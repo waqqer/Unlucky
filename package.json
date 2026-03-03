@@ -1,5 +1,6 @@
 {
-  "name": "unlucky-client",
+  "homepage": "http://waqqer.github.io/Unlucky",
+  "name": "unlucky",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,11 +8,16 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
+    "gh-pages": "^6.3.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "spwmini": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
