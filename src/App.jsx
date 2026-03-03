@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
+
+import SPWMini from 'spwmini/client'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [userName, setUserName] = useState("Noname")
+  const [userHead, setUserHead] = useState("")
+
+  const spm = new SPWMini('2c3db6cc-a30d-4c65-8b18-cc7e4fb42fbd', {
+    autoinit: true,
+  });
+
+  useEffect(() => {
+    const handleReady = () => {
+      setUserName(spm.user.username);
+      const uuid = spm.user.minecraftUUID;
+      console.log(uuid);
+      setUserHead(`https://mc-heads.net/avatar/${uuid}`);
+    };
+
+    spm.on('ready', handleReady)
+
+    return () => {
+      spm.off('ready', handleReady)
+    }
+  }, [])
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+          <img src={userHead} className="logo" alt="Vite logo" />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Hello, {userName}</h1>
     </>
   )
 }
