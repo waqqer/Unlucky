@@ -1,9 +1,11 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './app'
+import { BrowserRouter, Route, Routes } from 'react-router'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+  <BrowserRouter>
+    <Routes>
+      <Route path='/Unlucky/' element={<App />} />
+    </Routes>
+  </BrowserRouter>
 )
