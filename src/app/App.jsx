@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/Unlucky/' element={ <MainPage /> } />
-        <Route path='*' element={ <ErrorPage/> } />
+        <Route path='*' element={ <ErrorPage link="/Unlucky/" title="404" /> } />
       </Routes>
     </BrowserRouter>
   )
