@@ -1,9 +1,16 @@
-import PreviewTitle from "../widgets/preview-title/PreviewTitle"
+import { BrowserRouter, Route, Routes } from "react-router"
 import "./styles"
+import MainPage from "@/pages/MainPage"
+import ErrorPage from "@/pages/ErrorPage"
 
 function App() {
   return (
-    <PreviewTitle title="Unlucky" desc="Онлайн казино на сервере СПм для поддержки казны и спонсирования Коробки.."/>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/Unlucky/' element={ <MainPage /> } />
+        <Route path='*' element={ <ErrorPage/> } />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

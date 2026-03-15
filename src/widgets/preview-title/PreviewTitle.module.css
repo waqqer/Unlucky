@@ -10,9 +10,13 @@
 .title {
     font-size: 5.5rem;
     font-weight: 700;
+
     margin-bottom: 24px;
+
     color: var(--Main_text_color);
+    font-family: var(--Font);
     line-height: 1.1;
+    
     text-transform: uppercase;
     letter-spacing: -0.02em;
     text-shadow: 4px 4px 46px;
