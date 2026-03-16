@@ -1,0 +1,41 @@
+.ErrorMessage {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-family: var(--Font);
+    line-height: 1.1;
+    font-size: 1.5rem;
+    font-weight: 700;
+
+    display: flex;
+
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    gap: 2rem;
+}
+
+.ErrorTitle {
+    color: var(--Main_text_color);
+}
+
+.ErrorDesc {
+    font-size: 1rem;
+    font-weight: normal;
+    color: var(--Secondary_text_color);
+}
+
+.ErrorMessage .Button {
+    display: inline-block;
+    align-self: center;
+}
+
+.ErrorIcon {
+    font-size: clamp(1em, 3em, 6em);
+    margin-bottom: 0.5vh;
+    color: rgb(255, 101, 101);
+}

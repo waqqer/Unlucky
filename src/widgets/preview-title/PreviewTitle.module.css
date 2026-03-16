@@ -2,7 +2,6 @@
     color: var(--Secondary_text_color);
     font-family: var(--Font);
     font-size: 1.25rem;
-    color: #cbd5e1;
     max-width: 600px;
     margin: 0 auto 40px;
 }

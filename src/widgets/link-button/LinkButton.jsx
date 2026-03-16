@@ -4,13 +4,12 @@ import "./LinkButton.css"
 const LinkButton = (props) => {
     const {
         link,
-        title
+        title,
+        children
     } = props
 
     return (
-        <div className="Button Link-Button">
-            <Link to={link}>{title}</Link>
-        </div>
+        <Link className="Button LinkButton" to={link}>{title} {children}</Link>
     )
 }
 

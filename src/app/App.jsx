@@ -8,7 +8,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/Unlucky/' element={ <MainPage /> } />
-        <Route path='*' element={ <ErrorPage link="/Unlucky/" title="404" /> } />
+        <Route path='*' element={ 
+            <ErrorPage 
+                link="/Unlucky/" 
+                title="Упс! Кажется, здесь кто-то всё сломал..." 
+                message="Страница, которую вы ищете, либо удалена, либо никогда не существовала!" 
+                className="EnterFade"
+            /> 
+        } />
       </Routes>
     </BrowserRouter>
   )

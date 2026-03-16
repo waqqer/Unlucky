@@ -13,7 +13,7 @@ const PreviewTitle = (props) => {
     let f2 = title.slice(2, title.length)
 
     return (
-        <div className={`${className} centered-text`}>
+        <div className={`${className}`}>
             <h1 className={styles.title}>
                 <span className={`${styles.firstHalf}`}>{f1}</span>
                 <span className={`${styles.secondHalf}`}>{f2}</span>

@@ -6,7 +6,7 @@ const MainPage = () => {
             <PreviewTitle 
                 title="UnLucky" 
                 desc="Онлайн казино на сервере СПм для поддержки казны и спонсирования Коробки.."
-                className="centered-up" 
+                className="CenteredUp" 
             />
         </div>
     )

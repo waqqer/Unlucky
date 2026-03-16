@@ -1,0 +1,37 @@
+.LinkButton {
+    padding: 1.5% 3%;
+    background-color: rgba(137, 43, 226);
+    opacity: 0.75;
+
+    border-radius: 50px;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    transition: all 0.2s ease-in-out;
+
+    color: white;
+    text-decoration: none;
+    text-align: center;
+
+    font-weight: normal;
+    font-size: clamp(1em, 1.5em, 2em);
+    font-size: x-large;
+
+    margin: 0;
+
+    display: flex;
+}
+
+.LinkButton:hover {
+    transform: scale(110%, 110%);
+    transform: translateY(-5%);
+    transition: all 0.2s ease-in-out;
+
+    -webkit-box-shadow: 0px 0px 12px 1px rgba(206, 89, 242, 0.44);
+    -moz-box-shadow: 0px 0px 12px 1px rgba(206, 89, 242, 0.44);
+    box-shadow: 0px 0px 12px 1px rgba(206, 89, 242, 0.44);
+
+    opacity: 1;
+}

@@ -1,8 +1,4 @@
-.centered-text {
-    text-align: center;
-}
-
-.centered {
+.Centered {
     position: relative;
 
     top: 50%;
@@ -11,7 +7,7 @@
     transform: translate(-50%, -50%);
 }
 
-.centered-up {
+.CenteredUp {
     position: absolute;
     
     top: 30%;
@@ -20,7 +16,7 @@
     transform: translate(-50%, -50%);
 }
 
-.centered-down {
+.CenteredBottom {
     position: absolute;
     
     top: 70%;
@@ -29,13 +25,12 @@
     transform: translate(-50%, -50%);
 }
 
-.enter-fade {
-    animation: entry-fade 0.5s ease-in;
+.EnterFade {
+    animation: entry-fade 0.7s ease-in;
 }
 
 @keyframes entry-fade {
     from {
         opacity: 0;
-        transform: translateY(20px);
     }
 }

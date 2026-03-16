@@ -1,5 +1,5 @@
-import PreviewTitle from "@/widgets/preview-title"
-import LinkButton from "@/widgets/link-button"
+import ErrorMessage from "@/widgets/error-message"
+import LinkButton from "@/widgets/link-button/LinkButton"
 
 const ErrorPage = (props) => {
     const {
@@ -10,10 +10,9 @@ const ErrorPage = (props) => {
 
     return (
         <div>
-            <h1>{title}</h1>
-            <p>{message}</p>
-
-            <LinkButton link={link} title="На главную" />
+            <ErrorMessage title={title} desc={message} className="EnterFade">
+                <LinkButton title="На главную" />
+            </ErrorMessage>
         </div>
     )
 }
