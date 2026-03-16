@@ -1,3 +1,4 @@
+import { memo } from "react"
 import "./ErrorMessage.css"
 
 const ErrorMessage = (props) => {
@@ -18,4 +19,4 @@ const ErrorMessage = (props) => {
     )
 }
 
-export default ErrorMessage
+export default memo(ErrorMessage)
