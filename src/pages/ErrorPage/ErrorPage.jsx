@@ -11,7 +11,7 @@ const ErrorPage = (props) => {
     return (
         <div>
             <ErrorMessage title={title} desc={message} className="EnterFade">
-                <LinkButton title="На главную" />
+                <LinkButton title="На главную" link="/Unlucky?" />
             </ErrorMessage>
         </div>
     )

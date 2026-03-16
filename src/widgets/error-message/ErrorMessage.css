@@ -23,6 +23,11 @@
     color: var(--Main_text_color);
 }
 
+.Error {
+    text-decoration: none;
+    font-style: normal;
+}
+
 .ErrorDesc {
     font-size: 1rem;
     font-weight: normal;
@@ -38,4 +43,12 @@
     font-size: clamp(1em, 3em, 6em);
     margin-bottom: 0.5vh;
     color: rgb(255, 101, 101);
+    opacity: 0.75;
+
+    transition: all 0.15s ease;
+}
+
+.ErrorIcon:hover {
+    opacity: 1;
+    transform: translateY(-2px);
 }
