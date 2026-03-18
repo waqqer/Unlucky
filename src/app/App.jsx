@@ -1,23 +1,16 @@
-import { BrowserRouter, Route, Routes } from "react-router"
+import { HashRouter, Route, Routes } from "react-router"
 import "./styles"
-import MainPage from "@/pages/MainPage"
-import ErrorPage from "@/pages/ErrorPage"
+import { AboutUsPage, MainPage, NotFoundPage } from "@/pages"
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        <Route path='/Unlucky/' element={ <MainPage /> } />
-        <Route path='*' element={ 
-            <ErrorPage 
-                link="/Unlucky/" 
-                title="Упс! Кажется, здесь кто-то всё сломал..." 
-                message="Страница, которую вы ищете, либо удалена, либо никогда не существовала!" 
-                className="EnterFade"
-            /> 
-        } />
+        <Route path='/' element={ <MainPage /> } />
+        <Route path='/AboutUs' element={ <AboutUsPage /> } />
+        <Route path='*' element={ <NotFoundPage /> } />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
