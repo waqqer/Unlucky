@@ -1,7 +1,9 @@
+import NotFoundTitle from "@/widgets/NotFoundTitle"
+
 const NotFoundPage = () => {
 
     return (
-        <div>Not found 404</div>
+        <NotFoundTitle />
     )
 }
 

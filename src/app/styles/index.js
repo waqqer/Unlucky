@@ -1,2 +1,3 @@
 import "./normalize.css"
-import "./index.css"
+import "./variables.css"
+import "./main.css"
