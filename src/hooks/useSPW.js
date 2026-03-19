@@ -1,24 +1,33 @@
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import SPWMini from "spwmini/client"
 
 const appId = ""
 const minecraft_heads_url = "https://mc-heads.net/avatar/"
 
 const useSPW = () => {
-    let spwclient
+    const spClient = useRef(null)
+    const [user, setUser] = useState(null)
 
     useEffect(() => {
-        spwclient = new SPWMini(appId)
-        spwclient.initialize()
-        
+        if(!spClient.current) {
+            const sp = new SPWMini(appId)
+            sp.initialize()
+
+            spClient.current = sp
+            setUser(sp.user)
+        }
+
         return () => {
-            spwclient.dispose()
+            if(spClient.current) {
+                spClient.current.dispose()
+                spClient.current = null
+            }
         }
     }, [])
 
     return {
-        head: minecraft_heads_url + spwclient.user.minecraftUUID,
-        user: spwclient.user
+        head: minecraft_heads_url + user.minecraftUUID,
+        user: user
     }
 }
 

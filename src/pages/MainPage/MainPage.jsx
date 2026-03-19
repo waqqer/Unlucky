@@ -1,7 +1,9 @@
+import Title from "@/components/Title"
+
 const MainPage = () => {
 
     return (
-        <div>Main</div>
+        <Title title="Unlucky" desc="saddfsfsd"/>
     )
 }
 
