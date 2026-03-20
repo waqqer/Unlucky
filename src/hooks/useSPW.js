@@ -1,33 +1,36 @@
 import { useEffect, useRef, useState } from "react"
 import SPWMini from "spwmini/client"
 
-const appId = ""
+const appId = "e2b94c4f-c0be-442d-9554-59f03c8c84ce"
 const minecraft_heads_url = "https://mc-heads.net/avatar/"
 
 const useSPW = () => {
-    const spClient = useRef(null)
+    const spm = useRef(new SPWMini(appId, { autoinit: false }))
+
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-        if(!spClient.current) {
-            const sp = new SPWMini(appId)
-            sp.initialize()
+        console.log("Spw connectiong...")
+        const app = spm.current
 
-            spClient.current = sp
-            setUser(sp.user)
-        }
+        app.on('initResponse', userData => {
+            setUser(userData)
+        })
+
+        app.on('initError', message => {
+            console.error(message)
+        })
+
+        app.initialize()
 
         return () => {
-            if(spClient.current) {
-                spClient.current.dispose()
-                spClient.current = null
-            }
+            app.dispose()
         }
     }, [])
 
     return {
-        head: minecraft_heads_url + user.minecraftUUID,
-        user: user
+        user: user,
+        head: minecraft_heads_url + user.minecraftUUID
     }
 }
 
