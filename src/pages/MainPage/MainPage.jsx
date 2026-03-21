@@ -8,9 +8,17 @@ const MainPage = () => {
                 <UserProfile />
             </header>
 
-            <div>
-                <Title title="Unlucky" desc={`Hello, hello}`} />
-            </div>
+            <main>
+                <section>
+                    <Title>
+
+                    </Title>
+                </section>
+
+                <section>
+
+                </section>
+            </main>
         </>
     )
 }

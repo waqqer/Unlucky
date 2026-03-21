@@ -1,19 +1,15 @@
-const ErrorTitle = (props) => {
+import "./Title.css"
+
+const Title = (props) => {
     const {
-        title,
-        desc,
         children
     } = props
 
     return (
-        <div>
-            <h1 className="title">{title}</h1>
-
-            <p className="desc">{desc}</p>
-
+        <div className="title-container">
             {children}
         </div>
     )
 }
 
-export default ErrorTitle
+export default Title

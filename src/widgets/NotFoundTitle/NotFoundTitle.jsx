@@ -1,8 +1,26 @@
-import ErrorTitle from "@/components/Title"
+import Title from "@/components/Title"
+import LinkButton from "@/components/LinkButton"
+import UserProfile from "@/widgets/UserProfile"
+
+import "./NotFoundTitle.css"
 
 const NotFoundTitle = () => {
     return (
-        <ErrorTitle title="Упс! Кажется, здесь кто-то всё сломал..." desc="Страница, которую вы ищете, либо удалена, либо никогда не существовала!" />
+        <>
+            <header>
+                <UserProfile />
+            </header>
+
+            <main>
+                <Title >
+                    <i className="fa-solid fa-circle-exclamation error-icon"></i>
+                    <h1 className="title">Упс! Кажется, здесь кто-то всё сломал...</h1>
+                    <p className="desc">Страница, которую вы ищете, либо удалена, либо никогда не существовала!</p>
+
+                    <LinkButton className="not-found-btn">На главную</LinkButton>
+                </ Title>
+            </main>
+        </>
     )
 }
 

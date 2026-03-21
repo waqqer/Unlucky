@@ -1,0 +1,19 @@
+.error-icon {
+    color: rgb(247, 104, 104);
+    font-size: 5em;
+    animation: error-icon-fade 1s ease;
+}
+
+.not-found-btn {
+    align-self: center;
+}
+
+@keyframes error-icon-fade {
+    from {
+        opacity: 0;
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
