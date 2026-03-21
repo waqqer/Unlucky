@@ -1,0 +1,30 @@
+.user-about {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-avatar img {
+    border-radius: 4px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    padding-left: 5px;
+}
+
+.user-nick {
+    font-weight: 600;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.user-balance {
+    color: #e8ccff;
+    font-size: 1rem;
+}

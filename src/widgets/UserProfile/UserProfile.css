@@ -1,0 +1,21 @@
+.profile {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    background-color: rgba(30, 41, 59, 0.2);
+    backdrop-filter: blur(10px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.profile:hover .user-controlls {
+    max-height: 300px;
+    opacity: 1;
+    transform: translateY(0);
+    margin-top: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
