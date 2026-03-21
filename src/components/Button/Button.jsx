@@ -1,12 +1,23 @@
+import "./Button.css"
+
 const Button = (props) => {
     const {
         className,
-        text,
-
+        onClick,
+        type = "button",
+        isDisabled = false,
+        children
     } = props
 
     return (
-        <div></div>
+        <button 
+            className={`button ${className}`} 
+            type={type} 
+            onClick={onClick}
+            disabled={isDisabled}
+        > 
+            {children} 
+        </button>
     )
 }
 

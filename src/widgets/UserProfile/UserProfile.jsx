@@ -6,10 +6,10 @@ import "./UserProfile.css"
 const UserProfile = () => {
     
     return (
-        <div className="profile">
+        <nav className="profile">
             <UserInfo />
             <UserControlls />
-        </div>
+        </nav>
     )
 }
 

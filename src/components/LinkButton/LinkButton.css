@@ -1,6 +1,8 @@
-.button {
+.link-button {
     background-color: white;
     color: black;
+
+    text-decoration: none;
 
     border-width: 0px;
     border-radius: 7px;
@@ -11,14 +13,14 @@
     transition: all ease 0.1s;
 }
 
-.button:hover {
+.link-button:hover {
     background-color: rgb(219, 219, 219);
     border-radius: 5px;
 
     transform: scale(102%, 102%);
 }
 
-.button:active {
+.link-button:active {
     background-color: rgb(160, 160, 160);
     border-radius: 2px;
 
