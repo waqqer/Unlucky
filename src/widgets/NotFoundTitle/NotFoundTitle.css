@@ -8,6 +8,10 @@
     align-self: center;
 }
 
+.not-found-title {
+    margin-top: 20vh;
+}
+
 @keyframes error-icon-fade {
     from {
         opacity: 0;

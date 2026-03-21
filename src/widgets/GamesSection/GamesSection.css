@@ -11,5 +11,20 @@
 }
 
 .games-section {
-    margin-top: 15vh;
+    margin-top: 10vh;
+
+    animation: game-section-enter 1s ease;
+}
+
+@keyframes game-section-enter {
+    0% {
+
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

@@ -12,7 +12,7 @@ const NotFoundTitle = () => {
             </header>
 
             <main>
-                <Title>
+                <Title className="not-found-title">
                     <i className="fa-solid fa-circle-exclamation error-icon"></i>
                     <h1 className="title">Упс! Кажется, здесь кто-то всё сломал...</h1>
                     <p className="desc">Страница, которую вы ищете, либо удалена, либо никогда не существовала!</p>
