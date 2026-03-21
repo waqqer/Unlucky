@@ -1,14 +1,20 @@
 .profile-btn {
     padding: 10px 15px;
     color: #94a3b8;
+    letter-spacing: 1.25px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     text-decoration: none;
     text-align: center;
     font-size: 0.9rem;
-    transition: color 0.2s;
+    transition: all 0.2s;
 }
 
 .profile-btn:hover {
     color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.075);
+}
+
+.profile-btn:active {
+    border-radius: 15px;
 }

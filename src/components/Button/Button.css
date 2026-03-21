@@ -1,6 +1,7 @@
 .button {
     background-color: white;
     color: black;
+    letter-spacing: 1.75px;
 
     border-width: 0px;
     border-radius: 7px;
