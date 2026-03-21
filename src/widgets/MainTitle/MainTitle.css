@@ -1,0 +1,25 @@
+.main-title .title {
+    font-size: 5.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+
+    text-transform: uppercase;
+
+    color: white;
+
+    margin-bottom: 5px;
+
+    text-shadow: 4px 4px 46px 
+}
+
+.main-title .purple-part {
+    color: #9411ff;
+}
+
+.main-title .desc {
+    font-size: 1.25rem;
+
+    max-width: 600px;
+    margin: 0 auto 40px;
+}

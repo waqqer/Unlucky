@@ -1,0 +1,15 @@
+.game-rnd-message {
+    align-self: center;
+    justify-self: center;
+
+    text-align: center;
+
+    padding: 0;
+    margin: 0;
+
+    font-size: 2.5rem;
+}
+
+.games-section {
+    margin-top: 15vh;
+}

@@ -2,11 +2,12 @@ import "./Title.css"
 
 const Title = (props) => {
     const {
+        className,
         children
     } = props
 
     return (
-        <div className="title-container">
+        <div className={`title-container ${className}`}>
             {children}
         </div>
     )

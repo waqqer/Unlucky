@@ -1,0 +1,12 @@
+.games-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+
+    justify-content: center;
+    align-items: center;
+
+    max-width: 1200px;
+    margin: 20px auto 10px;
+    padding: 0 24px;
+}

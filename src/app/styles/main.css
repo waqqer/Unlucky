@@ -1,7 +1,27 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
 body {
     background-color: var(--Background-color);
     font-family: var(--Font);
     color: var(--Text-color);
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+main {
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
 }
 
 .title {
@@ -10,4 +30,10 @@ body {
 
 .desc {
     color: var(--Desc-text-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 100px auto 10px;
+    padding: 0 24px;
 }
