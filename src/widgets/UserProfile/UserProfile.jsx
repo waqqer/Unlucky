@@ -1,15 +1,54 @@
 import UserInfo from "@/components/UserInfo"
 import UserControlls from "@/components/UserControlls"
+import Modal from 'react-modal'
+import { useCallback, useState } from "react"
+import AboutUsModal from "../AboutUsModal"
+import ProfileModal from "../ProfileModal"
 
 import "./UserProfile.css"
 
 const UserProfile = () => {
-    
+    const [aboutUsModal, setAboutUsModal] = useState(false);
+    const [profileModal, setProfileModal] = useState(false);
+
+    const openAboutUs = useCallback(() => setAboutUsModal(true))
+    const closeAboutUs = useCallback(() => setAboutUsModal(false))
+
+    const openProfile = useCallback(() => setProfileModal(true))
+    const closeProfile = useCallback(() => setProfileModal(false))
+
     return (
-        <nav className="profile">
-            <UserInfo />
-            <UserControlls />
-        </nav>
+        <>
+            <nav className="profile">
+                <UserInfo />
+                <UserControlls
+                    openAbout={openAboutUs}
+                    openProfile={openProfile}
+                />
+            </nav>
+
+            <Modal
+                isOpen={aboutUsModal}
+                onRequestClose={closeAboutUs}
+                contentLabel="О нас"
+                className="modal"
+                overlayClassName="modal-overlay"
+                closeTimeoutMS={300}
+            >
+                <AboutUsModal close={closeAboutUs} />
+            </Modal>
+
+            <Modal
+                isOpen={profileModal}
+                onRequestClose={closeProfile}
+                contentLabel="Профиль"
+                className="modal"
+                overlayClassName="modal-overlay"
+                closeTimeoutMS={300}
+            >
+                <ProfileModal close={closeProfile} />
+            </Modal>
+        </>
     )
 }
 

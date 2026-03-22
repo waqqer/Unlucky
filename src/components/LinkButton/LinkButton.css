@@ -12,6 +12,10 @@
     margin: 0.75%;
 
     transition: all ease 0.1s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .link-button:hover {
@@ -26,4 +30,28 @@
     border-radius: 2px;
 
     transform: scale(105%, 105%);
+}
+
+.telegram {
+    background: #0088cc;
+    color: white;
+    font-weight: 600;
+
+    padding: 6% 10%;
+}
+
+.yt {
+    background: #ff0000;
+    color: white;
+    font-weight: 600;
+
+    padding: 6% 10%;
+}
+
+.telegram:hover {
+    background: #74d1ff;
+}
+
+.yt:hover {
+    background: #ff7070;
 }

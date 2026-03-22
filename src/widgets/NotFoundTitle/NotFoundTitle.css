@@ -21,3 +21,18 @@
         transform: translateY(-5px);
     }
 }
+
+@media (max-width: 640px) {
+    .error-icon {
+        display: none;
+    }
+
+    .not-found-title {
+        margin-top: 30vh;
+        text-align: start;
+    }
+
+    .not-found-btn {
+        padding: 15px 20px;
+    }
+}

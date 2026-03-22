@@ -1,0 +1,31 @@
+.about-us-modal {
+    font-size: 1.8rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.about-us-modal-icon {
+    color: rgb(128, 130, 255);
+    font-size: 5rem;
+}
+
+.about-us-modal-social {
+    display: flex;
+    gap: 50px;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 2vh;
+}
+
+.social-btn {
+    flex: 1;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}

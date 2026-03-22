@@ -6,7 +6,8 @@ const LinkButton = (props) => {
         className,
         onClick,
         to = "/",
-        children
+        children,
+        target
     } = props
 
     return (
@@ -14,6 +15,7 @@ const LinkButton = (props) => {
             className={`link-button ${className}`} 
             onClick={onClick}
             to={to}
+            target={target}
         > 
             {children} 
         </Link>

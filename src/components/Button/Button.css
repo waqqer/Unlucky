@@ -10,6 +10,10 @@
     margin: 0.75%;
 
     transition: all ease 0.1s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .button:hover {
