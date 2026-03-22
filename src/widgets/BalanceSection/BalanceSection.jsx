@@ -12,8 +12,7 @@ const BalanceSection = (props) => {
             <p>Баланс: <span>{balance}</span></p>
 
             <Button className="add-money-button">
-                <i className="fa-solid fa-circle-plus"></i>
-                Пополнить
+                <i className="fa-solid fa-wallet"></i>
             </Button>
         </div>
     )
