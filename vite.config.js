@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from "node:url"
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Unlucky/',
+  base: '/Unlucky',
   build: {
     outDir: "build"
   },
@@ -12,8 +12,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL("./src", import.meta.url))
     }
-  },
-  plugins: [
-    react()
-  ]
+  }
 })

@@ -11,7 +11,7 @@
 }
 
 .games-section {
-    margin-top: 10vh;
+    margin-top: 7vh;
 
     animation: game-section-enter 1s ease;
 }

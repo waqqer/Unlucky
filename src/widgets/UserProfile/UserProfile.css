@@ -19,3 +19,18 @@
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+@media (max-width: 630px)
+{
+    .profile {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+        right: 0;
+
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+}

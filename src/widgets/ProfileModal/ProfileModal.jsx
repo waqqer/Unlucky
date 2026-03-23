@@ -1,4 +1,3 @@
-import LinkButton from "@/components/LinkButton"
 import ProfileInfo from "@/components/ProfileInfo"
 import ModalExitButton from "../../components/ModalExitButton"
 import "./ProfileModal.css"
