@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import SPWMini from "spwmini/client"
 
-const appId = "30e34748-e1bb-4072-a5fb-b7d0df6aae8a"
-
 const useSPW = () => {
     const app = useRef(null)
     const [user, setUser] = useState(null)
 
     useEffect(() => {
         if (!app.current) {
-            app.current = new SPWMini(appId)
+            app.current = new SPWMini(import.meta.env.VITE_APP_ID)
         }
 
         console.log("Connecting...")
@@ -30,7 +28,10 @@ const useSPW = () => {
         }
     }, [])
 
-    return user
+    return {
+        spm: app.current,
+        user
+    }
 }
 
 export default useSPW

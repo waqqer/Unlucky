@@ -1,3 +1,5 @@
+import { useContext } from "react"
+import { AccountContext } from "@/context/AccountContext"
 import ProfileButton from "../ProfileButton"
 import "./UserControlls.css"
 
@@ -6,6 +8,10 @@ const UserControlls = (props) => {
         openAbout,
         openProfile
     } = props
+
+    const {
+        spm
+    } = useContext(AccountContext)
 
     const idAdmin = true
     return (

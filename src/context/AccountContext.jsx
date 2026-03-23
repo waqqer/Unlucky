@@ -5,11 +5,12 @@ import useHead from "@/hooks/useHead";
 export const AccountContext = createContext({})
 
 export const AccountProvider = ({ children }) => {
-    const user = useSPW()
+    const { user, spm } = useSPW()
     const head = useHead(user)
     
     const values = {
         user,
+        spm,
         head
     }
 
