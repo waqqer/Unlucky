@@ -8,7 +8,7 @@ const HEADERS = {
 
 const BalanceApi = {
 
-    getByUsername: (username) => {
+    getByName: (username) => {
         return fetch(URL + `/${username}`)
             .then(data => data.json())
     },
