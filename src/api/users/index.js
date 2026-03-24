@@ -9,7 +9,11 @@ const HEADERS = {
 const UserApi = {
 
     getAll: (limit) => {
-        return fetch(URL + `?limit=${limit}`)
+        let l = 20
+        if(typeof limit === "number" && limit > 1) 
+            l = limit
+
+        return fetch(URL + `?limit=${l}`)
             .then(data => data.json())
     },
 
@@ -18,11 +22,15 @@ const UserApi = {
             .then(data => data.json())
     },
 
-    getOrCreate: (sp_user, custom_role) => {
+    getOrCreate: (sp_user, role) => {
+        let r = "USER"
+        if(role === "USER" || role === "ADMIN")
+            r = role
+
         const data = {
             name: sp_user.username,
             UUID: sp_user.minecraftUUID,
-            role: custom_role ?? "USER"
+            role: r
         }
 
         return fetch(URL, {
