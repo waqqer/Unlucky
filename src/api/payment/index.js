@@ -1,11 +1,13 @@
+import { fetchUrl } from "../config"
+
 const URL = "http://localhost:3001/users"
 
 const HEADERS = {
     "Content-Type": "application/json"
 }
 
-const GamesApi = {
+const PaymentApi = {
 
 }
 
-export default GamesApi
+export default PaymentApi

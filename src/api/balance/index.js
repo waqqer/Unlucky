@@ -6,8 +6,8 @@ const HEADERS = {
     "Content-Type": "application/json"
 }
 
-const StatsApi = {
+const BalanceApi = {
 
 }
 
-export default StatsApi
+export default BalanceApi

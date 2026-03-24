@@ -6,8 +6,8 @@ const HEADERS = {
     "Content-Type": "application/json"
 }
 
-const StatsApi = {
+const HistoryApi = {
 
 }
 
-export default StatsApi
+export default HistoryApi
