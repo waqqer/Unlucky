@@ -1,5 +1,5 @@
 import Button from "@/components/Button"
-import "./BalanceSection.css"
+import styles from "./BalanceSection.module.css"
 
 const BalanceSection = (props) => {
     const {
@@ -8,10 +8,10 @@ const BalanceSection = (props) => {
     } = props
 
     return (
-        <div className={`balance-section ${className}`}>
+        <div className={`${styles["balance-section"]} ${className}`}>
             <p>Баланс: <span>{balance}</span></p>
 
-            <Button className="add-money-button">
+            <Button className={styles["add-money-button"]}>
                 <i className="fa-solid fa-wallet"></i>
             </Button>
         </div>

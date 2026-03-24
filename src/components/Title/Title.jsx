@@ -1,4 +1,4 @@
-import "./Title.css"
+import styles from "./Title.module.css"
 
 const Title = (props) => {
     const {
@@ -7,7 +7,7 @@ const Title = (props) => {
     } = props
 
     return (
-        <div className={`title-container ${className}`}>
+        <div className={`${styles["title-container"]} ${className}`}>
             {children}
         </div>
     )

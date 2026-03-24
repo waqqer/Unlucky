@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import "./LinkButton.css"
+import styles from "./LinkButton.module.css"
 
 const LinkButton = (props) => {
     const {
@@ -12,7 +12,7 @@ const LinkButton = (props) => {
 
     return (
         <Link 
-            className={`link-button ${className}`} 
+            className={`${styles["link-button"]} ${className}`} 
             onClick={onClick}
             to={to}
             target={target}

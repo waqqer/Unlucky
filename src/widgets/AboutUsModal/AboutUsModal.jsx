@@ -1,6 +1,6 @@
 import LinkButton from "@/components/LinkButton"
 import ModalExitButton from "../../components/ModalExitButton"
-import "./AboutUsModal.css"
+import styles from "./AboutUsModal.module.css"
 
 const AboutUsModal = (props) => {
     const {
@@ -10,8 +10,8 @@ const AboutUsModal = (props) => {
     return (
         <>
             <ModalExitButton modal={close} />
-            <i className="about-us-modal-icon fa-solid fa-rocket"></i>
-            <h1 className="about-us-modal title">О проекте Unlucky</h1>
+            <i className={`${styles["about-us-modal-icon"]} fa-solid fa-rocket`}></i>
+            <h1 className={styles["about-us-modal title"]}>О проекте Unlucky</h1>
 
             <p className="desc">
                 <b>Unlucky</b> - Онлайн казино на сервере СПм. Мы предоставляем вам игры,
@@ -24,13 +24,13 @@ const AboutUsModal = (props) => {
                 <br /> возможность пополнить свой капитал.
             </p>
 
-            <div className="about-us-modal-social">
-                <LinkButton to="https://t.me/shadowmonya" className="telegram social-btn" target="_blank" >
+            <div className={styles["about-us-modal-social"]}>
+                <LinkButton to="https://t.me/shadowmonya" className={`${styles["telegram"]} ${styles["social-btn"]}`} target="_blank" >
                     <i className="fab fa-telegram-plane"></i>
                     Telegram
                 </LinkButton>
 
-                <LinkButton to="https://youtube.com/@ShadowMonya" className="yt social-btn" target="_blank" >
+                <LinkButton to="https://youtube.com/@ShadowMonya" className={`${styles["yt"]} ${styles["social-btn"]}`} target="_blank" >
                     <i className="fab fa-youtube"></i>
                     YouTube
                 </LinkButton>

@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { AccountContext } from "../../context/AccountContext"
-import "./UserInfo.css"
+import styles from "./UserInfo.module.css"
 
 const UserInfo = () => {
 
@@ -10,8 +10,8 @@ const UserInfo = () => {
     } = useContext(AccountContext)
 
     return (
-        <div className="user-about">
-            <div className="user-avatar">
+        <div className={styles["user-about"]}>
+            <div className={styles["user-avatar"]}>
                 <img 
                     src={head}
                     alt="Аватар клиента"
@@ -19,9 +19,9 @@ const UserInfo = () => {
                     height={48}
                 />
             </div>
-            <div className="user-info">
-                <span className="user-nick">{user?.username ?? 'Username'}</span>
-                <span className="user-balance">1000 Ар</span>
+            <div className={styles["user-info"]}>
+                <span className={styles["user-nick"]}>{user?.username ?? 'Username'}</span>
+                <span className={styles["user-balance"]}>1000 Ар</span>
             </div>
         </div>
     )

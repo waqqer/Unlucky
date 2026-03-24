@@ -1,14 +1,12 @@
 import GameCard from "../GameCard"
-
 import SlotsImage from "@/shared/images/slots.png"
 import MinerImage from "@/shared/images/miner.png"
-
-import "./GamesList.css"
+import styles from "./GamesList.module.css"
 
 const GamesList = () => {
     
     return (
-        <div className="games-list">
+        <div className={styles["games-list"]}>
             <GameCard 
                 title="Слоты" 
                 desc="Выбей ряд одинаковых предметов и получай ИКСЫ!" 

@@ -1,4 +1,4 @@
-import "./ProfileButton.css"
+import styles from "./ProfileButton.module.css"
 
 const ProfileButton = (props) => {
     const {
@@ -7,7 +7,7 @@ const ProfileButton = (props) => {
     } = props
 
     return (
-        <span className="profile-btn" onClick={onClick}>{text}</span>
+        <span className={styles["profile-btn"]} onClick={onClick}>{text}</span>
     )
 }
 

@@ -1,4 +1,4 @@
-import "./ProfileInfo.css"
+import styles from "./ProfileInfo.module.css"
 
 const ProfileInfo = (props) => {
     const {
@@ -6,7 +6,7 @@ const ProfileInfo = (props) => {
     } = props
 
     return (
-        <div className={`profile-section ${className}`}>
+        <div className={`${styles["profile-section"]} ${className}`}>
             <h1 className="title">Username</h1>
             <p className="desc">ID: 0001</p>
         </div>

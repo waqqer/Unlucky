@@ -4,8 +4,7 @@ import Modal from 'react-modal'
 import { useCallback, useState } from "react"
 import AboutUsModal from "../AboutUsModal"
 import ProfileModal from "../ProfileModal"
-
-import "./UserProfile.css"
+import styles from "./UserProfile.module.css"
 
 const UserProfile = () => {
     const [aboutUsModal, setAboutUsModal] = useState(false);
@@ -19,9 +18,10 @@ const UserProfile = () => {
 
     return (
         <>
-            <nav className="profile">
+            <nav className={styles["profile"]}>
                 <UserInfo />
                 <UserControlls
+                    className={styles["user-controlls"]}
                     openAbout={openAboutUs}
                     openProfile={openProfile}
                 />

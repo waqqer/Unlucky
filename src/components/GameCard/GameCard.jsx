@@ -1,6 +1,5 @@
 import LinkButton from "@/components/LinkButton"
-
-import "./GameCard.css"
+import styles from "./GameCard.module.css"
 
 const GameCard = (props) => {
     const {
@@ -11,13 +10,13 @@ const GameCard = (props) => {
     } = props
 
     return (
-        <div style={{backgroundImage: `url(${image})`}} className="game-card">
-            <div className="details">
+        <div style={{backgroundImage: `url(${image})`}} className={styles["game-card"]}>
+            <div className={styles.details}>
                 <h3 className="title">{title}</h3>
 
-                <div className="game-desc">
-                    <p className="desc">{desc}</p>
-                    <LinkButton className="play-game-button" to={link}> Играть </LinkButton>
+                <div className={styles["game-desc"]}>
+                    <p className={`desc ${styles.desc}`}>{desc}</p>
+                    <LinkButton className={styles["play-game-button"]} to={link}> Играть </LinkButton>
                 </div>
             </div>
         </div>

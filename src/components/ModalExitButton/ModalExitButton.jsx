@@ -1,5 +1,5 @@
 import Button from "../Button"
-import "./ModalExitButton.css"
+import styles from "./ModalExitButton.module.css"
 
 const ModalExitButton = (props) => {
     const {
@@ -7,7 +7,7 @@ const ModalExitButton = (props) => {
     } = props
 
     return (
-        <Button className="exit-modal" onClick={modal}>
+        <Button className={styles["exit-modal"]} onClick={modal}>
             <i className="fa-regular fa-circle-xmark"></i>
         </Button>
     )

@@ -31,27 +31,3 @@
 
     transform: scale(105%, 105%);
 }
-
-.telegram {
-    background: #0088cc;
-    color: white;
-    font-weight: 600;
-
-    padding: 6% 10%;
-}
-
-.yt {
-    background: #ff0000;
-    color: white;
-    font-weight: 600;
-
-    padding: 6% 10%;
-}
-
-.telegram:hover {
-    background: #74d1ff;
-}
-
-.yt:hover {
-    background: #ff7070;
-}

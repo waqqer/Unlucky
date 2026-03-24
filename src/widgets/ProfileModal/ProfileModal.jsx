@@ -1,7 +1,7 @@
 import ProfileInfo from "@/components/ProfileInfo"
-import ModalExitButton from "../../components/ModalExitButton"
-import "./ProfileModal.css"
+import ModalExitButton from "@/components/ModalExitButton"
 import BalanceSection from "../BalanceSection"
+import styles from "./ProfileModal.module.css"
 
 const ProfileModal = (props) => {
     const {
