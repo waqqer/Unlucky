@@ -18,7 +18,7 @@ const UserControlls = (props) => {
     return (
         <div className={`${styles["user-controlls"]} ${className}`}>
             <ProfileButton text="Профиль" onClick={openProfile} />
-            {idAdmin === true && <ProfileButton text="Админ. панель" /> }
+            {idAdmin === true && <ProfileButton text="Админ. панель" link="/admin" /> }
             <ProfileButton text="О нас" onClick={openAbout} />
         </div>
     )

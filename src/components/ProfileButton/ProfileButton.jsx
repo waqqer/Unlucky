@@ -1,13 +1,15 @@
+import { Link } from "react-router"
 import styles from "./ProfileButton.module.css"
 
 const ProfileButton = (props) => {
     const {
         text,
-        onClick
+        onClick,
+        link
     } = props
 
     return (
-        <span className={styles["profile-btn"]} onClick={onClick}>{text}</span>
+        <Link className={styles["profile-btn"]} onClick={onClick} to={link} >{text}</Link>
     )
 }
 
