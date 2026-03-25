@@ -9,7 +9,8 @@ const BalanceSection = (props) => {
 
     return (
         <div className={`${styles["balance-section"]} ${className}`}>
-            <p>Баланс: <span>{balance}</span></p>
+            <p className={styles["balance-label"]}>Баланс: 
+                <span className={styles["balance-value"]}>{balance}</span></p>
 
             <Button className={styles["add-money-button"]}>
                 <i className="fa-solid fa-wallet"></i>

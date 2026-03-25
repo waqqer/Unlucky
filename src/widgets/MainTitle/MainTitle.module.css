@@ -1,0 +1,47 @@
+.main-title {
+    font-size: 5.5vh;
+}
+
+.title {
+    text-shadow: 0px 0px 24px;
+    text-transform: uppercase;
+}
+
+.purple-part {
+    color: blueviolet
+}
+
+.desc {
+    font-size: 2.35vmin;
+    color: rgb(255, 255, 255);
+    opacity: 0.7;
+
+    font-weight: lighter;
+    letter-spacing: 1.2px;
+
+    text-transform: capitalize;
+}
+
+.title-box {
+    margin-top: 1vh;
+    margin-bottom: 4vh;
+}
+
+@media (max-width: 630px) {
+    .main-title {
+        font-size: 8vw;
+    }
+
+    .desc {
+        font-size: 3vmin;
+        margin-left: 3vw;
+        margin-right: 3vw;
+
+        opacity: 0.9;
+    }
+
+    .title-box {
+        margin-top: 0.8vh;
+        margin-bottom: 3.2vh;
+    }
+}

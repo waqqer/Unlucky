@@ -10,12 +10,11 @@ const AboutUsModal = (props) => {
     return (
         <>
             <ModalExitButton modal={close} />
-            <i className={`${styles["about-us-modal-icon"]} fa-solid fa-rocket`}></i>
-            <h1 className={styles["about-us-modal title"]}>О проекте Unlucky</h1>
+            <i className={`${styles["icon"]} fa-solid fa-rocket`}></i>
+            <h1>О проекте Unlucky</h1>
 
-            <p className="desc">
-                <b>Unlucky</b> - Онлайн казино на сервере СПм. Мы предоставляем вам игры,
-                <br /> для веселого проведения досуга.
+            <p className={styles.desc}>
+                <b>Unlucky</b> - Онлайн казино на сервере СПм. Мы предоставляем вам игры, для веселого проведения досуга.
 
                 <br />
                 <br />
@@ -24,13 +23,13 @@ const AboutUsModal = (props) => {
                 <br /> возможность пополнить свой капитал.
             </p>
 
-            <div className={styles["about-us-modal-social"]}>
-                <LinkButton to="https://t.me/shadowmonya" className={`${styles["telegram"]} ${styles["social-btn"]}`} target="_blank" >
+            <div>
+                <LinkButton to="https://t.me/shadowmonya" className={styles["telegram"]} target="_blank" >
                     <i className="fab fa-telegram-plane"></i>
                     Telegram
                 </LinkButton>
 
-                <LinkButton to="https://youtube.com/@ShadowMonya" className={`${styles["yt"]} ${styles["social-btn"]}`} target="_blank" >
+                <LinkButton to="https://youtube.com/@ShadowMonya" className={styles["yt"]} target="_blank" >
                     <i className="fab fa-youtube"></i>
                     YouTube
                 </LinkButton>

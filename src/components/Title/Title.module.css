@@ -1,0 +1,9 @@
+.title-container {
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1.1px;
+    
+    align-content: center;
+    justify-content: center;
+}

@@ -1,0 +1,17 @@
+.games-list {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+@media (max-width: 630px) {
+    
+    .games-list {
+        flex-direction: column;
+        gap: 3vh;
+
+        justify-content: flex-start;
+    }
+}

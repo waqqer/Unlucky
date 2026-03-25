@@ -1,0 +1,66 @@
+.balance-section {
+    display: flex;
+
+    width: 100%;
+
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px dashed rgba(59, 130, 246, 0.3);
+    border-radius: 15px;
+
+    padding: 12px 15px;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add-money-button {
+    display: flexbox;
+    background-color: #3b82f6;
+    border: none;
+
+    margin-left: 20px;
+    flex: 1;
+
+    max-width: 10%;
+}
+
+.add-money-button:hover {
+    background-color: #3b82f6;
+    border: none;
+}
+
+.balance-label {
+    font-weight: normal;
+    font-size: large;
+    color: #94a3b8;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.balance-value {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.balance-value::before {
+    content: " ";
+}
+
+.balance-value::after {
+    content: " Ар";
+}
+
+@media (max-width: 630px) {
+    .balance-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .add-money-button {
+        width: 80%;
+        max-width: 80%;
+        padding: 10px 15px;
+    }
+}

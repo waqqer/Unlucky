@@ -1,19 +1,20 @@
 import Title from "@/components/Title"
 import styles from "./MainTitle.module.css"
+import Container from "@/components/Container"
 
 const MainTitle = () => {
     return (
-        <section className="container">
+        <Container className={styles["title-box"]}>
             <Title className={styles["main-title"]}>
-                <h1 className={`title ${styles.title}`}>
+                <h1 className={styles.title}>
                     <span>Un</span>
                     <span className={styles["purple-part"]}>lucky</span>
                 </h1>
-                <p className="desc">
+                <p className={styles.desc}>
                     Онлайн казино на сервере СПм для поддержки казны и спонсирования Коробки..
                 </p>
             </Title>
-        </section>
+        </Container>
     )
 }
 

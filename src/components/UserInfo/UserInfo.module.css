@@ -1,0 +1,26 @@
+.user-about {
+    display: flex;
+}
+
+.user-avatar {
+    border-radius: 5px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+
+    padding-left: 15px;
+    text-align: start;
+}
+
+.user-nick {
+    font-weight: 600;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.user-balance {
+    color: #e8ccff;
+    font-size: 1rem;
+}

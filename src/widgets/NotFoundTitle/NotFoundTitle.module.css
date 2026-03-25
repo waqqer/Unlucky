@@ -1,0 +1,52 @@
+.title {
+    color: rgb(255, 124, 124);
+    font-size: 3vh;
+}
+
+.desc {
+    color: rgb(224, 224, 224);
+    opacity: 0.9;
+
+    font-weight: normal;
+    font-size: 1.5vh;
+    letter-spacing: 1px;
+}
+
+.error-icon {
+    color: rgb(255, 124, 124);
+    font-size: 5rem;
+}
+
+.not-found-title {
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+.not-found-box {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100vw;
+    height: 90vh;
+
+    gap: 30px;
+}
+
+@media (max-width: 630px) {
+    .title {
+        font-size: 2vh;
+    }
+
+    .desc {
+        font-size: 1.25vh;
+    }
+    
+    .not-found-box {
+        gap: 200px;
+    }
+}

@@ -1,0 +1,20 @@
+.exit-modal {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    color: white;
+    opacity: 0.5;
+
+    background-color: transparent;
+    border: none;
+}
+
+.exit-modal:hover {
+    opacity: 1;
+
+    transform: none;
+    background: none;
+    border: none;
+}

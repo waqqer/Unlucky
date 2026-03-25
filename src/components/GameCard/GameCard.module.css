@@ -1,0 +1,149 @@
+.game-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-end;
+
+    min-width: 300px;
+    width: 20vw;
+    height: 50vh;
+
+    background: #1e293b;
+
+    border-radius: 32px;
+    border: 1px solid #334155;
+    padding: 32px 24px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: all 0.25s;
+
+    z-index: 1;
+}
+
+.game-card:hover {
+    transform: translateY(-8px);
+    border-color: #3b82f6;
+
+    -webkit-box-shadow: 0px 0px 47px 0px rgba(59, 130, 246, 0.61);
+    -moz-box-shadow: 0px 0px 47px 0px rgba(59, 130, 246, 0.61);
+    box-shadow: 0px 0px 47px 0px rgba(59, 130, 246, 0.61);
+}
+
+.game-card::after {
+    content: '';
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20%;
+
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 30px;
+    background: linear-gradient(to top,
+            rgba(15, 23, 42, 1) 0%,
+            rgba(15, 23, 42, 0.8) 40%,
+            rgba(15, 23, 42, 0) 100%);
+    backdrop-filter: blur(4px);
+
+    transition: height 0.2s ease-out;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.game-card:hover::after {
+    height: 100%;
+}
+
+.details {
+    transition: transform 0.3s ease;
+    z-index: 2;
+}
+
+.game-card:hover .details {
+    transform: translateY(-10px);
+}
+
+.game-desc {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform: translateY(20px);
+}
+
+.icon {
+    position: absolute;
+    text-align: center;
+    
+    top: 20%;
+    left: 0;
+    right: 0;
+
+    color: #3b82f6;
+    font-size: 5rem;
+    opacity: 0;
+
+    transition-duration: 0s;
+    z-index: 3;
+}
+
+.game-card:hover .game-desc {
+    max-height: 200px;
+    margin-top: 15px;
+
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.game-card:hover .icon {
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #ffffff;
+
+    margin: 0;
+    z-index: 2;
+}
+
+.desc {
+    color: #94a3b8;
+    font-size: 1rem;
+
+    margin-bottom: 24px;
+}
+
+.play-game-button {
+    display: inline-block;
+    background: transparent;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+    font-weight: 600;
+    padding: 10px 28px;
+    border-radius: 40px;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.play-game-button:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+@media (max-width: 630px) {
+    
+    .game-card {
+        width: 90vw;
+        height: 50vh;
+    }
+
+    .icon {
+        font-size: 10vh;
+    }
+}

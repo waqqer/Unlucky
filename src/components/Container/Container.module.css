@@ -1,0 +1,11 @@
+.container {
+    display: block;
+
+    justify-content: center;
+    align-content: center;
+
+    text-align: center;
+
+    left: 0;
+    right: 0;
+}

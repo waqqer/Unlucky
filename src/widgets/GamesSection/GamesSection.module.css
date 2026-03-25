@@ -1,0 +1,26 @@
+.game-rnd-message {
+    font-size: 4vh;
+    letter-spacing: 1.5px;
+
+    margin-bottom: 3vh;
+}
+
+.games-title {
+    display: none;
+
+    font-size: 3.5vh;
+    opacity: 0.9;
+    letter-spacing: 2px;
+
+    margin-bottom: 2vh;
+}
+
+@media (max-width: 630px) {
+    .game-rnd-message {
+        display: none;
+    }
+
+    .games-title {
+        display: inline-block;
+    }
+}

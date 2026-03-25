@@ -2,14 +2,24 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    color: white;
 }
 
 html {
-    overflow-y: scroll;
+    overflow-y: hidden;
     scroll-behavior: smooth;
+
+    height: 100vh;
 }
 
 body {
     font-family: var(--Font), sans-serif;
     background-color: var(--Bg-color);
+}
+
+@media (max-width: 630px) {
+    html {
+        overflow-y: scroll;
+    }
 }

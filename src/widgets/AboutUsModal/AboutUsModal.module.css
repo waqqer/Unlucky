@@ -1,0 +1,34 @@
+.icon {
+    font-size: 5rem;
+    color: #3b82f6;
+}
+
+.desc {
+    opacity: 0.8;
+}
+
+.telegram {
+    color: white;
+    font-weight: bold;
+    background-color: #3b82f6;
+}
+
+.telegram:hover {
+    background-color: #3b82f6;
+}
+
+.yt {
+    color: white;
+    font-weight: bold;
+    background-color: rgb(255, 98, 98);
+}
+
+.yt:hover {
+    background-color: rgb(255, 98, 98);
+}
+
+@media (max-width: 630px) {
+    .icon {
+        display: none;
+    }
+}

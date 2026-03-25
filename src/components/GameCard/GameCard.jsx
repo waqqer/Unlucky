@@ -9,13 +9,21 @@ const GameCard = (props) => {
         image
     } = props
 
+    const bg_style = {
+        backgroundImage: `url(${image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "100% 100%"
+    }
+
     return (
-        <div style={{backgroundImage: `url(${image})`}} className={styles["game-card"]}>
+        <div style={bg_style} className={styles["game-card"]}>
+            <i className={`${styles.icon} fa-solid fa-play`}></i>
             <div className={styles.details}>
-                <h3 className="title">{title}</h3>
+                <h3 className={styles.title}>{title}</h3>
 
                 <div className={styles["game-desc"]}>
-                    <p className={`desc ${styles.desc}`}>{desc}</p>
+                    <p className={styles.desc}>{desc}</p>
                     <LinkButton className={styles["play-game-button"]} to={link}> Играть </LinkButton>
                 </div>
             </div>
