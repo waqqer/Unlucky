@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
-import styles from "./ProfileInfo.module.css"
 import Placeholder from "../Placeholder"
+import styles from "./ProfileInfo.module.css"
 
 const ProfileInfo = (props) => {
     const {
