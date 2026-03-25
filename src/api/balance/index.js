@@ -8,12 +8,12 @@ const HEADERS = {
 
 const BalanceApi = {
 
-    getByName: (username) => {
+    getByName: async (username) => {
         return fetch(URL + `/${username}`)
             .then(data => data.json())
     },
 
-    change: (username, amount) => {
+    change: async (username, amount) => {
         let value = 0
         if (typeof amount === "number")
             value = amount

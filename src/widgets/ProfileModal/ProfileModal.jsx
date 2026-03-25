@@ -13,7 +13,7 @@ const ProfileModal = (props) => {
         <>
             <ModalExitButton modal={close} />
 
-            <ProfileInfo className="" />
+            <ProfileInfo />
 
             <BalanceSection />
             <HistorySection />

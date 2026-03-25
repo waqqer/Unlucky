@@ -7,7 +7,8 @@ const HEADERS = {
 }
 
 const HistoryApi = {
-    getAll: (limit) => {
+
+    getAll: async (limit) => {
         let l = 20
         if(typeof limit === "number" && limit > 1) 
             l = limit
@@ -16,7 +17,7 @@ const HistoryApi = {
             .then(data => data.json())
     },
 
-    getByName: (username, limit) => {
+    getByName: async (username, limit) => {
         let l = 20
         if(typeof limit === "number" && limit > 1) 
             l = limit
@@ -25,7 +26,7 @@ const HistoryApi = {
             .then(data => data.json())
     },
 
-    create: (username, game_name, result, amount) => {
+    create: async (username, game_name, result, amount) => {
         let res = "WIN"
         let a = 0
 

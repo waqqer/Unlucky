@@ -8,7 +8,7 @@ const HEADERS = {
 
 const UserApi = {
 
-    getAll: (limit) => {
+    getAll: async (limit) => {
         let l = 20
         if(typeof limit === "number" && limit > 1) 
             l = limit
@@ -17,12 +17,12 @@ const UserApi = {
             .then(data => data.json())
     },
 
-    getByName: (username) => {
+    getByName: async (username) => {
         return fetch(URL + `/${username}`)
             .then(data => data.json())
     },
 
-    getOrCreate: (sp_user, role) => {
+    getOrCreate: async (sp_user, role) => {
         let r = "USER"
         if(role === "USER" || role === "ADMIN")
             r = role

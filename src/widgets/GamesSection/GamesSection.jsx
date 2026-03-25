@@ -1,6 +1,6 @@
 import GamesList from "@/components/GamesList"
+import Container from "@/components/Container"
 import styles from "./GamesSection.module.css"
-import Container from "../../components/Container"
 
 const messages = [
     "Где тебе сегодня повезет?",
@@ -19,7 +19,7 @@ const messages = [
 ]
 
 const GamesSection = () => {
-    const title = messages[Math.round(Math.random() * messages.length)]
+    const title = messages[Math.round(Math.random() * messages.length - 1)]
     return (
         <Container>
             <h1 className={styles["game-rnd-message"]}>{title}</h1>

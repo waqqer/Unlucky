@@ -24,3 +24,7 @@
     color: #e8ccff;
     font-size: 1rem;
 }
+
+.user-balance::after {
+    content: " Ар";
+}

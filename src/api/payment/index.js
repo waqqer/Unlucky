@@ -7,7 +7,8 @@ const HEADERS = {
 }
 
 const PaymentApi = {
-    getAll: (limit) => {
+
+    getAll: async (limit) => {
         let l = 20
         if(typeof limit === "number" && limit > 1)
             l = limit
@@ -16,7 +17,7 @@ const PaymentApi = {
             .then(data => data.json())
     },
 
-    getByName: (username, limit) => {
+    getByName: async (username, limit) => {
         let l = 20
         if(typeof limit === "number" && limit > 1)
             l = limit
@@ -25,7 +26,7 @@ const PaymentApi = {
             .then(data => data.json())
     },
 
-    create: (username, amount, type) => {
+    create: async (username, amount, type) => {
         let a = 0
         let t = "ADD"
 

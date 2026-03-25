@@ -7,12 +7,13 @@ const HEADERS = {
 }
 
 const StatsApi = {
-    getByName: (username) => {
+    
+    getByName: async (username) => {
         return fetch(URL + `/${username}`)
             .then(data => data.json())
     },
 
-    change: (username, wins, losses, games) => {
+    change: async (username, wins, losses, games) => {
         let w = 0
         let l = 0
         let g = 1

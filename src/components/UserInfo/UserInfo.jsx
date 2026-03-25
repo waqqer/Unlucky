@@ -1,13 +1,15 @@
 import { useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
-import { memo } from "react"
+import Placeholder from "../Placeholder"
 import styles from "./UserInfo.module.css"
 
 const UserInfo = () => {
 
     const {
         user,
-        head
+        head,
+        account,
+        isLoaded
     } = useContext(AccountContext)
 
     return (
@@ -22,7 +24,10 @@ const UserInfo = () => {
             </div>
             <div className={styles["user-info"]}>
                 <span className={styles["user-nick"]}>{user?.username ?? 'Username'}</span>
-                <span className={styles["user-balance"]}>1000 Ар</span>
+                {isLoaded === true ? 
+                    <span className={styles["user-balance"]}>{`${account.balance}`}</span> : 
+                    <Placeholder />
+                }
             </div>
         </div>
     )
