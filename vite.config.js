@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from "node:url"
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Unlucky',
+  base: '/Unlucky/',
   build: {
     outDir: "build"
   },
