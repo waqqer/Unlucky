@@ -1,0 +1,36 @@
+.title {
+    font-size: medium;
+    text-align: center;
+}
+
+.history-section {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    background: rgba(75, 246, 59, 0.1);
+    border: 1px dashed rgba(59, 246, 106, 0.3);
+    border-radius: 15px;
+
+    padding: 12px 15px;
+    gap: 20px;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    justify-content:space-between;
+    align-items: start;
+    gap: 7px;
+}
+
+.not-found-message {
+    color: rgb(189, 189, 189);
+}

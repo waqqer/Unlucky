@@ -1,6 +1,7 @@
 import ProfileInfo from "@/components/ProfileInfo"
 import ModalExitButton from "@/components/ModalExitButton"
 import BalanceSection from "../BalanceSection"
+import HistorySection from "../HistorySection"
 
 const ProfileModal = (props) => {
     const {
@@ -14,6 +15,7 @@ const ProfileModal = (props) => {
             <ProfileInfo className="" />
 
             <BalanceSection />
+            <HistorySection />
         </>
     )
 }

@@ -1,0 +1,91 @@
+.data {
+    display: flex;
+    flex-direction: column;
+
+    align-items: start;
+    text-align: start;
+
+    margin-left: 20px;
+}
+
+.result {
+    font-size: xx-large;
+    text-transform: uppercase;
+}
+
+.amount::after {
+    content: " Ар";
+}
+
+.game-name {
+    font-size: medium;
+}
+
+.history-item-WIN {
+    display: flex;
+    background: #000000;
+    background: linear-gradient(54deg,rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.69) 1%, rgba(0, 0, 0, 0.6) 69%, rgba(158, 255, 154, 0.41) 100%);
+
+    width: 100%;
+
+    padding: 10px;
+    border: 2px solid rgba(158, 255, 154, 0.685);
+    border-radius: 15px;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item-LOSE {
+    display: flex;
+    background: #000000;
+    background: linear-gradient(54deg,rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.69) 1%, rgba(0, 0, 0, 0.6) 55%, rgba(255, 154, 154, 0.41) 100%);
+
+    width: 100%;
+
+    padding: 10px;
+    border: 2px solid rgba(255, 119, 119, 0.685);
+    border-radius: 15px;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item-LOSE .amount {
+    color: rgba(255, 119, 119, 1);
+}
+
+.history-item-WIN .amount {
+    color: rgba(158, 255, 154, 1);
+}
+
+@media (max-width: 630px) {
+    .data {
+        flex-direction: row;
+        gap: 30px;
+    }
+
+    .amount {
+        margin: 0; 
+        text-align: start;
+    }
+
+    .result {
+        display: none;
+    }
+    
+    .history-item-LOSE {
+        background: rgba(0, 0, 0, 0.479);
+        justify-content: center;
+    }
+
+    .history-item-WIN {
+        background: rgba(0, 0, 0, 0.479);
+        justify-content: center;
+    }
+
+    .game-name {
+        margin: 0;
+        text-align: end;
+    }
+}
