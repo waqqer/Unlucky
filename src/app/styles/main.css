@@ -1,38 +1,15 @@
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 html {
     overflow-y: scroll;
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--Background-color);
-    font-family: var(--Font);
-    color: var(--Text-color);
-
-    display: flex;
-    flex-direction: column;
-
-    min-height: 100vh;
-    line-height: 1.5;
-}
-
-main {
-    align-items: center;
-    justify-content: center;
-}
-
-.title {
-    color: var(--Title-text-color);
-}
-
-.desc {
-    color: var(--Desc-text-color);
-}
-
-.container {
-    max-width: 100vw;
-    margin: 40px auto 10px;
-    padding: 0 24px;
+    font-family: var(--Font), sans-serif;
+    background-color: var(--Bg-color);
 }
