@@ -144,6 +144,6 @@
     }
 
     .icon {
-        font-size: 10vh;
+        display: none;
     }
 }
