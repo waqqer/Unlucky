@@ -1,4 +1,5 @@
 import { Link } from "react-router"
+import { memo } from "react"
 import styles from "./LinkButton.module.css"
 
 const LinkButton = (props) => {
@@ -22,4 +23,4 @@ const LinkButton = (props) => {
     )
 }
 
-export default LinkButton
+export default memo(LinkButton)

@@ -1,5 +1,6 @@
 import LinkButton from "@/components/LinkButton"
-import ModalExitButton from "../../components/ModalExitButton"
+import ModalExitButton from "@/components/ModalExitButton"
+import { memo } from "react"
 import styles from "./AboutUsModal.module.css"
 
 const AboutUsModal = (props) => {
@@ -38,4 +39,4 @@ const AboutUsModal = (props) => {
     )
 }
 
-export default AboutUsModal
+export default memo(AboutUsModal)

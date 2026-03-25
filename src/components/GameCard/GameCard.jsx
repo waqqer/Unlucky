@@ -1,4 +1,5 @@
 import LinkButton from "@/components/LinkButton"
+import { memo } from "react"
 import styles from "./GameCard.module.css"
 
 const GameCard = (props) => {
@@ -31,4 +32,4 @@ const GameCard = (props) => {
     )
 }
 
-export default GameCard
+export default memo(GameCard)

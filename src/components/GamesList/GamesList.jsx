@@ -1,6 +1,7 @@
 import GameCard from "../GameCard"
 import SlotsImage from "@/shared/images/slots.png"
 import MinerImage from "@/shared/images/miner.png"
+import { memo } from "react"
 import styles from "./GamesList.module.css"
 
 const GamesList = () => {
@@ -29,4 +30,4 @@ const GamesList = () => {
     )
 }
 
-export default GamesList
+export default memo(GamesList)

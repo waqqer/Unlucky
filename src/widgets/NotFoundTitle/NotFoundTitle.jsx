@@ -1,8 +1,9 @@
 import Title from "@/components/Title"
 import LinkButton from "@/components/LinkButton"
 import UserProfile from "@/widgets/UserProfile"
+import Container from "@/components/Container"
+import { memo } from "react"
 import styles from "./NotFoundTitle.module.css"
-import Container from "../../components/Container"
 
 const NotFoundTitle = () => {
     return (
@@ -25,4 +26,4 @@ const NotFoundTitle = () => {
     )
 }
 
-export default NotFoundTitle
+export default memo(NotFoundTitle)

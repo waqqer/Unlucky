@@ -1,4 +1,5 @@
 import NotFoundTitle from "@/widgets/NotFoundTitle"
+import { memo } from "react"
 
 const NotFoundPage = () => {
 
@@ -7,4 +8,4 @@ const NotFoundPage = () => {
     )
 }
 
-export default NotFoundPage
+export default memo(NotFoundPage)

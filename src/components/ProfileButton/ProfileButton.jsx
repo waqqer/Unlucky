@@ -1,4 +1,5 @@
 import { Link } from "react-router"
+import { memo } from "react"
 import styles from "./ProfileButton.module.css"
 
 const ProfileButton = (props) => {
@@ -13,4 +14,4 @@ const ProfileButton = (props) => {
     )
 }
 
-export default ProfileButton
+export default memo(ProfileButton)

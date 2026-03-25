@@ -1,6 +1,7 @@
 import Title from "@/components/Title"
-import styles from "./MainTitle.module.css"
+import { memo } from "react"
 import Container from "@/components/Container"
+import styles from "./MainTitle.module.css"
 
 const MainTitle = () => {
     return (
@@ -18,4 +19,4 @@ const MainTitle = () => {
     )
 }
 
-export default MainTitle
+export default memo(MainTitle)

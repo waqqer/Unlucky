@@ -1,6 +1,7 @@
+import { memo } from "react"
 import styles from "./Button.module.css"
 
-const Button = (props) => {
+const Button =(props) => {
     const {
         className,
         onClick,
@@ -21,4 +22,4 @@ const Button = (props) => {
     )
 }
 
-export default Button
+export default memo(Button)

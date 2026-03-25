@@ -1,5 +1,6 @@
 import { useContext } from "react"
-import { AccountContext } from "../../context/AccountContext"
+import { AccountContext } from "@/context/AccountContext"
+import { memo } from "react"
 import styles from "./UserInfo.module.css"
 
 const UserInfo = () => {

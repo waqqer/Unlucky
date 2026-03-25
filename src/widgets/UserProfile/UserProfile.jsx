@@ -4,6 +4,7 @@ import Modal from 'react-modal'
 import { useCallback, useState } from "react"
 import AboutUsModal from "../AboutUsModal"
 import ProfileModal from "../ProfileModal"
+import { memo } from "react"
 import styles from "./UserProfile.module.css"
 
 const UserProfile = () => {
@@ -52,4 +53,4 @@ const UserProfile = () => {
     )
 }
 
-export default UserProfile
+export default memo(UserProfile)

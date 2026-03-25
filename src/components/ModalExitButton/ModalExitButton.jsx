@@ -1,7 +1,8 @@
 import Button from "../Button"
+import { memo } from "react"
 import styles from "./ModalExitButton.module.css"
 
-const ModalExitButton = (props) => {
+const ModalExitButton = memo((props) => {
     const {
         modal
     } = props
@@ -11,6 +12,6 @@ const ModalExitButton = (props) => {
             <i className="fa-regular fa-circle-xmark"></i>
         </Button>
     )
-}
+})
 
 export default ModalExitButton

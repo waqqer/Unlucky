@@ -1,4 +1,4 @@
-import HistoryItem from "../../components/HistoryItem"
+import HistoryItem from "@/components/HistoryItem"
 import styles from "./HistorySection.module.css"
 
 const HistorySection = (props) => {

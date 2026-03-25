@@ -3,7 +3,7 @@ import styles from "./BalanceSection.module.css"
 
 const BalanceSection = (props) => {
     const {
-        balance=0,
+        balance = 0,
         className
     } = props
 

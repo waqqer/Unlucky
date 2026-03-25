@@ -2,7 +2,8 @@ import ProfileInfo from "@/components/ProfileInfo"
 import ModalExitButton from "@/components/ModalExitButton"
 import BalanceSection from "../BalanceSection"
 import HistorySection from "../HistorySection"
-
+import { memo } from "react"
+ 
 const ProfileModal = (props) => {
     const {
         close
@@ -20,4 +21,4 @@ const ProfileModal = (props) => {
     )
 }
 
-export default ProfileModal
+export default memo(ProfileModal)
