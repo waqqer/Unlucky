@@ -18,7 +18,7 @@ const ProfileInfo = (props) => {
         <div className={`${styles["profile-section"]} ${className}`}>
             <h1 className={styles.nickname}>{user?.username ?? "Username"}</h1>
             {isLoaded === true ?
-                <p className={styles.uuid}>{account.id}</p> :
+                <p className={styles.uuid}>{`ID: ${account.id}`}</p> :
                 <Placeholder />
             }
         </div>

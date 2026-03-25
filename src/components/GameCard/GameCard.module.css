@@ -77,12 +77,12 @@
     position: absolute;
     text-align: center;
     
-    top: 20%;
+    top: 15%;
     left: 0;
     right: 0;
 
     color: #3b82f6;
-    font-size: 5rem;
+    font-size: clamp(2em, 4em, 5em);
     opacity: 0;
 
     transition-duration: 0s;
