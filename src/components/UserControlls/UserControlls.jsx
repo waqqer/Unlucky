@@ -10,14 +10,14 @@ const UserControlls = (props) => {
     } = props
 
     const {
-        spm
+        spm,
+        account
     } = useContext(AccountContext)
 
-    const idAdmin = true
     return (
         <div className={`${className}`}>
             <ProfileButton text="Профиль" onClick={openProfile} />
-            {idAdmin === true && <ProfileButton text="Админ. панель" link="/admin" /> }
+            {account === "ADMIN" && <ProfileButton text="Админ. панель" link="/admin" /> }
             <ProfileButton text="О нас" onClick={openAbout} />
         </div>
     )
