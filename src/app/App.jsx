@@ -20,7 +20,7 @@ function App() {
         <Route path='/' element={<MainPage />} />
         <Route path='*' element={<NotFoundPage />} />
 
-        {account.role === "ADMIN" && <Route path='/admin' element={ <AdminPage /> } />}
+        {(account?.role ?? "USER") === "ADMIN" && <Route path='/admin' element={ <AdminPage /> } />}
       </Routes>
     </HashRouter>
   )

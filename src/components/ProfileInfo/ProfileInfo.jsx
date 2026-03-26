@@ -9,6 +9,7 @@ const ProfileInfo = (props) => {
     } = props
 
     const {
+        head,
         user,
         isLoaded,
         account
@@ -16,11 +17,17 @@ const ProfileInfo = (props) => {
 
     return (
         <div className={`${styles["profile-section"]} ${className}`}>
-            <h1 className={styles.nickname}>{user?.username ?? "Username"}</h1>
-            {isLoaded === true ?
-                <p className={styles.uuid}>{`ID: ${account.id}`}</p> :
-                <Placeholder />
-            }
+            <img src={head}
+                width={64}
+                height={64}
+            />
+            <div>
+                <h1 className={styles.nickname}>{user?.username ?? "Username"}</h1>
+                {isLoaded === true ?
+                    <p className={styles.uuid}>{`ID: ${account.id}`}</p> :
+                    <Placeholder />
+                }
+            </div>
         </div>
     )
 }

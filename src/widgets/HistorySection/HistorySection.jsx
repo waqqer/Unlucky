@@ -1,7 +1,9 @@
 import HistoryItem from "@/components/HistoryItem"
 import Button from "@/components/Button"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useContext } from "react"
 import Modal from 'react-modal'
+import HistoryApi from "@/api/history"
+import { AccountContext } from "@/context/AccountContext"
 import styles from "./HistorySection.module.css"
 
 const HistorySection = (props) => {
@@ -9,17 +11,26 @@ const HistorySection = (props) => {
         className
     } = props
 
+    const {
+        user
+    } = useContext(AccountContext)
+
     const [historyModal, setHistotyModal] = useState(false);
+    const [history, setHistory] = useState([])
 
     const openHistory = useCallback(() => setHistotyModal(true))
     const closeHistory = useCallback(() => setHistotyModal(false))
 
-    const history_list = [{ id: 1, result: "WIN", amount: 12, game_name: "SLOTS" },
-    { id: 2, result: "LOSE", amount: -43, game_name: "MINER" },
-    { id: 3, result: "WIN", amount: 31, game_name: "MINER" },
-    { id: 4, result: "WIN", amount: 2, game_name: "ROCKET" }]
+    useEffect(() => {
+        HistoryApi.getByName(user?.username ?? "")
+                  .then(data => setHistory(data))
+                  .catch(_ => {
+                        setHistory([])
+                        console.warn("Failed to load user history")
+                  })
+    }, [])
 
-    const rendered_list = history_list.slice(0, 5)
+    const rendered_list = history.slice(0, 5)
 
     return (
         <>

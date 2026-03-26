@@ -1,16 +1,21 @@
 .profile-section {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 
     width: 100%;
 
-    align-items: start;
+    align-items: center;
     justify-content: flex-start;
 
     margin: 10px 0 15px 0;
-
     padding-bottom: 20px;
+
     border-bottom: 1px solid rgba(105, 105, 105, 0.253);
+    gap: 10px;
+}
+
+.profile-section img {
+    border-radius: 5px;
 }
 
 .nickname {
