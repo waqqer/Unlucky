@@ -1,0 +1,65 @@
+.admin-box {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+
+    margin-block: 4%;
+}
+
+.admin-panel {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    width: 90vw;
+    height: 50vh;
+
+    margin-inline: 3%;
+
+    gap: 10px;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-around;
+    align-items: center;
+
+    min-width: 100%;
+
+    margin-top: 2%;
+}
+
+.desc {
+    text-align: end;
+    justify-content: end;
+    align-items: center;
+}
+
+.desc h1, .desc h2, .desc h3, .desc h4, .desc h5, .desc h6 {
+    color: white;
+    font-size: 3.5rem;
+}
+
+.desc p {
+    color: aliceblue;
+    opacity: 0.75;
+}
+
+@media (max-width: 630px) {
+    .container {
+        flex-direction: column;
+
+        width: 100%;
+
+        gap: 10px;
+    }
+
+    .desc {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+}

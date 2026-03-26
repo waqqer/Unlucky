@@ -1,4 +1,5 @@
 import UserProfile from "@/widgets/UserProfile"
+import AdminPanel from "@/widgets/AdminPanel"
 
 const AdminPage = () => {
     return (
@@ -8,7 +9,7 @@ const AdminPage = () => {
             </header>
 
             <main>
-                <h1>Hello</h1>
+                <AdminPanel />
             </main>
         </>
     )

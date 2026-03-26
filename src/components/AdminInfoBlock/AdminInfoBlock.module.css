@@ -1,0 +1,28 @@
+.info {
+    display: flex;
+
+    padding: 1.5%;
+    width: 30%;
+    background-color: rgba(75, 47, 139, 0.432);
+
+    border: 1px dashed rgb(127, 92, 207);
+    border-radius: 25px;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info i {
+    font-size: 7.5rem;
+    color: rgb(215, 180, 255);
+}
+
+@media (max-width: 630px) {
+    .info {
+        width: 98%;
+
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+}

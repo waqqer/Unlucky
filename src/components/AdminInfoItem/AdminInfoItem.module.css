@@ -1,0 +1,23 @@
+.admin-item {
+    display: flex;
+    flex-direction: column;
+
+    background-color: rgba(51, 36, 119, 0.329);
+
+    width: 100%;
+
+    border-radius: 25px;
+    border: 1px dashed rgb(92, 43, 226);
+
+    padding: 1%;
+
+    justify-items: start;
+    align-items: center;
+    text-align: center;
+
+    transition: all 0.2s ease;
+}
+
+.admin-item:hover {
+    background-color: rgba(58, 36, 119, 0.61);
+}
