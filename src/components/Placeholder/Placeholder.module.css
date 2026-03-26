@@ -12,7 +12,7 @@
 }
 
 @keyframes pulse {
-    0% {
+    from {
         opacity: 0.5;
         background-color: rgb(126, 144, 160);
     }
@@ -22,7 +22,7 @@
         background-color: rgb(209, 209, 209);
     }
 
-    100% {
+    to {
         opacity: 0.5;
         background-color: rgb(126, 144, 160);
     }

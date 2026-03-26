@@ -8,7 +8,7 @@ import "./styles"
 Modal.setAppElement("#root")
 
 function App() {
-  const isAdmin = false
+  const isAdmin = true
   return (
     <AccountProvider>
       <HashRouter>

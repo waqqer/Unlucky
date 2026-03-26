@@ -1,8 +1,16 @@
+import UserProfile from "@/widgets/UserProfile"
+
 const AdminPage = () => {
     return (
-        <h1>
-            Admin page
-        </h1>
+        <>
+            <header>
+                <UserProfile />
+            </header>
+
+            <main>
+                <h1>Hello</h1>
+            </main>
+        </>
     )
 }
 
