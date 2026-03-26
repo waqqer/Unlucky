@@ -18,6 +18,9 @@ const HistoryApi = {
     },
 
     getByName: async (username, limit) => {
+        if(username === null || username === undefined)
+            return new null
+        
         let l = 20
         if(typeof limit === "number" && limit > 1) 
             l = limit

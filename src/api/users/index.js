@@ -18,6 +18,9 @@ const UserApi = {
     },
 
     getByName: async (username) => {
+        if(username === null || username === undefined)
+            return new null
+        
         return fetch(URL + `/${username}`)
             .then(data => data.json())
     },

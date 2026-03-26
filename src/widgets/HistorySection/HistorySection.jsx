@@ -22,7 +22,7 @@ const HistorySection = (props) => {
     const closeHistory = useCallback(() => setHistotyModal(false))
 
     useEffect(() => {
-        HistoryApi.getByName(user?.username ?? "")
+        HistoryApi.getByName(user?.username)
                   .then(data => setHistory(data))
                   .catch(_ => {
                         setHistory([])
