@@ -2,11 +2,12 @@ import styles from "./AdminInfoBlock.module.css"
 
 const AdminInfoBlock = (props) => {
     const {
-        children
+        children,
+        className
     } = props
 
     return (
-        <div className={styles.info}>
+        <div className={`${styles.info} ${className}`}>
             {children}
         </div>
     )

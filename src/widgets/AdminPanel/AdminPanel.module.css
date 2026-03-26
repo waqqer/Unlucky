@@ -1,9 +1,9 @@
 .admin-box {
-    display: flex;
     justify-items: center;
     align-items: center;
 
     margin-block: 1%;
+    margin-top: 3%;
 }
 
 .admin-panel {
@@ -40,7 +40,7 @@
 
 .desc h1, .desc h2, .desc h3, .desc h4, .desc h5, .desc h6 {
     color: white;
-    font-size: 3.5rem;
+    font-size: 200%;
 }
 
 .desc p {
@@ -48,13 +48,37 @@
     opacity: 0.75;
 }
 
+.home-btn {
+    position: absolute;
+    bottom: 5%;
+    width: 80%;
+}
+
+.home-btn-pc {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+
+    background-color: rgb(121, 148, 172);
+    opacity: 0.4;
+}
+
+.home-btn-pc:hover {
+    background-color: rgb(141, 167, 190);
+}
+
 @media (max-width: 630px) {
+    .admin-panel {
+        margin-top: 10%;
+    }
+
     .container {
         flex-direction: column;
 
         width: 100%;
-
         gap: 10px;
+
+        margin-top: 4%;
     }
 
     .desc {

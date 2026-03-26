@@ -18,6 +18,10 @@ body {
     background-color: var(--Bg-color);
 }
 
+.pc-hide {
+    display: none;
+}
+
 @media (max-width: 630px) {
     html {
         overflow-y: scroll;
@@ -25,5 +29,9 @@ body {
 
     .mobile-hide {
         display: none;
+    }
+
+    .pc-hide {
+        display: initial;
     }
 }
