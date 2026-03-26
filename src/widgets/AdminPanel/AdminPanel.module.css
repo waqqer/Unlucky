@@ -3,7 +3,7 @@
     justify-items: center;
     align-items: center;
 
-    margin-block: 4%;
+    margin-block: 1%;
 }
 
 .admin-panel {
@@ -12,7 +12,7 @@
 
     align-items: center;
 
-    width: 90vw;
+    width: 80vw;
     height: 50vh;
 
     margin-inline: 3%;
