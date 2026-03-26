@@ -19,7 +19,6 @@ const GameCard = (props) => {
 
     return (
         <div style={bg_style} className={styles["game-card"]}>
-            <i className={`${styles.icon} fa-solid fa-play`}></i>
             <div className={styles.details}>
                 <h3 className={styles.title}>{title}</h3>
 

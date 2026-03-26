@@ -13,7 +13,7 @@ const UserControlls = (props) => {
         spm
     } = useContext(AccountContext)
 
-    const idAdmin = true
+    const idAdmin = false
     return (
         <div className={`${className}`}>
             <ProfileButton text="Профиль" onClick={openProfile} />

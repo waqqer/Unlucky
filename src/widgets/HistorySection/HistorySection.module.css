@@ -1,6 +1,35 @@
 .title {
     font-size: medium;
-    text-align: center;
+    text-align: left;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: space-between;
+
+    width: 90%;
+}
+
+.all-btn {
+    color: lightgreen;
+    opacity: 0.85;
+    text-decoration: underline dashed;
+
+    padding: 1px;
+    background: none;
+
+    transition: color 0.2s ease;
+}
+
+.all-btn:hover {
+    color: green;
+    opacity: 0.7;
+
+    background: none;
+    transform: none;
 }
 
 .history-section {
