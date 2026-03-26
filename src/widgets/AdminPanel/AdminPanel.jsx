@@ -16,7 +16,7 @@ const AdminPanel = () => {
 
                             <div className={styles.desc}>
                                 <h3>100</h3>
-                                <p>Клиентов онлайн</p>
+                                <p>Игроков онлайн</p>
                             </div>
                         </AdminInfoBlock>
 
@@ -25,16 +25,16 @@ const AdminPanel = () => {
 
                             <div className={styles.desc}>
                                 <h3>100</h3>
-                                <p>Уникальных посетителей</p>
+                                <p>Всего игроков</p>
                             </div>
                         </AdminInfoBlock>
 
-                        <AdminInfoBlock>
+                        <AdminInfoBlock className="mobile-hide"> 
                             <i className="fa-solid fa-satellite mobile-hide"></i>
 
                             <div className={styles.desc}>
                                 <h3>100</h3>
-                                <p>Макс. кол-во посетителей одновременно</p>
+                                <p>Макс. игроков</p>
                             </div>
                         </AdminInfoBlock>
                     </div>
