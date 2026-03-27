@@ -7,7 +7,12 @@ import ProfileModal from "../ProfileModal"
 import { memo } from "react"
 import styles from "./UserProfile.module.css"
 
-const UserProfile = () => {
+const UserProfile = (props) => {
+    const {
+        className
+    } = props
+
+
     const [aboutUsModal, setAboutUsModal] = useState(false);
     const [profileModal, setProfileModal] = useState(false);
 
@@ -19,7 +24,7 @@ const UserProfile = () => {
 
     return (
         <>
-            <nav className={styles["profile"]}>
+            <nav className={`${styles["profile"]} ${className}`}>
                 <UserInfo />
                 <UserControlls
                     className={styles["user-controlls"]}

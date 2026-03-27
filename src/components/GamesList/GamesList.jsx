@@ -21,10 +21,10 @@ const GamesList = () => {
                 link="/miner"
             />
             <GameCard 
-                title="Майнер" 
-                desc="От твоей удачи зависит кирка, которая поможет добраться до лута!" 
+                title="Ракеты" 
+                desc="" 
                 image={MinerImage} 
-                link="/miner"
+                link="/rocket"
             />
         </div>
     )
