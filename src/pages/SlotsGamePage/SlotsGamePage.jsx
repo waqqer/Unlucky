@@ -1,6 +1,5 @@
 import UserProfile from "@/widgets/UserProfile"
 import ProfileButton from "@/components/ProfileButton"
-import SlotsGamePanel from "@/widgets/SlotsGamePanel"
 
 const SlotsGamePage = () => {
 
