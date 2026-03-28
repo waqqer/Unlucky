@@ -8,18 +8,19 @@ const HEADERS = {
 
 const HistoryApi = {
 
-    getAll: async (limit) => {
+    getAll: async (limit, game) => {
         let l = 20
         if(typeof limit === "number" && limit > 1) 
             l = limit
         
-        return fetch(URL + `?limit=${l}`)
+        return fetch(URL + `?limit=${l}&game=${game}`)
             .then(data => data.json())
     },
 
     getByName: async (username, limit) => {
-        if(username === null || username === undefined)
-            return new null
+        const u = username.trim()
+        if(u === null || u === undefined || usurname === "")
+            return null
         
         let l = 20
         if(typeof limit === "number" && limit > 1) 

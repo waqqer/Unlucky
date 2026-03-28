@@ -51,7 +51,7 @@ const HistorySection = (props) => {
             <Modal
                 isOpen={historyModal}
                 onRequestClose={closeHistory}
-                contentLabel="О нас"
+                contentLabel="Полная история игр"
                 className="modal"
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}

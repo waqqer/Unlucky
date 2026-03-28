@@ -9,7 +9,8 @@ import styles from "./UserProfile.module.css"
 
 const UserProfile = (props) => {
     const {
-        className
+        className,
+        children
     } = props
 
 
@@ -30,7 +31,7 @@ const UserProfile = (props) => {
                     className={styles["user-controlls"]}
                     openAbout={openAboutUs}
                     openProfile={openProfile}
-                />
+                >{children}</UserControlls>
             </nav>
 
             <Modal

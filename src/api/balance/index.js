@@ -9,8 +9,10 @@ const HEADERS = {
 const BalanceApi = {
 
     getByName: async (username) => {
-        if(username === null || username === undefined)
-            return new null
+        const u = username.trim()
+        if(u === null || u === undefined || usurname === "")
+            return null
+        
         return fetch(URL + `/${username}`)
             .then(data => data.json())
     },

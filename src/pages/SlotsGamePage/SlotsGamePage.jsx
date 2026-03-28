@@ -1,15 +1,18 @@
 import UserProfile from "@/widgets/UserProfile"
+import ProfileButton from "@/components/ProfileButton"
+import SlotsGamePanel from "@/widgets/SlotsGamePanel"
 
 const SlotsGamePage = () => {
 
     return (
         <>
             <header>
-                <UserProfile />
+                <UserProfile>
+                    <ProfileButton text="На главную" link="/"></ProfileButton>
+                </UserProfile>
             </header>
 
             <main>
-
             </main>
         </>
     )
