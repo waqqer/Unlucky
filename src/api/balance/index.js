@@ -9,12 +9,11 @@ const HEADERS = {
 const BalanceApi = {
 
     getByName: async (username) => {
-        const u = username.trim()
-        if(u === null || u === undefined || usurname === "")
+        if (!username || username.trim() === "")
             return null
-        
-        return fetch(URL + `/${username}`)
-            .then(data => data.json())
+
+        return fetch(URL + `/${username.trim()}`)
+            .then(res => res.json())
     },
 
     change: async (username, amount) => {
@@ -26,11 +25,11 @@ const BalanceApi = {
             balance: value
         }
 
-        return fetch(URL + `/${username}`, {
+        return fetch(URL + `/${username.trim()}`, {
             method: "PATCH",
             headers: HEADERS,
             body: JSON.stringify(data)
-        }).then(dat => dat.json())
+        }).then(res => res.json())
     }
 }
 
