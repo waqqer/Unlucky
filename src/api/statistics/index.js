@@ -7,13 +7,14 @@ const HEADERS = {
 }
 
 const StatsApi = {
-
+    
     getByName: async (username) => {
-        if (!username || username.trim() === "")
+        const u = username.trim()
+        if(u === null || u === undefined || usurname === "")
             return null
-
-        return fetch(URL + `/${username.trim()}`)
-            .then(res => res.json())
+        
+        return fetch(URL + `/${username}`)
+            .then(data => data.json())
     },
 
     change: async (username, wins, losses, games) => {
@@ -21,13 +22,13 @@ const StatsApi = {
         let l = 0
         let g = 1
 
-        if (typeof wins === "number" && wins > 0)
+        if(typeof wins === "number" && wins > 0)
             w = wins
 
-        if (typeof losses === "number" && losses > 0)
+        if(typeof wins === "number" && losses > 0)
             l = losses
 
-        if (typeof games === "number" && games > 0)
+        if(typeof wins === "number" && games > 0)
             g = games
 
         const data = {
@@ -36,11 +37,11 @@ const StatsApi = {
             games: g
         }
 
-        return fetch(URL + `/${username.trim()}`, {
+        return fetch(URL + `/${username}`, {
             method: "PUT",
             headers: HEADERS,
             body: JSON.stringify(data)
-        }).then(res => res.json())
+        }).then(dat => dat.json())
     }
 }
 

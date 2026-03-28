@@ -10,37 +10,34 @@ const HistoryApi = {
 
     getAll: async (limit, game) => {
         let l = 20
-        if (typeof limit === "number" && limit > 1)
+        if(typeof limit === "number" && limit > 1) 
             l = limit
-
-        let url = URL + `?limit=${l}`
-        if (game)
-            url += `&game=${game}`
-
-        return fetch(url)
-            .then(res => res.json())
+        
+        return fetch(URL + `?limit=${l}&game=${game}`)
+            .then(data => data.json())
     },
 
     getByName: async (username, limit) => {
-        if (!username || username.trim() === "")
+        const u = username.trim()
+        if(u === null || u === undefined || usurname === "")
             return null
-
+        
         let l = 20
-        if (typeof limit === "number" && limit > 1)
+        if(typeof limit === "number" && limit > 1) 
             l = limit
 
-        return fetch(URL + `/${username.trim()}?limit=${l}`)
-            .then(res => res.json())
+        return fetch(URL + `/${username}?limit=${l}`)
+            .then(data => data.json())
     },
 
     create: async (username, game_name, result, amount) => {
         let res = "WIN"
         let a = 0
 
-        if (result === "WIN" || result === "LOSE")
+        if(result === "WIN" || result === "LOSE")
             res = result
 
-        if (typeof amount === "number")
+        if(typeof a === "number")
             a = amount
 
         const data = {
@@ -49,11 +46,11 @@ const HistoryApi = {
             amount: a
         }
 
-        return fetch(URL + `/${username.trim()}`, {
+        return fetch(URL + `/${username}`, {
             method: "POST",
             headers: HEADERS,
             body: JSON.stringify(data)
-        }).then(res => res.json())
+        }).then(dat => dat.json())
     }
 }
 
