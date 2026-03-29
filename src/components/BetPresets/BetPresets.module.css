@@ -1,0 +1,50 @@
+.bet-presets {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.preset-btn {
+    flex: 1;
+    min-width: 60px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--Font), sans-serif;
+    color: white;
+    background: rgba(30, 41, 59, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.preset-btn:hover:not(:disabled) {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: rgba(100, 150, 255, 0.5);
+    transform: scale(1.02);
+}
+
+.preset-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.preset-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 630px) {
+    .bet-presets {
+        justify-content: center;
+    }
+
+    .preset-btn {
+        flex: 0 1 auto;
+        min-width: 50px;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}

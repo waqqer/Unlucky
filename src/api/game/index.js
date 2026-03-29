@@ -8,11 +8,24 @@ const HEADERS = {
 
 export const SlotsApi = {
     spin: async (username, bet) => {
-        return await fetch(BASE_URL + "/slots", {
+        const requestBody = { 
+            name: username, 
+            bet: typeof bet === "number" ? bet : parseFloat(bet) || 0 
+        }
+        
+        const response = await fetch(BASE_URL + "/slots", {
             method: 'POST',
             headers: HEADERS,
-            body: JSON.stringify({ name: username, bet: bet })
-        }).then(res => res.json())
+            body: JSON.stringify(requestBody)
+        })
+        
+        if (!response.ok) {
+            const errorText = await response.text()
+            console.error("SlotsApi.spin error:", response.status, errorText)
+            throw new Error(`Slots API error: ${response.status} ${errorText}`)
+        }
+        
+        return response.json()
     }
 }
 

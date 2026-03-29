@@ -17,6 +17,9 @@ const BalanceApi = {
     },
 
     change: async (username, amount) => {
+        if (!username || username.trim() === "")
+            return null
+
         let value = 0
         if (typeof amount === "number")
             value = amount

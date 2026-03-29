@@ -1,0 +1,109 @@
+.history-item-WIN,
+.history-item-LOSE {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+
+    padding: 12px 15px;
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(30, 41, 59, 0.2);
+    backdrop-filter: saturate(150%);
+}
+
+.history-item-WIN {
+    border-color: rgba(158, 255, 154, 0.4);
+}
+
+.history-item-LOSE {
+    border-color: rgba(255, 119, 119, 0.4);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    min-width: 0;
+}
+
+.username {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-name {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.result {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: end;
+}
+
+.result-text {
+    font-size: 12px;
+    text-transform: uppercase;
+    margin: 0 0 4px 0;
+}
+
+.amount {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.amount-WIN {
+    color: rgba(158, 255, 154, 1);
+}
+
+.amount-LOSE {
+    color: rgba(255, 119, 119, 1);
+}
+
+@media (max-width: 630px) {
+    .history-item-WIN,
+    .history-item-LOSE {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .username {
+        font-size: 13px;
+    }
+
+    .game-name {
+        font-size: 11px;
+    }
+
+    .result-text {
+        font-size: 10px;
+    }
+
+    .amount {
+        font-size: 13px;
+    }
+}
