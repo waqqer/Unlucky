@@ -41,8 +41,8 @@ const SlotReel = (props) => {
         const mouseX = e.clientX - centerX
         const mouseY = e.clientY - centerY
         
-        const rotateX = (mouseY / rect.height) * -45
-        const rotateY = (mouseX / rect.width) * 45
+        const rotateX = (mouseY / rect.height) * -60
+        const rotateY = (mouseX / rect.width) * 60
         
         setTiltStyle({
             transform: `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.1)`,
