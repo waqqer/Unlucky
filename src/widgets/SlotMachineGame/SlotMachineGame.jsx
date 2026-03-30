@@ -8,6 +8,8 @@ import BetInput from "@/components/BetInput"
 import BetPresets from "@/components/BetPresets"
 import Button from "@/components/Button"
 import VictoryScreen from "@/widgets/VictoryScreen"
+import AutoReroll from "@/components/AutoReroll"
+import slotSound from "@/shared/audio/slot.mp3"
 import styles from "./SlotMachineGame.module.css"
 
 const SYMBOLS = ["🍒", "🍋", "🍇", "🍉", "🔔", "⭐", "💎", "7️⃣"]
@@ -22,15 +24,27 @@ const SlotMachineGame = (props) => {
     const { account, updateUser } = useContext(AccountContext)
     const isMounted = useRef(true)
     const spinIntervalRef = useRef(null)
+    const autoRerollTimeoutRef = useRef(null)
+    const audioRef = useRef(null)
+    const autoRerollEnabledRef = useRef(false)
 
     const [reels, setReels] = useState(["🍒", "🍒", "🍒"])
-    const [bet, setBet] = useState(10)
+    const [bet, setBet] = useState(8)
     const [isSpinning, setIsSpinning] = useState(false)
+    const [isRequestPending, setIsRequestPending] = useState(false)
     const [winAmount, setWinAmount] = useState(null)
     const [showVictory, setShowVictory] = useState(false)
-    const [enable, setEnable] = useState(true)
 
-    // Очистка интервала при размонтировании
+    // Авто-реролл состояния
+    const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
+    const [consecutiveLosses, setConsecutiveLosses] = useState(0)
+
+    // Синхронизация ref с состоянием
+    useEffect(() => {
+        autoRerollEnabledRef.current = autoRerollEnabled
+    }, [autoRerollEnabled])
+
+    // Очистка всех интервалов и таймаутов при размонтировании
     useEffect(() => {
         isMounted.current = true
         return () => {
@@ -38,29 +52,50 @@ const SlotMachineGame = (props) => {
             if (spinIntervalRef.current) {
                 clearInterval(spinIntervalRef.current)
             }
+            if (autoRerollTimeoutRef.current) {
+                clearTimeout(autoRerollTimeoutRef.current)
+            }
         }
+    }, [])
+
+    // Обработчик изменения настроек авто-рерола
+    const handleAutoRerollToggle = useCallback(() => {
+        setAutoRerollEnabled(prev => {
+            const newValue = !prev
+            if (!newValue) {
+                // При выключении очищаем таймаут
+                if (autoRerollTimeoutRef.current) {
+                    clearTimeout(autoRerollTimeoutRef.current)
+                    autoRerollTimeoutRef.current = null
+                }
+            }
+            return newValue
+        })
+        setConsecutiveLosses(0)
     }, [])
 
     const getRandomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
 
     const spin = useCallback(async () => {
-        if (isSpinning || !account?.name) {
-            console.warn("Spin blocked:", { isSpinning, hasUserName: !!account?.name })
+        // Блокировка во время запроса или анимации
+        if (isRequestPending || isSpinning || !account?.name) {
+            console.warn("Spin blocked:", { isRequestPending, isSpinning, hasUserName: !!account?.name })
             return
         }
 
         const currentBalance = parseFloat(account.balance || 0)
         if (bet <= 0 || bet > currentBalance) {
             console.warn("Недостаточно средств или неверная ставка", { bet, currentBalance })
+            setAutoRerollEnabled(false)
             return
         }
 
         setWinAmount(null)
-        setEnable(false)
+        setIsRequestPending(true)
 
         try {
+            // Сначала запрос к серверу
             const result = await SlotsApi.spin(account.name, bet)
-            setIsSpinning(true)
             const win = result.winAmount || 0
             const newBalance = result.newBalance
             const combination = result.combination || ["🍒", "🍒", "🍒"]
@@ -71,15 +106,25 @@ const SlotMachineGame = (props) => {
                 updateUser({ balance: newBalance.toString() })
             }
 
+            // Теперь запускаем анимацию
+            setIsSpinning(true)
+
+            // Запускаем звук
+            if (audioRef.current) {
+                audioRef.current.currentTime = 0
+                audioRef.current.loop = true
+                audioRef.current.play().catch(err => console.warn("Audio play failed:", err))
+            }
+
             let spinIndex = 0
             const maxSpins = 20
-            
+
             spinIntervalRef.current = setInterval(() => {
                 if (!isMounted.current) {
                     clearInterval(spinIntervalRef.current)
                     return
                 }
-                
+
                 setReels([getRandomSymbol(), getRandomSymbol(), getRandomSymbol()])
                 spinIndex++
 
@@ -87,22 +132,31 @@ const SlotMachineGame = (props) => {
                     clearInterval(spinIntervalRef.current)
                     setReels(combination)
                     setWinAmount(win)
+                    setIsSpinning(false)
+                    setIsRequestPending(false)
 
-                    // История создаётся на бэкенде, статистику обновляем
-                    if (win > 0) {
+                    // Останавливаем звук
+                    if (audioRef.current) {
+                        audioRef.current.pause()
+                        audioRef.current.currentTime = 0
+                    }
+
+                    // Обработка результата
+                    const isWin = win > 0
+
+                    if (isWin) {
                         StatsApi.change(account.name, 1, 0, 1)
-                        // Показываем экран победы
                         setShowVictory(true)
-                        // Уведомляем о необходимости обновить историю
-                        if (onHistoryUpdate) {
-                            onHistoryUpdate()
-                        }
+                        setConsecutiveLosses(0)
                     } else {
                         StatsApi.change(account.name, 0, 1, 1)
-                        // Уведомляем о необходимости обновить историю
-                        if (onHistoryUpdate) {
-                            onHistoryUpdate()
-                        }
+                        const newConsecutiveLosses = consecutiveLosses + 1
+                        setConsecutiveLosses(newConsecutiveLosses)
+                    }
+
+                    // Уведомляем о необходимости обновить историю
+                    if (onHistoryUpdate) {
+                        onHistoryUpdate()
                     }
 
                     if (onGameComplete) {
@@ -114,17 +168,30 @@ const SlotMachineGame = (props) => {
                         })
                     }
 
-                    setIsSpinning(false)
-                    setEnable(true)
+                    // Авто-реролл: следующая игра через небольшую задержку
+                    if (autoRerollEnabledRef.current && isMounted.current) {
+                        const nextBalance = parseFloat(newBalance || account.balance || 0)
+                        if (nextBalance >= bet) {
+                            autoRerollTimeoutRef.current = setTimeout(() => {
+                                // Проверяем через ref, что авто-реролл всё ещё включён
+                                if (isMounted.current && autoRerollEnabledRef.current) {
+                                    spin()
+                                }
+                            }, 500)
+                        } else {
+                            setAutoRerollEnabled(false)
+                        }
+                    }
                 }
             }, 100)
 
         } catch (error) {
             console.error("Ошибка при спине:", error)
             setIsSpinning(false)
-            setEnable(true)
+            setIsRequestPending(false)
+            setAutoRerollEnabled(false)
         }
-    }, [bet, isSpinning, account, updateUser, onGameComplete, onHistoryUpdate])
+    }, [bet, isSpinning, isRequestPending, account, updateUser, onGameComplete, onHistoryUpdate, autoRerollEnabled, consecutiveLosses])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -132,6 +199,8 @@ const SlotMachineGame = (props) => {
 
     return (
         <div className={`${styles["slot-machine-game"]} ${className}`}>
+            <audio ref={audioRef} src={slotSound} preload="auto" />
+
             <VictoryScreen
                 isOpen={showVictory}
                 onClose={() => setShowVictory(false)}
@@ -153,21 +222,27 @@ const SlotMachineGame = (props) => {
                     <BetInput
                         value={bet}
                         onChange={setBet}
-                        disabled={isSpinning}
+                        disabled={isRequestPending || isSpinning}
                         min={1}
                         max={10000}
                     />
                     <BetPresets
                         onSelect={handlePresetSelect}
-                        disabled={isSpinning}
-                        presets={[10, 50, 100, 500, 1000]}
+                        disabled={isRequestPending || isSpinning}
+                        presets={[8, 16, 32, 64, 128]}
                     />
                 </div>
+
+                <AutoReroll
+                    enabled={autoRerollEnabled}
+                    onToggle={handleAutoRerollToggle}
+                />
 
                 <Button
                     className={styles["spin-btn"]}
                     onClick={spin}
-                    isDisabled={!enable || bet < 1}
+                    isDisabled={isRequestPending || isSpinning || bet < 1}
+                    activateOnSpace={true}
                 >
                     {isSpinning ? "Крутим..." : "Сыграть"}
                 </Button>

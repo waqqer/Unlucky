@@ -1,0 +1,48 @@
+.auto-reroll {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(100, 150, 255, 0.3);
+    border-radius: 12px;
+}
+
+.reroll-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.reroll-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #6496ff;
+}
+
+.toggle-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 630px) {
+    .auto-reroll {
+        padding: 10px 12px;
+    }
+
+    .reroll-toggle input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .toggle-text {
+        font-size: 13px;
+    }
+}
