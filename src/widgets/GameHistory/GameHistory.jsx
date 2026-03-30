@@ -7,13 +7,14 @@ import styles from "./GameHistory.module.css"
 const GameHistory = forwardRef((props, ref) => {
     const {
         className,
-        gameName = "Слоты"
+        gameName = "Слоты",
+        limit = 50
     } = props
 
     const [history, setHistory] = useState([])
 
     const loadHistory = useCallback(() => {
-        HistoryApi.getAll(50, gameName)
+        HistoryApi.getAll(limit, gameName)
             .then(data => {
                 setHistory(data ?? [])
             })

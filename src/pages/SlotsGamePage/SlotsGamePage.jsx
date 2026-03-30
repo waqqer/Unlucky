@@ -30,6 +30,7 @@ const SlotsGamePage = () => {
                             ref={gameHistoryRef}
                             className={styles.history}
                             gameName="Слоты"
+                            limit={20}
                         />
                         <SlotMachineGame
                             className={styles.game}
