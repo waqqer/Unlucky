@@ -201,7 +201,7 @@ const SlotMachineGame = (props) => {
 
     return (
         <div className={`${styles["slot-machine-game"]} ${className}`}>
-            <audio ref={audioRef} src={slotSound} preload="auto" />
+            <audio ref={audioRef} src={slotSound} preload="auto" spellCheck/>
 
             <VictoryScreen
                 isOpen={showVictory}
