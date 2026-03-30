@@ -1,0 +1,53 @@
+.misc-container {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: start;
+
+    gap: 1%;
+    margin-bottom: 1vw;
+}
+
+.misc-container > button {
+    display: flex;
+
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: saturate(150%);
+
+    color: white;
+    font-weight: bolder;
+
+    width: 50px;
+    height: 50px;
+
+    margin: 0;
+}
+
+.misc-container > button:hover {
+    transform: none;
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.misc-container > a {
+    display: flex;
+
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: saturate(150%);
+
+    color: white;
+    font-weight: bolder;
+
+    height: 50px;
+
+    margin: 0;
+}
+
+.misc-container > a:hover {
+    transform: none;
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
