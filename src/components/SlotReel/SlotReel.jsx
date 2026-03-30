@@ -1,3 +1,4 @@
+import { useRef, useState, useCallback } from "react"
 import diamondImg from "@/shared/images/games/slots/diamond.png"
 import goldImg from "@/shared/images/games/slots/gold.png"
 import ironImg from "@/shared/images/games/slots/iron.png"
@@ -28,10 +29,38 @@ const SlotReel = (props) => {
     } = props
 
     const imageSrc = SYMBOL_IMAGES[symbol] || SYMBOL_IMAGES.coal
+    const reelRef = useRef(null)
+    const [tiltStyle, setTiltStyle] = useState({})
+
+    const handleMouseMove = useCallback((e) => {
+        if (!reelRef.current) return
+        
+        const rect = reelRef.current.getBoundingClientRect()
+        const centerX = rect.left + rect.width / 2
+        const centerY = rect.top + rect.height / 2
+        const mouseX = e.clientX - centerX
+        const mouseY = e.clientY - centerY
+        
+        const rotateX = (mouseY / rect.height) * -45
+        const rotateY = (mouseX / rect.width) * 45
+        
+        setTiltStyle({
+            transform: `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.1)`,
+        })
+    }, [])
+
+    const handleMouseLeave = useCallback(() => {
+        setTiltStyle({})
+    }, [])
 
     return (
-        <div className={`${styles["slot-reel"]} ${className} ${isSpinning ? styles.spinning : ""} ${isStopped ? styles.stopped : ""}`}>
-            <div className={styles["reel-content"]}>
+        <div 
+            ref={reelRef}
+            className={`${styles["slot-reel"]} ${className} ${isSpinning ? styles.spinning : ""} ${isStopped ? styles.stopped : ""}`}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className={styles["reel-content"]} style={isSpinning ? {} : tiltStyle}>
                 <img
                     src={imageSrc}
                     alt={symbol}
