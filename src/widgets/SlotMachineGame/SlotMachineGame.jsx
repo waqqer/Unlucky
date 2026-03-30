@@ -1,7 +1,6 @@
 import { useState, useContext, useCallback, useRef, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import { SlotsApi } from "@/api/game"
-import StatsApi from "@/api/statistics"
 import ReelsContainer from "@/components/ReelsContainer"
 import SlotReel from "@/components/SlotReel"
 import BetInput from "@/components/BetInput"
@@ -188,11 +187,9 @@ const SlotMachineGame = (props) => {
 
                         if (!demoMode) {
                             if (isWin) {
-                                StatsApi.change(account.name, 1, 0, 1)
                                 setShowVictory(true)
                                 setConsecutiveLosses(0)
                             } else {
-                                StatsApi.change(account.name, 0, 1, 1)
                                 const newConsecutiveLosses = consecutiveLosses + 1
                                 setConsecutiveLosses(newConsecutiveLosses)
                             }
