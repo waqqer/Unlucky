@@ -17,8 +17,12 @@ const GlobalHistoryList = (props) => {
 
     return (
         <div className={`${styles["history-list"]} ${className}`}>
-            {history.slice().reverse().map((item) => (
-                <GlobalHistoryItem key={item.id} data={item} />
+            {history.slice().reverse().map((item, index) => (
+                <GlobalHistoryItem 
+                    key={item.id} 
+                    data={item}
+                    index={index}
+                />
             ))}
         </div>
     )

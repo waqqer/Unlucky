@@ -3,7 +3,8 @@ import useHead from "@/hooks/useHead"
 
 const GlobalHistoryItem = (props) => {
     const {
-        data
+        data,
+        index = 0
     } = props
 
     const result = data.result ?? "WIN"
@@ -14,10 +15,13 @@ const GlobalHistoryItem = (props) => {
     const avatarUrl = useHead(userUUID)
 
     return (
-        <div className={styles[`history-item-${result}`]}>
-            <img 
-                src={avatarUrl} 
-                alt={username} 
+        <div 
+            className={`${styles[`history-item-${result}`]} ${styles["history-item-animate"]}`}
+            style={{ animationDelay: `${index * 0.05}s` }}
+        >
+            <img
+                src={avatarUrl}
+                alt={username}
                 className={styles.avatar}
             />
             <div className={styles.data}>
