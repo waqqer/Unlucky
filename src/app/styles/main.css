@@ -4,6 +4,8 @@
     box-sizing: border-box;
 
     color: white;
+
+    scrollbar-color: rgb(36, 50, 78) transparent;
 }
 
 html {

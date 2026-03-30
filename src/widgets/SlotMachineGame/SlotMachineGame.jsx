@@ -28,12 +28,13 @@ const SlotMachineGame = (props) => {
     const audioRef = useRef(null)
     const autoRerollEnabledRef = useRef(false)
 
-    const [reels, setReels] = useState(["🍒", "🍒", "🍒"])
+    const [reels, setReels] = useState(["coal", "coal", "coal"])
     const [bet, setBet] = useState(8)
     const [isSpinning, setIsSpinning] = useState(false)
     const [isRequestPending, setIsRequestPending] = useState(false)
     const [winAmount, setWinAmount] = useState(null)
     const [showVictory, setShowVictory] = useState(false)
+    const [stoppedReels, setStoppedReels] = useState([false, false, false])
 
     // Авто-реролл состояния
     const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
@@ -92,6 +93,7 @@ const SlotMachineGame = (props) => {
 
         setWinAmount(null)
         setIsRequestPending(true)
+        setStoppedReels([false, false, false])
 
         try {
             // Сначала запрос к серверу
@@ -114,11 +116,13 @@ const SlotMachineGame = (props) => {
             if (audioRef.current) {
                 audioRef.current.currentTime = 0
                 audioRef.current.loop = true
+                audioRef.current.playbackRate = 1.2
                 audioRef.current.play().catch(err => console.warn("Audio play failed:", err))
             }
 
             let spinIndex = 0
             const maxSpins = 20
+            const reelDelays = [0, 8, 15] // Задержка остановки для каждого барабана (в кадрах после maxSpins)
 
             spinIntervalRef.current = setInterval(() => {
                 if (!isMounted.current) {
@@ -126,13 +130,27 @@ const SlotMachineGame = (props) => {
                     return
                 }
 
-                // Показываем случайные символы во время вращения
-                setReels([getRandomSymbol(), getRandomSymbol(), getRandomSymbol()])
                 spinIndex++
 
-                if (spinIndex >= maxSpins) {
+                // Проверяем, нужно ли остановить какой-то барабан
+                const newReels = [...reels]
+                const newStoppedReels = [...stoppedReels]
+
+                for (let i = 0; i < 3; i++) {
+                    if (!newStoppedReels[i] && spinIndex >= maxSpins + reelDelays[i]) {
+                        newReels[i] = combination[i]
+                        newStoppedReels[i] = true
+                    } else if (!newStoppedReels[i]) {
+                        newReels[i] = getRandomSymbol()
+                    }
+                }
+
+                setReels(newReels)
+                setStoppedReels(newStoppedReels)
+
+                // Все барабаны остановились
+                if (newStoppedReels.every(stopped => stopped)) {
                     clearInterval(spinIntervalRef.current)
-                    setReels(combination)
                     setWinAmount(win)
                     setIsSpinning(false)
                     setIsRequestPending(false)
@@ -193,7 +211,7 @@ const SlotMachineGame = (props) => {
             setIsRequestPending(false)
             setAutoRerollEnabled(false)
         }
-    }, [bet, isSpinning, isRequestPending, account, updateUser, onGameComplete, onHistoryUpdate, autoRerollEnabled, consecutiveLosses])
+    }, [bet, isSpinning, isRequestPending, account, updateUser, onGameComplete, onHistoryUpdate, autoRerollEnabled, consecutiveLosses, reels, stoppedReels])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -201,7 +219,7 @@ const SlotMachineGame = (props) => {
 
     return (
         <div className={`${styles["slot-machine-game"]} ${className}`}>
-            <audio ref={audioRef} src={slotSound} preload="auto" spellCheck/>
+            <audio ref={audioRef} src={slotSound} preload="auto"/>
 
             <VictoryScreen
                 isOpen={showVictory}
@@ -214,7 +232,8 @@ const SlotMachineGame = (props) => {
                     <SlotReel
                         key={index}
                         symbol={symbol}
-                        isSpinning={isSpinning}
+                        isSpinning={isSpinning && !stoppedReels[index]}
+                        isStopped={stoppedReels[index]}
                     />
                 ))}
             </ReelsContainer>

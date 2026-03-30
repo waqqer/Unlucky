@@ -15,13 +15,14 @@ const SlotReel = (props) => {
     const {
         className,
         symbol,
-        isSpinning = false
+        isSpinning = false,
+        isStopped = false
     } = props
 
     const imageSrc = SYMBOL_IMAGES[symbol] || SYMBOL_IMAGES.coal
 
     return (
-        <div className={`${styles["slot-reel"]} ${className} ${isSpinning ? styles.spinning : ""}`}>
+        <div className={`${styles["slot-reel"]} ${className} ${isSpinning ? styles.spinning : ""} ${isStopped ? styles.stopped : ""}`}>
             <div className={styles["reel-content"]}>
                 <img
                     src={imageSrc}
