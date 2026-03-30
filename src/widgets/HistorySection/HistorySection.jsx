@@ -24,11 +24,11 @@ const HistorySection = (props) => {
     useEffect(() => {
         HistoryApi.getByName(user?.username)
                   .then(data => setHistory(data ?? []))
-                  .catch(_ => {
+                  .catch(() => {
                         setHistory([])
                         console.warn("Failed to load user history")
                   })
-    }, [])
+    }, [user?.username])
 
     const rendered_list = history.slice(0, 5)
 

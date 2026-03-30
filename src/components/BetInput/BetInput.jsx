@@ -35,7 +35,6 @@ const BetInput = (props) => {
                 max={max}
                 disabled={disabled}
             />
-            <span className={styles.currency}>Ар</span>
         </div>
     )
 }

@@ -24,8 +24,8 @@ const UserInfo = () => {
             </div>
             <div className={styles["user-info"]}>
                 <span className={styles["user-nick"]}>{user?.username ?? 'Username'}</span>
-                {isLoaded === true ? 
-                    <span className={styles["user-balance"]}>{`${account.balance}`}</span> : 
+                {isLoaded === true ?
+                    <span className={styles["user-balance"]}>{`${account.balance}`}</span> :
                     <Placeholder />
                 }
             </div>

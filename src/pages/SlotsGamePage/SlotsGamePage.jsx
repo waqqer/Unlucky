@@ -3,9 +3,17 @@ import ProfileButton from "@/components/ProfileButton"
 import SlotMachineGame from "@/widgets/SlotMachineGame"
 import GameHistory from "@/widgets/GameHistory"
 import Container from "@/components/Container"
+import { useCallback, useRef } from "react"
 import styles from "./SlotsGamePage.module.css"
 
 const SlotsGamePage = () => {
+    const gameHistoryRef = useRef(null)
+
+    const handleHistoryUpdate = useCallback(() => {
+        if (gameHistoryRef.current) {
+            gameHistoryRef.current.refreshHistory()
+        }
+    }, [])
 
     return (
         <>
@@ -18,12 +26,14 @@ const SlotsGamePage = () => {
             <main className={styles.main}>
                 <Container className={styles.container}>
                     <div className={styles["game-layout"]}>
-                        <GameHistory 
-                            className={styles.history} 
-                            gameName="Слоты" 
+                        <GameHistory
+                            ref={gameHistoryRef}
+                            className={styles.history}
+                            gameName="Слоты"
                         />
-                        <SlotMachineGame 
-                            className={styles.game} 
+                        <SlotMachineGame
+                            className={styles.game}
+                            onHistoryUpdate={handleHistoryUpdate}
                         />
                     </div>
                 </Container>

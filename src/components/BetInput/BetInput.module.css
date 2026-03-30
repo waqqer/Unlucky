@@ -41,15 +41,6 @@
     opacity: 1;
 }
 
-.currency {
-    position: absolute;
-    right: 15px;
-    top: 38px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.5);
-    pointer-events: none;
-}
-
 @media (max-width: 630px) {
     .bet-input-container {
         align-items: center;

@@ -29,7 +29,7 @@ const GlobalHistoryItem = (props) => {
                     {result === "WIN" ? "Победа" : "Поражение"}
                 </p>
                 <p className={`${styles.amount} ${styles[`amount-${result}`]}`}>
-                    {amount > 0 ? `+${amount}` : `${amount}`} Ар
+                    {amount > 0 ? `+${amount}` : `${amount}`}
                 </p>
             </div>
         </div>

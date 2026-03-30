@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from "react"
 import HistoryApi from "@/api/history"
 import Title from "@/components/Title"
 import GlobalHistoryList from "@/components/GlobalHistoryList"
 import styles from "./GameHistory.module.css"
 
-const GameHistory = (props) => {
+const GameHistory = forwardRef((props, ref) => {
     const {
         className,
         gameName = "Слоты"
@@ -12,16 +12,25 @@ const GameHistory = (props) => {
 
     const [history, setHistory] = useState([])
 
-    useEffect(() => {
+    const loadHistory = useCallback(() => {
         HistoryApi.getAll(50, gameName)
             .then(data => {
                 setHistory(data ?? [])
             })
-            .catch(_ => {
+            .catch(() => {
                 setHistory([])
                 console.warn("Failed to load game history")
             })
     }, [gameName])
+
+    useEffect(() => {
+        loadHistory()
+    }, [loadHistory])
+
+    // Предоставляем внешний доступ к функции обновления
+    useImperativeHandle(ref, () => ({
+        refreshHistory: loadHistory
+    }))
 
     return (
         <div className={`${styles["game-history"]} ${className}`}>
@@ -31,6 +40,6 @@ const GameHistory = (props) => {
             <GlobalHistoryList history={history} />
         </div>
     )
-}
+})
 
 export default GameHistory
