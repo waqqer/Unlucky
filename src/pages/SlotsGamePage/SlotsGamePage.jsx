@@ -7,6 +7,10 @@ import ModalExitButton from "@/components/ModalExitButton"
 import { useCallback, useRef, useState } from "react"
 import GameExtraControlls from "@/components/GameExtraControlls"
 import Modal from 'react-modal'
+import coalImg from "@/shared/images/games/slots/coal.png"
+import ironImg from "@/shared/images/games/slots/iron.png"
+import goldImg from "@/shared/images/games/slots/gold.png"
+import diamondImg from "@/shared/images/games/slots/diamond.png"
 import styles from "./SlotsGamePage.module.css"
 
 const SlotsGamePage = () => {
@@ -59,7 +63,42 @@ const SlotsGamePage = () => {
             >
                 <ModalExitButton modal={closeAboutSlots} />
                 <h2>Инструкция к игре "Слоты"</h2>
-                <p style={{opacity: "0.7"}}>sdfjsdfjksdfjsdhjfhsdjf</p>
+                <div className={styles["game-description"]}>
+                    <p className="mobile-hide">
+                        <strong>Слоты</strong> — классическая азартная игра, где вам нужно собрать
+                        одинаковые символы на одной линии для победы!
+                    </p>
+
+                    <h3>🎮 Как играть:</h3>
+                    <ol>
+                        <li>Выберите размер ставки (от 1 до 10000 Ар)</li>
+                        <li>Нажмите кнопку <strong>"Сыграть"</strong> или пробел</li>
+                        <li>Дождитесь результата вращения барабанов</li>
+                        <li>Получите выигрыш при совпадении символов!</li>
+                    </ol>
+
+                    <h3>💎 Символы игры:</h3>
+                    <div className={styles["sym-container"]}>
+                        <ul className={styles["symbols-list"]}>
+                            <li>
+                                <img src={coalImg} alt="Уголь" className={styles["symbol-icon"]} />
+                                <strong>Уголь</strong> — самый частый символ
+                            </li>
+                            <li>
+                                <img src={ironImg} alt="Железо" className={styles["symbol-icon"]} />
+                                <strong>Железо</strong> — средняя редкость
+                            </li>
+                            <li>
+                                <img src={goldImg} alt="Золото" className={styles["symbol-icon"]} />
+                                <strong>Золото</strong> — редкий символ
+                            </li>
+                            <li>
+                                <img src={diamondImg} alt="Алмаз" className={styles["symbol-icon"]} />
+                                <strong>Алмаз</strong> x5
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </Modal>
         </>
     )

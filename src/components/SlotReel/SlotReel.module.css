@@ -19,9 +19,10 @@
 }
 
 .symbol {
-    font-size: 112px;
-    font-weight: 700;
-    line-height: 1;
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
 }
 
 .spinning .symbol {
@@ -30,30 +31,24 @@
 
 @keyframes blur {
     0% {
-        filter: blur(0px);
-        transform: translateY(0);
+        filter: blur(2px) brightness(0.8);
+        transform: rotate(0deg)    
     }
     50% {
-        filter: blur(2px);
-        transform: translateY(-2px);
+        filter: blur(4px) brightness(1.2);
+        transform: rotate(45deg)   
     }
     100% {
-        filter: blur(0px);
-        transform: translateY(0);
+        filter: blur(2px) brightness(0.8);
+        transform: rotate(90deg)   
     }
 }
 
-@media (max-height: 900px)
-{
+@media (max-height: 900px) {
     .slot-reel {
         aspect-ratio: 3/3;
     }
-
-    .symbol {
-        font-size: 112px;
-    }
 }
-
 
 @media (max-width: 630px) {
     .slot-reel {
@@ -61,6 +56,7 @@
     }
 
     .symbol {
-        font-size: 48px;
+        width: 70%;
+        height: 70%;
     }
 }

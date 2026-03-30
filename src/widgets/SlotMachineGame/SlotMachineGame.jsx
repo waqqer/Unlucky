@@ -12,7 +12,7 @@ import AutoReroll from "@/components/AutoReroll"
 import slotSound from "@/shared/audio/slot.mp3"
 import styles from "./SlotMachineGame.module.css"
 
-const SYMBOLS = ["🍒", "🍋", "🍇", "🍉", "🔔", "⭐", "💎", "7️⃣"]
+const SYMBOLS = ["coal", "iron", "gold", "diamond"]
 
 const SlotMachineGame = (props) => {
     const {
@@ -98,7 +98,8 @@ const SlotMachineGame = (props) => {
             const result = await SlotsApi.spin(account.name, bet)
             const win = result.winAmount || 0
             const newBalance = result.newBalance
-            const combination = result.combination || ["🍒", "🍒", "🍒"]
+            // Бэкенд возвращает combination как массив строк: ["diamond", "gold", "iron"]
+            const combination = result.combination || ["coal", "coal", "coal"]
             const multiplier = result.multiplier || 0
 
             // Обновляем баланс из ответа сервера
@@ -125,6 +126,7 @@ const SlotMachineGame = (props) => {
                     return
                 }
 
+                // Показываем случайные символы во время вращения
                 setReels([getRandomSymbol(), getRandomSymbol(), getRandomSymbol()])
                 spinIndex++
 
