@@ -35,15 +35,15 @@
 
 @keyframes blur {
     0% {
-        filter: blur(2px) brightness(0.8);
+        filter: blur(2px) brightness(0.8) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
         transform: rotateZ(0deg)
     }
     50% {
-        filter: blur(4px) brightness(1.2);
+        filter: blur(4px) brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
         transform: rotateZ(90deg)
     }
     100% {
-        filter: blur(2px) brightness(0.8);
+        filter: blur(2px) brightness(0.8) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
         transform: rotateZ(180deg)
     }
 }
@@ -51,15 +51,15 @@
 @keyframes land {
     0% {
         transform: scale(1.2) rotateZ(-16deg);
-        filter: brightness(1.5);
+        filter: brightness(2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
     50% {
         transform: scale(0.95);
-        filter: brightness(0.9);
+        filter: brightness(0.8) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
     100% {
         transform: scale(1);
-        filter: brightness(1);
+        filter: brightness(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
 }
 
