@@ -9,6 +9,7 @@ import BetPresets from "@/components/BetPresets"
 import Button from "@/components/Button"
 import VictoryScreen from "@/widgets/VictoryScreen"
 import AutoReroll from "@/components/AutoReroll"
+import DemoMode from "@/components/DemoMode"
 import slotSound from "@/shared/audio/slot.mp3"
 import styles from "./SlotMachineGame.module.css"
 
@@ -18,7 +19,8 @@ const SlotMachineGame = (props) => {
     const {
         className,
         onGameComplete,
-        onHistoryUpdate
+        onHistoryUpdate,
+        soundEnabled = true
     } = props
 
     const { account, updateUser } = useContext(AccountContext)
@@ -40,10 +42,22 @@ const SlotMachineGame = (props) => {
     const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
     const [consecutiveLosses, setConsecutiveLosses] = useState(0)
 
+    // Демо режим
+    const [demoMode, setDemoMode] = useState(false)
+
     // Синхронизация ref с состоянием
     useEffect(() => {
         autoRerollEnabledRef.current = autoRerollEnabled
     }, [autoRerollEnabled])
+
+    // Выключение звука при изменении soundEnabled
+    useEffect(() => {
+        if (!soundEnabled && audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.playbackRate = 1.2
+            audioRef.current.currentTime = 0
+        }
+    }, [soundEnabled])
 
     // Очистка всех интервалов и таймаутов при размонтировании
     useEffect(() => {
@@ -75,17 +89,32 @@ const SlotMachineGame = (props) => {
         setConsecutiveLosses(0)
     }, [])
 
+    // Обработчик переключения демо-режима
+    const handleDemoToggle = useCallback(() => {
+        setDemoMode(prev => !prev)
+    }, [])
+
     const getRandomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
 
     const spin = useCallback(async () => {
         // Блокировка во время запроса или анимации
-        if (isRequestPending || isSpinning || !account?.name) {
-            console.warn("Spin blocked:", { isRequestPending, isSpinning, hasUserName: !!account?.name })
+        if (isRequestPending || isSpinning) {
+            console.warn("Spin blocked:", { isRequestPending, isSpinning })
             return
         }
 
-        const currentBalance = parseFloat(account.balance || 0)
-        if (bet <= 0 || bet > currentBalance) {
+        // В демо-режиме запускаем без проверок, в обычном - проверяем наличие пользователя
+        if (!demoMode && !account?.name) {
+            console.warn("Spin blocked: user not authenticated")
+            return
+        }
+
+        // Проверка звука - если выключен, не запускаем
+        // (звук будет проверен непосредственно перед воспроизведением)
+
+        const currentBalance = parseFloat(account?.balance || 0)
+        // В демо-режиме не проверяем баланс
+        if (!demoMode && (bet <= 0 || bet > currentBalance)) {
             console.warn("Недостаточно средств или неверная ставка", { bet, currentBalance })
             setAutoRerollEnabled(false)
             return
@@ -95,29 +124,40 @@ const SlotMachineGame = (props) => {
         setIsRequestPending(true)
         setStoppedReels([false, false, false])
 
-        try {
-            // Сначала запрос к серверу
-            const result = await SlotsApi.spin(account.name, bet)
-            const win = result.winAmount || 0
-            const newBalance = result.newBalance
-            // Бэкенд возвращает combination как массив строк: ["diamond", "gold", "iron"]
-            const combination = result.combination || ["coal", "coal", "coal"]
-            const multiplier = result.multiplier || 0
+        // Останавливаем предыдущий звук если он есть
+        if (audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+        }
 
-            // Обновляем баланс из ответа сервера
-            if (newBalance !== undefined && isMounted.current) {
+        try {
+            // Сначала запрос к серверу (демо или обычный)
+            const result = demoMode 
+                ? await SlotsApi.demoSpin()  // Демо не требует авторизации
+                : await SlotsApi.spin(account.name, bet)
+            
+            // В демо-режиме получаем только комбинацию
+            const win = demoMode ? 0 : (result.winAmount || 0)
+            const newBalance = demoMode ? account?.balance || 0 : result.newBalance
+            const combination = result.combination || ["coal", "coal", "coal"]
+            const multiplier = demoMode ? 0 : (result.multiplier || 0)
+
+            // Обновляем баланс только в обычном режиме
+            if (!demoMode && newBalance !== undefined && isMounted.current) {
                 updateUser({ balance: newBalance.toString() })
             }
 
             // Теперь запускаем анимацию
             setIsSpinning(true)
 
-            // Запускаем звук
-            if (audioRef.current) {
+            // Запускаем звук только если он включён
+            if (audioRef.current && soundEnabled) {
                 audioRef.current.currentTime = 0
                 audioRef.current.loop = true
                 audioRef.current.playbackRate = 1.2
-                audioRef.current.play().catch(err => console.warn("Audio play failed:", err))
+                audioRef.current.play().catch(err => {
+                    console.warn("Audio play failed:", err)
+                })
             }
 
             let spinIndex = 0
@@ -132,77 +172,101 @@ const SlotMachineGame = (props) => {
 
                 spinIndex++
 
-                // Проверяем, нужно ли остановить какой-то барабан
-                const newReels = [...reels]
-                const newStoppedReels = [...stoppedReels]
-
-                for (let i = 0; i < 3; i++) {
-                    if (!newStoppedReels[i] && spinIndex >= maxSpins + reelDelays[i]) {
-                        newReels[i] = combination[i]
-                        newStoppedReels[i] = true
-                    } else if (!newStoppedReels[i]) {
-                        newReels[i] = getRandomSymbol()
-                    }
+                // Проверяем, не выключили ли звук во время вращения
+                if (!soundEnabled && audioRef.current && !audioRef.current.paused) {
+                    audioRef.current.pause()
                 }
 
-                setReels(newReels)
-                setStoppedReels(newStoppedReels)
-
-                // Все барабаны остановились
-                if (newStoppedReels.every(stopped => stopped)) {
-                    clearInterval(spinIntervalRef.current)
-                    setWinAmount(win)
-                    setIsSpinning(false)
-                    setIsRequestPending(false)
-
-                    // Останавливаем звук
-                    if (audioRef.current) {
-                        audioRef.current.pause()
-                        audioRef.current.currentTime = 0
-                    }
-
-                    // Обработка результата
-                    const isWin = win > 0
-
-                    if (isWin) {
-                        StatsApi.change(account.name, 1, 0, 1)
-                        setShowVictory(true)
-                        setConsecutiveLosses(0)
-                    } else {
-                        StatsApi.change(account.name, 0, 1, 1)
-                        const newConsecutiveLosses = consecutiveLosses + 1
-                        setConsecutiveLosses(newConsecutiveLosses)
-                    }
-
-                    // Уведомляем о необходимости обновить историю
-                    if (onHistoryUpdate) {
-                        onHistoryUpdate()
-                    }
-
-                    if (onGameComplete) {
-                        onGameComplete({
-                            combination,
-                            multiplier,
-                            win,
-                            bet
-                        })
-                    }
-
-                    // Авто-реролл: следующая игра через небольшую задержку
-                    if (autoRerollEnabledRef.current && isMounted.current) {
-                        const nextBalance = parseFloat(newBalance || account.balance || 0)
-                        if (nextBalance >= bet) {
-                            autoRerollTimeoutRef.current = setTimeout(() => {
-                                // Проверяем через ref, что авто-реролл всё ещё включён
-                                if (isMounted.current && autoRerollEnabledRef.current) {
-                                    spin()
-                                }
-                            }, 500)
+                // Обновляем барабаны с использованием функционального обновления
+                setStoppedReels(prevStopped => {
+                    const newStopped = [...prevStopped]
+                    const newReels = []
+                    
+                    for (let i = 0; i < 3; i++) {
+                        if (!newStopped[i] && spinIndex >= maxSpins + reelDelays[i]) {
+                            newReels[i] = combination[i]
+                            newStopped[i] = true
+                        } else if (!newStopped[i]) {
+                            newReels[i] = getRandomSymbol()
                         } else {
-                            setAutoRerollEnabled(false)
+                            newReels[i] = combination[i]
                         }
                     }
-                }
+                    
+                    setReels(newReels)
+                    
+                    // Проверяем, все ли барабаны остановились
+                    if (newStopped.every(stopped => stopped)) {
+                        clearInterval(spinIntervalRef.current)
+                        setWinAmount(win)
+                        setIsSpinning(false)
+                        setIsRequestPending(false)
+
+                        // Останавливаем звук
+                        if (audioRef.current) {
+                            audioRef.current.pause()
+                            audioRef.current.currentTime = 0
+                        }
+
+                        // Обработка результата
+                        const isWin = win > 0
+
+                        // В демо-режиме не показываем победу и не обновляем статистику
+                        if (!demoMode) {
+                            if (isWin) {
+                                StatsApi.change(account.name, 1, 0, 1)
+                                setShowVictory(true)
+                                setConsecutiveLosses(0)
+                            } else {
+                                StatsApi.change(account.name, 0, 1, 1)
+                                const newConsecutiveLosses = consecutiveLosses + 1
+                                setConsecutiveLosses(newConsecutiveLosses)
+                            }
+                        }
+
+                        // Уведомляем о необходимости обновить историю (только не в демо)
+                        if (onHistoryUpdate && !demoMode) {
+                            onHistoryUpdate()
+                        }
+
+                        if (onGameComplete) {
+                            onGameComplete({
+                                combination,
+                                multiplier,
+                                win,
+                                bet
+                            })
+                        }
+
+                        // Авто-реролл: следующая игра через небольшую задержку
+                        if (autoRerollEnabledRef.current && isMounted.current) {
+                            // В демо-режиме не проверяем баланс - играем бесконечно
+                            if (demoMode) {
+                                autoRerollTimeoutRef.current = setTimeout(() => {
+                                    // Проверяем ещё раз на момент запуска
+                                    if (isMounted.current && autoRerollEnabledRef.current && demoMode) {
+                                        spin()
+                                    }
+                                }, 500)
+                            } else {
+                                // В обычном режиме проверяем баланс
+                                const nextBalance = parseFloat(newBalance || account.balance || 0)
+                                if (nextBalance >= bet) {
+                                    autoRerollTimeoutRef.current = setTimeout(() => {
+                                        // Проверяем ещё раз на момент запуска
+                                        if (isMounted.current && autoRerollEnabledRef.current && !demoMode) {
+                                            spin()
+                                        }
+                                    }, 500)
+                                } else {
+                                    setAutoRerollEnabled(false)
+                                }
+                            }
+                        }
+                    }
+                    
+                    return newStopped
+                })
             }, 100)
 
         } catch (error) {
@@ -211,7 +275,7 @@ const SlotMachineGame = (props) => {
             setIsRequestPending(false)
             setAutoRerollEnabled(false)
         }
-    }, [bet, isSpinning, isRequestPending, account, updateUser, onGameComplete, onHistoryUpdate, autoRerollEnabled, consecutiveLosses, reels, stoppedReels])
+    }, [bet, isSpinning, isRequestPending, account, demoMode, updateUser, onGameComplete, onHistoryUpdate, autoRerollEnabled, consecutiveLosses, soundEnabled])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -250,13 +314,19 @@ const SlotMachineGame = (props) => {
                     <BetPresets
                         onSelect={handlePresetSelect}
                         disabled={isRequestPending || isSpinning}
-                        presets={[8, 16, 32, 64, 128]}
+                        presets={[1, 5, 10, 50, 500]}
                     />
                 </div>
 
                 <AutoReroll
                     enabled={autoRerollEnabled}
                     onToggle={handleAutoRerollToggle}
+                />
+
+                <DemoMode
+                    enabled={demoMode}
+                    onToggle={handleDemoToggle}
+                    disabled={isSpinning}
                 />
 
                 <Button

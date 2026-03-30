@@ -4,6 +4,7 @@ import SlotMachineGame from "@/widgets/SlotMachineGame"
 import GameHistory from "@/widgets/GameHistory"
 import Container from "@/components/Container"
 import ModalExitButton from "@/components/ModalExitButton"
+import Button from "@/components/Button"
 import { useCallback, useRef, useState } from "react"
 import GameExtraControlls from "@/components/GameExtraControlls"
 import Modal from 'react-modal'
@@ -23,9 +24,14 @@ const SlotsGamePage = () => {
     }, [])
 
     const [aboutSlots, setAboutSlots] = useState(false)
+    const [soundEnabled, setSoundEnabled] = useState(true)
 
     const openAboutSlots = useCallback(() => setAboutSlots(true))
     const closeAboutSlots = useCallback(() => setAboutSlots(false))
+
+    const toggleSound = useCallback(() => {
+        setSoundEnabled(prev => !prev)
+    }, [])
 
     return (
         <>
@@ -37,17 +43,29 @@ const SlotsGamePage = () => {
 
             <main className={styles.main}>
                 <Container className={styles.container}>
-                    <GameExtraControlls aboutOpen={openAboutSlots} />
+                    <GameExtraControlls aboutOpen={openAboutSlots}>
+                        <Button
+                            className={styles["sound-btn"]}
+                            onClick={toggleSound}
+                        >
+                            {soundEnabled ? (
+                                <i className="fa-solid fa-volume-high"></i>
+                            ) : (
+                                <i className="fa-solid fa-volume-xmark"></i>
+                            )}
+                        </Button>
+                    </GameExtraControlls>
                     <div className={styles["game-layout"]}>
                         <GameHistory
                             ref={gameHistoryRef}
                             className={styles.history}
                             gameName="Слоты"
-                            limit={20}
+                            limit={10}
                         />
                         <SlotMachineGame
                             className={styles.game}
                             onHistoryUpdate={handleHistoryUpdate}
+                            soundEnabled={soundEnabled}
                         />
                     </div>
                 </Container>

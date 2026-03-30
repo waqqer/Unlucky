@@ -9,6 +9,7 @@
 .container {
     width: 100%;
     max-width: 1200px;
+    margin: 0;
     padding: 0 20px;
 }
 
@@ -33,6 +34,25 @@
 .game {
     height: 100%;
     min-height: 500px;
+}
+
+.sound-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sound-btn:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(100, 150, 255, 0.5);
+}
+
+.sound-btn i {
+    font-size: 16px;
 }
 
 .game-description {
@@ -116,7 +136,7 @@
 @media (max-height: 900px)
 {
     .container {
-        margin-top: 6%; 
+        margin-top: 3%; 
     }
 }
 

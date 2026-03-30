@@ -30,7 +30,7 @@
 }
 
 .stopped .symbol {
-    animation: land 0.3s ease-out;
+    animation: land 0.4s ease-out forwards;
 }
 
 @keyframes blur {

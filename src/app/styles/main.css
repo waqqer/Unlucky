@@ -5,7 +5,7 @@
 
     color: white;
 
-    scrollbar-color: rgb(36, 50, 78) transparent;
+    scrollbar-color: rgb(36, 50, 78) var(--Bg-color);
 }
 
 html {
