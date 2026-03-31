@@ -16,7 +16,7 @@ const ProfileModal = (props) => {
             <ProfileInfo />
 
             <BalanceSection />
-            <HistorySection />
+            <HistorySection className="sp-hide" />
         </>
     )
 }

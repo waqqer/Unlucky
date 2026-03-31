@@ -45,7 +45,7 @@ const SlotsGamePage = () => {
                 <Container className={styles.container}>
                     <GameExtraControlls aboutOpen={openAboutSlots}>
                         <Button
-                            className={styles["sound-btn"]}
+                            className={`${styles["sound-btn"]}`}
                             onClick={toggleSound}
                         >
                             {soundEnabled ? (
