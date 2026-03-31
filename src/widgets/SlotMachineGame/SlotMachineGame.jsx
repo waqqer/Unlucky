@@ -41,6 +41,7 @@ const SlotMachineGame = (props) => {
     const [consecutiveLosses, setConsecutiveLosses] = useState(0)
 
     const [demoMode, setDemoMode] = useState(false)
+    const [pendingAutoRerollAfterVictory, setPendingAutoRerollAfterVictory] = useState(false)
 
     useEffect(() => {
         autoRerollEnabledRef.current = autoRerollEnabled
@@ -189,6 +190,11 @@ const SlotMachineGame = (props) => {
                             if (isWin) {
                                 setShowVictory(true)
                                 setConsecutiveLosses(0)
+
+                                // Если авто-рерол включён, устанавливаем флаг для отложенного запуска
+                                if (autoRerollEnabledRef.current) {
+                                    setPendingAutoRerollAfterVictory(true)
+                                }
                             } else {
                                 const newConsecutiveLosses = consecutiveLosses + 1
                                 setConsecutiveLosses(newConsecutiveLosses)
@@ -208,7 +214,8 @@ const SlotMachineGame = (props) => {
                             })
                         }
 
-                        if (autoRerollEnabledRef.current && isMounted.current) {
+                        // Авто-рерол при проигрыше (при победе ждём окончания анимации)
+                        if (!isWin && autoRerollEnabledRef.current && isMounted.current) {
                             if (demoMode) {
                                 autoRerollTimeoutRef.current = setTimeout(() => {
                                     if (isMounted.current && autoRerollEnabledRef.current && demoMode) {
@@ -246,64 +253,93 @@ const SlotMachineGame = (props) => {
         setBet(preset)
     }
 
+    // Обработка отложенного авто-рерола после победы
+    useEffect(() => {
+        if (pendingAutoRerollAfterVictory && !showVictory && autoRerollEnabled) {
+            setPendingAutoRerollAfterVictory(false)
+
+            if (demoMode) {
+                autoRerollTimeoutRef.current = setTimeout(() => {
+                    if (isMounted.current && autoRerollEnabledRef.current && demoMode) {
+                        spin()
+                    }
+                }, 500)
+            } else {
+                // Проверяем баланс после победы
+                const currentBalance = parseFloat(account?.balance || 0)
+                if (currentBalance >= bet) {
+                    autoRerollTimeoutRef.current = setTimeout(() => {
+                        if (isMounted.current && autoRerollEnabledRef.current && !demoMode) {
+                            spin()
+                        }
+                    }, 500)
+                } else {
+                    setAutoRerollEnabled(false)
+                }
+            }
+        }
+    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, demoMode, account, bet, spin])
+
     return (
-        <div className={`${styles["slot-machine-game"]} ${className}`}>
-            <audio ref={audioRef} src={slotSound} preload="auto"/>
+        <>
+            <div className={`${styles["slot-machine-game"]} ${className}`}>
+                <audio ref={audioRef} src={slotSound} preload="auto" />
+
+                <ReelsContainer className={styles["reels-container"]}>
+                    {reels.map((symbol, index) => (
+                        <SlotReel
+                            key={index}
+                            symbol={symbol}
+                            isSpinning={isSpinning && !stoppedReels[index]}
+                            isStopped={stoppedReels[index]}
+                        />
+                    ))}
+                </ReelsContainer>
+
+                <div className={styles["controls-section"]}>
+                    <div className={styles["bet-section"]}>
+                        <BetInput
+                            value={bet}
+                            onChange={setBet}
+                            disabled={isRequestPending || isSpinning}
+                            min={1}
+                            max={10000}
+                        />
+                        <BetPresets
+                            onSelect={handlePresetSelect}
+                            disabled={isRequestPending || isSpinning}
+                            presets={[1, 5, 10, 50, 500]}
+                        />
+                    </div>
+
+                    <AutoReroll
+                        enabled={autoRerollEnabled}
+                        onToggle={handleAutoRerollToggle}
+                    />
+
+                    <DemoMode
+                        enabled={demoMode}
+                        onToggle={handleDemoToggle}
+                        disabled={isSpinning}
+                    />
+
+                    <Button
+                        className={styles["spin-btn"]}
+                        onClick={spin}
+                        isDisabled={isRequestPending || isSpinning || bet < 1}
+                        activateOnSpace={true}
+                    >
+                        {isSpinning ? "Крутим..." : "Сыграть"}
+                    </Button>
+                </div>
+            </div>
 
             <VictoryScreen
                 isOpen={showVictory}
                 onClose={() => setShowVictory(false)}
                 winAmount={winAmount}
             />
-
-            <ReelsContainer className={styles["reels-container"]}>
-                {reels.map((symbol, index) => (
-                    <SlotReel
-                        key={index}
-                        symbol={symbol}
-                        isSpinning={isSpinning && !stoppedReels[index]}
-                        isStopped={stoppedReels[index]}
-                    />
-                ))}
-            </ReelsContainer>
-
-            <div className={styles["controls-section"]}>
-                <div className={styles["bet-section"]}>
-                    <BetInput
-                        value={bet}
-                        onChange={setBet}
-                        disabled={isRequestPending || isSpinning}
-                        min={1}
-                        max={10000}
-                    />
-                    <BetPresets
-                        onSelect={handlePresetSelect}
-                        disabled={isRequestPending || isSpinning}
-                        presets={[1, 5, 10, 50, 500]}
-                    />
-                </div>
-
-                <AutoReroll
-                    enabled={autoRerollEnabled}
-                    onToggle={handleAutoRerollToggle}
-                />
-
-                <DemoMode
-                    enabled={demoMode}
-                    onToggle={handleDemoToggle}
-                    disabled={isSpinning}
-                />
-
-                <Button
-                    className={styles["spin-btn"]}
-                    onClick={spin}
-                    isDisabled={isRequestPending || isSpinning || bet < 1}
-                    activateOnSpace={true}
-                >
-                    {isSpinning ? "Крутим..." : "Сыграть"}
-                </Button>
-            </div>
-        </div>
+        </>
     )
 }
 
