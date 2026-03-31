@@ -1,11 +1,11 @@
 import { useRef, useState, useCallback } from "react"
-import diamondImg from "@/shared/images/games/slots/diamond.png"
-import goldImg from "@/shared/images/games/slots/gold.png"
-import ironImg from "@/shared/images/games/slots/iron.png"
-import coalImg from "@/shared/images/games/slots/coal.png"
-import amethystImg from "@/shared/images/games/slots/amethyst.png"
-import starImg from "@/shared/images/games/slots/star.png"
-import redstoneImg from "@/shared/images/games/slots/redstone.png"
+import diamondImg from "@/shared/images/games/slots/diamond.webp"
+import goldImg from "@/shared/images/games/slots/gold.webp"
+import ironImg from "@/shared/images/games/slots/iron.webp"
+import coalImg from "@/shared/images/games/slots/coal.webp"
+import amethystImg from "@/shared/images/games/slots/amethyst.webp"
+import starImg from "@/shared/images/games/slots/star.webp"
+import redstoneImg from "@/shared/images/games/slots/redstone.webp"
 import styles from "./SlotReel.module.css"
 
 const SYMBOL_IMAGES = {

@@ -8,10 +8,10 @@ import Button from "@/components/Button"
 import { useCallback, useRef, useState } from "react"
 import GameExtraControlls from "@/components/GameExtraControlls"
 import Modal from 'react-modal'
-import coalImg from "@/shared/images/games/slots/coal.png"
-import ironImg from "@/shared/images/games/slots/iron.png"
-import goldImg from "@/shared/images/games/slots/gold.png"
-import diamondImg from "@/shared/images/games/slots/diamond.png"
+import coalImg from "@/shared/images/games/slots/coal.webp"
+import ironImg from "@/shared/images/games/slots/iron.webp"
+import goldImg from "@/shared/images/games/slots/gold.webp"
+import diamondImg from "@/shared/images/games/slots/diamond.webp"
 import styles from "./SlotsGamePage.module.css"
 
 const SlotsGamePage = () => {
