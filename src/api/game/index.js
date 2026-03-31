@@ -7,9 +7,9 @@ const HEADERS = {
 }
 
 export const SlotsApi = {
-    spin: async (username, bet) => {
+    spin: async (uuid, bet) => {
         const requestBody = {
-            name: username,
+            uuid: uuid,
             bet: typeof bet === "number" ? bet : parseFloat(bet) || 0
         }
 
@@ -30,7 +30,7 @@ export const SlotsApi = {
 
     demoSpin: async () => {
         const response = await fetch(BASE_URL + "/slots/demo")
-        
+
         if (!response.ok) {
             const errorText = await response.text()
             console.error("SlotsApi.demoSpin error:", response.status, errorText)
@@ -42,9 +42,9 @@ export const SlotsApi = {
 }
 
 export const RocketApi = {
-    play: async (username, bet, targetMultiplier) => {
+    play: async (uuid, bet, targetMultiplier) => {
         const body = {
-            name: username,
+            uuid: uuid,
             bet: bet
         }
         if (typeof targetMultiplier === "number" && targetMultiplier > 1.01) {

@@ -22,13 +22,13 @@ const HistorySection = (props) => {
     const closeHistory = useCallback(() => setHistotyModal(false))
 
     useEffect(() => {
-        HistoryApi.getByName(user?.username)
+        HistoryApi.getByUuid(user?.minecraftUUID)
                   .then(data => setHistory(data ?? []))
                   .catch(() => {
                         setHistory([])
                         console.warn("Failed to load user history")
                   })
-    }, [user?.username])
+    }, [user?.minecraftUUID])
 
     const rendered_list = history.slice(0, 5)
 

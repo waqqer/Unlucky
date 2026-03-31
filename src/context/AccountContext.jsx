@@ -34,14 +34,14 @@ export const AccountProvider = ({ children }) => {
 
     // Изменение баланса через API
     const changeBalance = useCallback(async (amount) => {
-        const username = spwUser?.name || account?.name
-        if (!username || !account) {
+        const userUuid = spwUser?.minecraftUUID || account?.UUID
+        if (!userUuid || !account) {
             console.warn("Cannot change balance: user not authenticated", { spwUser, account })
             return null
         }
 
         try {
-            const result = await BalanceApi.change(username, amount)
+            const result = await BalanceApi.change(userUuid, amount)
             if (result) {
                 setAccount(prev => prev ? { ...prev, balance: result.balance?.toString() || prev.balance } : prev)
             }
@@ -59,9 +59,10 @@ export const AccountProvider = ({ children }) => {
 
     // Обновление данных пользователя с сервера
     const refreshAccount = useCallback(async () => {
-        if (!spwUser) return null
+        const userUuid = spwUser?.minecraftUUID
+        if (!userUuid) return null
         try {
-            const data = await UserApi.getByName(spwUser.name)
+            const data = await UserApi.getByUuid(userUuid)
             if (data) {
                 setAccount(data)
             }

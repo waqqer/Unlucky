@@ -21,19 +21,19 @@ const HistoryApi = {
             .then(res => res.json())
     },
 
-    getByName: async (username, limit) => {
-        if (!username || username.trim() === "")
+    getByUuid: async (uuid, limit) => {
+        if (!uuid || uuid.trim() === "")
             return null
 
         let l = 20
         if (typeof limit === "number" && limit > 1)
             l = limit
 
-        return fetch(URL + `/${username.trim()}?limit=${l}`)
+        return fetch(URL + `/${uuid.trim()}?limit=${l}`)
             .then(res => res.json())
     },
 
-    create: async (username, game_name, result, amount) => {
+    create: async (uuid, game_name, result, amount) => {
         let res = "WIN"
         let a = 0
 
@@ -49,7 +49,7 @@ const HistoryApi = {
             amount: a
         }
 
-        return fetch(URL + `/${username.trim()}`, {
+        return fetch(URL + `/${uuid.trim()}`, {
             method: "POST",
             headers: HEADERS,
             body: JSON.stringify(data)

@@ -94,7 +94,7 @@ const SlotMachineGame = (props) => {
             return
         }
 
-        if (!demoMode && !account?.name) {
+        if (!demoMode && !account?.UUID) {
             console.warn("Spin blocked: user not authenticated")
             return
         }
@@ -118,7 +118,7 @@ const SlotMachineGame = (props) => {
         try {
             const result = demoMode
                 ? await SlotsApi.demoSpin()
-                : await SlotsApi.spin(account.name, bet)
+                : await SlotsApi.spin(account.UUID, bet)
 
             const win = demoMode ? 0 : (result.winAmount || 0)
             const newBalance = demoMode ? account?.balance || 0 : result.newBalance
@@ -191,7 +191,6 @@ const SlotMachineGame = (props) => {
                                 setShowVictory(true)
                                 setConsecutiveLosses(0)
 
-                                // Если авто-рерол включён, устанавливаем флаг для отложенного запуска
                                 if (autoRerollEnabledRef.current) {
                                     setPendingAutoRerollAfterVictory(true)
                                 }
@@ -214,7 +213,6 @@ const SlotMachineGame = (props) => {
                             })
                         }
 
-                        // Авто-рерол при проигрыше (при победе ждём окончания анимации)
                         if (!isWin && autoRerollEnabledRef.current && isMounted.current) {
                             if (demoMode) {
                                 autoRerollTimeoutRef.current = setTimeout(() => {
@@ -253,7 +251,6 @@ const SlotMachineGame = (props) => {
         setBet(preset)
     }
 
-    // Обработка отложенного авто-рерола после победы
     useEffect(() => {
         if (pendingAutoRerollAfterVictory && !showVictory && autoRerollEnabled) {
             setPendingAutoRerollAfterVictory(false)
@@ -265,7 +262,6 @@ const SlotMachineGame = (props) => {
                     }
                 }, 500)
             } else {
-                // Проверяем баланс после победы
                 const currentBalance = parseFloat(account?.balance || 0)
                 if (currentBalance >= bet) {
                     autoRerollTimeoutRef.current = setTimeout(() => {

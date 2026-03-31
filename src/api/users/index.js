@@ -17,11 +17,11 @@ const UserApi = {
             .then(res => res.json())
     },
 
-    getByName: async (username) => {
-        if (!username || username.trim() === "")
+    getByUuid: async (uuid) => {
+        if (!uuid || uuid.trim() === "")
             return null
 
-        return fetch(URL + `/${username.trim()}`)
+        return fetch(URL + `/${uuid.trim()}`)
             .then(res => res.json())
     },
 

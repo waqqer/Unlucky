@@ -8,15 +8,15 @@ const HEADERS = {
 
 const StatsApi = {
 
-    getByName: async (username) => {
-        if (!username || username.trim() === "")
+    getByUuid: async (uuid) => {
+        if (!uuid || uuid.trim() === "")
             return null
 
-        return fetch(URL + `/${username.trim()}`)
+        return fetch(URL + `/${uuid.trim()}`)
             .then(res => res.json())
     },
 
-    change: async (username, wins, losses, games) => {
+    change: async (uuid, wins, losses, games) => {
         let w = 0
         let l = 0
         let g = 1
@@ -36,7 +36,7 @@ const StatsApi = {
             games: g
         }
 
-        return fetch(URL + `/${username.trim()}`, {
+        return fetch(URL + `/${uuid.trim()}`, {
             method: "PUT",
             headers: HEADERS,
             body: JSON.stringify(data)

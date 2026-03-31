@@ -10,7 +10,7 @@ const GlobalHistoryItem = (props) => {
     const result = data.result ?? "WIN"
     const amount = data.amount ?? 0
     const title = data.game_name ?? "???"
-    const username = data.user?.name ?? "Неизвестно"
+    const username = data.user?.username ?? "Неизвестно"
     const userUUID = data.user?.UUID ?? ""
     const avatarUrl = useHead(userUUID)
 
