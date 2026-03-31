@@ -12,7 +12,7 @@ import DemoMode from "@/components/DemoMode"
 import slotSound from "@/shared/audio/slot.mp3"
 import styles from "./SlotMachineGame.module.css"
 
-const SYMBOLS = ["star", "monya", "amethyst", "redstone", "coal", "iron", "gold", "diamond"]
+const SYMBOLS = ["star", "amethyst", "redstone", "coal", "iron", "gold", "diamond"]
 
 const SlotMachineGame = (props) => {
     const {
