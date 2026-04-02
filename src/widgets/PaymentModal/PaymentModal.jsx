@@ -1,6 +1,7 @@
 import ModalExitButton from "@/components/ModalExitButton"
 import Button from "@/components/Button"
 import { useCallback, useState } from "react"
+import styles from "./PaymentModal.module.css"
 
 const PaymentModal = (props) => {
     const {
@@ -17,22 +18,34 @@ const PaymentModal = (props) => {
         setMode("TAKE")
     })
 
+    let renderedBody = (
+        <div className={styles.body}>
+            <h3>Пополнение</h3>
+            <input type="number" />
+            <Button>Пополнить</Button>
+        </div>
+    )
+
+    if(mode === "TAKE") {
+        renderedBody = (
+           <div>
+
+           </div> 
+        )
+    }
+
     return (
         <>
             <ModalExitButton modal={close} />
 
             <div>
                 <div>
-                    <Button onClick={addMode}>Пополнение</Button>
-                    <Button onClick={takeMode}>Вывод</Button>
+                    {renderedBody}
                 </div>
 
-                <div>
-                    {mode === "ADD" ? 
-                        <h1>Пополнение</h1> 
-                        : 
-                        <h1>Вывод</h1>
-                    }
+                <div className={styles["btn-container"]}>
+                    <Button onClick={addMode} className={styles.btn}>Пополнение</Button>
+                    <Button onClick={takeMode} className={styles.btn}>Вывод</Button>
                 </div>
             </div>
         </>

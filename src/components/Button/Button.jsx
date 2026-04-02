@@ -13,7 +13,6 @@ const Button = (props) => {
 
     const buttonRef = useRef(null)
 
-    // Обработчик нажатия пробела
     const handleKeyDown = useCallback((e) => {
         if (!activateOnSpace || isDisabled) return
         if (e.code === "Space" || e.key === " ") {
@@ -22,16 +21,14 @@ const Button = (props) => {
         }
     }, [activateOnSpace, isDisabled, onClick])
 
-    // Глобальный слушатель клавиатуры
     useEffect(() => {
         if (!activateOnSpace) return
 
         const handleGlobalKeyDown = (e) => {
             if (!activateOnSpace || isDisabled) return
             if (e.code === "Space" || e.key === " ") {
-                // Проверяем, что фокус не на input или textarea
                 const activeElement = document.activeElement
-                if (activeElement.tagName === "INPUT" || 
+                if (activeElement.tagName === "INPUT" ||
                     activeElement.tagName === "TEXTAREA" ||
                     activeElement.isContentEditable) {
                     return

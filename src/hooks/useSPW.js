@@ -10,10 +10,7 @@ const useSPW = () => {
             app.current = new SPWMini(import.meta.env.VITE_APP_ID)
         }
 
-        console.log("Connecting...")
-
         const initHandle = (userData) => {
-            console.log("Success connect!")
             setUser(userData)
         }
 
@@ -24,7 +21,7 @@ const useSPW = () => {
         return () => {
             app.current.off('initResponse', initHandle)
             app.current.dispose()
-            app.current = null 
+            app.current = null
         }
     }, [])
 

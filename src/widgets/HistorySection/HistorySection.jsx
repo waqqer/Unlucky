@@ -26,7 +26,6 @@ const HistorySection = (props) => {
                   .then(data => setHistory(data ?? []))
                   .catch(() => {
                         setHistory([])
-                        console.warn("Failed to load user history")
                   })
     }, [user?.minecraftUUID])
 

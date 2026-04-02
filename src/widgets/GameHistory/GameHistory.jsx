@@ -20,7 +20,6 @@ const GameHistory = forwardRef((props, ref) => {
             })
             .catch(() => {
                 setHistory([])
-                console.warn("Failed to load game history")
             })
     }, [gameName])
 
@@ -28,7 +27,6 @@ const GameHistory = forwardRef((props, ref) => {
         loadHistory()
     }, [loadHistory])
 
-    // Предоставляем внешний доступ к функции обновления
     useImperativeHandle(ref, () => ({
         refreshHistory: loadHistory
     }))

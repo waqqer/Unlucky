@@ -90,18 +90,15 @@ const SlotMachineGame = (props) => {
 
     const spin = useCallback(async () => {
         if (isRequestPending || isSpinning) {
-            console.warn("Spin blocked:", { isRequestPending, isSpinning })
             return
         }
 
         if (!demoMode && !account?.UUID) {
-            console.warn("Spin blocked: user not authenticated")
             return
         }
 
         const currentBalance = parseFloat(account?.balance || 0)
         if (!demoMode && (bet <= 0 || bet > currentBalance)) {
-            console.warn("Недостаточно средств или неверная ставка", { bet, currentBalance })
             setAutoRerollEnabled(false)
             return
         }
@@ -135,9 +132,7 @@ const SlotMachineGame = (props) => {
                 audioRef.current.currentTime = 0
                 audioRef.current.loop = true
                 audioRef.current.playbackRate = 1.2
-                audioRef.current.play().catch(err => {
-                    console.warn("Audio play failed:", err)
-                })
+                audioRef.current.play().catch(() => {})
             }
 
             let spinIndex = 0
@@ -240,7 +235,6 @@ const SlotMachineGame = (props) => {
             }, 100)
 
         } catch (error) {
-            console.error("Ошибка при спине:", error)
             setIsSpinning(false)
             setIsRequestPending(false)
             setAutoRerollEnabled(false)
