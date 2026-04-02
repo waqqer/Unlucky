@@ -1,35 +1,35 @@
-.title {
-    font-size: medium;
-    text-align: left;
-}
-
 .header {
     display: flex;
     flex-direction: row;
 
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+
+    font-size: medium;
+    text-align: center;
 
     width: 90%;
 }
 
 .all-btn {
-    color: lightgreen;
+    color: rgb(255, 255, 255);
     opacity: 0.85;
     text-decoration: underline dashed;
 
     padding: 1px;
     background: none;
 
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+
+    text-decoration: none;
 }
 
 .all-btn:hover {
-    color: green;
+    color: rgb(212, 255, 212);
     opacity: 0.7;
 
     background: none;
-    transform: none;
+    transform: scale(102%, 102%);
 }
 
 .history-section {
@@ -62,4 +62,5 @@
 
 .not-found-message {
     color: rgb(189, 189, 189);
+    margin: 5%;
 }

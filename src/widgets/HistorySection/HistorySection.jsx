@@ -35,8 +35,7 @@ const HistorySection = (props) => {
         <>
             <div className={`${styles["history-section"]} ${className}`}>
                 <div className={styles.header}>
-                    <h1 className={styles.title}>История</h1>
-                    <Button className={styles["all-btn"]} onClick={openHistory}>Показать всё</Button>
+                    <Button className={styles["all-btn"]} onClick={openHistory}>История</Button>
                 </div>
 
                 {rendered_list.length > 0 ?

@@ -16,10 +16,18 @@ const BalanceSection = (props) => {
         account
     } = useContext(AccountContext)
 
+    const [method, setMethod] = useState("ADD")
     const [paymentModal, setPaymentModal] = useState(false)
 
     const сlosePayment = useCallback(() => setPaymentModal(false))
-    const openPayment = useCallback(() => setPaymentModal(true))
+    const openPaymentADD = useCallback(() => {
+        setMethod("ADD")
+        setPaymentModal(true)
+    })
+    const openPaymentTAKE = useCallback(() => {
+        setMethod("TAKE")
+        setPaymentModal(true)
+    })
 
     return (
         <>
@@ -31,9 +39,17 @@ const BalanceSection = (props) => {
                     }
                 </p>
 
-                <Button className={styles["add-money-button"]} onClick={openPayment}>
-                    <i className="fa-solid fa-wallet"></i>
-                </Button>
+                <div className={`${styles.controlls}`}>
+                    <Button className={`${styles["add-money-button"]} ${styles["f-part"]}`} onClick={openPaymentTAKE}>
+                        <i className="fa-solid fa-wallet"></i>
+                        <p>Вывод</p>
+                    </Button>
+
+                    <Button className={`${styles["add-money-button"]} ${styles["s-part"]}`} onClick={openPaymentADD}>
+                        <i className="fa-solid fa-credit-card"></i>
+                        <p>Пополнение</p>
+                    </Button>
+                </div>
             </div>
 
             <Modal
@@ -44,7 +60,7 @@ const BalanceSection = (props) => {
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}
             >
-                <PaymentModal close={сlosePayment} />
+                <PaymentModal method={method} close={сlosePayment} />
             </Modal>
         </>
     )

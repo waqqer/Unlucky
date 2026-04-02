@@ -8,7 +8,8 @@ const Button = (props) => {
         type = "button",
         isDisabled = false,
         activateOnSpace = false,
-        children
+        children,
+        title
     } = props
 
     const buttonRef = useRef(null)
@@ -50,6 +51,7 @@ const Button = (props) => {
             onClick={onClick}
             disabled={isDisabled}
             onKeyDown={handleKeyDown}
+            title={title}
         >
             {children}
         </button>

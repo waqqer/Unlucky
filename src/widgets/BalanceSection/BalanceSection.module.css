@@ -17,16 +17,23 @@
     display: flexbox;
     background-color: #3b82f6;
     border: none;
-
-    margin-left: 20px;
+    border-radius: 0;
     flex: 1;
 
-    max-width: 12%;
+    max-width: 13vw;
+    margin: 0;
 }
 
 .add-money-button:hover {
-    background-color: #3b82f6;
-    border: none;
+    transform: none;
+    background-color: #5194ff;
+}
+
+.add-money-button > p {
+    display: none;
+
+    text-align: center;
+    font-weight: normal;
 }
 
 .balance-label {
@@ -59,6 +66,70 @@
     content: " Ар";
 }
 
+.controlls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin: 5%;
+    gap: 2%;
+}
+
+.controlls .f-part {
+    border-right: 1px solid #3d73ca;
+    border-radius: 10px 0 0 10px;
+}
+
+.controlls .s-part {
+    border-left: 1px solid #3d73ca;
+    border-radius: 0 10px 10px 0;
+}
+
+@keyframes contextFade {
+    from {
+        opacity: 0;
+        transform: translate(-60%, -130%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-60%, -150%);
+    }
+}
+
+.add-money-button:is(.f-part):hover::after {
+    content: "Вывод";
+    position: absolute;
+    text-align: center;
+    transform: translate(-60%, -150%);
+
+    color: white;
+    font-weight: 500;
+    letter-spacing: 1px;
+
+    background-color: #384455;
+    border-radius: 10px;
+    padding: 10px;
+
+    animation: contextFade 0.3s ease;
+}
+
+.add-money-button:is(.s-part):hover::after {
+    content: "Пополнение";
+    position: absolute;
+    text-align: center;
+    transform: translate(-60%, -150%);
+
+    color: white;
+    font-weight: 500;
+    letter-spacing: 1px;
+
+    background-color: #384455;
+    border-radius: 10px;
+    padding: 10px;
+
+    animation: contextFade 0.3s ease;
+}
+
 @media (max-width: 630px) {
     .balance-section {
         display: flex;
@@ -75,5 +146,39 @@
 
     .balance-loader {
         padding-right: 20%;
+    }
+
+    .add-money-button:is(.s-part):hover::after {
+        content: "";
+        background: none;
+    }
+
+    .add-money-button:is(.f-part):hover::after {
+        content: "";
+        background: none;
+    }
+
+    .controlls .f-part {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .controlls .s-part {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .controlls {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .add-money-button > i {
+        display: none;
+    }
+    
+    .add-money-button > p {
+        display: inline;
     }
 }

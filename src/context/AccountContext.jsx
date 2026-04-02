@@ -13,7 +13,6 @@ export const AccountProvider = ({ children }) => {
     const [isLoaded, setIsLoaded] = useState(false)
     const [account, setAccount] = useState(null)
 
-    // Загрузка данных пользователя при инициализации
     useEffect(() => {
         if (!spwUser) return
         UserApi.getOrCreate(spwUser, "USER")
@@ -27,12 +26,10 @@ export const AccountProvider = ({ children }) => {
             })
     }, [spwUser])
 
-    // Обновление данных пользователя
     const updateUser = useCallback((newData) => {
         setAccount(prev => prev ? { ...prev, ...newData } : newData)
     }, [])
 
-    // Изменение баланса через API
     const changeBalance = useCallback(async (amount) => {
         const userUuid = spwUser?.minecraftUUID || account?.UUID
         if (!userUuid || !account) {
@@ -52,12 +49,10 @@ export const AccountProvider = ({ children }) => {
         }
     }, [spwUser, account])
 
-    // Получение баланса
     const getBalance = useCallback(() => {
         return parseFloat(account?.balance || 0)
     }, [account])
 
-    // Обновление данных пользователя с сервера
     const refreshAccount = useCallback(async () => {
         const userUuid = spwUser?.minecraftUUID
         if (!userUuid) return null
