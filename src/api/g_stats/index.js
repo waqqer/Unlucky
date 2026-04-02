@@ -18,6 +18,11 @@ const GStatsApi = {
             .then(res => res.json())
     },
 
+    getOnline: async () => {
+        return fetch(URL + "/online")
+            .then(res => res.json())
+    },
+
     update: async (stats) => {
         const data = {}
 

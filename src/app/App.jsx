@@ -3,8 +3,9 @@ import { MainPage, NotFoundPage } from "@/pages"
 import Modal from 'react-modal'
 import AdminPage from "@/pages/AdminPage"
 import SlotsGamePage from "@/pages/SlotsGamePage"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
+import OnlineApi from "@/api/online"
 import "./styles"
 
 Modal.setAppElement("#root")
@@ -12,8 +13,21 @@ Modal.setAppElement("#root")
 function App() {
 
   const {
-    account
+    account,
+    isLoaded
   } = useContext(AccountContext)
+
+  useEffect(() => {
+    
+
+    OnlineApi.increment()
+      .catch(err => console.error("Failed to increment online:", err))
+
+    return () => {
+      OnlineApi.decrement()
+        .catch(err => console.error("Failed to decrement online:", err))
+    }
+  })
 
   return (
     <HashRouter>
