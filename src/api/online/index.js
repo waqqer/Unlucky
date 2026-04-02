@@ -1,8 +1,10 @@
 import { fetchUrl } from "../config"
 
-const URL = fetchUrl + "/online"
+export const URL = fetchUrl + "/online"
 
 const OnlineApi = {
+    URL,
+
     increment: async () => {
         return fetch(URL + "/increment", {
             method: "POST",
