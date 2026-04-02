@@ -46,7 +46,7 @@ function App() {
         <Route path='/' element={<MainPage />} />
         <Route path='*' element={<NotFoundPage />} />
 
-        {(account?.role ?? "ADMIN") === "ADMIN" && <Route path='/admin' element={ <AdminPage /> } />}
+        {(account?.role ?? "USER") === "ADMIN" && <Route path='/admin' element={ <AdminPage /> } />}
 
         <Route path='/slots' element={<SlotsGamePage />} />
       </Routes>
