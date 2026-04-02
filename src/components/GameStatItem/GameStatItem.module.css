@@ -1,0 +1,65 @@
+.game-stat-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 18px;
+    border-radius: 10px;
+
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    flex: 1;
+    min-width: 180px;
+}
+
+.icon {
+    font-size: 28px;
+    color: rgba(139, 92, 246, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.name {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.count {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+@media (max-width: 630px) {
+    .game-stat-item {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .icon {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+
+    .name {
+        font-size: 13px;
+    }
+
+    .count {
+        font-size: 18px;
+    }
+}

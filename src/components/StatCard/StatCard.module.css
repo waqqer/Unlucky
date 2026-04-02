@@ -1,0 +1,80 @@
+.stat-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+
+    padding: 16px 20px;
+    border-radius: 12px;
+
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 200px;
+    flex: 1;
+}
+
+.icon {
+    font-size: 32px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.value-win {
+    color: rgb(173, 255, 148);
+}
+
+.value-lose {
+    color: rgb(255, 148, 148);
+}
+
+.value-primary {
+    color: rgb(121, 148, 172);
+}
+
+@media (max-width: 630px) {
+    .stat-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        min-width: auto;
+        width: 100%;
+    }
+
+    .icon {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+
+    .label {
+        font-size: 11px;
+    }
+
+    .value {
+        font-size: 20px;
+    }
+}

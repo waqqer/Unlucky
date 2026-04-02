@@ -13,45 +13,12 @@
     align-items: center;
 
     width: 80vw;
-    height: 50vh;
+    max-width: 1200px;
 
     margin-inline: 3%;
 
-    gap: 10px;
-}
-
-.container {
-    display: flex;
-    flex-direction: row;
-
-    justify-content: space-around;
-    align-items: center;
-
-    min-width: 100%;
-
-    margin-top: 2%;
-}
-
-.desc {
-    text-align: end;
-    justify-content: end;
-    align-items: center;
-}
-
-.desc h1, .desc h2, .desc h3, .desc h4, .desc h5, .desc h6 {
-    color: white;
-    font-size: 200%;
-}
-
-.desc p {
-    color: aliceblue;
-    opacity: 0.75;
-}
-
-.home-btn {
-    position: absolute;
-    bottom: 5%;
-    width: 80%;
+    gap: 20px;
+    padding-bottom: 80px;
 }
 
 .home-btn-pc {
@@ -59,31 +26,47 @@
     top: 20px;
     left: 20px;
 
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
     background-color: rgb(121, 148, 172);
     opacity: 0.4;
 }
 
 .home-btn-pc:hover {
     background-color: rgb(141, 167, 190);
+    transform: translateX(-4px);
+}
+
+.home-btn-pc:hover i {
+    transform: translateX(-4px);
+}
+
+.home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.home-btn:hover {
+    transform: translateX(-4px);
+}
+
+.home-btn:hover i {
+    transform: translateX(-4px);
 }
 
 @media (max-width: 630px) {
     .admin-panel {
-        margin-top: 10%;
+        margin-top: 80px;
+        width: 90vw;
     }
 
-    .container {
-        flex-direction: column;
-
+    .home-btn {
+        margin-top: 30px;
         width: 100%;
-        gap: 10px;
-
-        margin-top: 4%;
-    }
-
-    .desc {
         justify-content: center;
-        align-items: center;
-        text-align: center;
     }
 }

@@ -13,6 +13,11 @@ const GStatsApi = {
             .then(res => res.json())
     },
 
+    gamesStats: async () => {
+        return fetch(URL + "/games")
+            .then(res => res.json())
+    },
+
     update: async (stats) => {
         const data = {}
 

@@ -1,4 +1,5 @@
 import HistoryItem from "@/components/HistoryItem"
+import HistoryList from "@/components/HistoryList"
 import Button from "@/components/Button"
 import { useState, useCallback, useEffect, useContext } from "react"
 import Modal from 'react-modal'
@@ -18,7 +19,11 @@ const HistorySection = (props) => {
     const [historyModal, setHistotyModal] = useState(false);
     const [history, setHistory] = useState([])
 
-    const openHistory = useCallback(() => setHistotyModal(true))
+    const openHistory = useCallback(() => {
+        if(history.length !== 0)
+            setHistotyModal(true)
+    }, [history])
+    
     const closeHistory = useCallback(() => setHistotyModal(false))
 
     useEffect(() => {
@@ -27,7 +32,7 @@ const HistorySection = (props) => {
                   .catch(() => {
                         setHistory([])
                   })
-    }, [user?.minecraftUUID])
+    }, [user?.username])
 
     const rendered_list = history.slice(0, 5)
 
@@ -54,7 +59,8 @@ const HistorySection = (props) => {
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}
             >
-                <h1> история </h1>
+                <h1>История игр</h1>
+                <HistoryList history={history} />
             </Modal>
         </>
     )

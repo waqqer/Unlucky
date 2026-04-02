@@ -33,7 +33,7 @@ const StatsApi = {
         const data = {
             wins: w,
             losses: l,
-            games: g
+            game_count: g
         }
 
         return fetch(URL + `/${uuid.trim()}`, {

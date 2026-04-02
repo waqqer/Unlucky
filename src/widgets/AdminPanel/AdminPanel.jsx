@@ -1,119 +1,33 @@
-import Container from "@/Components/Container"
-import AdminInfoItem from "@/components/AdminInfoItem"
-import LinkButton from "@/components/LinkButton"
-import AdminInfoBlock from "@/components/AdminInfoBlock/AdminInfoBlock"
+import Container from "@/components/Container"
+import Button from "@/components/Button"
+import { useNavigate } from "react-router"
+import OnlineStats from "@/widgets/OnlineStats"
+import ArStats from "@/widgets/ArStats"
+import GamesStats from "@/widgets/GamesStats"
 import styles from "./AdminPanel.module.css"
 
 const AdminPanel = () => {
+    const navigate = useNavigate()
+
+    const handleGoHome = () => {
+        navigate('/')
+    }
+
     return (
         <>
-            <LinkButton className={`${styles["home-btn-pc"]} mobile-hide`}>Главная</LinkButton>
+            <Button className={`${styles["home-btn-pc"]} mobile-hide back-style`} onClick={handleGoHome}>
+                <i className="fa-solid fa-arrow-left"></i>
+                <span>Главная</span>
+            </Button>
             <Container className={styles["admin-box"]}>
                 <div className={styles["admin-panel"]}>
-                    <AdminInfoItem className={styles.big}>
-                        <h3> Статистика по онлайну </h3>
-
-                        <div className={styles.container}>
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-signal mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3>100</h3>
-                                    <p>Игроков онлайн</p>
-                                </div>
-                            </AdminInfoBlock>
-
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-ghost mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3>100</h3>
-                                    <p>Всего игроков</p>
-                                </div>
-                            </AdminInfoBlock>
-
-                            <AdminInfoBlock className="mobile-hide">
-                                <i className="fa-solid fa-satellite mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3>100</h3>
-                                    <p>Макс. игроков</p>
-                                </div>
-                            </AdminInfoBlock>
-                        </div>
-                    </AdminInfoItem>
-
-                    <AdminInfoItem>
-                        <h3> Статистика по арам </h3>
-
-                        <div className={styles.container}>
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-coins mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3 style={{ color: "rgb(173, 255, 148)" }}>
-                                        100 000
-                                    </h3>
-                                    <p>Аров выиграно</p>
-                                </div>
-                            </AdminInfoBlock>
-
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-wallet mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3>250 000</h3>
-                                    <p>Всего аров</p>
-                                </div>
-                            </AdminInfoBlock>
-
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-arrow-trend-down mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3 style={{ color: "rgb(255, 148, 148)" }}>
-                                        50 000
-                                    </h3>
-                                    <p>Всего аров проиграно</p>
-                                </div>
-                            </AdminInfoBlock>
-                        </div>
-                    </AdminInfoItem>
-
-                    <AdminInfoItem className="mobile-hide">
-                        <h3> Статистика по играм </h3>
-
-                        <div className={styles.container}>
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-dice-d6 mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3>Название игры</h3>
-                                    <p>Всего игр: <b>123</b></p>
-                                </div>
-                            </AdminInfoBlock>
-
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-dice-d6 mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3>Название игры</h3>
-                                    <p>Всего игр: <b>123</b></p>
-                                </div>
-                            </AdminInfoBlock>
-
-                            <AdminInfoBlock>
-                                <i className="fa-solid fa-dice-d6 mobile-hide"></i>
-
-                                <div className={styles.desc}>
-                                    <h3>Название игры</h3>
-                                    <p>Всего игр: <b>123</b></p>
-                                </div>
-                            </AdminInfoBlock>
-                        </div>
-                    </AdminInfoItem>
-
-                    <LinkButton className={`${styles["home-btn"]} pc-hide`}>На главную</LinkButton>
+                    <OnlineStats />
+                    <ArStats />
+                    <GamesStats />
+                    <Button className={`${styles["home-btn"]} pc-hide back-style`} onClick={handleGoHome}>
+                        <i className="fa-solid fa-arrow-left"></i>
+                        <span>На главную</span>
+                    </Button>
                 </div>
             </Container>
         </>

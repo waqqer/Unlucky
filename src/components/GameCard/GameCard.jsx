@@ -1,4 +1,4 @@
-import LinkButton from "@/components/LinkButton"
+import { useNavigate } from "react-router"
 import { memo } from "react"
 import styles from "./GameCard.module.css"
 
@@ -10,22 +10,24 @@ const GameCard = (props) => {
         image
     } = props
 
-    const bg_style = {
-        backgroundImage: `url(${image})`,
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-        backgroundSize: "100% 100%"
+    const navigate = useNavigate()
+
+    const handleClick = () => {
+        navigate(link)
     }
 
     return (
-        <div style={bg_style} className={styles["game-card"]}>
+        <div className={styles["game-card"]} onClick={handleClick}>
+            <div className={styles["card-wrapper"]}>
+                <div 
+                    className={styles["card-bg"]} 
+                    style={{ backgroundImage: `url(${image})` }}
+                ></div>
+            </div>
+            <div className={styles["card-overlay"]}></div>
             <div className={styles.details}>
                 <h3 className={styles.title}>{title}</h3>
-
-                <div className={styles["game-desc"]}>
-                    <p className={styles.desc}>{desc}</p>
-                    <LinkButton className={styles["play-game-button"]} to={link}> Играть </LinkButton>
-                </div>
+                <p className={styles.desc}>{desc}</p>
             </div>
         </div>
     )

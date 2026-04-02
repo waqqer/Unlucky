@@ -1,0 +1,86 @@
+.games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.game-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 14px 18px;
+    border-radius: 10px;
+
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    transition: all 0.2s ease;
+}
+
+.game-item:hover {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.game-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon {
+    font-size: 24px;
+    color: rgba(139, 92, 246, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.count {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(139, 92, 246, 0.2);
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.empty {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+@media (max-width: 630px) {
+    .game-item {
+        padding: 12px 14px;
+    }
+
+    .icon {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+
+    .name {
+        font-size: 14px;
+    }
+
+    .count {
+        font-size: 14px;
+        padding: 4px 10px;
+    }
+}
