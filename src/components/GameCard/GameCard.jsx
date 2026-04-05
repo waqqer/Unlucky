@@ -18,13 +18,10 @@ const GameCard = (props) => {
 
     return (
         <div className={styles["game-card"]} onClick={handleClick}>
-            <div className={styles["card-wrapper"]}>
-                <div 
-                    className={styles["card-bg"]} 
-                    style={{ backgroundImage: `url(${image})` }}
-                ></div>
-            </div>
-            <div className={styles["card-overlay"]}></div>
+            <div 
+                className={styles["card-image"]} 
+                style={{ backgroundImage: `url(${image})` }}
+            ></div>
             <div className={styles.details}>
                 <h3 className={styles.title}>{title}</h3>
                 <p className={styles.desc}>{desc}</p>
