@@ -1,2 +1,4 @@
 export { default as MainPage } from "./MainPage"
 export { default as NotFoundPage } from "./NotFoundPage"
+export { default as SlotsGamePage } from "./SlotsGamePage"
+export { default as AdminPage } from "./AdminPage"

@@ -2,12 +2,13 @@
     display: flex;
 
     width: 100%;
+    max-height: 10vh;
 
     background: rgba(59, 130, 246, 0.1);
     border: 1px dashed rgba(59, 130, 246, 0.3);
     border-radius: 15px;
 
-    padding: 12px 15px;
+    padding: 12px 10px;
 
     align-items: center;
     justify-content: space-between;
@@ -180,5 +181,9 @@
     
     .add-money-button > p {
         display: inline;
+    }
+
+    .balance-section {
+        max-height: none;
     }
 }

@@ -8,15 +8,29 @@ const HistoryItem = (props) => {
         index = 0
     } = props
 
-    const { user } = useContext(AccountContext)
-
     const result = data.result ?? "WIN"
     const amount = data.amount ?? 0
     const title = data.game_name ?? "???"
-    const createdAt = data.game_date ? new Date(data.game_date) : null
+
+    let createdAt = null
+    if (data.game_date) {
+        try {
+            if (typeof data.game_date === 'string') {
+                createdAt = new Date(data.game_date.replace(' ', 'T'))
+            } else if (data.game_date instanceof Date) {
+                createdAt = data.game_date
+            } else {
+                createdAt = new Date(data.game_date)
+            }
+        } catch (e) {
+            console.error("Failed to parse date:", data.game_date, e)
+        }
+    }
 
     const formatDate = (date) => {
-        if (!date) return ""
+        if (!date || isNaN(date.getTime())) {
+            return ""
+        }
         return date.toLocaleDateString("ru-RU", {
             day: "numeric",
             month: "long",
@@ -25,14 +39,16 @@ const HistoryItem = (props) => {
         })
     }
 
+    const animate = index !== null
+
     return (
         <div
-            className={`${styles[`history-item-${result}`]} ${styles["history-item-animate"]}`}
-            style={{ animationDelay: `${index * 0.05}s` }}
+            className={`${styles[`history-item-${result}`]} ${animate ? styles["history-item-animate"] : ""}`}
+            style={animate ? { animationDelay: `${index * 0.05}s` } : {}}
         >
             <div className={styles.data}>
                 <h1 className={styles["game-name"]}>{title}</h1>
-                {createdAt && (
+                {createdAt && !isNaN(createdAt.getTime()) && (
                     <p className={styles.date}>{formatDate(createdAt)}</p>
                 )}
             </div>

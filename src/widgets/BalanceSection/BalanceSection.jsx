@@ -3,8 +3,8 @@ import Modal from 'react-modal'
 import Placeholder from "@/components/Placeholder"
 import { useCallback, useContext, useState } from "react"
 import { AccountContext } from "@/context/AccountContext"
-import styles from "./BalanceSection.module.css"
 import PaymentModal from "../PaymentModal"
+import styles from "./BalanceSection.module.css"
 
 const BalanceSection = (props) => {
     const {

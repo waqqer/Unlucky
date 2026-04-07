@@ -33,25 +33,23 @@ const ArStats = () => {
         )
     }
 
-    const totalAr = (stats?.wins_amount ?? 0) + (stats?.loss_amount ?? 0)
-
     return (
         <StatsGroup title="Статистика по арам">
             <StatCard
                 icon="fa-solid fa-coins"
-                label="Всего выиграно"
+                label="Потрачено на выиграши"
                 value={stats?.wins_amount ?? 0}
                 valueColor="win"
             />
             <StatCard
                 icon="fa-solid fa-wallet"
-                label="Всего аров было получено"
-                value={totalAr}
+                label="Всего аров депнуто"
+                value={stats?.total_amount ?? 0}
                 valueColor="primary"
             />
             <StatCard
                 icon="fa-solid fa-arrow-trend-down"
-                label="Всего проиграно"
+                label="Всего получено с поражений"
                 value={stats?.loss_amount ?? 0}
                 valueColor="lose"
             />

@@ -3,7 +3,7 @@ import StatsGroup from "@/components/StatsGroup"
 import StatCard from "@/components/StatCard"
 import Placeholder from "@/components/Placeholder"
 import styles from "./OnlineStats.module.css"
-import GStatsApi from "../../api/g_stats"
+import GStatsApi from "@/api/g_stats"
 
 const OnlineStats = () => {
     const [stats, setStats] = useState(null)

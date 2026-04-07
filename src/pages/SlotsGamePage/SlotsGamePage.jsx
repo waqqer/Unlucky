@@ -1,5 +1,4 @@
 import UserProfile from "@/widgets/UserProfile"
-import ProfileButton from "@/components/ProfileButton"
 import SlotMachineGame from "@/widgets/SlotMachineGame"
 import GameHistory from "@/widgets/GameHistory"
 import Container from "@/components/Container"
@@ -36,9 +35,7 @@ const SlotsGamePage = () => {
     return (
         <>
             <header>
-                <UserProfile>
-                    <ProfileButton text="На главную" link="/"></ProfileButton>
-                </UserProfile>
+                <UserProfile />
             </header>
 
             <main className={styles.main}>

@@ -30,16 +30,25 @@
     align-items: center;
     gap: 8px;
 
-    background-color: rgb(121, 148, 172);
-    opacity: 0.4;
+    background-color: rgba(45, 58, 70, 0.4);
+    border: 1px solid rgb(58, 62, 77);
+    border-radius: 15px;
+    opacity: 1;
 }
 
 .home-btn-pc:hover {
-    background-color: rgb(141, 167, 190);
+    background-color: rgba(45, 58, 70, 0.4);
+    border: 1px solid rgb(58, 62, 77);
+    border-radius: 10px;
     transform: translateX(-4px);
 }
 
+.home-btn i {
+    transition: all 0.3s ease;
+}
+
 .home-btn-pc:hover i {
+    transition: all 0.3s ease;
     transform: translateX(-4px);
 }
 

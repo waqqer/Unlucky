@@ -45,7 +45,7 @@ const HistorySection = (props) => {
 
                 {rendered_list.length > 0 ?
                     <div className={styles["history-list"]} >
-                        {rendered_list.map(i => <HistoryItem key={i.id} data={i} />)}
+                        {rendered_list.map(i => <HistoryItem key={i.id} data={i} index={null} />)}
                     </div> :
                     <p className={styles["not-found-message"]} >Тут пока ничего нет...</p>
                 }

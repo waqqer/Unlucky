@@ -1,11 +1,24 @@
 import styles from "./GlobalHistoryItem.module.css"
 import useHead from "@/hooks/useHead"
+import { useEffect, useState } from "react"
 
 const GlobalHistoryItem = (props) => {
     const {
         data,
-        index = 0
+        index = 0,
+        animate = false
     } = props
+
+    const [shouldAnimate, setShouldAnimate] = useState(false)
+
+    useEffect(() => {
+        if (animate) {
+            const timer = requestAnimationFrame(() => {
+                setShouldAnimate(true)
+            })
+            return () => cancelAnimationFrame(timer)
+        }
+    }, [animate])
 
     const result = data.result ?? "WIN"
     const amount = data.amount ?? 0
@@ -15,9 +28,9 @@ const GlobalHistoryItem = (props) => {
     const avatarUrl = useHead(userUUID)
 
     return (
-        <div 
-            className={`${styles[`history-item-${result}`]} ${styles["history-item-animate"]}`}
-            style={{ animationDelay: `${index * 0.05}s` }}
+        <div
+            className={`${styles[`history-item-${result}`]} ${shouldAnimate ? styles["history-item-animate"] : ""}`}
+            style={shouldAnimate ? { animationDelay: `${index * 0.05}s` } : {}}
         >
             <img
                 src={avatarUrl}
