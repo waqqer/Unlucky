@@ -7,8 +7,7 @@ const LinkButton = (props) => {
         className,
         onClick,
         to = "/",
-        children,
-        target
+        children
     } = props
 
     return (
@@ -16,7 +15,6 @@ const LinkButton = (props) => {
             className={`${styles["link-button"]} ${className}`} 
             onClick={onClick}
             to={to}
-            target={target}
         > 
             {children} 
         </Link>
