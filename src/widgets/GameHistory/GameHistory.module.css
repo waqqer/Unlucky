@@ -9,6 +9,16 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     backdrop-filter: saturate(150%);
+
+    animation: history-show 3s ease;
+}
+
+@keyframes history-show {
+    from {
+        transform: translateX(-20px);
+        filter: brightness(110%);
+        opacity: 0;
+    }
 }
 
 .title {

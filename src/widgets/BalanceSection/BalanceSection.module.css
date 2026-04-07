@@ -12,8 +12,15 @@
 
     align-items: center;
     justify-content: space-between;
+
+    animation: balance-show 1s ease;
 }
 
+@keyframes balance-show {
+    from {
+        opacity: 0.3;
+    }
+}
 .add-money-button {
     display: flexbox;
     background-color: #3b82f6;
@@ -137,6 +144,8 @@
         flex-direction: column;
         align-items: center;
         gap: 10px;
+
+        animation: none;
     }
 
     .add-money-button {

@@ -7,7 +7,8 @@ const GameCard = (props) => {
         link,
         title,
         desc,
-        image
+        image,
+        className
     } = props
 
     const navigate = useNavigate()
@@ -17,7 +18,7 @@ const GameCard = (props) => {
     }
 
     return (
-        <div className={styles["game-card"]} onClick={handleClick}>
+        <div className={`${styles["game-card"]} {className}`} onClick={handleClick}>
             <div 
                 className={styles["card-image"]} 
                 style={{ backgroundImage: `url(${image})` }}

@@ -30,7 +30,7 @@ const SlotMachineGame = (props) => {
     const autoRerollEnabledRef = useRef(false)
 
     const [reels, setReels] = useState(["coal", "coal", "coal"])
-    const [bet, setBet] = useState(8)
+    const [bet, setBet] = useState(10)
     const [isSpinning, setIsSpinning] = useState(false)
     const [isRequestPending, setIsRequestPending] = useState(false)
     const [winAmount, setWinAmount] = useState(null)

@@ -1,6 +1,7 @@
 import GameCard from "../GameCard"
 import SlotsImage from "@/shared/images/slots.png"
 import MinerImage from "@/shared/images/miner.png"
+import RocketImage from "@/shared/images/rocket.png"
 import { memo } from "react"
 import styles from "./GamesList.module.css"
 
@@ -23,7 +24,7 @@ const GamesList = () => {
             <GameCard 
                 title="Ракеты" 
                 desc="" 
-                image={MinerImage} 
+                image={RocketImage} 
                 link="/rocket"
             />
         </div>

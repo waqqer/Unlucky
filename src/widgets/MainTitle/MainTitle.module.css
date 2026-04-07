@@ -2,6 +2,17 @@
     font-size: 5.5vh;
 }
 
+.icon {
+    animation: icon-jump 1s ease-in-out 0.3s both;
+}
+
+@keyframes icon-jump {
+    from {
+        transform: scale(105%, 105%);
+        filter: brightness(110%);
+    }
+}
+
 .title-container {
     display: flex;
     gap: 2%;
@@ -16,7 +27,29 @@
 }
 
 .purple-part {
-    color: blueviolet
+    color: blueviolet;
+    display: inline-block;
+    animation: purple-part-show 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+@keyframes purple-part-show {
+    0% {
+        transform: translateX(70px);
+        opacity: 0;
+        filter: blur(4px);
+    }
+    60% {
+        opacity: 1;
+        filter: blur(0);
+    }
+    80% {
+        transform: translateX(2px);
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+        filter: blur(0);
+    }
 }
 
 .desc {
@@ -28,6 +61,13 @@
     letter-spacing: 1.2px;
 
     text-transform: capitalize;
+    animation: desc-show 3s ease;
+}
+
+@keyframes desc-show {
+    from {
+        opacity: 0;
+    }
 }
 
 .title-box {
@@ -51,5 +91,9 @@
     .title-box {
         margin-top: 5vh;
         margin-bottom: 3.2vh;
+    }
+
+    .purple-part {
+        animation: none;
     }
 }

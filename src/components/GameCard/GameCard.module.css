@@ -26,6 +26,18 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
                 box-shadow 0.3s ease;
+
+    animation: card-fade 0.75s ease;
+    animation-delay: 0s;
+    opacity: 0;
+}
+
+@keyframes card-fade {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+        filter: brightness(200%);
+    }
 }
 
 .card-image {
@@ -160,6 +172,7 @@
 @media (max-width: 630px) {
     .game-card {
         border-radius: 12px;
+        animation: none;
     }
 
     .details {

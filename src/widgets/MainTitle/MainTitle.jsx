@@ -9,7 +9,7 @@ const MainTitle = () => {
         <Container className={styles["title-box"]}>
             <Title className={styles["main-title"]}>
                 <div className={styles["title-container"]}>
-                    <img src={Icon} alt="Unlucky icon" width={96} height={96} className="mobile-hide"/>
+                    <img src={Icon} alt="Unlucky icon" width={96} height={96} className={`${styles.icon} mobile-hide`}/>
                     <h1 className={styles.title}>
                         <span>Un</span>
                         <span className={styles["purple-part"]}>lucky</span>
