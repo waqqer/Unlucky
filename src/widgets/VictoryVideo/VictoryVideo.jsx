@@ -3,7 +3,7 @@ import styles from "./VictoryVideo.module.css"
 
 const VictoryVideo = (props) => {
     const {
-        className
+        className = ""
     } = props
 
     return (

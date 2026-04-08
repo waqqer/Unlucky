@@ -2,7 +2,7 @@ import styles from "./DemoMode.module.css"
 
 const DemoMode = (props) => {
     const {
-        className,
+        className = "",
         enabled,
         onToggle,
         disabled = false

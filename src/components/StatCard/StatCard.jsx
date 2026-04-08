@@ -6,7 +6,7 @@ const StatCard = (props) => {
         label,
         value,
         valueColor,
-        className
+        className = ""
     } = props
 
     return (

@@ -7,7 +7,7 @@ import styles from "./StatsSection.module.css"
 
 const StatsSection = (props) => {
     const {
-        className
+        className = ""
     } = props
 
     const {

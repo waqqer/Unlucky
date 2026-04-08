@@ -2,7 +2,7 @@ import styles from "./Title.module.css"
 
 const Title = (props) => {
     const {
-        className,
+        className = "",
         children
     } = props
 

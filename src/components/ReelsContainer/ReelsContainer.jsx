@@ -2,7 +2,7 @@ import styles from "./ReelsContainer.module.css"
 
 const ReelsContainer = (props) => {
     const {
-        className,
+        className = "",
         children
     } = props
 

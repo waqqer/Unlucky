@@ -8,7 +8,7 @@ import styles from "./BalanceSection.module.css"
 
 const BalanceSection = (props) => {
     const {
-        className
+        className = ""
     } = props
 
     const {

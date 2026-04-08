@@ -2,7 +2,7 @@ import styles from "./BetPresets.module.css"
 
 const BetPresets = (props) => {
     const {
-        className,
+        className = "",
         onSelect,
         disabled = false,
         presets = [10, 50, 100, 500]

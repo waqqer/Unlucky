@@ -4,7 +4,7 @@ import styles from "./LinkButton.module.css"
 
 const LinkButton = (props) => {
     const {
-        className,
+        className = "",
         onClick,
         to = "/",
         children

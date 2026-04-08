@@ -3,7 +3,7 @@ import styles from "./AdminInfoBlock.module.css"
 const AdminInfoBlock = (props) => {
     const {
         children,
-        className
+        className = ""
     } = props
 
     return (

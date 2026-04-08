@@ -2,7 +2,7 @@ import styles from "./AutoReroll.module.css"
 
 const AutoReroll = (props) => {
     const {
-        className,
+        className = "",
         enabled,
         onToggle,
         disabled = false

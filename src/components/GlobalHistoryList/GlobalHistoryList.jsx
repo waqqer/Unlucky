@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react"
 
 const GlobalHistoryList = (props) => {
     const {
-        className,
+        className = "",
         history = []
     } = props
 

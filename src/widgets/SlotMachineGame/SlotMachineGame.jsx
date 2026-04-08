@@ -16,7 +16,7 @@ const SYMBOLS = ["star", "amethyst", "redstone", "coal", "iron", "gold", "diamon
 
 const SlotMachineGame = (props) => {
     const {
-        className,
+        className = "",
         onGameComplete,
         onHistoryUpdate,
         soundEnabled = true

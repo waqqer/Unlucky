@@ -9,7 +9,7 @@ import styles from "./HistorySection.module.css"
 
 const HistorySection = (props) => {
     const {
-        className
+        className = ""
     } = props
 
     const {

@@ -1,5 +1,3 @@
-import { useContext } from "react"
-import { AccountContext } from "@/context/AccountContext"
 import styles from "./HistoryItem.module.css"
 
 const HistoryItem = (props) => {

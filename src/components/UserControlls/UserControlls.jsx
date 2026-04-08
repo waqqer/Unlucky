@@ -4,7 +4,7 @@ import ProfileButton from "../ProfileButton"
 
 const UserControlls = (props) => {
     const {
-        className,
+        className = "",
         openAbout,
         openProfile,
         children

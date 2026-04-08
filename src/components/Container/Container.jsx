@@ -2,7 +2,7 @@ import styles from "./Container.module.css"
 
 const Container = (props) => {
     const {
-        className,
+        className = "",
         children
     } = props
 

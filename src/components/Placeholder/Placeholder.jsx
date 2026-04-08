@@ -3,7 +3,7 @@ import styles from "./Placeholder.module.css"
 
 const Placeholder = (props) => {
     const {
-        className
+        className = ""
     } = props
 
     return (

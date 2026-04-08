@@ -20,7 +20,7 @@ const SYMBOL_IMAGES = {
 
 const SlotReel = (props) => {
     const {
-        className,
+        className = "",
         symbol,
         isSpinning = false,
         isStopped = false

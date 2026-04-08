@@ -9,7 +9,7 @@ import styles from "./UserProfile.module.css"
 
 const UserProfile = (props) => {
     const {
-        className,
+        className = "",
         children
     } = props
 

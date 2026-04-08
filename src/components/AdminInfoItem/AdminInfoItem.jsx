@@ -3,7 +3,7 @@ import styles from "./AdminInfoItem.module.css"
 
 const AdminInfoItem = (props) => {
     const {
-        className,
+        className = "",
         children
     } = props
 

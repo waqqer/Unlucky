@@ -6,7 +6,7 @@ import styles from "./GameHistory.module.css"
 
 const GameHistory = forwardRef((props, ref) => {
     const {
-        className,
+        className = "",
         gameName = "Слоты",
         limit = 50
     } = props

@@ -4,7 +4,7 @@ const StatsGroup = (props) => {
     const {
         title,
         children,
-        className
+        className = ""
     } = props
 
     return (

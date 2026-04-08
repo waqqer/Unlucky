@@ -2,7 +2,7 @@ import styles from "./BetInput.module.css"
 
 const BetInput = (props) => {
     const {
-        className,
+        className = "",
         value,
         onChange,
         placeholder = "Введите ставку",

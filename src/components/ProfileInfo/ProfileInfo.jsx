@@ -5,7 +5,7 @@ import styles from "./ProfileInfo.module.css"
 
 const ProfileInfo = (props) => {
     const {
-        className
+        className = ""
     } = props
 
     const {
