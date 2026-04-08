@@ -64,6 +64,7 @@ const SlotReel = (props) => {
                     alt={symbol}
                     className={styles.symbol}
                     draggable={false}
+                    loading="lazy"
                 />
             </div>
         </div>

@@ -96,19 +96,19 @@ const SlotsGamePage = () => {
                     <div className={styles["sym-container"]}>
                         <ul className={styles["symbols-list"]}>
                             <li>
-                                <img src={coalImg} alt="Уголь" className={styles["symbol-icon"]} />
+                                <img src={coalImg} alt="Уголь" className={styles["symbol-icon"]} loading="lazy" />
                                 <strong>Уголь</strong> — самый частый символ
                             </li>
                             <li>
-                                <img src={ironImg} alt="Железо" className={styles["symbol-icon"]} />
+                                <img src={ironImg} alt="Железо" className={styles["symbol-icon"]} loading="lazy" />
                                 <strong>Железо</strong> — средняя редкость
                             </li>
                             <li>
-                                <img src={goldImg} alt="Золото" className={styles["symbol-icon"]} />
+                                <img src={goldImg} alt="Золото" className={styles["symbol-icon"]} loading="lazy" />
                                 <strong>Золото</strong> — редкий символ
                             </li>
                             <li>
-                                <img src={diamondImg} alt="Алмаз" className={styles["symbol-icon"]} />
+                                <img src={diamondImg} alt="Алмаз" className={styles["symbol-icon"]} loading="lazy" />
                                 <strong>Алмаз</strong> x5
                             </li>
                         </ul>

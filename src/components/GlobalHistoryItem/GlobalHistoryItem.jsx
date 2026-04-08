@@ -36,6 +36,8 @@ const GlobalHistoryItem = (props) => {
                 src={avatarUrl}
                 alt={username}
                 className={styles.avatar}
+                loading="lazy"
+                draggable={false}
             />
             <div className={styles.data}>
                 <h1 className={styles.username}>{username}</h1>

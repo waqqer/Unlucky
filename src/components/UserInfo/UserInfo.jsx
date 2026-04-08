@@ -20,6 +20,7 @@ const UserInfo = () => {
                     alt="Аватар клиента"
                     width={48}
                     height={48}
+                    loading="lazy"
                 />
             </div>
             <div className={styles["user-info"]}>
