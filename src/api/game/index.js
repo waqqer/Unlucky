@@ -40,28 +40,38 @@ export const SlotsApi = {
 }
 
 export const RocketApi = {
-    play: async (uuid, bet, targetMultiplier) => {
-        const body = {
-            uuid: uuid,
-            bet: bet
-        }
-        if (typeof targetMultiplier === "number" && targetMultiplier > 1.01) {
-            body.targetMultiplier = targetMultiplier
-        }
-
-        return await fetch(BASE_URL + "/rocket", {
+    crash: async () => {
+        const response = await fetch(BASE_URL + "/rocket/crash", {
             method: 'POST',
             headers: HEADERS,
-            body: JSON.stringify(body)
-        }).then(res => res.json())
-    }
-}
+            body: JSON.stringify({})
+        })
 
-export const MinerApi = {
-    play: async () => {
-        return await fetch(BASE_URL + "/miner", {
+        if (!response.ok) {
+            const errorText = await response.text()
+            throw new Error(`Rocket API error: ${response.status} ${errorText}`)
+        }
+
+        return response.json()
+    },
+
+    result: async (uuid, bet, multiplier) => {
+        const requestBody = {
+            bet: typeof bet === "number" ? bet : parseFloat(bet) || 0,
+            multiplier: typeof multiplier === "number" ? multiplier : parseFloat(multiplier) || 0
+        }
+
+        const response = await fetch(BASE_URL + `/rocket/result/${uuid}`, {
             method: 'POST',
-            headers: HEADERS
-        }).then(res => res.json())
+            headers: HEADERS,
+            body: JSON.stringify(requestBody)
+        })
+
+        if (!response.ok) {
+            const errorText = await response.text()
+            throw new Error(`Rocket API error: ${response.status} ${errorText}`)
+        }
+
+        return response.json()
     }
 }
