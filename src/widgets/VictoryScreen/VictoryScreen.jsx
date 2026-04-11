@@ -13,6 +13,7 @@ const VictoryScreen = (props) => {
     } = props
 
     const hasTriggeredComplete = useRef(false)
+    const closeTimerRef = useRef(null)
 
     const handleClose = useCallback(() => {
         if (onClose) {
@@ -21,20 +22,33 @@ const VictoryScreen = (props) => {
     }, [onClose])
 
     useEffect(() => {
+        // Сброс при закрытии
         if (!isOpen) {
             hasTriggeredComplete.current = false
+            if (closeTimerRef.current) {
+                clearTimeout(closeTimerRef.current)
+                closeTimerRef.current = null
+            }
             return
         }
 
-        const timer = setTimeout(() => {
+        // Вызываем onVictoryComplete сразу при открытии
+        if (onVictoryComplete && !hasTriggeredComplete.current) {
+            hasTriggeredComplete.current = true
+            onVictoryComplete()
+        }
+
+        // Автоматическое закрытие
+        closeTimerRef.current = setTimeout(() => {
             handleClose()
-            if (onVictoryComplete && !hasTriggeredComplete.current) {
-                hasTriggeredComplete.current = true
-                onVictoryComplete()
-            }
         }, AUTO_CLOSE_DELAY)
 
-        return () => clearTimeout(timer)
+        return () => {
+            if (closeTimerRef.current) {
+                clearTimeout(closeTimerRef.current)
+                closeTimerRef.current = null
+            }
+        }
     }, [isOpen, handleClose, onVictoryComplete])
 
     if (!isOpen) {
@@ -46,7 +60,7 @@ const VictoryScreen = (props) => {
             <VictoryVideo className={styles["victory-video"]} />
             <div className={styles["victory-content"]}>
                 <h1 className={styles["victory-title"]}>Ты победил</h1>
-                <p className={styles["victory-amount"]}>+{winAmount} Ар</p>
+                <p className={styles["victory-amount"]}>+{Math.floor(winAmount)} Ар</p>
             </div>
         </div>
     )

@@ -1,0 +1,133 @@
+.rocket-game {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgba(30, 41, 59, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    backdrop-filter: saturate(150%);
+    overflow: hidden;
+}
+
+.game-area {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.controls-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.bet-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.play-btn {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, rgba(100, 150, 255, 0.8), rgba(50, 100, 200, 0.8));
+    color: white;
+    border: 1px solid rgba(100, 150, 255, 0.5);
+}
+
+.play-btn:hover:not(:disabled) {
+    transform: scale(101%, 101%);
+    background: linear-gradient(135deg, rgba(120, 170, 255, 0.9), rgba(70, 120, 220, 0.9));
+}
+
+.play-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cashout-btn {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.8), rgba(16, 185, 129, 0.8));
+    color: white;
+    border: 1px solid rgba(52, 211, 153, 0.5);
+}
+
+.cashout-btn:hover:not(:disabled) {
+    transform: scale(101%, 101%);
+    background: linear-gradient(135deg, rgba(72, 231, 173, 0.9), rgba(36, 205, 149, 0.9));
+}
+
+.cashout-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cashout-btn-danger {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(220, 38, 38, 0.8));
+    color: white;
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    animation: dangerPulse 1s ease-in-out infinite;
+}
+
+.cashout-btn-danger:hover:not(:disabled) {
+    transform: scale(101%, 101%);
+    background: linear-gradient(135deg, rgba(249, 88, 88, 0.9), rgba(230, 58, 58, 0.9));
+}
+
+.cashout-btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes dangerPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 15px 5px rgba(239, 68, 68, 0.2);
+    }
+}
+
+@media (max-width: 630px) {
+    .rocket-game {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .game-area {
+        height: 250px;
+    }
+
+    .play-btn,
+    .cashout-btn,
+    .cashout-btn-danger {
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+}

@@ -3,6 +3,7 @@ import { MainPage, NotFoundPage } from "@/pages"
 import Modal from 'react-modal'
 import AdminPage from "@/pages/AdminPage"
 import SlotsGamePage from "@/pages/SlotsGamePage"
+import RocketGamePage from "@/pages/RocketGamePage"
 import { useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import "./styles"
@@ -24,6 +25,7 @@ function App() {
         {(account?.role ?? "USER") === "ADMIN" && <Route path='/admin' element={ <AdminPage /> } />}
 
         <Route path='/slots' element={<SlotsGamePage />} />
+        <Route path='/rocket' element={<RocketGamePage />} />
       </Routes>
     </HashRouter>
   )

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from "react"
+import { useState, useEffect, useCallback, forwardRef } from "react"
 import HistoryApi from "@/api/history"
 import Title from "@/components/Title"
 import GlobalHistoryList from "@/components/GlobalHistoryList"
@@ -8,7 +8,8 @@ const GameHistory = forwardRef((props, ref) => {
     const {
         className = "",
         gameName = "Слоты",
-        limit = 50
+        limit = 50,
+        refreshTrigger = 0
     } = props
 
     const [history, setHistory] = useState([])
@@ -21,15 +22,15 @@ const GameHistory = forwardRef((props, ref) => {
             .catch(() => {
                 setHistory([])
             })
-    }, [gameName])
+    }, [gameName, limit])
 
     useEffect(() => {
         loadHistory()
     }, [loadHistory])
 
-    useImperativeHandle(ref, () => ({
-        refreshHistory: loadHistory
-    }))
+    useEffect(() => {
+        loadHistory()
+    }, [refreshTrigger, loadHistory])
 
     return (
         <div className={`${styles["game-history"]} ${className}`}>

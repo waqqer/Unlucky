@@ -28,7 +28,7 @@ const HistorySection = (props) => {
 
     useEffect(() => {
         HistoryApi.getByUuid(user?.minecraftUUID)
-                  .then(data => setHistory(data ?? []))
+                  .then(data => setHistory(data.reverse() ?? []))
                   .catch(() => {
                         setHistory([])
                   })

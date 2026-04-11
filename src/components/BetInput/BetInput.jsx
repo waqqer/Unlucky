@@ -15,10 +15,22 @@ const BetInput = (props) => {
         const val = parseInt(e.target.value, 10)
         if (isNaN(val) || val < 0) {
             onChange(0)
+        } else if (val < min) {
+            onChange(min)
         } else if (val > max) {
             onChange(max)
         } else {
             onChange(val)
+        }
+    }
+
+    const handleBlur = () => {
+        // При потере фокуса применяем ограничения
+        const val = typeof value === "number" ? value : 0
+        if (val < min) {
+            onChange(min)
+        } else if (val > max) {
+            onChange(max)
         }
     }
 
@@ -30,6 +42,7 @@ const BetInput = (props) => {
                 className={styles["bet-input"]}
                 value={value}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder={placeholder}
                 min={min}
                 max={max}

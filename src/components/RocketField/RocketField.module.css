@@ -1,0 +1,64 @@
+.rocket-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    overflow: hidden;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.multiplier {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    transition: color 1s ease;
+    animation: multiplierPulse 1s ease-in-out infinite;
+    max-width: 100%;
+    text-align: center;
+    word-break: break-all;
+}
+
+.crashed-label {
+    margin-top: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #ef4444;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: crashShake 0.5s ease-in-out;
+}
+
+@keyframes multiplierPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes crashShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@media (max-width: 630px) {
+    .multiplier {
+        font-size: 48px;
+    }
+
+    .crashed-label {
+        font-size: 18px;
+    }
+}

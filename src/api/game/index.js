@@ -55,10 +55,11 @@ export const RocketApi = {
         return response.json()
     },
 
-    result: async (uuid, bet, multiplier) => {
+    result: async (uuid, bet, multiplier, isWin) => {
         const requestBody = {
             bet: typeof bet === "number" ? bet : parseFloat(bet) || 0,
-            multiplier: typeof multiplier === "number" ? multiplier : parseFloat(multiplier) || 0
+            multiplier: typeof multiplier === "number" ? multiplier : parseFloat(multiplier) || 0,
+            isWin
         }
 
         const response = await fetch(BASE_URL + `/rocket/result/${uuid}`, {

@@ -4,7 +4,7 @@ import GameHistory from "@/widgets/GameHistory"
 import Container from "@/components/Container"
 import ModalExitButton from "@/components/ModalExitButton"
 import Button from "@/components/Button"
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useState } from "react"
 import GameExtraControlls from "@/components/GameExtraControlls"
 import Modal from 'react-modal'
 import coalImg from "@/shared/images/games/slots/coal.webp"
@@ -14,12 +14,10 @@ import diamondImg from "@/shared/images/games/slots/diamond.webp"
 import styles from "./SlotsGamePage.module.css"
 
 const SlotsGamePage = () => {
-    const gameHistoryRef = useRef(null)
+    const [refreshCounter, setRefreshCounter] = useState(0)
 
     const handleHistoryUpdate = useCallback(() => {
-        if (gameHistoryRef.current) {
-            gameHistoryRef.current.refreshHistory()
-        }
+        setRefreshCounter(prev => prev + 1)
     }, [])
 
     const [aboutSlots, setAboutSlots] = useState(false)
@@ -54,7 +52,7 @@ const SlotsGamePage = () => {
                     </GameExtraControlls>
                     <div className={styles["game-layout"]}>
                         <GameHistory
-                            ref={gameHistoryRef}
+                            refreshTrigger={refreshCounter}
                             className={styles.history}
                             gameName="Слоты"
                             limit={10}
