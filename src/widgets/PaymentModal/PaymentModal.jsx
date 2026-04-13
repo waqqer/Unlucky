@@ -3,8 +3,6 @@ import Button from "@/components/Button"
 import { useCallback, useState, useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./PaymentModal.module.css"
-import { useNavigate } from "react-router"
-import PaymentsApi from "@/api/payments"
 
 const PaymentModal = (props) => {
     const {
@@ -23,8 +21,6 @@ const PaymentModal = (props) => {
     }, [])
 
     const handlePayment = useCallback(() => {
-        PaymentsApi.newAddPay(user.minecraftUUID, amount)
-        .then(d => console.log(d))
     }, [amount])
 
     const isSubmitDisabled = !amount || amount < 1 || !user
