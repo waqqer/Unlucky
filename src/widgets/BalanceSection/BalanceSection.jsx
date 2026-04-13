@@ -21,13 +21,18 @@ const BalanceSection = (props) => {
 
     const сlosePayment = useCallback(() => setPaymentModal(false))
     const openPaymentADD = useCallback(() => {
-        setMethod("ADD")
-        setPaymentModal(true)
-    })
+        if (isLoaded) {
+            setMethod("ADD")
+            setPaymentModal(true)
+        }
+    }, [isLoaded])
+    
     const openPaymentTAKE = useCallback(() => {
-        setMethod("TAKE")
-        setPaymentModal(true)
-    })
+        if (isLoaded) {
+            setMethod("TAKE")
+            setPaymentModal(true)
+        }
+    }, [isLoaded])
 
     return (
         <>
