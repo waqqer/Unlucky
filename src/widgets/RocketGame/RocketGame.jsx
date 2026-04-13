@@ -72,7 +72,6 @@ const RocketGame = (props) => {
     const isFlyingRef = useRef(false)
     const isRequestPendingRef = useRef(false)
     const autoRerollEnabledRef = useRef(false)
-    const pendingAutoRerollRef = useRef(false)
     const crashedPointRef = useRef(null)
 
     const [bet, setBet] = useState(10)
@@ -86,6 +85,7 @@ const RocketGame = (props) => {
     const [isRequestPending, setIsRequestPending] = useState(false)
     const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
     const [demoMode, setDemoMode] = useState(false)
+    const [pendingAutoRerollAfterVictory, setPendingAutoRerollAfterVictory] = useState(false)
 
     useEffect(() => {
         betRef.current = bet
@@ -142,13 +142,7 @@ const RocketGame = (props) => {
     }, [])
 
     const handleDemoToggle = useCallback(() => {
-        setDemoMode(prev => {
-            const newMode = !prev
-            if (newMode) {
-                setAutoRerollEnabled(false)
-            }
-            return newMode
-        })
+        setDemoMode(prev => !prev)
     }, [])
 
     const handlePresetSelect = useCallback((preset) => {
@@ -166,14 +160,25 @@ const RocketGame = (props) => {
         autoRerollTimeoutRef.current = setTimeout(() => {
             if (!isMountedRef.current) return
             if (!autoRerollEnabledRef.current) return
+
             if (demoModeRef.current) {
-                startGameRef.current?.()
+                const startFn = startGameRef.current
+                if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
+                    startFn()
+                } else if (startFn) {
+                    scheduleAutoReroll(500)
+                }
                 return
             }
 
             const currentBalance = getBalance()
             if (currentBalance >= betRef.current) {
-                startGameRef.current?.()
+                const startFn = startGameRef.current
+                if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
+                    startFn()
+                } else if (startFn) {
+                    scheduleAutoReroll(500)
+                }
             } else {
                 setAutoRerollEnabled(false)
             }
@@ -389,23 +394,53 @@ const RocketGame = (props) => {
                 })
 
             setShowVictory(true)
-            pendingAutoRerollRef.current = autoRerollEnabledRef.current
+            if (autoRerollEnabledRef.current) {
+                setPendingAutoRerollAfterVictory(true)
+            }
         } else {
             setTimeout(() => {
                 if (!isMountedRef.current) return
                 setHasCashedOut(false)
                 hasCashedOutRef.current = false
                 setIsCrashed(false)
+
+                if (autoRerollEnabledRef.current && isMountedRef.current) {
+                    scheduleAutoReroll(1000)
+                }
             }, 500)
         }
     }, [isCrashed, account, updateUser, onHistoryUpdate, sounds])
 
     useEffect(() => {
-        if (pendingAutoRerollRef.current && !showVictory) {
-            pendingAutoRerollRef.current = false
-            scheduleAutoReroll(1000)
+        if (pendingAutoRerollAfterVictory && !showVictory && autoRerollEnabled) {
+            setPendingAutoRerollAfterVictory(false)
+
+            if (demoMode) {
+                autoRerollTimeoutRef.current = setTimeout(() => {
+                    if (isMountedRef.current && autoRerollEnabledRef.current && demoModeRef.current) {
+                        const startFn = startGameRef.current
+                        if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
+                            startFn()
+                        }
+                    }
+                }, 1000)
+            } else {
+                const currentBalance = getBalance()
+                if (currentBalance >= bet) {
+                    autoRerollTimeoutRef.current = setTimeout(() => {
+                        if (isMountedRef.current && autoRerollEnabledRef.current && !demoModeRef.current) {
+                            const startFn = startGameRef.current
+                            if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
+                                startFn()
+                            }
+                        }
+                    }, 1000)
+                } else {
+                    setAutoRerollEnabled(false)
+                }
+            }
         }
-    }, [showVictory, scheduleAutoReroll])
+    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, demoMode, getBalance, bet])
 
     return (
         <>
@@ -443,7 +478,6 @@ const RocketGame = (props) => {
                     <AutoReroll
                         enabled={autoRerollEnabled}
                         onToggle={handleAutoRerollToggle}
-                        disabled={demoMode}
                     />
 
                     <DemoMode
