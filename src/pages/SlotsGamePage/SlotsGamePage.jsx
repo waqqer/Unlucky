@@ -78,7 +78,7 @@ const SlotsGamePage = () => {
                 <h2>Инструкция к игре "Слоты"</h2>
                 <div className={styles["game-description"]}>
                     <p className="mobile-hide">
-                        <strong>Слоты</strong> — классическая азартная игра, где вам нужно собрать
+                        <strong>Слоты</strong> - классическая азартная игра, где вам нужно собрать
                         одинаковые символы на одной линии для победы!
                     </p>
 
@@ -89,28 +89,6 @@ const SlotsGamePage = () => {
                         <li>Дождитесь результата вращения барабанов</li>
                         <li>Получите выигрыш при совпадении символов!</li>
                     </ol>
-
-                    <h3>💎 Символы игры:</h3>
-                    <div className={styles["sym-container"]}>
-                        <ul className={styles["symbols-list"]}>
-                            <li>
-                                <img src={coalImg} alt="Уголь" className={styles["symbol-icon"]} loading="lazy" />
-                                <strong>Уголь</strong> — самый частый символ
-                            </li>
-                            <li>
-                                <img src={ironImg} alt="Железо" className={styles["symbol-icon"]} loading="lazy" />
-                                <strong>Железо</strong> — средняя редкость
-                            </li>
-                            <li>
-                                <img src={goldImg} alt="Золото" className={styles["symbol-icon"]} loading="lazy" />
-                                <strong>Золото</strong> — редкий символ
-                            </li>
-                            <li>
-                                <img src={diamondImg} alt="Алмаз" className={styles["symbol-icon"]} loading="lazy" />
-                                <strong>Алмаз</strong> x5
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </Modal>
         </>

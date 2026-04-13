@@ -11,7 +11,6 @@ import AutoReroll from "@/components/AutoReroll"
 import DemoMode from "@/components/DemoMode"
 import styles from "./RocketGame.module.css"
 
-// Звуковые эффекты (встроенные Web Audio API)
 const useGameSounds = (enabled) => {
     const audioContextRef = useRef(null)
 
@@ -37,7 +36,6 @@ const useGameSounds = (enabled) => {
             oscillator.start(ctx.currentTime)
             oscillator.stop(ctx.currentTime + duration)
         } catch {
-            // Игнорируем ошибки аудио
         }
     }, [enabled, getAudioContext])
 
@@ -63,7 +61,6 @@ const RocketGame = (props) => {
     const { account, updateUser, getBalance } = useContext(AccountContext)
     const sounds = useGameSounds(soundEnabled)
 
-    // Refs для игрового состояния (чтобы избежать проблем с замыканиями)
     const isMountedRef = useRef(true)
     const animationFrameRef = useRef(null)
     const autoRerollTimeoutRef = useRef(null)
@@ -78,7 +75,6 @@ const RocketGame = (props) => {
     const pendingAutoRerollRef = useRef(false)
     const crashedPointRef = useRef(null)
 
-    // Состояния
     const [bet, setBet] = useState(10)
     const [isFlying, setIsFlying] = useState(false)
     const [isCrashed, setIsCrashed] = useState(false)
@@ -91,7 +87,6 @@ const RocketGame = (props) => {
     const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
     const [demoMode, setDemoMode] = useState(false)
 
-    // Синхронизация refs с состояниями
     useEffect(() => {
         betRef.current = bet
     }, [bet])
@@ -112,12 +107,10 @@ const RocketGame = (props) => {
         isRequestPendingRef.current = isRequestPending
     }, [isRequestPending])
 
-    // Синхронизация crashedPoint
     useEffect(() => {
         crashedPointRef.current = crashedPoint
     }, [crashedPoint])
 
-    // Очистка при размонтировании
     useEffect(() => {
         isMountedRef.current = true
         return () => {
@@ -133,7 +126,6 @@ const RocketGame = (props) => {
         }
     }, [])
 
-    // Обновление startGameRef
     useEffect(() => {
         startGameRef.current = startGame
     })
@@ -163,7 +155,6 @@ const RocketGame = (props) => {
         setBet(preset)
     }, [])
 
-    // Функция запуска auto-reroll
     const scheduleAutoReroll = useCallback((delay = 1000) => {
         if (!isMountedRef.current) return
 
@@ -189,7 +180,6 @@ const RocketGame = (props) => {
         }, delay)
     }, [getBalance])
 
-    // Анимация полёта
     const startAnimation = useCallback((crashPoint) => {
         const startTime = Date.now()
         const duration = Math.max(crashPoint * 500, 1000)
@@ -207,7 +197,6 @@ const RocketGame = (props) => {
             setCurrentMultiplier(roundedMult)
             currentMultiplierRef.current = roundedMult
 
-            // Звук при прохождении целых чисел
             const currentWhole = Math.floor(roundedMult)
             if (currentWhole > lastMilestone.current && !hasCashedOutRef.current) {
                 sounds.playTick()
@@ -219,7 +208,6 @@ const RocketGame = (props) => {
                 return
             }
 
-            // Ракета долетела до точки краша
             if (!hasCashedOutRef.current && isMountedRef.current) {
                 setIsCrashed(true)
                 setIsFlying(false)
@@ -243,7 +231,6 @@ const RocketGame = (props) => {
                     }
                 }
 
-                // Auto-reroll после краша
                 if (autoRerollEnabledRef.current && isMountedRef.current) {
                     scheduleAutoReroll(1500)
                 }
@@ -253,7 +240,6 @@ const RocketGame = (props) => {
         animationFrameRef.current = requestAnimationFrame(animate)
     }, [sounds, onHistoryUpdate, scheduleAutoReroll])
 
-    // Запуск игры
     const startGame = useCallback(async () => {
         if (isRequestPendingRef.current || isFlyingRef.current) return
         if (!demoModeRef.current && !account?.UUID) return
@@ -265,7 +251,6 @@ const RocketGame = (props) => {
             return
         }
 
-        // Очистка предыдущего состояния
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current)
             animationFrameRef.current = null
@@ -289,7 +274,6 @@ const RocketGame = (props) => {
         try {
             let crashPoint
             if (demoModeRef.current) {
-                // Генерация демо-точки краша
                 const r = Math.random()
                 if (r < 0.33) {
                     crashPoint = 1 + Math.random() * 1.5
@@ -326,14 +310,12 @@ const RocketGame = (props) => {
         }
     }, [account, getBalance, sounds, startAnimation])
 
-    // Забрать выигрыш
     const cashOut = useCallback(() => {
         if (!isFlyingRef.current || hasCashedOutRef.current || isCrashed) return
 
         const currentMult = currentMultiplierRef.current
         const currentBet = betRef.current
 
-        // Если множитель < 1 — всегда поражение
         if (currentMult < 1) {
             setHasCashedOut(true)
             hasCashedOutRef.current = true
@@ -409,7 +391,6 @@ const RocketGame = (props) => {
             setShowVictory(true)
             pendingAutoRerollRef.current = autoRerollEnabledRef.current
         } else {
-            // В демо-режиме сразу сбрасываем
             setTimeout(() => {
                 if (!isMountedRef.current) return
                 setHasCashedOut(false)
@@ -419,7 +400,6 @@ const RocketGame = (props) => {
         }
     }, [isCrashed, account, updateUser, onHistoryUpdate, sounds])
 
-    // Обработка auto-reroll после закрытия VictoryScreen
     useEffect(() => {
         if (pendingAutoRerollRef.current && !showVictory) {
             pendingAutoRerollRef.current = false
@@ -451,12 +431,12 @@ const RocketGame = (props) => {
                             onChange={setBet}
                             disabled={isRequestPending || isFlying}
                             min={1}
-                            max={10000}
+                            max={100}
                         />
                         <BetPresets
                             onSelect={handlePresetSelect}
                             disabled={isRequestPending || isFlying}
-                            presets={[1, 5, 10, 50, 500]}
+                            presets={[1, 5, 10, 50, 100]}
                         />
                     </div>
 

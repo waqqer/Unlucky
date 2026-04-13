@@ -93,3 +93,27 @@
         margin-top: 3%;
     }
 }
+
+.game-description {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    line-height: 1.6;
+}
+
+.game-description h3 {
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    color: #94a3b8;
+}
+
+.game-description ol,
+.game-description ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.game-description li {
+    margin-bottom: 8px;
+}
