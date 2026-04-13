@@ -3,6 +3,8 @@ import Button from "@/components/Button"
 import { useCallback, useState, useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./PaymentModal.module.css"
+import { useNavigate } from "react-router"
+import PaymentsApi from "@/api/payments"
 
 const PaymentModal = (props) => {
     const {
@@ -10,17 +12,22 @@ const PaymentModal = (props) => {
         close
     } = props
 
-    const { account } = useContext(AccountContext)
-    const [amount, setAmount] = useState("")
+    const { account, user } = useContext(AccountContext)
+    const [amount, setAmount] = useState(10)
 
     const handleAmountChange = useCallback((e) => {
         const value = e.target.value
-        if (value === "" || (Number(value) >= 1 && Number(value) <= 1000)) {
+        if (value >= 1 && value <= 1000) {
             setAmount(value)
         }
     }, [])
 
-    const isSubmitDisabled = !amount || Number(amount) < 1
+    const handlePayment = useCallback(() => {
+        PaymentsApi.newAddPay(user.minecraftUUID, amount)
+        .then(d => console.log(d))
+    }, [amount])
+
+    const isSubmitDisabled = !amount || amount < 1 || !user
 
     return (
         <>
@@ -69,7 +76,7 @@ const PaymentModal = (props) => {
                             <button
                                 key={preset}
                                 className={styles["preset-btn"]}
-                                onClick={() => setAmount(String(preset))}
+                                onClick={() => setAmount(preset)}
                             >
                                 +{preset}
                             </button>
@@ -79,6 +86,7 @@ const PaymentModal = (props) => {
                     <Button
                         className={`${styles.btn} ${isSubmitDisabled ? styles["btn-disabled"] : ""}`}
                         disabled={isSubmitDisabled}
+                        onClick={handlePayment}
                     >
                         {method === "ADD" ? "Пополнить" : "Вывести"}
                     </Button>
