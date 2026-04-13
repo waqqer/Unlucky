@@ -33,11 +33,11 @@ const GameHistory = forwardRef((props, ref) => {
     }, [refreshTrigger, loadHistory])
 
     return (
-        <div className={`${styles["game-history"]} ${className}`}>
+        <div className={`${styles["game-history"]}`}>
             <Title className={styles.title}>
                 <h1 className={styles["history-title"]}>История</h1>
             </Title>
-            <GlobalHistoryList history={history} />
+            <GlobalHistoryList history={history} className={className}/>
         </div>
     )
 })
