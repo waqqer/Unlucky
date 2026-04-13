@@ -37,20 +37,11 @@ const useOnline = () => {
         const handleOffline = () => handleDecrement()
         const handleOnline = () => handleIncrement()
 
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === "hidden") {
-                handleDecrement()
-            } else if (document.visibilityState === "visible") {
-                handleIncrement()
-            }
-        }
-
         window.addEventListener("beforeunload", handleDecrement)
         window.addEventListener("offline", handleOffline)
         window.addEventListener("online", handleOnline)
         window.addEventListener("pagehide", handleDecrement)
         window.addEventListener("unload", handleDecrement)
-        document.addEventListener("visibilitychange", handleVisibilityChange)
 
         return () => {
             window.removeEventListener("beforeunload", handleDecrement)
@@ -58,7 +49,6 @@ const useOnline = () => {
             window.removeEventListener("online", handleOnline)
             window.removeEventListener("pagehide", handleDecrement)
             window.removeEventListener("unload", handleDecrement)
-            document.removeEventListener("visibilitychange", handleVisibilityChange)
             sendDecrement()
         }
     }, [handleIncrement, handleDecrement])
