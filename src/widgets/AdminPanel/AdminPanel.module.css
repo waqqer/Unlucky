@@ -43,20 +43,16 @@
     transform: translateX(-4px);
 }
 
-.home-btn i {
-    transition: all 0.3s ease;
-}
-
-.home-btn-pc:hover i {
-    transition: all 0.3s ease;
-    transform: translateX(-4px);
-}
-
 .home-btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+
     gap: 8px;
     margin-top: 20px;
+
+    background-color: rgba(45, 58, 70, 0.4);
+    border: 1px solid rgb(58, 62, 77);
+    border-radius: 15px;
 }
 
 .home-btn:hover {
@@ -77,5 +73,9 @@
         margin-top: 30px;
         width: 100%;
         justify-content: center;
+    }
+
+    .admin-box {
+        margin-top: 5vh;
     }
 }

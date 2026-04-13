@@ -24,8 +24,7 @@ const AdminPanel = () => {
                     <OnlineStats />
                     <ArStats />
                     <GamesStats />
-                    <Button className={`${styles["home-btn"]} pc-hide back-style`} onClick={handleGoHome}>
-                        <i className="fa-solid fa-arrow-left"></i>
+                    <Button className={`${styles["home-btn"]} pc-hide`} onClick={handleGoHome}>
                         <span>На главную</span>
                     </Button>
                 </div>

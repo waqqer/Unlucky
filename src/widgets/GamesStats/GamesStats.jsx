@@ -33,7 +33,7 @@ const GamesStats = () => {
     const gameNames = {
         slots: "Слоты",
         miner: "Майнер",
-        rocket: "Ракеты"
+        rocket: "Ракетa"
     }
 
     if (loading) {
