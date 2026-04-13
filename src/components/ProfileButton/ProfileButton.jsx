@@ -6,11 +6,18 @@ const ProfileButton = (props) => {
     const {
         text,
         onClick,
-        link
+        link,
+        className = ""
     } = props
 
     return (
-        <Link className={styles["profile-btn"]} onClick={onClick} to={link} >{text}</Link>
+        <Link 
+            className={`${styles["profile-btn"]} ${className}`} 
+            onClick={onClick} 
+            to={link} 
+        >
+            {text}
+        </Link>
     )
 }
 

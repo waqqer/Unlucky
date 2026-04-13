@@ -11,7 +11,6 @@ const UserControlls = (props) => {
     } = props
 
     const {
-        spm,
         account
     } = useContext(AccountContext)
 
@@ -21,6 +20,7 @@ const UserControlls = (props) => {
             {(account?.role ?? "USER") === "ADMIN" && <ProfileButton text="Админ. панель" link="/admin" /> }
             <ProfileButton text="О нас" onClick={openAbout} />
             {children}
+            <ProfileButton text="Главная" link="/" className="pc-hide" />
         </div>
     )
 }
