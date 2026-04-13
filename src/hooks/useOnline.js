@@ -5,13 +5,14 @@ const HEARTBEAT_INTERVAL = 15_000
 const DECREMENT_PAYLOAD = JSON.stringify({})
 const INCREMENT_DELAY = 300
 
+let _isReloaded = false
 const isPageReload = () => {
     try {
         const wasVisited = sessionStorage.getItem("online_tracked")
         sessionStorage.setItem("online_tracked", "1")
         return wasVisited === "1"
     } catch {
-        return false
+        return _isReloaded
     }
 }
 
@@ -44,6 +45,7 @@ const useOnline = () => {
     const handleDecrement = useCallback(() => {
         if (!isIncremented.current) return
         isIncremented.current = false
+        _isReloaded = true
         sendDecrement()
     }, [])
 
@@ -83,10 +85,21 @@ const useOnline = () => {
             startHeartbeat()
         }
 
+        const handlePageshow = (e) => {
+            if (e.persisted) {
+                _isReloaded = true
+            }
+        }
+
         const handleVisibilityChange = () => {
             if (document.visibilityState === "hidden") {
                 handleDecrement()
                 stopHeartbeat()
+            } else if (isIncremented.current === false) {
+                OnlineApi.increment()
+                    .then(() => { isIncremented.current = true })
+                    .catch((error) => { console.error("Visibility increment failed:", error) })
+                startHeartbeat()
             }
         }
 
@@ -94,6 +107,8 @@ const useOnline = () => {
         window.addEventListener("offline", handleOffline)
         window.addEventListener("online", handleOnline)
         window.addEventListener("pagehide", handleDecrement)
+        window.addEventListener("pageshow", handlePageshow)
+        window.addEventListener("unload", handleDecrement)
         document.addEventListener("visibilitychange", handleVisibilityChange)
 
         return () => {
@@ -101,6 +116,8 @@ const useOnline = () => {
             window.removeEventListener("offline", handleOffline)
             window.removeEventListener("online", handleOnline)
             window.removeEventListener("pagehide", handleDecrement)
+            window.removeEventListener("pageshow", handlePageshow)
+            window.removeEventListener("unload", handleDecrement)
             document.removeEventListener("visibilitychange", handleVisibilityChange)
             stopHeartbeat()
             sendDecrement()
