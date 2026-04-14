@@ -1,8 +1,8 @@
 .rocket-field {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: end;
+    justify-content: start;
     position: absolute;
     inset: 0;
     z-index: 10;
@@ -20,6 +20,8 @@
     max-width: 100%;
     text-align: center;
     word-break: break-all;
+    margin-top: 5%;
+    margin-right: 10%;
 }
 
 .crashed-label {
@@ -30,6 +32,8 @@
     text-transform: uppercase;
     letter-spacing: 3px;
     animation: crashShake 0.5s ease-in-out;
+    margin-right: 16%;
+    text-align: center;
 }
 
 @keyframes multiplierPulse {

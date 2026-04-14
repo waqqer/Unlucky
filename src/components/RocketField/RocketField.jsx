@@ -23,7 +23,7 @@ const RocketField = ({ multiplier, isCrashed, crashedPoint }) => {
                 {isCrashed ? crashedPoint.toFixed(2) : multiplier.toFixed(2)}x
             </div>
             {isCrashed && (
-                <div className={styles["crashed-label"]}>CRASHED</div>
+                <div className={styles["crashed-label"]}>БУУМ!!!</div>
             )}
         </div>
     )
