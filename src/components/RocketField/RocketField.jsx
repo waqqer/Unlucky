@@ -1,6 +1,6 @@
 import styles from "./RocketField.module.css"
 
-const RocketField = ({ multiplier, isCrashed, crashedPoint }) => {
+const RocketField = ({ multiplier, isCrashed }) => {
     const getColorByMultiplier = (mult) => {
         if (mult < 2) return "#60a5fa"
         if (mult < 3) return "#34d399"
@@ -20,7 +20,7 @@ const RocketField = ({ multiplier, isCrashed, crashedPoint }) => {
                     textShadow: `0 0 20px ${color}80, 0 0 40px ${color}40`
                 }}
             >
-                {isCrashed ? crashedPoint.toFixed(2) : multiplier.toFixed(2)}x
+                {multiplier.toFixed(2)}x
             </div>
             {isCrashed && (
                 <div className={styles["crashed-label"]}>БУУМ!!!</div>

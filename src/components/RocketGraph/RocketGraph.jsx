@@ -5,7 +5,7 @@ import rocketImg from "@/shared/images/games/rocket/rocket.webp"
 const ROCKET_SIZE = 64
 const ROCKET_ANGLE_OFFSET = 45
 
-const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
+const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedOut }) => {
     const canvasRef = useRef(null)
     const containerRef = useRef(null)
     const dimensionsRef = useRef({ width: 600, height: 400 })
@@ -115,7 +115,8 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
 
         const startMult = 0.7
         const currentMult = multiplier ?? startMult
-        const targetMultiplier = isCrashed ? crashedPoint : currentMult
+        
+        const targetMultiplier = (isCrashed && !hasCashedOut) ? crashedPoint : currentMult
         const progress = Math.min((targetMultiplier - startMult) / (10 - startMult), 1)
 
         const curveWidth = startX + graphWidth * progress
@@ -212,7 +213,7 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
             ctx.fillStyle = "rgba(239, 68, 68, 0.1)"
             ctx.fillRect(0, 0, width, height)
         }
-    }, [multiplier, isCrashed, isFlying, crashedPoint, imageReady])
+    }, [multiplier, isCrashed, isFlying, crashedPoint, imageReady, hasCashedOut])
 
     return (
         <div ref={containerRef} className={styles["graph-container"]}>

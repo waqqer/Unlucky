@@ -346,11 +346,11 @@ const RocketGame = (props) => {
                         isCrashed={isCrashed}
                         isFlying={isFlying}
                         crashedPoint={crashedPoint}
+                        hasCashedOut={hasCashedOut}
                     />
                     <RocketField
                         multiplier={currentMultiplier}
                         isCrashed={isCrashed}
-                        crashedPoint={crashedPoint}
                     />
                 </div>
 
