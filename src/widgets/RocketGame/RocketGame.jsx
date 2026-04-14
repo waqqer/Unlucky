@@ -364,6 +364,7 @@ const RocketGame = (props) => {
                             max={100}
                         />
                         <BetPresets
+                            className="sp-hide"
                             onSelect={handlePresetSelect}
                             disabled={isRequestPending || isFlying}
                             presets={[1, 5, 10, 50, 100]}

@@ -13,7 +13,7 @@
 .container {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0;
     padding: 0 20px;
     box-sizing: border-box;
 }
@@ -89,7 +89,7 @@
 
 @media (max-height: 900px) {
     .container {
-        margin-top: 3%;
+        margin-top: 2%;
     }
 }
 

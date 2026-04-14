@@ -131,3 +131,13 @@
         font-size: 15px;
     }
 }
+
+@media (max-width: 1000px) {
+    .game-area {
+        height: 300px;
+    }
+    
+    .rocket-game {
+        gap: 15px;
+    }
+}
