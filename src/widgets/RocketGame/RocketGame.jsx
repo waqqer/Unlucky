@@ -10,6 +10,8 @@ import VictoryScreen from "@/widgets/VictoryScreen"
 import DemoMode from "@/components/DemoMode"
 import styles from "./RocketGame.module.css"
 
+const MULTIPLIER_SPEED = 0.25
+
 const useGameSounds = (enabled) => {
     const audioContextRef = useRef(null)
 
@@ -132,7 +134,7 @@ const RocketGame = (props) => {
 
     const startAnimation = useCallback((crashPoint) => {
         const startTime = Date.now()
-        const duration = Math.max(crashPoint * 500, 1000)
+        const duration = ((crashPoint - 0.7) / MULTIPLIER_SPEED) * 1000
         const startMult = 0.7
         const lastMilestone = { current: 1 }
 
