@@ -46,12 +46,12 @@ const BalanceSection = (props) => {
 
                 <div className={`${styles.controlls}`}>
                     <Button className={`${styles["add-money-button"]} ${styles["f-part"]}`} onClick={openPaymentTAKE}>
-                        <i className="fa-solid fa-wallet"></i>
+                        <i className="fa-solid fa-upload"></i>
                         <p>Вывод</p>
                     </Button>
 
                     <Button className={`${styles["add-money-button"]} ${styles["s-part"]}`} onClick={openPaymentADD}>
-                        <i className="fa-solid fa-credit-card"></i>
+                        <i className="fa-solid fa-download"></i>
                         <p>Пополнение</p>
                     </Button>
                 </div>
