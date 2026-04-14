@@ -1,7 +1,7 @@
 .rocket-field {
     display: flex;
     flex-direction: column;
-    align-items: end;
+    align-items: start;
     justify-content: start;
     position: absolute;
     inset: 0;
@@ -21,7 +21,7 @@
     text-align: center;
     word-break: break-all;
     margin-top: 5%;
-    margin-right: 10%;
+    margin-left: 10%;
 }
 
 .crashed-label {
@@ -32,7 +32,7 @@
     text-transform: uppercase;
     letter-spacing: 3px;
     animation: crashShake 0.5s ease-in-out;
-    margin-right: 16%;
+    margin-left: 15%;
     text-align: center;
 }
 
