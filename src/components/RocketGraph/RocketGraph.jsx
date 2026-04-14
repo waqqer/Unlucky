@@ -1,13 +1,30 @@
-import { useRef, useEffect, useCallback } from "react"
+import { useRef, useEffect, useCallback, useState } from "react"
 import styles from "./RocketGraph.module.css"
+import rocketImg from "@/shared/images/games/rocket/rocket.webp"
+
+const ROCKET_SIZE = 64
+const ROCKET_ANGLE_OFFSET = 45
 
 const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
     const canvasRef = useRef(null)
     const containerRef = useRef(null)
     const dimensionsRef = useRef({ width: 600, height: 400 })
     const animationFrameRef = useRef(null)
+    const rocketImageRef = useRef(null)
+    const [imageReady, setImageReady] = useState(false)
 
-    // Функция для обновления размеров canvas
+    useEffect(() => {
+        const img = new Image()
+        img.src = rocketImg
+        img.onload = () => {
+            rocketImageRef.current = img
+            setImageReady(true)
+        }
+        img.onerror = () => {
+            console.error("Failed to load rocket image")
+        }
+    }, [])
+
     const updateDimensions = useCallback(() => {
         const container = containerRef.current
         const canvas = canvasRef.current
@@ -18,22 +35,18 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         const width = Math.floor(rect.width)
         const height = Math.floor(rect.height)
 
-        // Устанавливаем физический размер canvas с учётом DPR
         canvas.width = width * dpr
         canvas.height = height * dpr
 
-        // Устанавливаем CSS размер
         canvas.style.width = `${width}px`
         canvas.style.height = `${height}px`
 
-        // Масштабируем контекст
         const ctx = canvas.getContext("2d")
         ctx.scale(dpr, dpr)
 
         dimensionsRef.current = { width, height }
     }, [])
 
-    // Отслеживание размеров контейнера
     useEffect(() => {
         updateDimensions()
 
@@ -70,7 +83,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         }
     }, [updateDimensions])
 
-    // Отрисовка графика
     useEffect(() => {
         const canvas = canvasRef.current
         if (!canvas) return
@@ -78,7 +90,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         const ctx = canvas.getContext("2d")
         const { width, height } = dimensionsRef.current
 
-        // Очистка с учётом DPR
         ctx.save()
         ctx.setTransform(1, 0, 0, 1, 0, 0)
         ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -89,7 +100,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         const startX = 20
         const startY = height - 20
 
-        // Рисуем сетку
         ctx.strokeStyle = "rgba(255, 255, 255, 0.1)"
         ctx.lineWidth = 1
 
@@ -111,7 +121,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         const curveWidth = startX + graphWidth * progress
         const curveHeight = startY - graphHeight * progress
 
-        // Градиент заполнения
         const gradient = ctx.createLinearGradient(startX, startY, startX, startY - graphHeight)
         if (isCrashed) {
             gradient.addColorStop(0, "rgba(239, 68, 68, 0.05)")
@@ -121,7 +130,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
             gradient.addColorStop(1, "rgba(100, 150, 255, 0.2)")
         }
 
-        // Заполнение под кривой
         ctx.beginPath()
         ctx.moveTo(startX, startY)
         ctx.quadraticCurveTo(
@@ -135,7 +143,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         ctx.fillStyle = gradient
         ctx.fill()
 
-        // Линия кривой
         ctx.beginPath()
         ctx.moveTo(startX, startY)
         ctx.quadraticCurveTo(
@@ -148,7 +155,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         if (isCrashed) {
             ctx.strokeStyle = "#ef4444"
         } else {
-            // Цвет меняется в зависимости от множителя
             if (currentMult < 2) {
                 ctx.strokeStyle = "#60a5fa"
             } else if (currentMult < 5) {
@@ -164,12 +170,7 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
         ctx.lineCap = "round"
         ctx.stroke()
 
-        // Точка на конце кривой
-        ctx.beginPath()
-        ctx.arc(curveWidth, curveHeight, isCrashed ? 8 : 6, 0, Math.PI * 2)
         if (isCrashed) {
-            ctx.fillStyle = "#ef4444"
-            // Эффект взрыва
             for (let i = 0; i < 8; i++) {
                 const angle = (Math.PI * 2 * i) / 8
                 const distance = 15
@@ -180,20 +181,38 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint }) => {
                 ctx.fillStyle = `rgba(239, 68, 68, ${0.3 + Math.random() * 0.7})`
                 ctx.fill()
             }
+        } else if (imageReady && rocketImageRef.current) {
+            const fixedAngle = ROCKET_ANGLE_OFFSET * Math.PI / 180
+
+            ctx.save()
+            ctx.translate(curveWidth, curveHeight)
+            ctx.rotate(fixedAngle)
+            ctx.shadowColor = "#60a5fa"
+            ctx.shadowBlur = 15
+            ctx.drawImage(
+                rocketImageRef.current,
+                -ROCKET_SIZE / 2,
+                -ROCKET_SIZE / 2,
+                ROCKET_SIZE,
+                ROCKET_SIZE
+            )
+            ctx.restore()
+            ctx.shadowBlur = 0
         } else {
+            ctx.beginPath()
+            ctx.arc(curveWidth, curveHeight, 6, 0, Math.PI * 2)
             ctx.fillStyle = "#60a5fa"
             ctx.shadowColor = "#60a5fa"
             ctx.shadowBlur = 10
+            ctx.fill()
+            ctx.shadowBlur = 0
         }
-        ctx.fill()
-        ctx.shadowBlur = 0
 
-        // Анимация краша
         if (isCrashed) {
             ctx.fillStyle = "rgba(239, 68, 68, 0.1)"
             ctx.fillRect(0, 0, width, height)
         }
-    }, [multiplier, isCrashed, isFlying, crashedPoint])
+    }, [multiplier, isCrashed, isFlying, crashedPoint, imageReady])
 
     return (
         <div ref={containerRef} className={styles["graph-container"]}>
