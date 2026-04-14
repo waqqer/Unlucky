@@ -7,7 +7,6 @@ import BetInput from "@/components/BetInput"
 import BetPresets from "@/components/BetPresets"
 import Button from "@/components/Button"
 import VictoryScreen from "@/widgets/VictoryScreen"
-import AutoReroll from "@/components/AutoReroll"
 import DemoMode from "@/components/DemoMode"
 import styles from "./RocketGame.module.css"
 
@@ -58,21 +57,20 @@ const RocketGame = (props) => {
         soundEnabled = true
     } = props
 
-    const { account, updateUser, getBalance } = useContext(AccountContext)
+    const { account, updateUser, getBalance, user } = useContext(AccountContext)
     const sounds = useGameSounds(soundEnabled)
 
     const isMountedRef = useRef(true)
     const animationFrameRef = useRef(null)
-    const autoRerollTimeoutRef = useRef(null)
-    const startGameRef = useRef(null)
     const hasCashedOutRef = useRef(false)
     const currentMultiplierRef = useRef(0.7)
     const betRef = useRef(10)
     const demoModeRef = useRef(false)
     const isFlyingRef = useRef(false)
     const isRequestPendingRef = useRef(false)
-    const autoRerollEnabledRef = useRef(false)
     const crashedPointRef = useRef(null)
+    const accountRef = useRef(null)
+    const soundsRef = useRef(null)
 
     const [bet, setBet] = useState(10)
     const [isFlying, setIsFlying] = useState(false)
@@ -83,9 +81,7 @@ const RocketGame = (props) => {
     const [winAmount, setWinAmount] = useState(null)
     const [hasCashedOut, setHasCashedOut] = useState(false)
     const [isRequestPending, setIsRequestPending] = useState(false)
-    const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
     const [demoMode, setDemoMode] = useState(false)
-    const [pendingAutoRerollAfterVictory, setPendingAutoRerollAfterVictory] = useState(false)
 
     useEffect(() => {
         betRef.current = bet
@@ -94,10 +90,6 @@ const RocketGame = (props) => {
     useEffect(() => {
         demoModeRef.current = demoMode
     }, [demoMode])
-
-    useEffect(() => {
-        autoRerollEnabledRef.current = autoRerollEnabled
-    }, [autoRerollEnabled])
 
     useEffect(() => {
         isFlyingRef.current = isFlying
@@ -112,6 +104,14 @@ const RocketGame = (props) => {
     }, [crashedPoint])
 
     useEffect(() => {
+        accountRef.current = account
+    }, [account])
+
+    useEffect(() => {
+        soundsRef.current = sounds
+    }, [sounds])
+
+    useEffect(() => {
         isMountedRef.current = true
         return () => {
             isMountedRef.current = false
@@ -119,26 +119,7 @@ const RocketGame = (props) => {
                 cancelAnimationFrame(animationFrameRef.current)
                 animationFrameRef.current = null
             }
-            if (autoRerollTimeoutRef.current) {
-                clearTimeout(autoRerollTimeoutRef.current)
-                autoRerollTimeoutRef.current = null
-            }
         }
-    }, [])
-
-    useEffect(() => {
-        startGameRef.current = startGame
-    })
-
-    const handleAutoRerollToggle = useCallback(() => {
-        setAutoRerollEnabled(prev => {
-            const newValue = !prev
-            if (!newValue && autoRerollTimeoutRef.current) {
-                clearTimeout(autoRerollTimeoutRef.current)
-                autoRerollTimeoutRef.current = null
-            }
-            return newValue
-        })
     }, [])
 
     const handleDemoToggle = useCallback(() => {
@@ -148,42 +129,6 @@ const RocketGame = (props) => {
     const handlePresetSelect = useCallback((preset) => {
         setBet(preset)
     }, [])
-
-    const scheduleAutoReroll = useCallback((delay = 1000) => {
-        if (!isMountedRef.current) return
-
-        if (autoRerollTimeoutRef.current) {
-            clearTimeout(autoRerollTimeoutRef.current)
-            autoRerollTimeoutRef.current = null
-        }
-
-        autoRerollTimeoutRef.current = setTimeout(() => {
-            if (!isMountedRef.current) return
-            if (!autoRerollEnabledRef.current) return
-
-            if (demoModeRef.current) {
-                const startFn = startGameRef.current
-                if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
-                    startFn()
-                } else if (startFn) {
-                    scheduleAutoReroll(500)
-                }
-                return
-            }
-
-            const currentBalance = getBalance()
-            if (currentBalance >= betRef.current) {
-                const startFn = startGameRef.current
-                if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
-                    startFn()
-                } else if (startFn) {
-                    scheduleAutoReroll(500)
-                }
-            } else {
-                setAutoRerollEnabled(false)
-            }
-        }, delay)
-    }, [getBalance])
 
     const startAnimation = useCallback((crashPoint) => {
         const startTime = Date.now()
@@ -204,7 +149,7 @@ const RocketGame = (props) => {
 
             const currentWhole = Math.floor(roundedMult)
             if (currentWhole > lastMilestone.current && !hasCashedOutRef.current) {
-                sounds.playTick()
+                soundsRef.current.playTick()
                 lastMilestone.current = currentWhole
             }
 
@@ -217,10 +162,10 @@ const RocketGame = (props) => {
                 setIsCrashed(true)
                 setIsFlying(false)
                 isFlyingRef.current = false
-                sounds.playCrash()
+                soundsRef.current.playCrash()
 
                 if (!demoModeRef.current) {
-                    const userUuid = account?.UUID
+                    const userUuid = accountRef.current?.UUID
                     if (userUuid) {
                         RocketApi.result(userUuid, betRef.current, crashedPointRef.current, false)
                             .then(result => {
@@ -235,34 +180,25 @@ const RocketGame = (props) => {
                             })
                     }
                 }
-
-                if (autoRerollEnabledRef.current && isMountedRef.current) {
-                    scheduleAutoReroll(1500)
-                }
             }
         }
 
         animationFrameRef.current = requestAnimationFrame(animate)
-    }, [sounds, onHistoryUpdate, scheduleAutoReroll])
+    }, [onHistoryUpdate, updateUser])
 
     const startGame = useCallback(async () => {
         if (isRequestPendingRef.current || isFlyingRef.current) return
-        if (!demoModeRef.current && !account?.UUID) return
+        if (!demoModeRef.current && !accountRef.current?.UUID) return
 
         const currentBalance = getBalance()
         const currentBet = betRef.current
         if (!demoModeRef.current && (currentBet <= 0 || currentBet > currentBalance)) {
-            setAutoRerollEnabled(false)
             return
         }
 
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current)
             animationFrameRef.current = null
-        }
-        if (autoRerollTimeoutRef.current) {
-            clearTimeout(autoRerollTimeoutRef.current)
-            autoRerollTimeoutRef.current = null
         }
 
         setIsRequestPending(true)
@@ -303,7 +239,7 @@ const RocketGame = (props) => {
             setIsRequestPending(false)
             isRequestPendingRef.current = false
 
-            sounds.playStart()
+            soundsRef.current.playStart()
             startAnimation(crashPoint)
         } catch (error) {
             console.error("Rocket game error:", error)
@@ -311,9 +247,8 @@ const RocketGame = (props) => {
             isRequestPendingRef.current = false
             setIsFlying(false)
             isFlyingRef.current = false
-            setAutoRerollEnabled(false)
         }
-    }, [account, getBalance, sounds, startAnimation])
+    }, [getBalance, startAnimation])
 
     const cashOut = useCallback(() => {
         if (!isFlyingRef.current || hasCashedOutRef.current || isCrashed) return
@@ -334,10 +269,10 @@ const RocketGame = (props) => {
             }
 
             setWinAmount(0)
-            sounds.playCrash()
+            soundsRef.current.playCrash()
 
             if (!demoModeRef.current) {
-                const userUuid = account?.UUID
+                const userUuid = accountRef.current?.UUID
                 if (userUuid) {
                     RocketApi.result(userUuid, betRef.current, currentMult, false)
                         .then(result => {
@@ -351,10 +286,6 @@ const RocketGame = (props) => {
                             if (onHistoryUpdate) onHistoryUpdate()
                         })
                 }
-            }
-
-            if (autoRerollEnabledRef.current && isMountedRef.current) {
-                scheduleAutoReroll(1500)
             }
             return
         }
@@ -372,10 +303,10 @@ const RocketGame = (props) => {
         }
 
         setWinAmount(win)
-        sounds.playCashOut()
+        soundsRef.current.playCashOut()
 
         if (!demoModeRef.current) {
-            const userUuid = account?.UUID
+            const userUuid = accountRef.current?.UUID
             if (!userUuid) {
                 console.error("Cannot cash out: user UUID not found")
                 return
@@ -394,53 +325,15 @@ const RocketGame = (props) => {
                 })
 
             setShowVictory(true)
-            if (autoRerollEnabledRef.current) {
-                setPendingAutoRerollAfterVictory(true)
-            }
         } else {
             setTimeout(() => {
                 if (!isMountedRef.current) return
                 setHasCashedOut(false)
                 hasCashedOutRef.current = false
                 setIsCrashed(false)
-
-                if (autoRerollEnabledRef.current && isMountedRef.current) {
-                    scheduleAutoReroll(1000)
-                }
             }, 500)
         }
-    }, [isCrashed, account, updateUser, onHistoryUpdate, sounds])
-
-    useEffect(() => {
-        if (pendingAutoRerollAfterVictory && !showVictory && autoRerollEnabled) {
-            setPendingAutoRerollAfterVictory(false)
-
-            if (demoMode) {
-                autoRerollTimeoutRef.current = setTimeout(() => {
-                    if (isMountedRef.current && autoRerollEnabledRef.current && demoModeRef.current) {
-                        const startFn = startGameRef.current
-                        if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
-                            startFn()
-                        }
-                    }
-                }, 1000)
-            } else {
-                const currentBalance = getBalance()
-                if (currentBalance >= bet) {
-                    autoRerollTimeoutRef.current = setTimeout(() => {
-                        if (isMountedRef.current && autoRerollEnabledRef.current && !demoModeRef.current) {
-                            const startFn = startGameRef.current
-                            if (startFn && !isRequestPendingRef.current && !isFlyingRef.current) {
-                                startFn()
-                            }
-                        }
-                    }, 1000)
-                } else {
-                    setAutoRerollEnabled(false)
-                }
-            }
-        }
-    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, demoMode, getBalance, bet])
+    }, [isCrashed, updateUser, onHistoryUpdate])
 
     return (
         <>
@@ -475,11 +368,6 @@ const RocketGame = (props) => {
                         />
                     </div>
 
-                    <AutoReroll
-                        enabled={autoRerollEnabled}
-                        onToggle={handleAutoRerollToggle}
-                    />
-
                     <DemoMode
                         enabled={demoMode}
                         onToggle={handleDemoToggle}
@@ -490,7 +378,7 @@ const RocketGame = (props) => {
                         <Button
                             className={styles["play-btn"]}
                             onClick={startGame}
-                            isDisabled={isRequestPending || bet < 1}
+                            isDisabled={isRequestPending || bet < 1 || (!demoMode && !user)}
                             activateOnSpace={true}
                         >
                             {isRequestPending ? "Загрузка..." : "Сыграть"}
