@@ -1,5 +1,6 @@
 import GamesList from "@/components/GamesList"
 import Container from "@/components/Container"
+import { useEffect, useState } from "react"
 import styles from "./GamesSection.module.css"
 
 const messages = [
@@ -15,7 +16,12 @@ const messages = [
 ]
 
 const GamesSection = () => {
-    const title = messages[Math.round(Math.random() * messages.length - 1)]
+    const [title, setTitle] = useState("")
+
+    useEffect(() => {
+        setTitle(messages[Math.round(Math.random() * messages.length - 1)])
+    }, [])
+
     return (
         <Container>
             <h1 className={styles["game-rnd-message"]}>{title}</h1>
