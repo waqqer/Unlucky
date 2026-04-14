@@ -1,6 +1,8 @@
 import { useState, useContext, useCallback, useRef, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import { SlotsApi } from "@/api/game"
+import { useSyncRefs } from "@/hooks"
+import { SLOTS_CONFIG } from "@/shared/configs"
 import ReelsContainer from "@/components/ReelsContainer"
 import SlotReel from "@/components/SlotReel"
 import BetInput from "@/components/BetInput"
@@ -12,7 +14,20 @@ import DemoMode from "@/components/DemoMode"
 import slotSound from "@/shared/audio/slot.mp3"
 import styles from "./SlotMachineGame.module.css"
 
-const SYMBOLS = ["star", "amethyst", "redstone", "coal", "iron", "gold", "diamond"]
+const {
+    REEL_COUNT,
+    MAX_SPINS,
+    SPIN_INTERVAL_MS,
+    REEL_STOP_DELAYS,
+    AUTO_REROLL_DELAY_MS,
+    MIN_BET: SLOTS_MIN_BET,
+    MAX_BET: SLOTS_MAX_BET,
+    BET_PRESETS: SLOTS_BET_PRESETS,
+    AUDIO_PLAYBACK_RATE,
+    SYMBOLS,
+    INITIAL_REELS,
+    INITIAL_STOPPED
+} = SLOTS_CONFIG
 
 const SlotMachineGame = (props) => {
     const {
@@ -27,15 +42,14 @@ const SlotMachineGame = (props) => {
     const spinIntervalRef = useRef(null)
     const autoRerollTimeoutRef = useRef(null)
     const audioRef = useRef(null)
-    const autoRerollEnabledRef = useRef(false)
 
-    const [reels, setReels] = useState(["coal", "coal", "coal"])
+    const [reels, setReels] = useState(INITIAL_REELS)
     const [bet, setBet] = useState(10)
     const [isSpinning, setIsSpinning] = useState(false)
     const [isRequestPending, setIsRequestPending] = useState(false)
     const [winAmount, setWinAmount] = useState(null)
     const [showVictory, setShowVictory] = useState(false)
-    const [stoppedReels, setStoppedReels] = useState([false, false, false])
+    const [stoppedReels, setStoppedReels] = useState(INITIAL_STOPPED)
 
     const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
     const [consecutiveLosses, setConsecutiveLosses] = useState(0)
@@ -43,14 +57,14 @@ const SlotMachineGame = (props) => {
     const [demoMode, setDemoMode] = useState(false)
     const [pendingAutoRerollAfterVictory, setPendingAutoRerollAfterVictory] = useState(false)
 
-    useEffect(() => {
-        autoRerollEnabledRef.current = autoRerollEnabled
-    }, [autoRerollEnabled])
+    const [autoRerollEnabledRef, demoModeRef, accountRef, betRef, soundEnabledRef] = useSyncRefs(
+        autoRerollEnabled, demoMode, account, bet, soundEnabled
+    )
 
     useEffect(() => {
         if (!soundEnabled && audioRef.current) {
             audioRef.current.pause()
-            audioRef.current.playbackRate = 1.2
+            audioRef.current.playbackRate = AUDIO_PLAYBACK_RATE
             audioRef.current.currentTime = 0
         }
     }, [soundEnabled])
@@ -89,23 +103,18 @@ const SlotMachineGame = (props) => {
     const getRandomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
 
     const spin = useCallback(async () => {
-        if (isRequestPending || isSpinning) {
-            return
-        }
+        if (isRequestPending || isSpinning) return
+        if (!demoModeRef.current && !accountRef.current?.UUID) return
 
-        if (!demoMode && !account?.UUID) {
-            return
-        }
-
-        const currentBalance = parseFloat(account?.balance || 0)
-        if (!demoMode && (bet <= 0 || bet > currentBalance)) {
+        const currentBalance = parseFloat(accountRef.current?.balance || 0)
+        if (!demoModeRef.current && (betRef.current < SLOTS_MIN_BET || betRef.current > currentBalance)) {
             setAutoRerollEnabled(false)
             return
         }
 
         setWinAmount(null)
         setIsRequestPending(true)
-        setStoppedReels([false, false, false])
+        setStoppedReels(INITIAL_STOPPED)
 
         if (audioRef.current) {
             audioRef.current.pause()
@@ -113,31 +122,29 @@ const SlotMachineGame = (props) => {
         }
 
         try {
-            const result = demoMode
+            const result = demoModeRef.current
                 ? await SlotsApi.demoSpin()
-                : await SlotsApi.spin(account.UUID, bet)
+                : await SlotsApi.spin(accountRef.current.UUID, betRef.current)
 
-            const win = demoMode ? 0 : (result.winAmount || 0)
-            const newBalance = demoMode ? account?.balance || 0 : result.newBalance
-            const combination = result.combination || ["coal", "coal", "coal"]
-            const multiplier = demoMode ? 0 : (result.multiplier || 0)
+            const win = demoModeRef.current ? 0 : (result.winAmount || 0)
+            const newBalance = demoModeRef.current ? accountRef.current?.balance || 0 : result.newBalance
+            const combination = result.combination || INITIAL_REELS
+            const multiplier = demoModeRef.current ? 0 : (result.multiplier || 0)
 
-            if (!demoMode && newBalance !== undefined && isMounted.current) {
+            if (!demoModeRef.current && newBalance !== undefined && isMounted.current) {
                 updateUser({ balance: newBalance.toString() })
             }
 
             setIsSpinning(true)
 
-            if (audioRef.current && soundEnabled) {
+            if (audioRef.current && soundEnabledRef.current) {
                 audioRef.current.currentTime = 0
                 audioRef.current.loop = true
-                audioRef.current.playbackRate = 1.2
+                audioRef.current.playbackRate = AUDIO_PLAYBACK_RATE
                 audioRef.current.play().catch(() => {})
             }
 
             let spinIndex = 0
-            const maxSpins = 20
-            const reelDelays = [0, 8, 15]
 
             spinIntervalRef.current = setInterval(() => {
                 if (!isMounted.current) {
@@ -147,7 +154,7 @@ const SlotMachineGame = (props) => {
 
                 spinIndex++
 
-                if (!soundEnabled && audioRef.current && !audioRef.current.paused) {
+                if (!soundEnabledRef.current && audioRef.current && !audioRef.current.paused) {
                     audioRef.current.pause()
                 }
 
@@ -155,8 +162,8 @@ const SlotMachineGame = (props) => {
                     const newStopped = [...prevStopped]
                     const newReels = []
 
-                    for (let i = 0; i < 3; i++) {
-                        if (!newStopped[i] && spinIndex >= maxSpins + reelDelays[i]) {
+                    for (let i = 0; i < REEL_COUNT; i++) {
+                        if (!newStopped[i] && spinIndex >= MAX_SPINS + REEL_STOP_DELAYS[i]) {
                             newReels[i] = combination[i]
                             newStopped[i] = true
                         } else if (!newStopped[i]) {
@@ -181,7 +188,7 @@ const SlotMachineGame = (props) => {
 
                         const isWin = win > 0
 
-                        if (!demoMode) {
+                        if (!demoModeRef.current) {
                             if (isWin) {
                                 setShowVictory(true)
                                 setConsecutiveLosses(0)
@@ -190,12 +197,11 @@ const SlotMachineGame = (props) => {
                                     setPendingAutoRerollAfterVictory(true)
                                 }
                             } else {
-                                const newConsecutiveLosses = consecutiveLosses + 1
-                                setConsecutiveLosses(newConsecutiveLosses)
+                                setConsecutiveLosses(prev => prev + 1)
                             }
                         }
 
-                        if (onHistoryUpdate && !demoMode) {
+                        if (onHistoryUpdate && !demoModeRef.current) {
                             onHistoryUpdate()
                         }
 
@@ -204,25 +210,25 @@ const SlotMachineGame = (props) => {
                                 combination,
                                 multiplier,
                                 win,
-                                bet
+                                bet: betRef.current
                             })
                         }
 
                         if (!isWin && autoRerollEnabledRef.current && isMounted.current) {
-                            if (demoMode) {
+                            if (demoModeRef.current) {
                                 autoRerollTimeoutRef.current = setTimeout(() => {
-                                    if (isMounted.current && autoRerollEnabledRef.current && demoMode) {
+                                    if (isMounted.current && autoRerollEnabledRef.current && demoModeRef.current) {
                                         spin()
                                     }
-                                }, 500)
+                                }, AUTO_REROLL_DELAY_MS)
                             } else {
-                                const nextBalance = parseFloat(newBalance || account.balance || 0)
-                                if (nextBalance >= bet) {
+                                const nextBalance = parseFloat(newBalance || accountRef.current?.balance || 0)
+                                if (nextBalance >= betRef.current) {
                                     autoRerollTimeoutRef.current = setTimeout(() => {
-                                        if (isMounted.current && autoRerollEnabledRef.current && !demoMode) {
+                                        if (isMounted.current && autoRerollEnabledRef.current && !demoModeRef.current) {
                                             spin()
                                         }
-                                    }, 500)
+                                    }, AUTO_REROLL_DELAY_MS)
                                 } else {
                                     setAutoRerollEnabled(false)
                                 }
@@ -232,14 +238,14 @@ const SlotMachineGame = (props) => {
 
                     return newStopped
                 })
-            }, 100)
+            }, SPIN_INTERVAL_MS)
 
         } catch (error) {
             setIsSpinning(false)
             setIsRequestPending(false)
             setAutoRerollEnabled(false)
         }
-    }, [bet, isSpinning, isRequestPending, account, demoMode, updateUser, onGameComplete, onHistoryUpdate, autoRerollEnabled, consecutiveLosses, soundEnabled])
+    }, [isSpinning, isRequestPending, accountRef, updateUser, onGameComplete, onHistoryUpdate])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -249,26 +255,30 @@ const SlotMachineGame = (props) => {
         if (pendingAutoRerollAfterVictory && !showVictory && autoRerollEnabled) {
             setPendingAutoRerollAfterVictory(false)
 
-            if (demoMode) {
+            if (demoModeRef.current) {
                 autoRerollTimeoutRef.current = setTimeout(() => {
-                    if (isMounted.current && autoRerollEnabledRef.current && demoMode) {
+                    if (isMounted.current && autoRerollEnabledRef.current && demoModeRef.current) {
                         spin()
                     }
-                }, 500)
+                }, AUTO_REROLL_DELAY_MS)
             } else {
-                const currentBalance = parseFloat(account?.balance || 0)
-                if (currentBalance >= bet) {
+                const currentBalance = parseFloat(accountRef.current?.balance || 0)
+                if (currentBalance >= betRef.current) {
                     autoRerollTimeoutRef.current = setTimeout(() => {
-                        if (isMounted.current && autoRerollEnabledRef.current && !demoMode) {
+                        if (isMounted.current && autoRerollEnabledRef.current && !demoModeRef.current) {
                             spin()
                         }
-                    }, 500)
+                    }, AUTO_REROLL_DELAY_MS)
                 } else {
                     setAutoRerollEnabled(false)
                 }
             }
         }
-    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, demoMode, account, bet, spin])
+    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled])
+
+    const balance = parseFloat(account?.balance || 0)
+    const hasEnoughBalance = demoMode || bet <= balance
+    const canSpin = !isRequestPending && !isSpinning && bet >= SLOTS_MIN_BET && hasEnoughBalance
 
     return (
         <>
@@ -292,14 +302,14 @@ const SlotMachineGame = (props) => {
                             value={bet}
                             onChange={setBet}
                             disabled={isRequestPending || isSpinning}
-                            min={1}
-                            max={10000}
+                            min={SLOTS_MIN_BET}
+                            max={SLOTS_MAX_BET}
                         />
                         <BetPresets
                             className="sp-hide"
                             onSelect={handlePresetSelect}
                             disabled={isRequestPending || isSpinning}
-                            presets={[1, 5, 10, 50, 500]}
+                            presets={SLOTS_BET_PRESETS}
                         />
                     </div>
 
@@ -317,10 +327,11 @@ const SlotMachineGame = (props) => {
                     <Button
                         className={styles["spin-btn"]}
                         onClick={spin}
-                        isDisabled={isRequestPending || isSpinning || bet < 1}
+                        isDisabled={!canSpin}
                         activateOnSpace={true}
+                        title={!hasEnoughBalance ? "Недостаточно средств" : undefined}
                     >
-                        {isSpinning ? "Крутим..." : "Сыграть"}
+                        {isSpinning ? "Крутим..." : !hasEnoughBalance ? "Нет средств" : "Сыграть"}
                     </Button>
                 </div>
             </div>

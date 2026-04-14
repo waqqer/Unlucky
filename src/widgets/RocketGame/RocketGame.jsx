@@ -1,6 +1,8 @@
 import { useState, useContext, useCallback, useRef, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import { RocketApi } from "@/api/game"
+import { useSyncRefs, useGameSounds } from "@/hooks"
+import { ROCKET_CONFIG } from "@/shared/configs"
 import RocketGraph from "@/components/RocketGraph"
 import RocketField from "@/components/RocketField"
 import BetInput from "@/components/BetInput"
@@ -10,47 +12,14 @@ import VictoryScreen from "@/widgets/VictoryScreen"
 import DemoMode from "@/components/DemoMode"
 import styles from "./RocketGame.module.css"
 
-const MULTIPLIER_SPEED = 0.25
-
-const useGameSounds = (enabled) => {
-    const audioContextRef = useRef(null)
-
-    const getAudioContext = useCallback(() => {
-        if (!audioContextRef.current) {
-            audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)()
-        }
-        return audioContextRef.current
-    }, [])
-
-    const playTone = useCallback((frequency, duration, type = "sine") => {
-        if (!enabled) return
-        try {
-            const ctx = getAudioContext()
-            const oscillator = ctx.createOscillator()
-            const gainNode = ctx.createGain()
-            oscillator.connect(gainNode)
-            gainNode.connect(ctx.destination)
-            oscillator.type = type
-            oscillator.frequency.value = frequency
-            gainNode.gain.setValueAtTime(0.1, ctx.currentTime)
-            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration)
-            oscillator.start(ctx.currentTime)
-            oscillator.stop(ctx.currentTime + duration)
-        } catch {
-        }
-    }, [enabled, getAudioContext])
-
-    const playStart = useCallback(() => playTone(440, 0.2, "sine"), [playTone])
-    const playCashOut = useCallback(() => {
-        playTone(523, 0.1, "sine")
-        setTimeout(() => playTone(659, 0.1, "sine"), 100)
-        setTimeout(() => playTone(784, 0.2, "sine"), 200)
-    }, [playTone])
-    const playCrash = useCallback(() => playTone(150, 0.4, "sawtooth"), [playTone])
-    const playTick = useCallback(() => playTone(800, 0.05, "sine"), [playTone])
-
-    return { playStart, playCashOut, playCrash, playTick }
-}
+const {
+    START_MULTIPLIER,
+    MULTIPLIER_SPEED,
+    MULTIPLIER_PRECISION,
+    MIN_BET: ROCKET_MIN_BET,
+    MAX_BET: ROCKET_MAX_BET,
+    BET_PRESETS: ROCKET_BET_PRESETS
+} = ROCKET_CONFIG
 
 const RocketGame = (props) => {
     const {
@@ -65,19 +34,12 @@ const RocketGame = (props) => {
     const isMountedRef = useRef(true)
     const animationFrameRef = useRef(null)
     const hasCashedOutRef = useRef(false)
-    const currentMultiplierRef = useRef(0.7)
-    const betRef = useRef(10)
-    const demoModeRef = useRef(false)
-    const isFlyingRef = useRef(false)
-    const isRequestPendingRef = useRef(false)
-    const crashedPointRef = useRef(null)
-    const accountRef = useRef(null)
-    const soundsRef = useRef(null)
+    const currentMultiplierRef = useRef(START_MULTIPLIER)
 
     const [bet, setBet] = useState(10)
     const [isFlying, setIsFlying] = useState(false)
     const [isCrashed, setIsCrashed] = useState(false)
-    const [currentMultiplier, setCurrentMultiplier] = useState(0.7)
+    const [currentMultiplier, setCurrentMultiplier] = useState(START_MULTIPLIER)
     const [crashedPoint, setCrashedPoint] = useState(null)
     const [showVictory, setShowVictory] = useState(false)
     const [winAmount, setWinAmount] = useState(null)
@@ -85,33 +47,10 @@ const RocketGame = (props) => {
     const [isRequestPending, setIsRequestPending] = useState(false)
     const [demoMode, setDemoMode] = useState(false)
 
-    useEffect(() => {
-        betRef.current = bet
-    }, [bet])
-
-    useEffect(() => {
-        demoModeRef.current = demoMode
-    }, [demoMode])
-
-    useEffect(() => {
-        isFlyingRef.current = isFlying
-    }, [isFlying])
-
-    useEffect(() => {
-        isRequestPendingRef.current = isRequestPending
-    }, [isRequestPending])
-
-    useEffect(() => {
-        crashedPointRef.current = crashedPoint
-    }, [crashedPoint])
-
-    useEffect(() => {
-        accountRef.current = account
-    }, [account])
-
-    useEffect(() => {
-        soundsRef.current = sounds
-    }, [sounds])
+    // Ref-sync для доступа к актуальным значениям в замыканиях
+    const [betRef, isFlyingRef, isRequestPendingRef, crashedPointRef, accountRef, soundsRef, demoModeRef] = useSyncRefs(
+        bet, isFlying, isRequestPending, crashedPoint, account, sounds, demoMode
+    )
 
     useEffect(() => {
         isMountedRef.current = true
@@ -124,18 +63,17 @@ const RocketGame = (props) => {
         }
     }, [])
 
-    const handleDemoToggle = useCallback(() => {
-        setDemoMode(prev => !prev)
-    }, [])
-
     const handlePresetSelect = useCallback((preset) => {
         setBet(preset)
     }, [])
 
+    const handleDemoToggle = useCallback(() => {
+        setDemoMode(prev => !prev)
+    }, [])
+
     const startAnimation = useCallback((crashPoint) => {
         const startTime = Date.now()
-        const duration = ((crashPoint - 0.7) / MULTIPLIER_SPEED) * 1000
-        const startMult = 0.7
+        const duration = ((crashPoint - START_MULTIPLIER) / MULTIPLIER_SPEED) * 1000
         const lastMilestone = { current: 1 }
 
         const animate = () => {
@@ -143,8 +81,8 @@ const RocketGame = (props) => {
 
             const elapsed = Date.now() - startTime
             const progress = Math.min(elapsed / duration, 1)
-            const mult = startMult + (crashPoint - startMult) * progress
-            const roundedMult = Math.round(mult * 100) / 100
+            const mult = START_MULTIPLIER + (crashPoint - START_MULTIPLIER) * progress
+            const roundedMult = Math.round(mult * MULTIPLIER_PRECISION) / MULTIPLIER_PRECISION
 
             setCurrentMultiplier(roundedMult)
             currentMultiplierRef.current = roundedMult
@@ -166,21 +104,19 @@ const RocketGame = (props) => {
                 isFlyingRef.current = false
                 soundsRef.current.playCrash()
 
-                if (!demoModeRef.current) {
-                    const userUuid = accountRef.current?.UUID
-                    if (userUuid) {
-                        RocketApi.result(userUuid, betRef.current, crashedPointRef.current, false)
-                            .then(result => {
-                                if (result && typeof result.balance === "number") {
-                                    updateUser({ balance: result.balance.toString() })
-                                }
-                                if (onHistoryUpdate) onHistoryUpdate()
-                            })
-                            .catch(err => {
-                                console.error("Failed to send crash result:", err)
-                                if (onHistoryUpdate) onHistoryUpdate()
-                            })
-                    }
+                const userUuid = accountRef.current?.UUID
+                if (userUuid) {
+                    RocketApi.result(userUuid, betRef.current, crashedPointRef.current, false)
+                        .then(result => {
+                            if (result && typeof result.balance === "number") {
+                                updateUser({ balance: result.balance.toString() })
+                            }
+                            if (onHistoryUpdate) onHistoryUpdate()
+                        })
+                        .catch(err => {
+                            console.error("Failed to send crash result:", err)
+                            if (onHistoryUpdate) onHistoryUpdate()
+                        })
                 }
             }
         }
@@ -194,7 +130,7 @@ const RocketGame = (props) => {
 
         const currentBalance = getBalance()
         const currentBet = betRef.current
-        if (!demoModeRef.current && (currentBet <= 0 || currentBet > currentBalance)) {
+        if (!demoModeRef.current && (currentBet < ROCKET_MIN_BET || currentBet > currentBalance)) {
             return
         }
 
@@ -211,11 +147,12 @@ const RocketGame = (props) => {
         setCrashedPoint(null)
         crashedPointRef.current = null
         setWinAmount(null)
-        setCurrentMultiplier(0.7)
-        currentMultiplierRef.current = 0.7
+        setCurrentMultiplier(START_MULTIPLIER)
+        currentMultiplierRef.current = START_MULTIPLIER
 
         try {
             let crashPoint
+
             if (demoModeRef.current) {
                 const r = Math.random()
                 if (r < 0.33) {
@@ -292,7 +229,7 @@ const RocketGame = (props) => {
             return
         }
 
-        const win = Math.round(currentBet * (currentMult - 1) * 100) / 100
+        const win = Math.round(currentBet * (currentMult - 1) * MULTIPLIER_PRECISION) / MULTIPLIER_PRECISION
 
         setHasCashedOut(true)
         hasCashedOutRef.current = true
@@ -360,14 +297,14 @@ const RocketGame = (props) => {
                             value={bet}
                             onChange={setBet}
                             disabled={isRequestPending || isFlying}
-                            min={1}
-                            max={100}
+                            min={ROCKET_MIN_BET}
+                            max={ROCKET_MAX_BET}
                         />
                         <BetPresets
                             className="sp-hide"
                             onSelect={handlePresetSelect}
                             disabled={isRequestPending || isFlying}
-                            presets={[1, 5, 10, 50, 100]}
+                            presets={ROCKET_BET_PRESETS}
                         />
                     </div>
 
