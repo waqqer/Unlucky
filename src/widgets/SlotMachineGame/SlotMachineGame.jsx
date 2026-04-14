@@ -296,6 +296,7 @@ const SlotMachineGame = (props) => {
                             max={10000}
                         />
                         <BetPresets
+                            className="sp-hide"
                             onSelect={handlePresetSelect}
                             disabled={isRequestPending || isSpinning}
                             presets={[1, 5, 10, 50, 500]}
