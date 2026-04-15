@@ -1,4 +1,5 @@
 import { memo } from "react"
+import video from "@/shared/video/victory.webm"
 import styles from "./VictoryVideo.module.css"
 
 const VictoryVideo = (props) => {
@@ -8,13 +9,12 @@ const VictoryVideo = (props) => {
 
     return (
         <video
-            className={`${styles["victory-video"]} ${className || ""}`}
+            className={`${styles["victory-video"]} ${className}`}
             autoPlay
             loop
-            muted
             playsInline
         >
-            <source src="/assets/victory.mp4" type="video/mp4" />
+            <source src={video} type="video/webm" />
         </video>
     )
 }

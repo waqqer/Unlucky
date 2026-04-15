@@ -47,7 +47,6 @@ const RocketGame = (props) => {
     const [isRequestPending, setIsRequestPending] = useState(false)
     const [demoMode, setDemoMode] = useState(false)
 
-    // Ref-sync для доступа к актуальным значениям в замыканиях
     const [betRef, isFlyingRef, isRequestPendingRef, crashedPointRef, accountRef, soundsRef, demoModeRef] = useSyncRefs(
         bet, isFlying, isRequestPending, crashedPoint, account, sounds, demoMode
     )
@@ -165,7 +164,7 @@ const RocketGame = (props) => {
                 crashPoint = Math.round(crashPoint * 100) / 100
             } else {
                 const result = await RocketApi.crash()
-                if (!result || typeof result.crashPoint !== "number" || result.crashPoint < 1) {
+                if (!result || typeof result.crashPoint !== "number") {
                     throw new Error("Некорректная точка краша от сервера")
                 }
                 crashPoint = result.crashPoint
