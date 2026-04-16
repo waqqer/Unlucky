@@ -12,6 +12,7 @@ const VictoryVideo = (props) => {
             className={`${styles["victory-video"]} ${className}`}
             autoPlay
             loop
+            muted
             playsInline
         >
             <source src={video} type="video/webm" />

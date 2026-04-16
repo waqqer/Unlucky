@@ -6,6 +6,7 @@ import SlotsGamePage from "@/pages/SlotsGamePage"
 import RocketGamePage from "@/pages/RocketGamePage"
 import { useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
+import MinerGamePage from "../pages/MinerGamePage"
 import "./styles"
 
 Modal.setAppElement("#root")
@@ -26,6 +27,7 @@ function App() {
 
         <Route path='/slots' element={<SlotsGamePage />} />
         <Route path='/rocket' element={<RocketGamePage />} />
+        <Route path='/miner' element={<MinerGamePage />} />
       </Routes>
     </HashRouter>
   )

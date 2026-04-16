@@ -22,7 +22,6 @@ const VictoryScreen = (props) => {
     }, [onClose])
 
     useEffect(() => {
-        // Сброс при закрытии
         if (!isOpen) {
             hasTriggeredComplete.current = false
             if (closeTimerRef.current) {
@@ -32,13 +31,10 @@ const VictoryScreen = (props) => {
             return
         }
 
-        // Вызываем onVictoryComplete сразу при открытии
         if (onVictoryComplete && !hasTriggeredComplete.current) {
             hasTriggeredComplete.current = true
             onVictoryComplete()
         }
-
-        // Автоматическое закрытие
         closeTimerRef.current = setTimeout(() => {
             handleClose()
         }, AUTO_CLOSE_DELAY)
