@@ -1,0 +1,5 @@
+export const MINER_CONFIG = {
+    MINER_MIN_BET: 10,
+    MINER_MAX_BET: 1000,
+    MINER_BET_PRESETS: [1, 5, 10, 50, 100]
+}

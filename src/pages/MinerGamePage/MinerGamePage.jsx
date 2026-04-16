@@ -7,6 +7,7 @@ import { useCallback, useState } from "react"
 import Modal from 'react-modal'
 import ModalExitButton from "@/components/ModalExitButton"
 import styles from "./MinerGamePage.module.css"
+import MinerGame from "../../widgets/MinerGame"
 
 const MinerGamePage = () => {
     const [refreshCounter, setRefreshCounter] = useState(0)
@@ -53,6 +54,8 @@ const MinerGamePage = () => {
                             gameName="Майнер"
                             limit={10}
                         />
+                        
+                        <MinerGame />
                     </div>
                 </Container>
             </main>
