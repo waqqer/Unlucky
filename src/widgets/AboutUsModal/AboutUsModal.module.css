@@ -32,6 +32,13 @@
     background-color: rgb(255, 98, 98);
 }
 
+.btn-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media (max-width: 630px) {
     .icon {
         display: none;
@@ -39,5 +46,13 @@
 
     .btn i {
         margin-right: 1px;
+    }
+
+    .btn-box {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
     }
 }

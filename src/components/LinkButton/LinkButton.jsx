@@ -7,17 +7,35 @@ const LinkButton = (props) => {
         className = "",
         onClick,
         to = "/",
+        external = false,
         children
     } = props
 
     return (
-        <Link 
-            className={`${styles["link-button"]} ${className}`} 
-            onClick={onClick}
-            to={to}
-        > 
-            {children} 
-        </Link>
+        <>
+            {external === false ?
+                <>
+                    <Link
+                        className={`${styles["link-button"]} ${className}`}
+                        onClick={onClick}
+                        to={to}
+                    >
+                        {children}
+                    </Link>
+                </>
+                :
+                <>
+                    <a
+                        className={`${styles["link-button"]} ${className}`}
+                        onClick={onClick}
+                        href={to}
+                        target="_blank"
+                    >
+                        {children}
+                    </a>
+                </>
+            }
+        </>
     )
 }
 

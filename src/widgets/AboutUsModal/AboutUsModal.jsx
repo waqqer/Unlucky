@@ -10,25 +10,19 @@ const AboutUsModal = (props) => {
         close
     } = props
 
-    const [sp, setSp] = useState(null)
-
-    useEffect(() => {
-        if (!sp) {
-            setSp(useSPW.spm)
-        }
-    }, [])
+    const { spm } = useSPW()
 
     const openTelegram = useCallback(() => {
-        if (!sp) {
-            sp.openURL("https://t.me/shadowmonya")
+        if (spm) {
+            spm.openURL("https://t.me/shadowmonya")
         }
-    }, [sp])
+    }, [spm])
 
     const openYT = useCallback(() => {
-        if (!sp) {
-            sp.openURL("https://youtube.com/@ShadowMonya")
+        if (spm) {
+            spm.openURL("https://youtube.com/@ShadowMonya")
         }
-    }, [sp])
+    }, [spm])
 
     return (
         <>
@@ -46,8 +40,8 @@ const AboutUsModal = (props) => {
                 <br /> возможность пополнить свой капитал.
             </p>
 
-            <div>
-                {sp === null ? (
+            <div className={styles["btn-box"]}>
+                {spm !== null ? (
                     <>
                         <Button onClick={openTelegram} className={`${styles["btn"]} ${styles["telegram"]}`} >
                             <i className="fab fa-telegram-plane"></i>
@@ -61,12 +55,12 @@ const AboutUsModal = (props) => {
                     </>
                 ) : (
                     <>
-                        <LinkButton to="https://t.me/shadowmonya" className={`${styles["btn"]} ${styles["telegram"]}`} target="_blank" >
+                        <LinkButton to="https://t.me/shadowmonya" className={`${styles["btn"]} ${styles["telegram"]}`} external>
                             <i className="fab fa-telegram-plane"></i>
                             Telegram
                         </LinkButton>
 
-                        <LinkButton to="https://youtube.com/@ShadowMonya" className={`${styles["btn"]} ${styles["yt"]}`} target="_blank" >
+                        <LinkButton to="https://youtube.com/@ShadowMonya" className={`${styles["btn"]} ${styles["yt"]}`} external>
                             <i className="fab fa-youtube"></i>
                             YouTube
                         </LinkButton>
