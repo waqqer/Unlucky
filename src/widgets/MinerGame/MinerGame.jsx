@@ -48,6 +48,12 @@ const MinerGame = (props) => {
 
                 <div className={styles["controls-section"]}>
                     <div className={styles["bet-section"]}>
+                        <img 
+                            src="https://media.tenor.com/Mdz2s-fOMggAAAAj/the-fragrant-flower-blooms-with-dignity-kaoruko-waguri.gif" 
+                            alt="dance gif" 
+                            className="mobile-hide"
+                        />
+
                         <BetInput
                             value={bet}
                             onChange={setBet}

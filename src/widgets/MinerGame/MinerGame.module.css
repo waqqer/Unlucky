@@ -40,3 +40,11 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+@media (max-width: 630px) {
+    .miner-game {
+        margin-top: 7vh;
+        display: flex;
+        flex-direction: column;
+    }
+}

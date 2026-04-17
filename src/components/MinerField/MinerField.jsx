@@ -1,3 +1,4 @@
+import background from "@/shared/images/games/miner/background.jpg"
 import styles from "./MinerField.module.css"
 
 const MinerField = (props) => {
@@ -6,8 +7,10 @@ const MinerField = (props) => {
     } = props
 
     return (
-        <div className={styles["miner-game"]}>
-            DF
+        <div className={styles["miner-game"]} style={{
+            backgroundImage: `url(${background})`
+        }}>
+            
         </div>
     )
 }

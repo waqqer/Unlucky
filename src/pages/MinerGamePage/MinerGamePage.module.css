@@ -42,7 +42,7 @@
     grid-template-columns: 1fr 2fr;
     gap: 20px;
     align-items: stretch;
-    min-height: 500px;
+    min-height: 600px;
 }
 
 .history {
@@ -71,4 +71,15 @@
 
 .game-description li {
     margin-bottom: 8px;
+}
+
+@media (max-width: 1000px) {
+    .game-layout {
+        grid-template-columns: 1fr;
+        min-height: 550px;
+    }
+
+    .main {
+        margin-top: 25px;
+    }
 }
