@@ -29,6 +29,8 @@ const {
     INITIAL_STOPPED
 } = SLOTS_CONFIG
 
+const toNumber = (value) => (typeof value === "number" ? value : parseFloat(value) || 0)
+
 const SlotMachineGame = (props) => {
     const {
         className = "",
@@ -61,26 +63,35 @@ const SlotMachineGame = (props) => {
         autoRerollEnabled, demoMode, account, bet, soundEnabled
     )
 
-    useEffect(() => {
-        if (!soundEnabled && audioRef.current) {
-            audioRef.current.pause()
-            audioRef.current.playbackRate = AUDIO_PLAYBACK_RATE
-            audioRef.current.currentTime = 0
+    const stopAudio = useCallback(() => {
+        if (!audioRef.current) return
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+        audioRef.current.playbackRate = AUDIO_PLAYBACK_RATE
+    }, [])
+
+    const clearTimers = useCallback(() => {
+        if (spinIntervalRef.current) {
+            clearInterval(spinIntervalRef.current)
+            spinIntervalRef.current = null
         }
-    }, [soundEnabled])
+        if (autoRerollTimeoutRef.current) {
+            clearTimeout(autoRerollTimeoutRef.current)
+            autoRerollTimeoutRef.current = null
+        }
+    }, [])
+
+    useEffect(() => {
+        if (!soundEnabled) stopAudio()
+    }, [soundEnabled, stopAudio])
 
     useEffect(() => {
         isMounted.current = true
         return () => {
             isMounted.current = false
-            if (spinIntervalRef.current) {
-                clearInterval(spinIntervalRef.current)
-            }
-            if (autoRerollTimeoutRef.current) {
-                clearTimeout(autoRerollTimeoutRef.current)
-            }
+            clearTimers()
         }
-    }, [])
+    }, [clearTimers])
 
     const handleAutoRerollToggle = useCallback(() => {
         setAutoRerollEnabled(prev => {
@@ -102,12 +113,27 @@ const SlotMachineGame = (props) => {
 
     const getRandomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
 
+    const scheduleAutoReroll = useCallback(() => {
+        autoRerollTimeoutRef.current = setTimeout(() => {
+            if (!isMounted.current) return
+            if (!autoRerollEnabledRef.current) return
+            // spin() reads fresh refs (bet/account/demo/sound), so calling the latest closure is safe here.
+            spin()
+        }, AUTO_REROLL_DELAY_MS)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     const spin = useCallback(async () => {
         if (isRequestPending || isSpinning) return
         if (!demoModeRef.current && !accountRef.current?.UUID) return
 
-        const currentBalance = parseFloat(accountRef.current?.balance || 0)
-        if (!demoModeRef.current && (betRef.current < SLOTS_MIN_BET || betRef.current > currentBalance)) {
+        const currentBalance = toNumber(accountRef.current?.balance)
+        const currentBet = toNumber(betRef.current)
+        if (!demoModeRef.current && (
+            currentBet < SLOTS_MIN_BET ||
+            currentBet > SLOTS_MAX_BET ||
+            currentBet > currentBalance
+        )) {
             setAutoRerollEnabled(false)
             return
         }
@@ -116,20 +142,18 @@ const SlotMachineGame = (props) => {
         setIsRequestPending(true)
         setStoppedReels(INITIAL_STOPPED)
 
-        if (audioRef.current) {
-            audioRef.current.pause()
-            audioRef.current.currentTime = 0
-        }
+        stopAudio()
 
         try {
             const result = demoModeRef.current
                 ? await SlotsApi.demoSpin()
                 : await SlotsApi.spin(accountRef.current.UUID, betRef.current)
 
-            const win = demoModeRef.current ? 0 : (result.winAmount || 0)
+            // Demo mode doesn't mutate balance/history, but should still display server-provided outcome.
+            const win = (result?.winAmount || 0)
             const newBalance = demoModeRef.current ? accountRef.current?.balance || 0 : result.newBalance
             const combination = result.combination || INITIAL_REELS
-            const multiplier = demoModeRef.current ? 0 : (result.multiplier || 0)
+            const multiplier = (result?.multiplier || 0)
 
             if (!demoModeRef.current && newBalance !== undefined && isMounted.current) {
                 updateUser({ balance: newBalance.toString() })
@@ -148,7 +172,7 @@ const SlotMachineGame = (props) => {
 
             spinIntervalRef.current = setInterval(() => {
                 if (!isMounted.current) {
-                    clearInterval(spinIntervalRef.current)
+                    clearTimers()
                     return
                 }
 
@@ -176,15 +200,15 @@ const SlotMachineGame = (props) => {
                     setReels(newReels)
 
                     if (newStopped.every(stopped => stopped)) {
-                        clearInterval(spinIntervalRef.current)
+                        if (spinIntervalRef.current) {
+                            clearInterval(spinIntervalRef.current)
+                            spinIntervalRef.current = null
+                        }
                         setWinAmount(win)
                         setIsSpinning(false)
                         setIsRequestPending(false)
 
-                        if (audioRef.current) {
-                            audioRef.current.pause()
-                            audioRef.current.currentTime = 0
-                        }
+                        stopAudio()
 
                         const isWin = win > 0
 
@@ -216,19 +240,11 @@ const SlotMachineGame = (props) => {
 
                         if (!isWin && autoRerollEnabledRef.current && isMounted.current) {
                             if (demoModeRef.current) {
-                                autoRerollTimeoutRef.current = setTimeout(() => {
-                                    if (isMounted.current && autoRerollEnabledRef.current && demoModeRef.current) {
-                                        spin()
-                                    }
-                                }, AUTO_REROLL_DELAY_MS)
+                                scheduleAutoReroll()
                             } else {
-                                const nextBalance = parseFloat(newBalance || accountRef.current?.balance || 0)
+                                const nextBalance = toNumber(newBalance ?? accountRef.current?.balance)
                                 if (nextBalance >= betRef.current) {
-                                    autoRerollTimeoutRef.current = setTimeout(() => {
-                                        if (isMounted.current && autoRerollEnabledRef.current && !demoModeRef.current) {
-                                            spin()
-                                        }
-                                    }, AUTO_REROLL_DELAY_MS)
+                                    scheduleAutoReroll()
                                 } else {
                                     setAutoRerollEnabled(false)
                                 }
@@ -241,11 +257,12 @@ const SlotMachineGame = (props) => {
             }, SPIN_INTERVAL_MS)
 
         } catch (error) {
+            console.error("Slots game error:", error)
             setIsSpinning(false)
             setIsRequestPending(false)
             setAutoRerollEnabled(false)
         }
-    }, [isSpinning, isRequestPending, accountRef, updateUser, onGameComplete, onHistoryUpdate])
+    }, [isSpinning, isRequestPending, accountRef, updateUser, onGameComplete, onHistoryUpdate, stopAudio, clearTimers, scheduleAutoReroll])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -256,29 +273,23 @@ const SlotMachineGame = (props) => {
             setPendingAutoRerollAfterVictory(false)
 
             if (demoModeRef.current) {
-                autoRerollTimeoutRef.current = setTimeout(() => {
-                    if (isMounted.current && autoRerollEnabledRef.current && demoModeRef.current) {
-                        spin()
-                    }
-                }, AUTO_REROLL_DELAY_MS)
+                scheduleAutoReroll()
             } else {
-                const currentBalance = parseFloat(accountRef.current?.balance || 0)
+                const currentBalance = toNumber(accountRef.current?.balance)
                 if (currentBalance >= betRef.current) {
-                    autoRerollTimeoutRef.current = setTimeout(() => {
-                        if (isMounted.current && autoRerollEnabledRef.current && !demoModeRef.current) {
-                            spin()
-                        }
-                    }, AUTO_REROLL_DELAY_MS)
+                    scheduleAutoReroll()
                 } else {
                     setAutoRerollEnabled(false)
                 }
             }
         }
-    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, scheduleAutoReroll])
 
-    const balance = parseFloat(account?.balance || 0)
+    const balance = toNumber(account?.balance)
     const hasEnoughBalance = demoMode || bet <= balance
-    const canSpin = !isRequestPending && !isSpinning && bet >= SLOTS_MIN_BET && hasEnoughBalance
+    const isBetInRange = bet >= SLOTS_MIN_BET && bet <= SLOTS_MAX_BET
+    const canSpin = !isRequestPending && !isSpinning && isBetInRange && hasEnoughBalance
 
     return (
         <>

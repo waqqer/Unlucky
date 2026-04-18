@@ -21,6 +21,8 @@ const {
     BET_PRESETS: ROCKET_BET_PRESETS
 } = ROCKET_CONFIG
 
+const formatMoney = (value) => Number(value).toFixed(2)
+
 const RocketGame = (props) => {
     const {
         className = "",
@@ -51,16 +53,20 @@ const RocketGame = (props) => {
         bet, isFlying, isRequestPending, crashedPoint, account, sounds, demoMode
     )
 
+    const stopAnimation = useCallback(() => {
+        if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current)
+            animationFrameRef.current = null
+        }
+    }, [])
+
     useEffect(() => {
         isMountedRef.current = true
         return () => {
             isMountedRef.current = false
-            if (animationFrameRef.current) {
-                cancelAnimationFrame(animationFrameRef.current)
-                animationFrameRef.current = null
-            }
+            stopAnimation()
         }
-    }, [])
+    }, [stopAnimation])
 
     const handlePresetSelect = useCallback((preset) => {
         setBet(preset)
@@ -69,6 +75,38 @@ const RocketGame = (props) => {
     const handleDemoToggle = useCallback(() => {
         setDemoMode(prev => !prev)
     }, [])
+
+    const applyBalanceAndHistory = useCallback((result) => {
+        if (result && typeof result.balance === "number") {
+            updateUser({ balance: result.balance.toString() })
+        }
+        if (onHistoryUpdate) onHistoryUpdate()
+    }, [onHistoryUpdate, updateUser])
+
+    const sendResult = useCallback((multiplier, isWin) => {
+        const userUuid = accountRef.current?.UUID
+        if (!userUuid) return
+
+        RocketApi.result(userUuid, betRef.current, multiplier, isWin)
+            .then(applyBalanceAndHistory)
+            .catch(err => {
+                console.error("Failed to send result:", err)
+                if (onHistoryUpdate) onHistoryUpdate()
+            })
+    }, [applyBalanceAndHistory, onHistoryUpdate, accountRef, betRef])
+
+    const resetRoundState = useCallback(() => {
+        setHasCashedOut(false)
+        hasCashedOutRef.current = false
+
+        setIsCrashed(false)
+        setCrashedPoint(null)
+        crashedPointRef.current = null
+
+        setWinAmount(null)
+        setCurrentMultiplier(START_MULTIPLIER)
+        currentMultiplierRef.current = START_MULTIPLIER
+    }, [crashedPointRef])
 
     const startAnimation = useCallback((crashPoint) => {
         const startTime = Date.now()
@@ -103,25 +141,12 @@ const RocketGame = (props) => {
                 isFlyingRef.current = false
                 soundsRef.current.playCrash()
 
-                const userUuid = accountRef.current?.UUID
-                if (userUuid) {
-                    RocketApi.result(userUuid, betRef.current, crashedPointRef.current, false)
-                        .then(result => {
-                            if (result && typeof result.balance === "number") {
-                                updateUser({ balance: result.balance.toString() })
-                            }
-                            if (onHistoryUpdate) onHistoryUpdate()
-                        })
-                        .catch(err => {
-                            console.error("Failed to send crash result:", err)
-                            if (onHistoryUpdate) onHistoryUpdate()
-                        })
-                }
+                sendResult(crashedPointRef.current, false)
             }
         }
 
         animationFrameRef.current = requestAnimationFrame(animate)
-    }, [onHistoryUpdate, updateUser])
+    }, [sendResult])
 
     const startGame = useCallback(async () => {
         if (isRequestPendingRef.current || isFlyingRef.current) return
@@ -129,25 +154,19 @@ const RocketGame = (props) => {
 
         const currentBalance = getBalance()
         const currentBet = betRef.current
-        if (!demoModeRef.current && (currentBet < ROCKET_MIN_BET || currentBet > currentBalance)) {
+        if (!demoModeRef.current && (
+            currentBet < ROCKET_MIN_BET ||
+            currentBet > ROCKET_MAX_BET ||
+            currentBet > currentBalance
+        )) {
             return
         }
 
-        if (animationFrameRef.current) {
-            cancelAnimationFrame(animationFrameRef.current)
-            animationFrameRef.current = null
-        }
+        stopAnimation()
 
         setIsRequestPending(true)
         isRequestPendingRef.current = true
-        setHasCashedOut(false)
-        hasCashedOutRef.current = false
-        setIsCrashed(false)
-        setCrashedPoint(null)
-        crashedPointRef.current = null
-        setWinAmount(null)
-        setCurrentMultiplier(START_MULTIPLIER)
-        currentMultiplierRef.current = START_MULTIPLIER
+        resetRoundState()
 
         try {
             let crashPoint
@@ -186,7 +205,7 @@ const RocketGame = (props) => {
             setIsFlying(false)
             isFlyingRef.current = false
         }
-    }, [getBalance, startAnimation])
+    }, [getBalance, resetRoundState, startAnimation, stopAnimation])
 
     const cashOut = useCallback(() => {
         if (!isFlyingRef.current || hasCashedOutRef.current || isCrashed) return
@@ -201,28 +220,14 @@ const RocketGame = (props) => {
             isFlyingRef.current = false
             setIsCrashed(true)
 
-            if (animationFrameRef.current) {
-                cancelAnimationFrame(animationFrameRef.current)
-                animationFrameRef.current = null
-            }
+            stopAnimation()
 
             setWinAmount(0)
             soundsRef.current.playCrash()
 
             if (!demoModeRef.current) {
-                const userUuid = accountRef.current?.UUID
-                if (userUuid) {
-                    RocketApi.result(userUuid, betRef.current, currentMult, false)
-                        .then(result => {
-                            if (result && typeof result.balance === "number") {
-                                updateUser({ balance: result.balance.toString() })
-                            }
-                            if (onHistoryUpdate) onHistoryUpdate()
-                        })
-                        .catch(err => {
-                            console.error("Failed to send result:", err)
-                            if (onHistoryUpdate) onHistoryUpdate()
-                        })
+                if (accountRef.current?.UUID) {
+                    sendResult(currentMult, false)
                 }
             }
             return
@@ -235,10 +240,7 @@ const RocketGame = (props) => {
         setIsFlying(false)
         isFlyingRef.current = false
 
-        if (animationFrameRef.current) {
-            cancelAnimationFrame(animationFrameRef.current)
-            animationFrameRef.current = null
-        }
+        stopAnimation()
 
         setWinAmount(win)
         soundsRef.current.playCashOut()
@@ -250,17 +252,7 @@ const RocketGame = (props) => {
                 return
             }
 
-            RocketApi.result(userUuid, currentBet, currentMult, true)
-                .then(result => {
-                    if (result && typeof result.balance === "number") {
-                        updateUser({ balance: result.balance.toString() })
-                    }
-                    if (onHistoryUpdate) onHistoryUpdate()
-                })
-                .catch(err => {
-                    console.error("Failed to send result:", err)
-                    if (onHistoryUpdate) onHistoryUpdate()
-                })
+            sendResult(currentMult, true)
 
             setShowVictory(true)
         } else {
@@ -271,7 +263,7 @@ const RocketGame = (props) => {
                 setIsCrashed(false)
             }, 500)
         }
-    }, [isCrashed, updateUser, onHistoryUpdate])
+    }, [isCrashed, sendResult, stopAnimation])
 
     return (
         <>
@@ -317,7 +309,7 @@ const RocketGame = (props) => {
                         <Button
                             className={styles["play-btn"]}
                             onClick={startGame}
-                            isDisabled={isRequestPending || bet < 1 || (!demoMode && !user)}
+                            isDisabled={isRequestPending || bet < ROCKET_MIN_BET || (!demoMode && !user)}
                             activateOnSpace={true}
                         >
                             {isRequestPending ? "Загрузка..." : "Сыграть"}
@@ -330,8 +322,8 @@ const RocketGame = (props) => {
                             activateOnSpace={true}
                         >
                             {hasCashedOut ? "Забрано!" : currentMultiplier < 1
-                                ? `Забрать (поражение!) ${(bet * currentMultiplier).toFixed(2)} Ар`
-                                : `Забрать ${(bet * currentMultiplier).toFixed(2)} Ар`
+                                ? `Забрать (поражение!) ${formatMoney(bet * currentMultiplier)} Ар`
+                                : `Забрать ${formatMoney(bet * currentMultiplier)} Ар`
                             }
                         </Button>
                     )}
