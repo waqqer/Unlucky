@@ -25,7 +25,6 @@ const BetInput = (props) => {
     }
 
     const handleBlur = () => {
-        // При потере фокуса применяем ограничения
         const val = typeof value === "number" ? value : 0
         if (val < min) {
             onChange(min)

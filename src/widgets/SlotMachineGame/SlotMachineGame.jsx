@@ -117,10 +117,8 @@ const SlotMachineGame = (props) => {
         autoRerollTimeoutRef.current = setTimeout(() => {
             if (!isMounted.current) return
             if (!autoRerollEnabledRef.current) return
-            // spin() reads fresh refs (bet/account/demo/sound), so calling the latest closure is safe here.
             spin()
         }, AUTO_REROLL_DELAY_MS)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const spin = useCallback(async () => {
@@ -149,7 +147,6 @@ const SlotMachineGame = (props) => {
                 ? await SlotsApi.demoSpin()
                 : await SlotsApi.spin(accountRef.current.UUID, betRef.current)
 
-            // Demo mode doesn't mutate balance/history, but should still display server-provided outcome.
             const win = (result?.winAmount || 0)
             const newBalance = demoModeRef.current ? accountRef.current?.balance || 0 : result.newBalance
             const combination = result.combination || INITIAL_REELS
@@ -283,7 +280,6 @@ const SlotMachineGame = (props) => {
                 }
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, scheduleAutoReroll])
 
     const balance = toNumber(account?.balance)

@@ -104,7 +104,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
     }, [])
 
     useEffect(() => {
-        // Stable random params for smoother smoke (no random jitter per frame).
         particleSeedsRef.current = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
             i,
             spriteIndex: Math.floor(Math.random() * Math.max(1, (SMOKE_SPRITES?.length || 1))),
@@ -117,10 +116,8 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
     }, [PARTICLE_COUNT])
 
     const buildExplosionSeeds = useCallback(() => {
-        // New random burst each crash (so the pattern doesn't repeat).
         const spriteCount = Math.max(1, (EXPLOSION_SPRITES?.length || 1))
         explosionSeedsRef.current = Array.from({ length: EXPLOSION_PARTICLE_COUNT }, (_, i) => {
-            // Fully random direction with slight clustering variation.
             const angle = Math.random() * Math.PI * 2
             return {
                 i,
@@ -130,7 +127,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
                 speedMul: 0.55 + Math.random() * 1.05,
                 sizeMul: 0.6 + Math.random() * 1.2,
                 rot: (Math.random() - 0.5) * 8,
-                // Fixed per-particle jitter so motion is stable frame-to-frame.
                 jitterX: (Math.random() - 0.5) * EXPLOSION_SPREAD,
                 jitterY: (Math.random() - 0.5) * EXPLOSION_SPREAD
             }
@@ -142,7 +138,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
         crashAtRef.current = performance.now()
         buildExplosionSeeds()
 
-        // Force redraw for explosion duration (since props may stop updating after crash).
         let raf = null
         const loop = () => {
             if (!crashAtRef.current) return
@@ -316,7 +311,6 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
                 ctx.fill()
             }
 
-            // Explosion burst (visual only).
             if (EXPLOSION_ENABLED && spritesReady && explosionSpriteImagesRef.current.length > 0 && crashAtRef.current) {
                 const tMs = performance.now() - crashAtRef.current
                 const t = Math.max(0, Math.min(tMs / EXPLOSION_DURATION_MS, 1))
@@ -327,10 +321,8 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
                 for (const p of explosionSeedsRef.current) {
                     const sprite = explosionSpriteImagesRef.current[p.spriteIndex % explosionSpriteImagesRef.current.length]
                     const speed = EXPLOSION_SPEED * p.speedMul
-                    // Radial blast from the crash point.
                     const dist = speed * elapsedSec * easeOut
 
-                    // Keep a bit of initial randomness near the center, but fixed per particle.
                     const jitterFade = (1 - easeOut)
                     const x = curveWidth + Math.cos(p.angle) * dist + p.jitterX * jitterFade
                     const y = curveHeight + Math.sin(p.angle) * dist + p.jitterY * jitterFade
@@ -359,25 +351,20 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
             const fixedAngle = ROCKET_ANGLE_OFFSET * Math.PI / 180
             const smokeAngle = fixedAngle + (DIRECTION_ANGLE_OFFSET * Math.PI / 180)
 
-            // Smoke particles behind the rocket (visual only).
             if (SMOKE_ENABLED && spritesReady && smokeSpriteImagesRef.current.length > 0) {
-                // Important: smoke is positioned in rocket-local coords then rotated by ROCKET_ANGLE_OFFSET,
-                // so it's always strictly "behind" the rocket relative to its tilt.
                 const now = performance.now() / 1000
                 const tailLength = Math.max(1, PARTICLE_COUNT) * PARTICLE_SPACING
 
                 for (const p of particleSeedsRef.current) {
                     const sprite = smokeSpriteImagesRef.current[p.spriteIndex % smokeSpriteImagesRef.current.length]
                     const travel = (now * PARTICLE_SPEED + p.i * PARTICLE_SPACING) % tailLength
-                    const t = travel / tailLength // 0..1 (near rocket -> far tail)
+                    const t = travel / tailLength
 
                     const back = Math.min(PARTICLE_BASE_BACK + travel, PARTICLE_MAX_BACK)
                     const size = PARTICLE_BASE_SIZE * p.size * (1 + t * 1.15)
                     const fade = 1 - t
 
-                    // Local coords: X points forward along rocket tilt, so negative X is "behind".
                     const localX = ENGINE_OFFSET_X - back
-                    // Invert lateral component so smoke sits "below" the rocket (as on the sprite).
                     const localY = ENGINE_OFFSET_Y - (
                         (p.spread * SIDE_SPREAD) * fade +
                         Math.sin(now * 2 + p.phase) * 2.5 * fade +
