@@ -62,6 +62,12 @@ const RocketGamePage = () => {
                 </Container>
             </main>
 
+            <img
+                src="https://media.tenor.com/VpWKdp6XoMIAAAAi/cute-cat.gif"
+                className={`${styles.gif} sp-hide`}
+                loading="lazy"
+            />
+
             <Modal
                 isOpen={aboutRocket}
                 onRequestClose={closeAboutRocket}

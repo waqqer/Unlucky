@@ -120,6 +120,23 @@
     font-weight: 600;
 }
 
+.gif {
+    position: fixed;
+
+    bottom: 0;
+    left: 85vw;
+}
+
+.gif:hover {
+    transform: scale(105%, 105%);
+}
+
+@media (max-width: 1600px) {
+    .gif {
+        display: none;
+    }
+}
+
 @media (max-width: 630px) {
     .symbols-list li {
         padding: 6px 10px;

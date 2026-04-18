@@ -66,6 +66,12 @@ const SlotsGamePage = () => {
                 </Container>
             </main>
 
+            <img
+                src="https://media.tenor.com/tPfCnUEDWMQAAAAi/frieren-frieren-dance.gif"
+                className={`${styles.gif} sp-hide`}
+                loading="lazy"
+            />
+
             <Modal
                 isOpen={aboutSlots}
                 onRequestClose={closeAboutSlots}
