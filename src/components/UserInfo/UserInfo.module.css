@@ -28,3 +28,7 @@
 .user-balance::after {
     content: " Ар";
 }
+
+.head {
+    border-radius: 5px;
+}

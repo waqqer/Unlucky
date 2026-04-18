@@ -14,10 +14,6 @@
     gap: 10px;
 }
 
-.profile-section img {
-    border-radius: 5px;
-}
-
 .nickname {
     transition: opacity 0.2s ease;
 }
@@ -28,4 +24,8 @@
 
 .uuid {
     opacity: 0.7;
+}
+
+.head {
+    border-radius: 5px;
 }

@@ -21,6 +21,8 @@ const UserInfo = () => {
                     width={48}
                     height={48}
                     loading="lazy"
+                    draggable={false}
+                    className={styles.head}
                 />
             </div>
             <div className={styles["user-info"]}>

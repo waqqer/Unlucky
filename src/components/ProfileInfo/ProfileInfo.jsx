@@ -17,9 +17,13 @@ const ProfileInfo = (props) => {
 
     return (
         <div className={`${styles["profile-section"]} ${className}`}>
-            <img src={head}
+            <img 
+                src={head}
                 width={64}
                 height={64}
+                loading="lazy"
+                draggable={false}
+                className={styles.head}
             />
             <div>
                 <h1 className={styles.nickname}>{user?.username ?? "Username"}</h1>

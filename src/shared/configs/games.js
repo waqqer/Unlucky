@@ -1,6 +1,6 @@
-import SlotsImage from "@/shared/images/slots.png"
-import MinerImage from "@/shared/images/miner.png"
-import RocketImage from "@/shared/images/rocket.png"
+import SlotsImage from "@/shared/images/slots.webp"
+import MinerImage from "@/shared/images/miner.webp"
+import RocketImage from "@/shared/images/rocket.webp"
 
 export const GAMES_CONFIG = [
     {
