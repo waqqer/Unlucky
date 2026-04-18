@@ -114,8 +114,21 @@
     }
 }
 
+@media (max-width: 1000px) {
+    .game-area {
+        height: 300px;
+    }
+    
+    .rocket-game {
+        gap: 15px;
+    }
+}
+
+
 @media (max-width: 630px) {
     .rocket-game {
+        justify-content: space-between;
+        margin-top: 5vh;
         padding: 12px;
         gap: 12px;
     }
@@ -129,15 +142,5 @@
     .cashout-btn-danger {
         padding: 12px 20px;
         font-size: 15px;
-    }
-}
-
-@media (max-width: 1000px) {
-    .game-area {
-        height: 300px;
-    }
-    
-    .rocket-game {
-        gap: 15px;
     }
 }

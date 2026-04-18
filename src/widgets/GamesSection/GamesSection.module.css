@@ -7,12 +7,16 @@
 
 .games-title {
     display: none;
+    width: 80%;
 
     font-size: 3.5vh;
     opacity: 0.9;
     letter-spacing: 2px;
 
     margin-bottom: 2vh;
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 @media (max-width: 630px) {
