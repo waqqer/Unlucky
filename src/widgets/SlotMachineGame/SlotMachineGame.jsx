@@ -237,8 +237,6 @@ const SlotMachineGame = (props) => {
                             })
                         }
 
-                        const netWin = win - betRef.current;
-
                         if (!isWin && autoRerollEnabledRef.current && isMounted.current) {
                             if (demoModeRef.current) {
                                 scheduleAutoReroll()
