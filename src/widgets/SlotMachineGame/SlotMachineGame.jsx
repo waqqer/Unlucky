@@ -152,9 +152,7 @@ const SlotMachineGame = (props) => {
             const combination = result.combination || INITIAL_REELS
             const multiplier = (result?.multiplier || 0)
 
-            if (!demoModeRef.current && newBalance !== undefined && isMounted.current) {
-                updateUser({ balance: newBalance.toString() })
-            }
+            const balanceToUpdate = newBalance
 
             setIsSpinning(true)
 
@@ -162,7 +160,7 @@ const SlotMachineGame = (props) => {
                 audioRef.current.currentTime = 0
                 audioRef.current.loop = true
                 audioRef.current.playbackRate = AUDIO_PLAYBACK_RATE
-                audioRef.current.play().catch(() => {})
+                audioRef.current.play().catch(() => { })
             }
 
             let spinIndex = 0
@@ -201,13 +199,17 @@ const SlotMachineGame = (props) => {
                             clearInterval(spinIntervalRef.current)
                             spinIntervalRef.current = null
                         }
-                        setWinAmount(win)
+                        setWinAmount(win - bet)
                         setIsSpinning(false)
                         setIsRequestPending(false)
 
                         stopAudio()
 
                         const isWin = win > 0
+
+                        if (!demoModeRef.current && balanceToUpdate !== undefined && isMounted.current) {
+                            updateUser({ balance: balanceToUpdate.toString() })
+                        }
 
                         if (!demoModeRef.current) {
                             if (isWin) {
@@ -235,11 +237,13 @@ const SlotMachineGame = (props) => {
                             })
                         }
 
+                        const netWin = win - betRef.current;
+
                         if (!isWin && autoRerollEnabledRef.current && isMounted.current) {
                             if (demoModeRef.current) {
                                 scheduleAutoReroll()
                             } else {
-                                const nextBalance = toNumber(newBalance ?? accountRef.current?.balance)
+                                const nextBalance = toNumber(balanceToUpdate ?? accountRef.current?.balance)
                                 if (nextBalance >= betRef.current) {
                                     scheduleAutoReroll()
                                 } else {
