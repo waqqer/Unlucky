@@ -136,5 +136,5 @@ build
 .pnp.*
 
 # Dev
-todo.txt
-api_routes.txt
+todo.*
+api_routes.*
