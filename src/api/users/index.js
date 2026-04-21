@@ -41,6 +41,11 @@ const UserApi = {
             body: JSON.stringify(data),
             headers: HEADERS
         }).then(res => res.json())
+    },
+
+    getCards: async (uuid) => {
+        return fetch(URL + `/${uuid.trim()}/cards`)
+                .then(res => res.json())
     }
 }
 
