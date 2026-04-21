@@ -34,7 +34,7 @@ const PaymentModal = (props) => {
 
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <div className={`${styles["method-icon"]} ${styles["method-add"]}`}>
+                    <div className={`${styles["method-icon"]} ${styles["method-add"]} mobile-hide`}>
                             <i className="fa-solid fa-credit-card"></i>
                     </div>
                     <h2 className={styles.title}>

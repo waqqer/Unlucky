@@ -5,6 +5,7 @@ import { useCallback, useContext, useState } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import PaymentModal from "../PaymentModal"
 import styles from "./BalanceSection.module.css"
+import OutModal from "../OutModal"
 
 const BalanceSection = (props) => {
     const {
@@ -28,7 +29,7 @@ const BalanceSection = (props) => {
 
     const closeOut = useCallback(() => setOutModal(false))
     const openOut = useCallback(() => {
-        if(isLoaded) {
+        if(true) {
             setOutModal(true)
         }
     }, [isLoaded])
@@ -75,7 +76,7 @@ const BalanceSection = (props) => {
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}
             >
-                <PaymentModal close={closeOut} />
+                <OutModal close={closeOut} />
             </Modal>
         </>
     )

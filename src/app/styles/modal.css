@@ -20,8 +20,8 @@
     color: white;
     padding: 30px;
     border-radius: 20px;
-    width: 90%;
-    max-width: 650px;
+    width: 80%;
+    max-width: 600px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 
     display: flex;
