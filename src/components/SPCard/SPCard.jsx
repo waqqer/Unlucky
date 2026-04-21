@@ -22,16 +22,9 @@ const SPCard = (props) => {
         setColor(colors[Math.round(Math.random() * colors.length - 1)])
     }, [])
 
-    const select = useCallback(() => {
-        onSelect({
-            name,
-            code
-        })
-    })
-
     return (
-        <div className={`${styles.card} ${styles[color]} ${selected ? styles.selected : ""}`} onClick={select}>
-            <h3 className={styles.name}>{name}</h3>
+        <div className={`${styles.card} ${styles[color]} ${selected ? styles.selected : ""}`} onClick={onSelect}>
+            <h2 className={styles.name}>{name}</h2>
             <p className={styles.code}>{code}</p>
         </div>
     )

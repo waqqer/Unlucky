@@ -1,9 +1,10 @@
 import ModalExitButton from "@/components/ModalExitButton"
-import { useContext, useState, useCallback } from "react"
+import { useContext, useState, useCallback, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import Button from "@/components/Button"
 import styles from "./OutModal.module.css"
-import SPCard from "../../components/SPCard"
+import SPCard from "@/components/SPCard"
+import UserApi from "@/api/users"
 
 const OutModal = (props) => {
     const {
@@ -16,6 +17,14 @@ const OutModal = (props) => {
     const [card, setCard] = useState(null)
     const [cardList, setCardList] = useState([])
 
+    useEffect(() => {
+        if (!user)
+            return
+
+        UserApi.getCards(user.minecraftUUID)
+            .then(d => setCardList(d))
+    }, [user])
+
     const handleAmountChange = useCallback((e) => {
         const value = e.target.value
         if (value >= 1 && value <= 1000) {
@@ -25,7 +34,6 @@ const OutModal = (props) => {
 
     const handleCardSelect = useCallback((c) => {
         setCard(c)
-        console.log(card)
     }, [])
 
     const isSubmitDisabled = !amount || amount < 1 || !user || cardList.length === 0 || !card
@@ -99,7 +107,13 @@ const OutModal = (props) => {
                                         name={c.name}
                                         code={c.number}
                                         selected={card?.number === c.number}
-                                        onSelect={() => handleCardSelect(c)}
+                                        onSelect={() => {
+                                            if(c.number === card?.number) {
+                                                handleCardSelect(null)
+                                            } else {
+                                                handleCardSelect(c)
+                                            }
+                                        }}
                                     />
                                 ))
                             )}
