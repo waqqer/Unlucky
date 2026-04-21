@@ -5,6 +5,7 @@ import Button from "@/components/Button"
 import styles from "./OutModal.module.css"
 import SPCard from "@/components/SPCard"
 import UserApi from "@/api/users"
+import PaymentApi from "@/api/payments"
 
 const OutModal = (props) => {
     const {
@@ -36,6 +37,17 @@ const OutModal = (props) => {
         setCard(c)
     }, [])
 
+    const handleClick = useCallback(() => {
+        if (card) {
+            PaymentApi.transaction(card.number, user.minecraftUUID, amount)
+                .then(d => {
+                    if (d.succes) {
+                        window.location.reload()
+                    }
+                })
+        }
+    }, [amount, card, user])
+
     const isSubmitDisabled = !amount || amount < 1 || !user || cardList.length === 0 || !card
 
     return (
@@ -65,7 +77,7 @@ const OutModal = (props) => {
                             className={styles.input}
                             type="number"
                             min={1}
-                            max={1000}
+                            max={account?.balance ?? 1000}
                             placeholder=" "
                             value={amount}
                             onChange={handleAmountChange}
@@ -73,14 +85,17 @@ const OutModal = (props) => {
                         <label className={styles["input-label"]}>
                             Сумма пополнения
                         </label>
-                        <span className={`${styles["input-hint"]} mobile-hide`}>от 1 до 1000 Ар</span>
+                        <span className={`${styles["input-hint"]} mobile-hide`}>
+                            от 1 до {account?.balance ?? 1000} Ар
+                        </span>
 
-                        <div className={styles["presets"]}>
+                        <div className={`${styles["presets"]} mobile-hide`}>
                             {[50, 100, 250, 500, 1000].map((preset) => (
                                 <button
                                     key={preset}
                                     className={styles["preset-btn"]}
                                     onClick={() => setAmount(preset)}
+                                    disabled={preset > (account?.balance ?? 1000)}
                                 >
                                     +{preset}
                                 </button>
@@ -90,6 +105,7 @@ const OutModal = (props) => {
                         <Button
                             className={`${styles.btn} ${isSubmitDisabled ? styles["btn-disabled"] : ""}`}
                             disabled={isSubmitDisabled}
+                            onClick={handleClick}
                         >
                             Вывести
                         </Button>
@@ -108,7 +124,7 @@ const OutModal = (props) => {
                                         code={c.number}
                                         selected={card?.number === c.number}
                                         onSelect={() => {
-                                            if(c.number === card?.number) {
+                                            if (c.number === card?.number) {
                                                 handleCardSelect(null)
                                             } else {
                                                 handleCardSelect(c)
