@@ -16,21 +16,20 @@ const BalanceSection = (props) => {
         account
     } = useContext(AccountContext)
 
-    const [method, setMethod] = useState("ADD")
     const [paymentModal, setPaymentModal] = useState(false)
+    const [outModal, setOutModal] = useState(false)
 
     const сlosePayment = useCallback(() => setPaymentModal(false))
-    const openPaymentADD = useCallback(() => {
+    const openPayment = useCallback(() => {
         if (isLoaded) {
-            setMethod("ADD")
             setPaymentModal(true)
         }
     }, [isLoaded])
-    
-    const openPaymentTAKE = useCallback(() => {
-        if (isLoaded) {
-            setMethod("TAKE")
-            setPaymentModal(true)
+
+    const closeOut = useCallback(() => setOutModal(false))
+    const openOut = useCallback(() => {
+        if(isLoaded) {
+            setOutModal(true)
         }
     }, [isLoaded])
 
@@ -45,12 +44,12 @@ const BalanceSection = (props) => {
                 </p>
 
                 <div className={`${styles.controlls}`}>
-                    <Button className={`${styles["add-money-button"]} ${styles["f-part"]}`} onClick={openPaymentTAKE}>
+                    <Button className={`${styles["add-money-button"]} ${styles["f-part"]}`} onClick={openOut}>
                         <i className="fa-solid fa-upload"></i>
                         <p>Вывод</p>
                     </Button>
 
-                    <Button className={`${styles["add-money-button"]} ${styles["s-part"]}`} onClick={openPaymentADD}>
+                    <Button className={`${styles["add-money-button"]} ${styles["s-part"]}`} onClick={openPayment}>
                         <i className="fa-solid fa-download"></i>
                         <p>Пополнение</p>
                     </Button>
@@ -60,12 +59,23 @@ const BalanceSection = (props) => {
             <Modal
                 isOpen={paymentModal}
                 onRequestClose={сlosePayment}
-                contentLabel="Пополнение или вывод"
+                contentLabel="Пополнение"
                 className="modal"
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}
             >
-                <PaymentModal method={method} close={сlosePayment} />
+                <PaymentModal close={сlosePayment} />
+            </Modal>
+
+            <Modal
+                isOpen={outModal}
+                onRequestClose={closeOut}
+                contentLabel="Вывод"
+                className="modal"
+                overlayClassName="modal-overlay"
+                closeTimeoutMS={300}
+            >
+                <PaymentModal close={closeOut} />
             </Modal>
         </>
     )

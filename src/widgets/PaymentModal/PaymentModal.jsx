@@ -7,7 +7,6 @@ import PaymentApi from "@/api/payments"
 
 const PaymentModal = (props) => {
     const {
-        method = "ADD",
         close
     } = props
 
@@ -22,11 +21,9 @@ const PaymentModal = (props) => {
     }, [])
 
     const handlePayment = useCallback(() => {
-        if (method === "ADD") {
-            PaymentApi.new(amount, user.minecraftUUID).then(d => {
-                spm.openPayment(d.code)
-            })
-        }
+        PaymentApi.new(amount, user.minecraftUUID).then(d => {
+            spm.openPayment(d.code)
+        })
     }, [amount])
 
     const isSubmitDisabled = !amount || amount < 1 || !user
@@ -37,15 +34,11 @@ const PaymentModal = (props) => {
 
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <div className={`${styles["method-icon"]} ${method === "ADD" ? styles["method-add"] : styles["method-take"]}`}>
-                        {method === "ADD" ? (
+                    <div className={`${styles["method-icon"]} ${styles["method-add"]}`}>
                             <i className="fa-solid fa-credit-card"></i>
-                        ) : (
-                            <i className="fa-solid fa-wallet"></i>
-                        )}
                     </div>
                     <h2 className={styles.title}>
-                        {method === "ADD" ? "Пополнение баланса" : "Вывод средств"}
+                        Пополнение баланса
                     </h2>
                 </div>
 
@@ -68,7 +61,7 @@ const PaymentModal = (props) => {
                             onChange={handleAmountChange}
                         />
                         <label className={styles["input-label"]}>
-                            {method === "ADD" ? "Сумма пополнения" : "Сумма вывода"}
+                            Сумма пополнения
                         </label>
                         <span className={styles["input-hint"]}>от 1 до 1000 Ар</span>
                     </div>
@@ -90,7 +83,7 @@ const PaymentModal = (props) => {
                         disabled={isSubmitDisabled}
                         onClick={handlePayment}
                     >
-                        {method === "ADD" ? "Пополнить" : "Вывести"}
+                        Пополнить
                     </Button>
                 </div>
             </div>
