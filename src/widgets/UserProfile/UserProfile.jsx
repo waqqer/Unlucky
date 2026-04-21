@@ -1,10 +1,9 @@
 import UserInfo from "@/components/UserInfo"
 import UserControlls from "@/components/UserControlls"
 import Modal from 'react-modal'
-import { useCallback, useState } from "react"
+import { useCallback, useState, memo } from "react"
 import AboutUsModal from "../AboutUsModal"
 import ProfileModal from "../ProfileModal"
-import { memo } from "react"
 import styles from "./UserProfile.module.css"
 
 const UserProfile = (props) => {

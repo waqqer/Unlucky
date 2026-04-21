@@ -3,6 +3,7 @@ import Button from "@/components/Button"
 import { useCallback, useState, useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./PaymentModal.module.css"
+import PaymentApi from "@/api/payments"
 
 const PaymentModal = (props) => {
     const {
@@ -10,7 +11,7 @@ const PaymentModal = (props) => {
         close
     } = props
 
-    const { account, user } = useContext(AccountContext)
+    const { account, user, spm } = useContext(AccountContext)
     const [amount, setAmount] = useState(10)
 
     const handleAmountChange = useCallback((e) => {
@@ -21,6 +22,11 @@ const PaymentModal = (props) => {
     }, [])
 
     const handlePayment = useCallback(() => {
+        if (method === "ADD") {
+            PaymentApi.new(amount, user.minecraftUUID).then(d => {
+                spm.openPayment(d.code)
+            })
+        }
     }, [amount])
 
     const isSubmitDisabled = !amount || amount < 1 || !user
