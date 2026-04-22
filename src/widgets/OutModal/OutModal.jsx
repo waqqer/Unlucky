@@ -9,7 +9,8 @@ import PaymentApi from "@/api/payments"
 
 const OutModal = (props) => {
     const {
-        close
+        close,
+        onPayment
     } = props
 
     const { spm, user, account } = useContext(AccountContext)
@@ -42,7 +43,7 @@ const OutModal = (props) => {
             PaymentApi.transaction(card.number, user.minecraftUUID, amount)
                 .then(d => {
                     if (d.succes) {
-                        window.location.reload()
+                        onPayment()
                     }
                 })
         }

@@ -14,7 +14,8 @@ const BalanceSection = (props) => {
 
     const {
         isLoaded,
-        account
+        account,
+        refreshAccount
     } = useContext(AccountContext)
 
     const [paymentModal, setPaymentModal] = useState(false)
@@ -33,6 +34,12 @@ const BalanceSection = (props) => {
             setOutModal(true)
         }
     }, [isLoaded])
+
+    const onPayment = useCallback(() => {
+        setOutModal(false)
+        setPaymentModal(false)
+        refreshAccount()
+    }, [])
 
     return (
         <>
@@ -65,7 +72,7 @@ const BalanceSection = (props) => {
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}
             >
-                <PaymentModal close={сlosePayment} />
+                <PaymentModal close={сlosePayment} onPayment={onPayment} />
             </Modal>
 
             <Modal
@@ -76,7 +83,7 @@ const BalanceSection = (props) => {
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}
             >
-                <OutModal close={closeOut} />
+                <OutModal close={closeOut} onPayment={onPayment} />
             </Modal>
         </>
     )

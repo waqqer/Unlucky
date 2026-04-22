@@ -7,7 +7,8 @@ import PaymentApi from "@/api/payments"
 
 const PaymentModal = (props) => {
     const {
-        close
+        close,
+        onPayment
     } = props
 
     const { account, user, spm } = useContext(AccountContext)
@@ -23,8 +24,9 @@ const PaymentModal = (props) => {
     const handlePayment = useCallback(() => {
         PaymentApi.new(amount, user.minecraftUUID).then(d => {
             spm.openPayment(d.code)
+            onPayment()
         })
-    }, [amount])
+    }, [amount, user, spm])
 
     const isSubmitDisabled = !amount || amount < 1 || !user
 
