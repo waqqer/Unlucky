@@ -140,13 +140,14 @@ const RocketGame = (props) => {
                 setIsFlying(false)
                 isFlyingRef.current = false
                 soundsRef.current.playCrash()
-
-                sendResult(crashedPointRef.current, false)
+                if (!demoModeRef.current) {
+                    sendResult(crashedPointRef.current, false)
+                }
             }
         }
 
         animationFrameRef.current = requestAnimationFrame(animate)
-    }, [sendResult])
+    }, [sendResult, demoModeRef])
 
     const startGame = useCallback(async () => {
         if (isRequestPendingRef.current || isFlyingRef.current) return
