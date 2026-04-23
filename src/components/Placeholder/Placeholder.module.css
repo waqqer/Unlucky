@@ -1,29 +1,25 @@
 .loader {
     display: inline-block;
-    background-color: rgb(126, 144, 160);
-
+    background: linear-gradient(90deg,
+            #7e90a0 0%,
+            #b0b8c0 30%,
+            #d1d1d1 50%,
+            #b0b8c0 70%,
+            #7e90a0 100%);
+    background-size: 200% 100%;
     border-radius: 7px;
-
     padding: 10px;
     margin-top: 5px;
     width: 100%;
-
-    animation: pulse 5s ease infinite;
+    animation: wave 10s ease infinite;
 }
 
-@keyframes pulse {
-    from {
-        opacity: 0.5;
-        background-color: rgb(126, 144, 160);
+@keyframes wave {
+    0% {
+        background-position: 200% 0;
     }
 
-    50% {
-        opacity: 0.2;
-        background-color: rgb(209, 209, 209);
-    }
-
-    to {
-        opacity: 0.5;
-        background-color: rgb(126, 144, 160);
+    100% {
+        background-position: -200% 0;
     }
 }
