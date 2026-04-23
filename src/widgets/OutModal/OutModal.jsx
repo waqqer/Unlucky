@@ -38,7 +38,7 @@ const OutModal = (props) => {
 
     const handleAmountChange = useCallback((e) => {
         const value = e.target.value
-        if (value >= 1 && value <= 1000) {
+        if (value >= 0 && value <= 1000) {
             setAmount(value)
         }
     }, [])
@@ -89,11 +89,12 @@ const OutModal = (props) => {
                             min={1}
                             max={account?.balance ?? 1000}
                             placeholder=" "
+                            id="amount-input"
                             value={amount}
                             onChange={handleAmountChange}
                         />
-                        <label className={styles["input-label"]}>
-                            Сумма пополнения
+                        <label className={styles["input-label"]} htmlFor="amount-input">
+                            Сумма вывода
                         </label>
                         <span className={`${styles["input-hint"]} mobile-hide`}>
                             от 1 до {account?.balance ?? 1000} Ар
