@@ -17,16 +17,7 @@ const OutModal = (props) => {
 
     const [amount, setAmount] = useState(10)
     const [card, setCard] = useState(null)
-    const [cardList, setCardList] = useState([{
-        name: "sd",
-        number: 9
-    },{
-        name: "sd",
-        number: 4
-    },{
-        name: "sd",
-        number: 6
-    }])
+    const [cardList, setCardList] = useState([])
 
     useEffect(() => {
         if (!user)

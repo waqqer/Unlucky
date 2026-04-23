@@ -65,6 +65,8 @@
 
     margin-block: 10px;
     width: 100%;
+
+    scrollbar-color: rgba(75, 246, 59, 0.5) rgba(75, 246, 59, 0.05);
 }
 
 @media (max-width: 1000px) {
