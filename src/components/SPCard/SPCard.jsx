@@ -1,12 +1,19 @@
 import { memo, useCallback, useEffect, useState } from "react"
 import styles from "./SPCard.module.css"
 
-const colors = [
-    "purple",
-    "gray",
-    "red",
-    "blue"
-]
+const colors = {
+    0: "green",
+    1: "purple",
+    2: "gray",
+    3: "red",
+    4: "blue",
+    5: "orange",
+    6: "gold",
+    7: "green",
+    8: "pink",
+    9: "yellow",
+    10: "purple"
+}
 
 const SPCard = (props) => {
     const {
@@ -19,7 +26,9 @@ const SPCard = (props) => {
     const [color, setColor] = useState("gray")
 
     useEffect(() => {
-        setColor(colors[Math.round(Math.random() * colors.length - 1)])
+        const num = Number(String(code)[0])
+        const newColor = colors[num]
+        setColor(newColor)
     }, [])
 
     return (

@@ -33,12 +33,24 @@
     box-shadow: 0px 0px 8px 5px rgba(214, 214, 214, 0.2);
 }
 
-.card:hover {
+.selected .name {
+    opacity: 1;
+}
+
+.selected .code {
+    opacity: 0.9;
+}
+
+.card:not(.selected):hover {
     border-radius: 5px;
 
     -webkit-box-shadow: 0px 0px 8px 5px rgba(22, 22, 22, 0.7);
     -moz-box-shadow: 0px 0px 8px 5px rgba(22, 22, 22, 0.7);
     box-shadow: 0px 0px 8px 5px rgba(22, 22, 22, 0.7);
+}
+
+.card:is(.selected):hover {
+    border-radius: 5px;
 }
 
 .name {
@@ -50,11 +62,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    transition: all 0.3s ease;
 }
 
 .code {
     opacity: 0.6;
     font-size: 1.2rem;
+
+    transition: all 0.3s ease;
 }
 
 .code::selection,
@@ -66,22 +82,47 @@
 
 .purple {
     background: #5F3E82;
-    background: linear-gradient(30deg, rgb(97, 42, 155) 0%, rgb(97, 42, 155) 50%, rgba(138, 43, 226, 1) 50%, rgba(138, 43, 226, 1) 100%);
+    background: linear-gradient(30deg, #612a9b 0%, #612a9b 50%, #8a2be2 10%, #8a2be2 100%);
 }
 
 .gray {
     background: #424242;
-    background: linear-gradient(30deg, rgb(122, 122, 122) 0%, rgb(122, 122, 122) 50%, rgba(97, 97, 97, 1) 50%, rgba(97, 97, 97, 1) 100%);
+    background: linear-gradient(30deg, #7a7a7a 0%, #7a7a7a 50%, #616161 51%, #616161 100%);
 }
 
 .red {
     background: #B83B56;
-    background: linear-gradient(30deg, rgba(184, 59, 86, 1) 0%, rgba(184, 59, 86, 1) 50%, rgba(226, 52, 90, 1) 50%, rgba(226, 52, 90, 1) 100%);
+    background: linear-gradient(30deg, #b83b56 0%, #b83b56 50%, #e2345a 51%, #e2345a 100%);
 }
 
 .blue {
     background: #4942ad;
-    background: linear-gradient(30deg, rgb(37, 33, 92) 0%, rgb(37, 33, 92) 50%, rgba(55, 43, 226, 1) 50%, rgba(55, 43, 226, 1) 100%);
+    background: linear-gradient(30deg, #25215c 0%, #25215c 50%, #372be2 51%, #372be2 100%);
+}
+
+.orange {
+    background: #e99a34;
+    background: linear-gradient(30deg, #725227 0%, #725227 50%, #e99a34 51%, #e99a34 100%);
+}
+
+.gold {
+    background: #fcd966;
+    background: linear-gradient(30deg, #8f6c4c 0%, #ad943e 50%, #fcd966 51%, #fcd966 100%);
+}
+
+.green {
+    background: #24c731;
+    background: linear-gradient(30deg, #2c8f34 0%, #2c8f34 50%, #24c731 51%, #24c731 100%);
+}
+
+.pink {
+    background: #ec97da;
+    background: linear-gradient(30deg, #b377a6 0%, #b377a6 50%, #ec97da 51%, #ec97da 100%);
+}
+
+.yellow {
+    background: yellow;
+    background: linear-gradient(30deg, #686435 0%, #686435 50%, yellow 51%, yellow 100%);
 }
 
 @media (max-width: 630px) {
