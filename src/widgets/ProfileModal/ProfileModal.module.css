@@ -4,9 +4,4 @@
 
     width: 100%;
     gap: 10px;
-
-    max-height: 50vh;
-    overflow-y: auto;
-
-    scrollbar-base-color: #1e293b;
 }

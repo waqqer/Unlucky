@@ -51,6 +51,29 @@
     animation: history-show 1s ease;
 }
 
+.history-list {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.history-list > p {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+
+    margin-block: 10px;
+    width: 100%;
+}
+
+@media (max-width: 1000px) {
+    .history-list {
+        max-height: 30vh;
+        overflow-y: auto;
+    }
+}
+
 @keyframes history-show {
     from {
         opacity: 0.3;

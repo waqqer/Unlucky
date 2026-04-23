@@ -19,7 +19,7 @@ const ProfileModal = (props) => {
 
             <div className={styles.list}>
                 <BalanceSection />
-                <HistorySection className="sp-hide" />
+                <HistorySection className="mobile-hide" />
             </div>
         </>
     )

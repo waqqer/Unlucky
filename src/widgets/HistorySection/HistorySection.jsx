@@ -20,18 +20,17 @@ const HistorySection = (props) => {
     const [history, setHistory] = useState([])
 
     const openHistory = useCallback(() => {
-        if(history.length !== 0)
+        if (history.length !== 0)
             setHistotyModal(true)
     }, [history])
-    
-    const closeHistory = useCallback(() => setHistotyModal(false))
 
+    const closeHistory = useCallback(() => setHistotyModal(false))
     useEffect(() => {
         HistoryApi.getByUuid(user?.minecraftUUID)
-                  .then(data => setHistory(data.reverse() ?? []))
-                  .catch(() => {
-                        setHistory([])
-                  })
+            .then(data => setHistory(data ?? []))
+            .catch(() => {
+                setHistory([])
+            })
     }, [user?.username])
 
     const rendered_list = history.slice(0, 5)
@@ -43,12 +42,14 @@ const HistorySection = (props) => {
                     <Button className={styles["all-btn"]} onClick={openHistory}>История</Button>
                 </div>
 
-                {rendered_list.length > 0 ?
-                    <div className={styles["history-list"]} >
-                        {rendered_list.map(i => <HistoryItem key={i.id} data={i} index={null} />)}
-                    </div> :
-                    <p className={styles["not-found-message"]} >Тут пока ничего нет...</p>
-                }
+                <div className={styles["history-list"]}>
+                    {rendered_list.length > 0 ?
+                        <div className={styles["history-list"]} >
+                            {rendered_list.map(i => <HistoryItem key={i.id} data={i} index={null} />)}
+                        </div> :
+                        <p className={styles["not-found-message"]} >Тут пока ничего нет...</p>
+                    }
+                </div>
             </div>
 
             <Modal

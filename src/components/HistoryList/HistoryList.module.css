@@ -6,6 +6,9 @@
     width: 100%;
     overflow-y: auto;
     padding: 10px;
+
+    align-items: center;
+    justify-content: start;
 }
 
 .not-found-message {

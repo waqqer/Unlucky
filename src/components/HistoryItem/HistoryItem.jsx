@@ -29,12 +29,17 @@ const HistoryItem = (props) => {
         if (!date || isNaN(date.getTime())) {
             return ""
         }
-        return date.toLocaleDateString("ru-RU", {
+        const time = date.toLocaleDateString("ru-RU", {
             day: "numeric",
             month: "long",
             hour: "2-digit",
             minute: "2-digit"
         })
+
+        if(!time || time === "") {
+            return "date"
+        }
+        return time
     }
 
     const animate = index !== null
