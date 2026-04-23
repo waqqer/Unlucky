@@ -30,7 +30,7 @@ const BalanceSection = (props) => {
 
     const closeOut = useCallback(() => setOutModal(false))
     const openOut = useCallback(() => {
-        if(true) {
+        if(isLoaded) {
             setOutModal(true)
         }
     }, [isLoaded])

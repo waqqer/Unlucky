@@ -16,7 +16,7 @@ const PaymentModal = (props) => {
 
     const handleAmountChange = useCallback((e) => {
         const value = e.target.value
-        if (value >= 1 && value <= 1000) {
+        if (value >= 0 && value <= 1000) {
             setAmount(value)
         }
     }, [])
