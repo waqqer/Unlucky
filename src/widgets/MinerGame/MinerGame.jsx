@@ -75,7 +75,7 @@ const MinerGame = (props) => {
                             activateOnSpace={true}
                             title={!hasEnoughBalance ? "Недостаточно средств" : undefined}
                         >
-                            {isPlaying ? "Крутим..." : !hasEnoughBalance ? "Нет средств" : "Сыграть"}
+                            {isPlaying ? "Играем..." : "Сыграть"}
                         </Button>
                     </div>
                 </div>

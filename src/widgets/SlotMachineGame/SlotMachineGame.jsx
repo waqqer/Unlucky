@@ -340,7 +340,7 @@ const SlotMachineGame = (props) => {
                         activateOnSpace={true}
                         title={!hasEnoughBalance ? "Недостаточно средств" : undefined}
                     >
-                        {isSpinning ? "Крутим..." : !hasEnoughBalance ? "Нет средств" : "Сыграть"}
+                        {isSpinning ? "Крутим..." : "Сыграть"}
                     </Button>
                 </div>
             </div>
