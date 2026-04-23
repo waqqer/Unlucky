@@ -69,6 +69,7 @@ const SlotsGamePage = () => {
             <img
                 src="https://media.tenor.com/tPfCnUEDWMQAAAAi/frieren-frieren-dance.gif"
                 className={`${styles.gif} sp-hide`}
+                draggable={false}
                 loading="lazy"
             />
 

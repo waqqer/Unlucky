@@ -66,6 +66,7 @@ const RocketGamePage = () => {
                 src="https://media.tenor.com/VpWKdp6XoMIAAAAi/cute-cat.gif"
                 className={`${styles.gif} sp-hide`}
                 loading="lazy"
+                draggable={false}
             />
 
             <Modal
