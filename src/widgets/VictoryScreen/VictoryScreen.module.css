@@ -55,14 +55,48 @@
     font-weight: 700;
     color: rgb(173, 255, 148);
     text-shadow: 0 0 20px rgba(173, 255, 148, 0.8);
-    animation: amountSlide 0.5s ease-out 0.2s both;
+    background-color: rgb(187, 19, 19);
+    box-sizing: border-box;
+    padding: 15px 100px; 
+    border: 3px solid gold;
+    border-radius: 10px;
+
+    -webkit-box-shadow: 0px 0px 20px 12px rgba(34, 60, 80, 0.38) inset;
+    -moz-box-shadow: 0px 0px 20px 12px rgba(34, 60, 80, 0.38) inset;
+    box-shadow: 0px 0px 20px 12px rgba(34, 60, 80, 0.38) inset;
+
     margin: 0;
+    transition: transform 0.05s ease;
+    animation: none;
+}
+
+.victory-amount::selection {
+    background: transparent;
+}
+
+.victory-title::selection {
+    background: transparent;
+}
+
+.victory-amount:is(.pop) {
+    animation: amountPop 0.25s ease;
+}
+
+@keyframes amountPop {
+    from {
+        transform: translateY(-2px);
+    }
+
+    to {
+        transform: translateY(2px);
+    }
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -73,6 +107,7 @@
         transform: scale(0);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -80,22 +115,14 @@
 }
 
 @keyframes titlePulse {
-    0%, 100% {
-        transform: scale(1);
+    0%,
+    100% {
+        transform: scale(1), rotateZ(0deg);
     }
-    50% {
-        transform: scale(1.05);
-    }
-}
 
-@keyframes amountSlide {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
+    33% {
+        transform: scale(1.05);
+        filter: brightness(105%);
     }
 }
 
