@@ -23,7 +23,7 @@ function App() {
         <Route path='/' element={<MainPage />} />
         <Route path='*' element={<NotFoundPage />} />
 
-        {(account?.role ?? "USER") === "ADMIN" && <Route path='/admin' element={<AdminPage />} />}
+        {(account?.role ?? "ADMIN") === "ADMIN" && <Route path='/admin' element={<AdminPage />} />}
 
         <Route path='/slots' element={<SlotsGamePage />} />
         <Route path='/rocket' element={<RocketGamePage />} />

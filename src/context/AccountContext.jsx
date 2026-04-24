@@ -1,7 +1,6 @@
 import { createContext, useEffect, useMemo, useState, useCallback } from "react"
 import useSPW from "@/hooks/useSpw"
 import useHead from "@/hooks/useHead"
-import useOnline from "@/hooks/useOnline"
 import UserApi from "@/api/users"
 import BalanceApi from "@/api/balance"
 
@@ -10,8 +9,6 @@ export const AccountContext = createContext({})
 export const AccountProvider = ({ children }) => {
     const { user: spwUser, spm } = useSPW()
     const head = useHead(spwUser)
-
-    useOnline()
 
     const [isLoaded, setIsLoaded] = useState(false)
     const [account, setAccount] = useState(null)

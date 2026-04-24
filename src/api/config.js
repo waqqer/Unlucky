@@ -1,1 +1,1 @@
-export const fetchUrl = import.meta.env.VITE_BACKEND_URL
+export const fetchUrl = import.meta.env.VITE_BACKEND_URL + "/api"

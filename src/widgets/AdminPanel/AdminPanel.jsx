@@ -7,10 +7,10 @@ import GamesStats from "@/widgets/GamesStats"
 import styles from "./AdminPanel.module.css"
 
 const AdminPanel = () => {
-    const navigate = useNavigate()
+    const nav = useNavigate()
 
     const handleGoHome = () => {
-        navigate('/')
+        nav('/')
     }
 
     return (
