@@ -47,8 +47,6 @@
 
     align-items: center;
     justify-content: center;
-
-    animation: history-show 1s ease;
 }
 
 .history-list {
@@ -56,6 +54,8 @@
     flex-direction: column;
 
     width: 100%;
+
+    scrollbar-color: #578a5f52 transparent;
 }
 
 .history-list > p {
@@ -65,21 +65,12 @@
 
     margin-block: 10px;
     width: 100%;
-
-    scrollbar-color: rgba(75, 246, 59, 0.5) rgba(75, 246, 59, 0.05);
 }
 
 @media (max-width: 1000px) {
     .history-list {
         max-height: 30vh;
         overflow-y: auto;
-    }
-}
-
-@keyframes history-show {
-    from {
-        opacity: 0.3;
-        transform: translateY(-5px);
     }
 }
 
