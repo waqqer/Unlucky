@@ -10,7 +10,8 @@ import PaymentApi from "@/api/payments"
 const OutModal = (props) => {
     const {
         close,
-        onPayment
+        onPayment,
+        onError
     } = props
 
     const { spm, user, account } = useContext(AccountContext)
@@ -44,10 +45,12 @@ const OutModal = (props) => {
                 .then(d => {
                     if (d.succes) {
                         onPayment()
+                    } else {
+                        onError(d)
                     }
                 })
         }
-    }, [amount, card, user])
+    }, [amount, card, user, onError, onPayment])
 
     const isSubmitDisabled = !amount || amount < 1 || !user || cardList.length === 0 || !card
 

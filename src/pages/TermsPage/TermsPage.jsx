@@ -1,14 +1,14 @@
 import { memo, useCallback, useContext, useState } from "react"
 import styles from "./TermsPage.module.css"
 import Button from "@/components/Button"
-import { AccountContext } from "../../context/AccountContext"
+import { AccountContext } from "@/context/AccountContext"
 
 const TermsPage = () => {
     const { acceptTerms, user, termsAccepted } = useContext(AccountContext)
-    const { accepted, setAccepted } = useState(termsAccepted)
+    const [accepted, setAccepted] = useState(termsAccepted)
 
     const acceptHandle = useCallback(() => {
-        if(user) {
+        if (user) {
             setAccepted(true)
             acceptTerms()
         }
@@ -25,8 +25,8 @@ const TermsPage = () => {
             </div>
 
             <div className={styles.controlls}>
-                <Button 
-                    onClick={acceptHandle} 
+                <Button
+                    onClick={acceptHandle}
                     className={styles.accept}
                     enabled={accepted}
                 >

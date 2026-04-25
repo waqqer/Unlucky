@@ -37,6 +37,12 @@
     text-align: start;
 }
 
+.result-modal {
+    min-width: 400px;
+    width: 400px;
+    max-width: 800px;
+}
+
 .modal-overlay {
     opacity: 0;
     backdrop-filter: blur(0px);

@@ -6,6 +6,7 @@ import { AccountContext } from "@/context/AccountContext"
 import PaymentModal from "../PaymentModal"
 import styles from "./BalanceSection.module.css"
 import OutModal from "../OutModal"
+import ResultModal from "../ResultModal"
 
 const BalanceSection = (props) => {
     const {
@@ -19,7 +20,11 @@ const BalanceSection = (props) => {
     } = useContext(AccountContext)
 
     const [paymentModal, setPaymentModal] = useState(false)
+    const [resultModal, setResultModal] = useState(false)
     const [outModal, setOutModal] = useState(false)
+
+    const [outSucces, setOutSucces] = useState(true)
+    const [outMessage, setOutMessage] = useState("")
 
     const сlosePayment = useCallback(() => setPaymentModal(false))
     const openPayment = useCallback(() => {
@@ -28,12 +33,31 @@ const BalanceSection = (props) => {
         }
     }, [isLoaded])
 
+    const сloseResult = useCallback(() => setResultModal(false))
+    const openResult = useCallback(() => setResultModal(true))
+
     const closeOut = useCallback(() => setOutModal(false))
     const openOut = useCallback(() => {
-        if(isLoaded) {
+        if (isLoaded) {
             setOutModal(true)
         }
     }, [isLoaded])
+
+    const onError = useCallback((data) => {
+        setOutModal(false)
+        setPaymentModal(false)
+        refreshAccount()
+
+        setOutSucces(false)
+        setOutMessage(data.message)
+        openResult()
+    }, [])
+
+    const onOut = useCallback(() => {
+        setOutSucces(true)
+        setOutMessage("Успех!")
+        openResult()
+    }, [])
 
     const onPayment = useCallback(() => {
         setOutModal(false)
@@ -83,7 +107,18 @@ const BalanceSection = (props) => {
                 overlayClassName="modal-overlay"
                 closeTimeoutMS={300}
             >
-                <OutModal close={closeOut} onPayment={onPayment} />
+                <OutModal close={closeOut} onPayment={onOut} onError={onError} />
+            </Modal>
+
+            <Modal
+                isOpen={resultModal}
+                onRequestClose={сloseResult}
+                contentLabel="Вывод"
+                className="modal result-modal"
+                overlayClassName="modal-overlay"
+                closeTimeoutMS={300}
+            >
+                <ResultModal close={сloseResult} succes={outSucces} message={outMessage} />
             </Modal>
         </>
     )
