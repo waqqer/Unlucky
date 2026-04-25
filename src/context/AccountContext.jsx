@@ -69,25 +69,27 @@ export const AccountProvider = ({ children }) => {
 
     const termsAccepted = useCallback(() => {
         if(!account) {
-            return false
+            return true
         }
 
         return account.terms_accept
     }, [account])
 
-    const acceptTerms = useCallback(async () => {
+    const acceptTerms = useCallback(() => {
         const uuid = spwUser?.minecraftUUID
+
         if(!uuid)
             return
 
         try {
-            const data = await UserApi.acceptTerms(uuid)
-            refreshAccount()
+            UserApi.acceptTerms(uuid).then(d => {
+                window.location.reload()
+            })
         } catch (error) {
             console.error("Ошибка при принятии условий пользователя: ", error)
             return null
         }
-    }, [])
+    }, [spwUser])
 
     useEffect(() => {
         if (!spm)

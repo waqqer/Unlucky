@@ -4,14 +4,13 @@ import Button from "@/components/Button"
 import { AccountContext } from "../../context/AccountContext"
 
 const TermsPage = () => {
-    const { acceptTerms, termsAccepted, user } = useContext(AccountContext)
-    const [accept, setAccept] = useState(termsAccepted)
+    const { acceptTerms, user, termsAccepted } = useContext(AccountContext)
+    const { accepted, setAccepted } = useState(termsAccepted)
 
     const acceptHandle = useCallback(() => {
-        if(!user) {
-            setAccept(true)
+        if(user) {
+            setAccepted(true)
             acceptTerms()
-            return
         }
     }, [user])
 
@@ -26,7 +25,13 @@ const TermsPage = () => {
             </div>
 
             <div className={styles.controlls}>
-                <Button onClick={acceptHandle} className={styles.accept}>Принять</Button>
+                <Button 
+                    onClick={acceptHandle} 
+                    className={styles.accept}
+                    enabled={accepted}
+                >
+                    Принять
+                </Button>
             </div>
         </main>
     )
