@@ -6,15 +6,9 @@ import styles from "./NotFoundPage.module.css"
 const NotFoundPage = () => {
 
     return (
-        <>
-            <header>
-                <UserProfile className={styles.profile} />
-            </header>
-
-            <main>
-                <NotFoundTitle />
-            </main>
-        </>
+        <main>
+            <NotFoundTitle />
+        </main>
     )
 }
 

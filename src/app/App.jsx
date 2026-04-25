@@ -8,14 +8,26 @@ import { useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import MinerGamePage from "../pages/MinerGamePage"
 import "./styles"
+import TermsPage from "../pages/TermsPage/TermsPage"
 
 Modal.setAppElement("#root")
 
 function App() {
-
   const {
-    account
+    account,
+    termsAccepted
   } = useContext(AccountContext)
+
+  if (!termsAccepted()) {
+    return (
+      <HashRouter>
+        <Routes>
+          <Route path='/' element={<TermsPage />} />
+          <Route path='*' element={<NotFoundPage />} />
+        </Routes>
+      </HashRouter>
+    )
+  }
 
   return (
     <HashRouter>
@@ -23,7 +35,7 @@ function App() {
         <Route path='/' element={<MainPage />} />
         <Route path='*' element={<NotFoundPage />} />
 
-        {(account?.role ?? "ADMIN") === "ADMIN" && <Route path='/admin' element={<AdminPage />} />}
+        {(account?.role ?? "USER") === "ADMIN" && <Route path='/admin' element={<AdminPage />} />}
 
         <Route path='/slots' element={<SlotsGamePage />} />
         <Route path='/rocket' element={<RocketGamePage />} />

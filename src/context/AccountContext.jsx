@@ -33,7 +33,6 @@ export const AccountProvider = ({ children }) => {
     const changeBalance = useCallback(async (amount) => {
         const userUuid = spwUser?.minecraftUUID || account?.UUID
         if (!userUuid || !account) {
-            console.warn("Cannot change balance: user not authenticated", { spwUser, account })
             return null
         }
 
@@ -44,7 +43,7 @@ export const AccountProvider = ({ children }) => {
             }
             return result
         } catch (error) {
-            console.error("Failed to change balance:", error)
+            console.error("Ошибка при смене баланса:", error)
             return null
         }
     }, [spwUser, account])
@@ -63,10 +62,32 @@ export const AccountProvider = ({ children }) => {
             }
             return data
         } catch (error) {
-            console.error("Failed to refresh account:", error)
+            console.error("Ошибка при обновлении аккаунта: ", error)
             return null
         }
     }, [spwUser])
+
+    const termsAccepted = useCallback(() => {
+        if(!account) {
+            return false
+        }
+
+        return account.terms_accept
+    }, [account])
+
+    const acceptTerms = useCallback(async () => {
+        const uuid = spwUser?.minecraftUUID
+        if(!uuid)
+            return
+
+        try {
+            const data = await UserApi.acceptTerms(uuid)
+            refreshAccount()
+        } catch (error) {
+            console.error("Ошибка при принятии условий пользователя: ", error)
+            return null
+        }
+    }, [])
 
     useEffect(() => {
         if (!spm)
@@ -96,8 +117,10 @@ export const AccountProvider = ({ children }) => {
         updateUser,
         changeBalance,
         getBalance,
-        refreshAccount
-    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount])
+        refreshAccount,
+        termsAccepted,
+        acceptTerms
+    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted])
 
     return (
         <AccountContext.Provider value={values}>

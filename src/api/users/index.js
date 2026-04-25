@@ -46,6 +46,13 @@ const UserApi = {
     getCards: async (uuid) => {
         return fetch(URL + `/${uuid.trim()}/cards`)
                 .then(res => res.json())
+    },
+    
+    acceptTerms: async (uuid) => {
+        return fetch(URL + `/${uuid.trim()}/accept`, {
+            method: "POST",
+            headers: HEADERS
+        }).then(res => res.json())
     }
 }
 
