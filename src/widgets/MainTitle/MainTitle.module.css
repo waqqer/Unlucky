@@ -8,17 +8,6 @@
     justify-content: center;
 }
 
-.icon {
-    animation: icon-jump 1s ease-in-out 0.3s both;
-}
-
-@keyframes icon-jump {
-    from {
-        transform: scale(105%, 105%);
-        filter: brightness(110%);
-    }
-}
-
 .title-container {
     display: flex;
     gap: 2%;
@@ -27,14 +16,12 @@
     justify-content: center;
 }
 
-@media (max-width: 1000px) {
-    .title-container {
-        padding-inline: 20%;
-        justify-content: start;
-    }
+.logo {
+    width: 650px;
 }
 
 .title {
+    display: none;
     text-shadow: 0px 0px 24px;
     text-transform: uppercase;
     text-wrap: nowrap;
@@ -43,50 +30,25 @@
 .purple-part {
     color: blueviolet;
     display: inline-block;
-    animation: purple-part-show 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
-}
-
-@keyframes purple-part-show {
-    0% {
-        transform: translateX(70px);
-        opacity: 0;
-        filter: blur(4px);
-    }
-    60% {
-        opacity: 1;
-        filter: blur(0);
-    }
-    80% {
-        transform: translateX(2px);
-    }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-.desc {
-    font-size: 2.35vmin;
-    color: rgb(255, 255, 255);
-    opacity: 0.7;
-
-    font-weight: lighter;
-    letter-spacing: 1.2px;
-
-    text-transform: capitalize;
-    animation: desc-show 3s ease;
-}
-
-@keyframes desc-show {
-    from {
-        opacity: 0;
-    }
 }
 
 .title-box {
     margin-top: 1vh;
-    margin-bottom: 4vh;
+}
+
+@media (max-width: 1000px) {
+    .title-container {
+        padding-inline: 20%;
+        justify-content: start;
+    }
+
+    .logo {
+        width: 350px;
+    }
+
+    .title-box {
+        margin-bottom: 1vh;
+    }
 }
 
 @media (max-width: 630px) {
@@ -94,21 +56,16 @@
         font-size: 8vw;
     }
 
-    .desc {
-        font-size: 4vmin;
-        margin-left: 3vw;
-        margin-right: 3vw;
+    .title {
+        display: inline;
+    }
 
-        width: 80%;
-
-        text-align: start;
-
-        opacity: 0.9;
+    .logo {
+        display: none;
     }
 
     .title-box {
         margin-top: 7vh;
-        margin-bottom: 3.2vh;
     }
 
     .purple-part {

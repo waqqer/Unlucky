@@ -9,7 +9,7 @@
 }
 
 html {
-    overflow-y: scroll;
+    overflow-y: auto;
     scroll-behavior: smooth;
 
     height: 100vh;
@@ -44,7 +44,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 @media (max-width: 630px) {
     html {
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     .mobile-hide {

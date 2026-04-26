@@ -5,7 +5,7 @@ import styles from "./MainPage.module.css"
 
 const MainPage = () => {
     return (
-        <>
+        <div className={styles.main}>
             <header>
                 <UserProfile />
             </header>
@@ -18,7 +18,7 @@ const MainPage = () => {
             <footer className={`${styles.footer} mobile-hide`}>
                 <p>ООО "Тмыв денег"</p>
             </footer>
-        </>
+        </div>
     )
 }
 
