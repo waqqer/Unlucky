@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, memo } from "react"
 import StatsGroup from "@/components/StatsGroup"
 import StatCard from "@/components/StatCard"
 import GStatsApi from "@/api/g_stats"
@@ -57,4 +57,4 @@ const ArStats = () => {
     )
 }
 
-export default ArStats
+export default memo(ArStats)

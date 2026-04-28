@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, memo } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import StatsApi from "@/api/statistics"
 import UserStatItem from "@/components/UserStatItem"
@@ -48,4 +48,4 @@ const StatsSection = (props) => {
     )
 }
 
-export default StatsSection
+export default memo(StatsSection)

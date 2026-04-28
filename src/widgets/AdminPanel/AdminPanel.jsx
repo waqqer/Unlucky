@@ -4,6 +4,7 @@ import { useNavigate } from "react-router"
 import OnlineStats from "@/widgets/OnlineStats"
 import ArStats from "@/widgets/ArStats"
 import GamesStats from "@/widgets/GamesStats"
+import UserStats from "../UserStats"
 import styles from "./AdminPanel.module.css"
 
 const AdminPanel = () => {
@@ -24,6 +25,7 @@ const AdminPanel = () => {
                     <OnlineStats />
                     <ArStats />
                     <GamesStats />
+                    <UserStats />
                     <Button className={`${styles["home-btn"]} pc-hide`} onClick={handleGoHome}>
                         <span>На главную</span>
                     </Button>
