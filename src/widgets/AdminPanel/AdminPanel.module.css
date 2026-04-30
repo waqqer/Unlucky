@@ -3,7 +3,7 @@
     align-items: center;
 
     margin-block: 1%;
-    margin-top: 7%;
+    margin-top: 3%;
 }
 
 .admin-panel {
@@ -62,6 +62,13 @@
 .home-btn:hover i {
     transform: translateX(-4px);
 }
+
+@media (max-width: 1000px) {
+    .admin-panel {
+        margin-top: 13%;
+    }
+}
+
 
 @media (max-width: 630px) {
     .admin-panel {
