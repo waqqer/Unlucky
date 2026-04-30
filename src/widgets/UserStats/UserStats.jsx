@@ -1,5 +1,8 @@
 import { memo, useEffect, useState } from "react"
-import TopApi from "../../api/top"
+import TopApi from "@/api/top"
+import StatsGroup from "@/components/StatsGroup"
+import UserTopItem from "@/components/UserTopItem"
+import styles from "./UserStats.module.css"
 
 const limit = 20
 
@@ -7,16 +10,16 @@ const UserStats = () => {
     const [users, setUsers] = useState([])
 
     useEffect(() => {
-        TopApi.getWinners(20)
+        TopApi.getWinners(limit)
             .then(d => setUsers(d))
     }, [])
 
     return (
-        <div>
-            {users.map(e => {
-                <p>e.uuid</p>
-            })}
-        </div>
+        <StatsGroup title="Топ игроков">
+            <div className={styles["top-list"]}>
+                {users.map((u, i) => <UserTopItem userData={u} number={i + 1} />)}
+            </div>
+        </StatsGroup>
     )
 }
 
