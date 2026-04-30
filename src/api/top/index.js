@@ -9,7 +9,7 @@ const HEADERS = {
 const TopApi = {
     getWinners: async (limit) => {
         const l = Number(limit) ?? 10
-        return fetch(fetchUrl + "/win_amount/" + l)
+        return fetch(URL + "/win_amount/" + l)
             .then(d => d.json())
     }
 }

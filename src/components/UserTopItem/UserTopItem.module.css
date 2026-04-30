@@ -1,7 +1,7 @@
 .user-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 
     align-items: center;
     justify-content: space-between;
@@ -86,7 +86,7 @@
 }
 
 .item:hover .user-info {
-    gap: 15px;
+    gap: 17px;
 }
 
 .item:hover .head {

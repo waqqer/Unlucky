@@ -17,7 +17,11 @@ const UserStats = () => {
     return (
         <StatsGroup title="Топ игроков">
             <div className={styles["top-list"]}>
-                {users.map((u, i) => <UserTopItem key={i} userData={u} number={i + 1} />)}
+                {users.length === 0 ?
+                    <p className={styles.empty}>Тут пусто((...</p>
+                    :
+                    users.map((u, i) => <UserTopItem key={i} userData={u} number={i + 1} />) 
+                }
             </div>
         </StatsGroup>
     )
