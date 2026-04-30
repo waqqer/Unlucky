@@ -17,7 +17,7 @@ const UserStats = () => {
     return (
         <StatsGroup title="Топ игроков">
             <div className={styles["top-list"]}>
-                {users.map((u, i) => <UserTopItem userData={u} number={i + 1} />)}
+                {users.map((u, i) => <UserTopItem key={i} userData={u} number={i + 1} />)}
             </div>
         </StatsGroup>
     )
