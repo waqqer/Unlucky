@@ -1,34 +1,25 @@
 .main {
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
 
     display: flex;
     flex-direction: column;
 
-    align-items: center;
-    justify-content: start;
+    align-items: start;
+    justify-content: center;
 
     gap: 20px;
 
-    background-color: rgba(16, 17, 20, 0.267);
-
-    padding: 10px 20px;
-    border-radius: 10px;
-
-    -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    padding: 10vh 10vw;
 }
 
 .main h1 {
-    font-size: 4rem;
+    font-size: 3rem;
     text-wrap: nowrap;
     width: 100%;
-    text-align: center;
+    text-align: start;
 
     border-bottom: 1px solid rgba(85, 85, 85, 0.37);
 }
@@ -37,60 +28,44 @@
     width: 100%;
     text-align: start;
 
-    max-height: 55vh;
+    max-height: 60vh;
     overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    scrollbar-color: #202d49 #0f1729;
 }
 
-.message {
-    opacity: 0.6;
-    font-size: 1rem;
-    letter-spacing: 1.25px;
-    text-wrap: wrap;
-    text-align: start;
-    word-break: break-all;
+.content * {
+    opacity: 0.85;
 }
 
 .controlls {
-    border-top: 1px solid rgba(85, 85, 85, 0.37);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     width: 100%;
     display: flex;
 }
 
 .accept {
-    flex: 1;
+    min-width: 150px;
+    width: 20%;
+    max-width: 250px;
 }
 
 @media (max-width: 630px) {
     .main h1 {
-        font-size: 3rem;
+        font-size: 1.2rem;
         border: none;
     }
 
     .main {
-        position: static;
-        transform: none;
-        background: none;
-        box-shadow: none;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        padding: 0;
-
-        width: 100vw;
-        height: 100vh;
+        padding: 10px;
 
         align-items: center;
         justify-content: center;
-    }
-
-    .controlls {
-        border: none;
-        width: 50%;
-    }
-
-    .message {
-        letter-spacing: 1px;
-        font-size: 0.75rem;
-        opacity: 0.7;
-        padding: 10px;
     }
 }
