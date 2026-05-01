@@ -30,7 +30,7 @@ export const AppProvider = ({ children }) => {
 
             socket.onclose = () => {
                 setIsConnected(false)
-                setTimeout(connect, 3000)
+                setTimeout(connect, 5000)
             }
 
             socket.onerror = (err) => {

@@ -14,7 +14,9 @@ export const AccountProvider = ({ children }) => {
     const [account, setAccount] = useState(null)
 
     useEffect(() => {
-        if (!spwUser) return
+        if (!spwUser)
+            return
+
         UserApi.getOrCreate(spwUser, "USER")
             .then(data => {
                 setAccount(data)
@@ -54,7 +56,9 @@ export const AccountProvider = ({ children }) => {
 
     const refreshAccount = useCallback(async () => {
         const userUuid = spwUser?.minecraftUUID
-        if (!userUuid) return null
+        if (!userUuid)
+            return null
+
         try {
             const data = await UserApi.getByUuid(userUuid)
             if (data) {
@@ -68,7 +72,7 @@ export const AccountProvider = ({ children }) => {
     }, [spwUser])
 
     const termsAccepted = useCallback(() => {
-        if(!account) {
+        if (!account) {
             return true
         }
 
@@ -78,7 +82,7 @@ export const AccountProvider = ({ children }) => {
     const acceptTerms = useCallback(() => {
         const uuid = spwUser?.minecraftUUID
 
-        if(!uuid)
+        if (!uuid)
             return
 
         try {
