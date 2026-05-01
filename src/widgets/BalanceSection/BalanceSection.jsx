@@ -56,13 +56,18 @@ const BalanceSection = (props) => {
     const onOut = useCallback(() => {
         setOutSucces(true)
         setOutMessage("Успех!")
+
+        closeOut()
         openResult()
+        
+        setTimeout(() => {
+            refreshAccount()
+        }, 1000)
     }, [])
 
     const onPayment = useCallback(() => {
         setOutModal(false)
         setPaymentModal(false)
-        refreshAccount()
     }, [])
 
     return (
