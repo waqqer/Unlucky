@@ -25,6 +25,10 @@
     cursor: pointer;
 }
 
+.link-button::selection {
+    background-color: transparent;
+}
+
 .link-button:hover {
     transform: scale(102%, 102%);
     background-color: rgb(202, 202, 202);

@@ -15,6 +15,14 @@ html {
     height: 100vh;
 }
 
+button::selection {
+    background-color: transparent;
+}
+
+input[type="button"] {
+    background-color: transparent;
+}
+
 body {
     font-family: var(--Font), sans-serif;
     background-color: var(--Bg-color);

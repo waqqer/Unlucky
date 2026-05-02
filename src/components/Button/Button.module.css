@@ -30,6 +30,10 @@
     background-color: rgb(202, 202, 202);
 }
 
+.button::selection {
+    background-color: transparent;
+}
+
 .button.back-style {
     display: inline-flex;
     align-items: center;

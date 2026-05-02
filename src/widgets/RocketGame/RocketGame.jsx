@@ -323,7 +323,7 @@ const RocketGame = (props) => {
                             activateOnSpace={true}
                         >
                             {hasCashedOut ? "Забрано!" : currentMultiplier < 1
-                                ? `Забрать (поражение!) ${formatMoney(bet * currentMultiplier)} Ар`
+                                ? `Забрать ${formatMoney(bet * currentMultiplier)} Ар`
                                 : `Забрать ${formatMoney(bet * currentMultiplier)} Ар`
                             }
                         </Button>
