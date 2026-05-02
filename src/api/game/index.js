@@ -78,23 +78,20 @@ export const RocketApi = {
 }
 
 export const MinerApi = {
-    play: async (uuid, bet) => {
-        const requestBody = {
-            uuid: uuid,
-            bet: typeof bet === "number" ? bet : parseFloat(bet) || 0
+    play: async (uuid, bet, cols, rows) => {
+        const body = {
+            uuid,
+            bet,
+            cols,
+            rows
         }
 
-        const response = await fetch(BASE_URL + "/miner", {
-            method: 'POST',
+        const responce = await fetch(BASE_URL + "/miner", {
+            method: "POST",
             headers: HEADERS,
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify(body)
         })
 
-        if (!response.ok) {
-            const errorText = await response.text()
-            throw new Error(`Miner API error: ${response.status} ${errorText}`)
-        }
-
-        return response.json()
+        return responce.json()
     }
 }
