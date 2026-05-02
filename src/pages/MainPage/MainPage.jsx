@@ -10,7 +10,7 @@ const MainPage = () => {
                 <UserProfile />
             </header>
 
-            <main>
+            <main className={styles.content}>
                 <MainTitle />
                 <GamesSection />
             </main>

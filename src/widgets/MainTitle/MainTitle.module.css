@@ -17,7 +17,11 @@
 }
 
 .logo {
-    width: 650px;
+    width: 450px;
+}
+
+.logo::selection {
+    background-color: transparent;
 }
 
 .title {
