@@ -15,11 +15,7 @@ html {
     height: 100vh;
 }
 
-button::selection {
-    background-color: transparent;
-}
-
-input[type="button"] {
+button::selection, input[type="button"]::selection {
     background-color: transparent;
 }
 
