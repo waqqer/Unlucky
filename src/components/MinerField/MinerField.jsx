@@ -27,7 +27,6 @@ const MinerField = (props) => {
     const glowTintScratchRef = useRef(null)
     const chestBounceT0Ref = useRef(new Map())
     const chestLabelShownRef = useRef(new Set())
-    const soundVolumeRef = useRef(0.28)
     const pickaxeFallRafIdsRef = useRef(new Set())
     const minerRouletteAudioRef = useRef(null)
     const roundCanvasRedrawRef = useRef(null)
@@ -57,6 +56,8 @@ const MinerField = (props) => {
         MINER_PICKAXE_ROULETE_SOUND = null,
         CHEST_GLOW_PARTICLE_DEFAULTS = {}
     } = MINER_CONFIG
+
+    const soundVolumeRef = useRef(MINER_SOUND_VOLUME)
 
     const chestGlowParticleParams = (chestCfg) => {
         const d = CHEST_GLOW_PARTICLE_DEFAULTS || {}
