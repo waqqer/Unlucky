@@ -78,12 +78,13 @@ export const RocketApi = {
 }
 
 export const MinerApi = {
-    play: async (uuid, bet, cols, rows) => {
+    play: async (uuid, bet, cols, rows, pickaxeRows = 1) => {
         const body = {
             uuid,
             bet: typeof bet === "number" ? bet : parseFloat(bet) || 0,
             cols,
-            rows
+            rows,
+            pickaxeRows
         }
 
         const response = await fetch(BASE_URL + "/miner", {

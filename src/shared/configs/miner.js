@@ -17,17 +17,47 @@ import BLOCK_BREAK_NORMAL from "@/shared/audio/miner/blocks/break_normal.mp3"
 import BLOCK_BREAK_POOR from "@/shared/audio/miner/blocks/break_poor.mp3"
 import BLOCK_BREAK_RICH from "@/shared/audio/miner/blocks/break_rich.mp3"
 
+import BLOCK_BREAK_STAGE0 from "@/shared/images/games/miner/destroy_stage_0.png"
+import BLOCK_BREAK_STAGE1 from "@/shared/images/games/miner/destroy_stage_1.png"
+import BLOCK_BREAK_STAGE2 from "@/shared/images/games/miner/destroy_stage_2.png"
+import BLOCK_BREAK_STAGE3 from "@/shared/images/games/miner/destroy_stage_3.png"
+import BLOCK_BREAK_STAGE4 from "@/shared/images/games/miner/destroy_stage_4.png"
+import BLOCK_BREAK_STAGE5 from "@/shared/images/games/miner/destroy_stage_5.png"
+import BLOCK_BREAK_STAGE6 from "@/shared/images/games/miner/destroy_stage_6.png"
+import BLOCK_BREAK_STAGE7 from "@/shared/images/games/miner/destroy_stage_7.png"
+import BLOCK_BREAK_STAGE8 from "@/shared/images/games/miner/destroy_stage_8.png"
+import BLOCK_BREAK_STAGE9 from "@/shared/images/games/miner/destroy_stage_9.png"
+
 export const MINER_CONFIG = {
     MINER_MIN_BET: 10,
     MINER_MAX_BET: 1000,
-    MINER_BET_PRESETS: [1, 5, 10, 50, 100],
+    MINER_BET_PRESETS: [10, 25, 50, 100, 250],
 
     ROWS: 5,
-    COLS: 5, 
+    COLS: 5,
+    PICKAXE_ROWS: 3,
     CELL_SIZE_PX: 64,
     GRID_GAP_PX: 6,
 
+    PICKAXE_FALL_DURATION_MS: 410,
+    PICKAXE_FALL_SPINS: 1,
+
+    PICKAXE_BOUNCE_DURATION_MS: 480,
+    PICKAXE_BOUNCE_HEIGHT_MULT: 1.4,
+
     SLOT_TEXTURE: SLOT_TEXTURE,
+    BREAK_TEXTURES: [
+        BLOCK_BREAK_STAGE0,
+        BLOCK_BREAK_STAGE1,
+        BLOCK_BREAK_STAGE2,
+        BLOCK_BREAK_STAGE3,
+        BLOCK_BREAK_STAGE4,
+        BLOCK_BREAK_STAGE5,
+        BLOCK_BREAK_STAGE6,
+        BLOCK_BREAK_STAGE7,
+        BLOCK_BREAK_STAGE8,
+        BLOCK_BREAK_STAGE9
+    ],
 
     BLOCKS: {
         "stone": {

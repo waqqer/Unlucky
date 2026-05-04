@@ -12,7 +12,9 @@ import styles from "./MinerGame.module.css"
 const MinerGame = (props) => {
     const {
         className = "",
-        soundEnabled = true
+        soundEnabled = true,
+        onHistoryUpdate,
+        onAnimationComplete
     } = props
 
     const {
@@ -20,12 +22,14 @@ const MinerGame = (props) => {
         MINER_BET_PRESETS,
         MINER_MIN_BET,
         COLS,
-        ROWS
+        ROWS,
+        PICKAXE_ROWS
     } = MINER_CONFIG
 
     const { account, updateUser, user, refreshAccount } = useContext(AccountContext)
 
     const isMountedRef = useRef(true)
+    const pendingBalanceRef = useRef(null)
 
     const [isPlaying, setIsPlaying] = useState(false)
     const [bet, setBet] = useState(10)
@@ -52,7 +56,7 @@ const MinerGame = (props) => {
         setRoundData(null)
 
         try {
-            const result = await MinerApi.play(account.UUID, bet, COLS, ROWS)
+            const result = await MinerApi.play(account.UUID, bet, COLS, ROWS, PICKAXE_ROWS)
             if (!isMountedRef.current) return
 
             setRoundData(result || {})
@@ -61,25 +65,39 @@ const MinerGame = (props) => {
             const newBalance = result?.newBalance ?? result?.balance
 
             if (typeof newBalance === "number") {
-                updateUser({ balance: newBalance.toString() })
+                pendingBalanceRef.current = newBalance
+            } else {
+                pendingBalanceRef.current = null
             }
 
             const safeWin = Number(winFromServer) || 0
             setWinAmount(safeWin)
         } catch (error) {
             console.error("Miner game error:", error)
+            pendingBalanceRef.current = null
+            if (isMountedRef.current) setIsPlaying(false)
         } finally {
             if (!isMountedRef.current) return
             setIsRequestPending(false)
-            setIsPlaying(false)
-            refreshAccount?.()
         }
-    }, [isRequestPending, isPlaying, account, bet, COLS, ROWS, updateUser, refreshAccount])
+    }, [isRequestPending, isPlaying, account, bet, COLS, ROWS, PICKAXE_ROWS])
+
+    const handleAnimationComplete = useCallback(() => {
+        setIsPlaying(false)
+        const bal = pendingBalanceRef.current
+        pendingBalanceRef.current = null
+        if (typeof bal === "number") {
+            updateUser({ balance: bal.toString() })
+        }
+        refreshAccount?.()
+        onHistoryUpdate?.()
+        onAnimationComplete?.()
+    }, [onHistoryUpdate, onAnimationComplete, updateUser, refreshAccount])
 
     const handleRoundComplete = useCallback(({ winAmount: completedWin } = {}) => {
-        const safeWin = Number(completedWin ?? winAmount) || 0
+        const safeWin = Number(completedWin) || 0
         if (safeWin > 0) setShowVictory(true)
-    }, [winAmount])
+    }, [])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -98,14 +116,15 @@ const MinerGame = (props) => {
                     roundData={roundData}
                     isPlaying={isPlaying}
                     onRoundComplete={handleRoundComplete}
+                    onAnimationComplete={handleAnimationComplete}
                 />
 
                 <div className={styles["controls-section"]}>
                     <div className={styles["bet-section"]}>
-                        <img 
-                            src="https://media.tenor.com/Mdz2s-fOMggAAAAj/the-fragrant-flower-blooms-with-dignity-kaoruko-waguri.gif" 
+                        <img
+                            className={`${styles.gif} mobile-hide`}
+                            src="https://media.tenor.com/MhX9j6cmTkAAAAAi/minecraft-discord.gif" 
                             alt="dance gif" 
-                            className="mobile-hide"
                             draggable={false}
                             loading="lazy"
                         />

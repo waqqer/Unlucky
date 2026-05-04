@@ -55,7 +55,10 @@ const MinerGamePage = () => {
                             limit={10}
                         />
                         
-                        <MinerGame />
+                        <MinerGame
+                            onHistoryUpdate={handleHistoryUpdate}
+                            soundEnabled={soundEnabled}
+                        />
                     </div>
                 </Container>
             </main>
