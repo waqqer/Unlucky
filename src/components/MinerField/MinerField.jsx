@@ -17,11 +17,21 @@ const MinerField = (props) => {
     const rafRef = useRef(null)
     const timersRef = useRef([])
     const assetsRef = useRef(new Map())
-    const resizeObserverRef = useRef(null)
     const layoutRef = useRef({ cssW: 0, cssH: 0, scale: 1, offsetX: 0, yBlocks: 0, yChests: 0 })
     const soundEnabledRef = useRef(soundEnabled)
     const onRoundCompleteRef = useRef(onRoundComplete)
     const onAnimationCompleteRef = useRef(onAnimationComplete)
+    const idleRafRef = useRef(null)
+    const audioPoolsRef = useRef(new Map())
+    const suppressSoundRef = useRef(false)
+    const glowTintScratchRef = useRef(null)
+    const chestBounceT0Ref = useRef(new Map())
+    const chestLabelShownRef = useRef(new Set())
+    const soundVolumeRef = useRef(0.28)
+    const pickaxeFallRafIdsRef = useRef(new Set())
+    const minerRouletteAudioRef = useRef(null)
+    const roundCanvasRedrawRef = useRef(null)
+    const idleCanvasRedrawRef = useRef(null)
 
     const {
         ROWS,
@@ -37,8 +47,53 @@ const MinerField = (props) => {
         PICKAXE_FALL_DURATION_MS = 920,
         PICKAXE_FALL_SPINS = 1.45,
         PICKAXE_BOUNCE_DURATION_MS = 420,
-        PICKAXE_BOUNCE_HEIGHT_MULT = 2
+        PICKAXE_BOUNCE_HEIGHT_MULT = 1.05,
+        PICKAXE_ROW_PAUSE_MS = 260,
+        PICKAXE_RECOIL_AFTER_BREAK_MS = 130,
+        PICKAXE_RECOIL_JUMP_MULT = 0.4,
+        PICKAXE_RECOIL_SPIN_TURNS = 0.22,
+        PICKAXE_BETWEEN_HIT_DELAY_MS = 10,
+        MINER_SOUND_VOLUME = 0.28,
+        MINER_PICKAXE_ROULETE_SOUND = null,
+        CHEST_GLOW_PARTICLE_DEFAULTS = {}
     } = MINER_CONFIG
+
+    const chestGlowParticleParams = (chestCfg) => {
+        const d = CHEST_GLOW_PARTICLE_DEFAULTS || {}
+        const num = (v, fallback) => {
+            const x = Number(v)
+            return Number.isFinite(x) ? x : fallback
+        }
+        const c = chestCfg || {}
+        return {
+            spawnInterval: num(c.GLOW_SPAWN_INTERVAL_SEC, num(d.SPAWN_INTERVAL_SEC, 0.065)),
+            cellPadMult: num(c.GLOW_CELL_PADDING_MULT, num(d.CELL_PADDING_MULT, 0.1)),
+            speedMin: num(c.GLOW_SPEED_MIN, num(d.SPEED_MIN, 28)),
+            speedRandom: num(c.GLOW_SPEED_RANDOM, num(d.SPEED_RANDOM, 52)),
+            lifeBase: num(c.GLOW_LIFE_BASE_SEC, num(d.LIFE_BASE_SEC, 0.72)),
+            lifeRandom: num(c.GLOW_LIFE_RANDOM_SEC, num(d.LIFE_RANDOM_SEC, 0.48)),
+            lifeDistBase: num(c.GLOW_LIFE_DIST_BASE, num(d.LIFE_DIST_BASE, 0.72)),
+            lifeDistScale: num(c.GLOW_LIFE_DIST_SCALE, num(d.LIFE_DIST_SCALE, 0.22)),
+            lifeDistCap: num(c.GLOW_LIFE_DIST_CAP, num(d.LIFE_DIST_CAP, 1.45)),
+            sizeMin: num(c.GLOW_SIZE_MIN_PX, num(d.SIZE_MIN_PX, 7)),
+            sizeRandom: num(c.GLOW_SIZE_RANDOM_PX, num(d.SIZE_RANDOM_PX, 11)),
+            drag: Math.min(0.9995, Math.max(0.9, num(c.GLOW_DRAG, num(d.DRAG, 0.987)))),
+            speedMulDefault: num(c.GLOW_SPEED_MUL_DEFAULT, num(d.SPEED_MUL_DEFAULT, 0.5)),
+            distMulDefault: num(c.GLOW_DISTANCE_MUL_DEFAULT, num(d.DIST_MUL_DEFAULT, 1.75))
+        }
+    }
+
+    useEffect(() => {
+        const v = Math.min(1, Math.max(0, Number(MINER_SOUND_VOLUME) || 0))
+        soundVolumeRef.current = v
+        audioPoolsRef.current.forEach((pool) => {
+            pool.forEach((a) => {
+                a.volume = v
+            })
+        })
+        const loop = minerRouletteAudioRef.current
+        if (loop) loop.volume = v
+    }, [MINER_SOUND_VOLUME])
 
     const CHEST_ROW_COUNT = 1
     const PICKAXE_ROW_COUNT = Math.max(1, Number(PICKAXE_ROWS) || 1)
@@ -114,6 +169,46 @@ const MinerField = (props) => {
         return img
     }
 
+    const drawTintedGlowSprite = (ctx2, tex, px, py, s, tint, globalAlpha) => {
+        if (!tex?.complete) return
+        if (!tint) {
+            ctx2.save()
+            ctx2.globalAlpha = globalAlpha * 0.92
+            ctx2.drawImage(tex, px - s / 2, py - s / 2, s, s)
+            ctx2.restore()
+            return
+        }
+        const pad = 2
+        const n = Math.max(64, Math.ceil(s + pad))
+        let c = glowTintScratchRef.current
+        if (!c) {
+            c = document.createElement("canvas")
+            glowTintScratchRef.current = c
+        }
+        if (c.width < n || c.height < n) {
+            c.width = n
+            c.height = n
+        }
+        const sc = c.getContext("2d", { willReadFrequently: false })
+        if (!sc) return
+        sc.setTransform(1, 0, 0, 1, 0, 0)
+        sc.clearRect(0, 0, n, n)
+        sc.imageSmoothingEnabled = true
+        sc.globalCompositeOperation = "source-over"
+        sc.drawImage(tex, 0, 0, s, s)
+        sc.globalCompositeOperation = "multiply"
+        sc.fillStyle = tint
+        sc.fillRect(0, 0, s, s)
+        sc.globalCompositeOperation = "destination-in"
+        sc.drawImage(tex, 0, 0, s, s)
+        sc.globalCompositeOperation = "source-over"
+        const hw = s / 2
+        ctx2.save()
+        ctx2.globalAlpha = globalAlpha * 0.92
+        ctx2.drawImage(c, 0, 0, s, s, px - hw, py - hw, s, s)
+        ctx2.restore()
+    }
+
     const fitCanvasToContainer = (canvas, worldW, worldH) => {
         const container = containerRef.current
         if (!container) return
@@ -174,8 +269,9 @@ const MinerField = (props) => {
 
     const drawPickaxeRow = (ctx, pickaxes) => {
         const slotImg = getImage(SLOT_TEXTURE)
+        const pickaxeRowStride = CELL_SIZE_PX + GRID_GAP_PX
         for (let r = 0; r < PICKAXE_ROW_COUNT; r++) {
-            const y = r * (CELL_SIZE_PX - 5)
+            const y = r * pickaxeRowStride
             for (let c = 0; c < COLS; c++) {
                 const x = c * (CELL_SIZE_PX + GRID_GAP_PX)
                 const slotIndex = r * COLS + c
@@ -216,40 +312,179 @@ const MinerField = (props) => {
         }
     }
 
+    const formatChestMultiplierText = (m) => {
+        const n = Number(m)
+        if (!Number.isFinite(n)) return "×?"
+        const floored = Math.floor(n * 100) / 100
+        if (Math.abs(floored - Math.round(floored)) < 1e-9) return `×${Math.round(floored)}`
+        const t = floored.toFixed(2)
+        return `×${t.replace(/\.?0+$/, "")}`
+    }
+
     const drawChestRow = (ctx, chests, y) => {
+        const nowTs = performance.now()
+        const bounceMs = 280
+        const multDelayMs = 70
+        const multInMs = 260
 
         for (let c = 0; c < COLS; c++) {
             const x = c * (CELL_SIZE_PX + GRID_GAP_PX)
             const chest = chests?.[c]
             const quality = chest?.quality || "common"
             const multiplier = chest?.multiplier
-            const isOpened = typeof multiplier === "number" && multiplier !== -1
+            const serverOpened = typeof multiplier === "number" && multiplier !== -1
 
             const chestCfg = CHESTS?.[quality]
+            const bounceT0 = chestBounceT0Ref.current.get(c)
+            const labelSettled = chestLabelShownRef.current.has(c)
+            const visualOpen = serverOpened && (bounceT0 != null || labelSettled)
 
-            ctx.fillStyle = chestCfg?.COLOR || "#8b5a2b"
-            ctx.fillRect(x, y, CELL_SIZE_PX, CELL_SIZE_PX)
+            let elapsed = 0
+            if (bounceT0 != null) elapsed = nowTs - bounceT0
 
-            const tex = getImage(chestCfg?.TEXTURE)
-            if (tex && tex.complete) {
-                ctx.drawImage(tex, x, y, CELL_SIZE_PX, CELL_SIZE_PX)
+            let bounceOy = 0
+            let multScale = 1
+            let multAlpha = 0
+            let multPopRaw = 0
+            if (serverOpened && bounceT0 != null) {
+                const tb = Math.min(1, elapsed / bounceMs)
+                bounceOy = -Math.sin(Math.PI * tb) * 9
+                multPopRaw = Math.max(0, Math.min(1, (elapsed - multDelayMs) / multInMs))
+                const sm = multPopRaw * multPopRaw * (3 - 2 * multPopRaw)
+                multScale = 0.2 + sm * 0.8
+                multAlpha = Math.min(1, sm * 1.15)
+            } else if (labelSettled && serverOpened) {
+                multScale = 1
+                multAlpha = 1
+                multPopRaw = 1
             }
 
-            ctx.strokeStyle = "rgba(0,0,0,0.35)"
-            ctx.lineWidth = 2
-            ctx.strokeRect(x + 1, y + 1, CELL_SIZE_PX - 2, CELL_SIZE_PX - 2)
+            const multPopSm = multPopRaw * multPopRaw * (3 - 2 * multPopRaw)
 
-            if (!isOpened) {
-                ctx.fillStyle = "rgba(0,0,0,0.45)"
+            ctx.save()
+            ctx.translate(0, bounceOy)
+
+            const texClosed = getImage(chestCfg?.TEXTURE)
+            const texOpen = getImage(chestCfg?.OPEN_TEXTURE)
+            const drawTex = visualOpen && texOpen?.complete ? texOpen : texClosed
+            const hasChestTex = !!(drawTex && drawTex.complete)
+            if (!hasChestTex) {
+                ctx.fillStyle = chestCfg?.COLOR || "#8b5a2b"
                 ctx.fillRect(x, y, CELL_SIZE_PX, CELL_SIZE_PX)
             } else {
-                ctx.fillStyle = "rgba(255,255,255,0.18)"
-                ctx.fillRect(x, y, CELL_SIZE_PX, CELL_SIZE_PX)
+                ctx.drawImage(drawTex, x, y, CELL_SIZE_PX, CELL_SIZE_PX)
             }
+
+            if (!visualOpen) {
+                ctx.fillStyle = "rgba(0,0,0,0.45)"
+                ctx.fillRect(x, y, CELL_SIZE_PX, CELL_SIZE_PX)
+            } else if (multAlpha > 0.02) {
+                const cx = x + CELL_SIZE_PX / 2
+                const fontPx = Math.max(13, Math.floor(CELL_SIZE_PX * 0.28))
+                const yAboveChest = y - fontPx * 0.55 - 6
+                const yBurst = y - fontPx * 0.55 - 34
+                const labelCy = yBurst + (yAboveChest - yBurst) * multPopSm
+                const label = formatChestMultiplierText(multiplier)
+                ctx.save()
+                ctx.translate(cx, labelCy)
+                ctx.scale(multScale, multScale)
+                ctx.globalAlpha = multAlpha
+                ctx.font = `800 ${fontPx}px system-ui, "Segoe UI", sans-serif`
+                ctx.textAlign = "center"
+                ctx.textBaseline = "middle"
+                ctx.lineWidth = 4
+                ctx.strokeStyle = "rgba(0,0,0,0.55)"
+                ctx.strokeText(label, 0, 0)
+                ctx.fillStyle = "#fff7e0"
+                ctx.fillText(label, 0, 0)
+                ctx.restore()
+            }
+
+            ctx.restore()
+        }
+    }
+
+    const stopMinerRouletteSound = () => {
+        const a = minerRouletteAudioRef.current
+        if (!a) return
+        try {
+            a.pause()
+            a.currentTime = 0
+        } catch {
+        }
+    }
+
+    const startMinerRouletteSound = () => {
+        if (!MINER_PICKAXE_ROULETE_SOUND) return
+        if (suppressSoundRef.current) return
+        if (!soundEnabledRef.current) return
+        try {
+            let a = minerRouletteAudioRef.current
+            if (!a) {
+                a = new Audio(MINER_PICKAXE_ROULETE_SOUND)
+                a.preload = "auto"
+                minerRouletteAudioRef.current = a
+            }
+            a.loop = true
+            a.volume = soundVolumeRef.current
+            a.currentTime = 0
+            void a.play().catch(() => { })
+        } catch {
+        }
+    }
+
+    const stopAllMinerSounds = () => {
+        stopMinerRouletteSound()
+        audioPoolsRef.current.forEach((pool) => {
+            pool.forEach((a) => {
+                try {
+                    a.pause()
+                    a.currentTime = 0
+                } catch {
+                }
+            })
+        })
+    }
+
+    const ensureAudioPool = (src) => {
+        if (!src || typeof src !== "string") return null
+        if (!audioPoolsRef.current.has(src)) {
+            const pool = [0, 1, 2].map(() => {
+                const a = new Audio(src)
+                a.preload = "auto"
+                a.volume = soundVolumeRef.current
+                return a
+            })
+            audioPoolsRef.current.set(src, pool)
+        }
+        return audioPoolsRef.current.get(src)
+    }
+
+    const playSound = (src) => {
+        if (suppressSoundRef.current) return
+        if (!soundEnabledRef.current) return
+        if (!src) return
+        try {
+            const pool = ensureAudioPool(src)
+            if (!pool?.length) return
+            const vol = soundVolumeRef.current
+            const audio = pool.find((a) => a.paused || a.ended) || pool[0]
+            audio.volume = vol
+            audio.currentTime = 0
+            void audio.play().catch(() => { })
+        } catch {
         }
     }
 
     const clearAnimation = () => {
+        stopAllMinerSounds()
+        pickaxeFallRafIdsRef.current.forEach((id) => {
+            try {
+                cancelAnimationFrame(id)
+            } catch {
+            }
+        })
+        pickaxeFallRafIdsRef.current.clear()
         if (rafRef.current) {
             cancelAnimationFrame(rafRef.current)
             rafRef.current = null
@@ -257,17 +492,6 @@ const MinerField = (props) => {
         if (timersRef.current.length) {
             timersRef.current.forEach(t => clearTimeout(t))
             timersRef.current = []
-        }
-    }
-
-    const playSound = (src) => {
-        if (!soundEnabledRef.current) return
-        if (!src) return
-        try {
-            const audio = new Audio(src)
-            audio.volume = 0.5
-            audio.play().catch(() => { })
-        } catch {
         }
     }
 
@@ -280,9 +504,39 @@ const MinerField = (props) => {
         onAnimationCompleteRef.current = onAnimationComplete
     }, [onRoundComplete, onAnimationComplete])
 
+    useEffect(() => () => {
+        suppressSoundRef.current = true
+        stopAllMinerSounds()
+        chestBounceT0Ref.current.clear()
+        chestLabelShownRef.current.clear()
+        if (idleRafRef.current) {
+            cancelAnimationFrame(idleRafRef.current)
+            idleRafRef.current = null
+        }
+    }, [])
+
+    useEffect(() => {
+        const soundUrls = new Set()
+        const push = (u) => { if (u && typeof u === "string") soundUrls.add(u) }
+        Object.values(BLOCKS || {}).forEach((b) => {
+            push(b?.HIT_SOUND)
+            push(b?.BREAK_SOUND)
+        })
+        Object.values(PICKAXES || {}).forEach((p) => {
+            push(p?.HIT_SOUND)
+            push(p?.BREAK_SOUND)
+        })
+        Object.values(CHESTS || {}).forEach((c) => {
+            push(c?.OPEN_SOUND)
+        })
+        soundUrls.forEach((url) => ensureAudioPool(url))
+    }, [BLOCKS, PICKAXES, CHESTS])
+
     useEffect(() => {
         const preload = async () => {
-            const urls = [SLOT_TEXTURE, ...BREAK_TEXTURES].filter(Boolean)
+            const glowUrls = Object.values(CHESTS || {}).map((c) => c?.GLOW_TEXTURE).filter(Boolean)
+            const openTexUrls = Object.values(CHESTS || {}).map((c) => c?.OPEN_TEXTURE).filter(Boolean)
+            const urls = [SLOT_TEXTURE, ...BREAK_TEXTURES, ...glowUrls, ...openTexUrls].filter(Boolean)
             await Promise.all(urls.map((url) => new Promise((resolve) => {
                 const img = getImage(url)
                 if (!img) {
@@ -298,7 +552,7 @@ const MinerField = (props) => {
             })))
         }
         preload()
-    }, [SLOT_TEXTURE, BREAK_TEXTURES])
+    }, [SLOT_TEXTURE, BREAK_TEXTURES, CHESTS])
 
     useEffect(() => {
         if (roundData) return
@@ -311,21 +565,72 @@ const MinerField = (props) => {
 
         fitCanvasToContainer(canvas, worldW, worldH)
 
-        if (resizeObserverRef.current) {
-            resizeObserverRef.current.disconnect()
-            resizeObserverRef.current = null
-        }
-        resizeObserverRef.current = new ResizeObserver(() => {
-            fitCanvasToContainer(canvas, worldW, worldH)
-
-            const ctx = canvas.getContext("2d")
-            if (!ctx) return
-            drawGrid(demoGrid, demoChests, pickaxesForIdleCanvas, ctx)
-        })
-        if (containerRef.current) resizeObserverRef.current.observe(containerRef.current)
-
         const ctx = canvas.getContext("2d")
         if (!ctx) return
+
+        const idleChestGlow = []
+        const idleSpawnAcc = Array.from({ length: COLS }, () => 0)
+        let idleGlowClock = performance.now()
+
+        const drawIdleChestGlow = (ctx2) => {
+            for (const p of idleChestGlow) {
+                const tex = getImage(p.texSrc)
+                const alpha = Math.max(0, Math.min(1, p.life / p.maxLife))
+                const s = p.size
+                drawTintedGlowSprite(ctx2, tex, p.x, p.y, s, p.tint, alpha)
+            }
+        }
+
+        const stepIdleChestGlow = (dt, chests, yChests) => {
+            for (let c = 0; c < COLS; c++) {
+                const chest = chests[c]
+                const q = chest?.quality || "common"
+                const cfg = CHESTS?.[q]
+                if (!cfg?.GLOW || !cfg?.GLOW_TEXTURE) continue
+                const opened = typeof chest?.multiplier === "number" && chest?.multiplier !== -1
+                if (opened) continue
+                const gp = chestGlowParticleParams(cfg)
+                idleSpawnAcc[c] += dt
+                if (idleSpawnAcc[c] < gp.spawnInterval) continue
+                idleSpawnAcc[c] = 0
+                const cellLeft = c * (CELL_SIZE_PX + GRID_GAP_PX)
+                const pad = Math.max(2, CELL_SIZE_PX * gp.cellPadMult)
+                const span = Math.max(1, CELL_SIZE_PX - pad * 2)
+                const px = cellLeft + pad + Math.random() * span
+                const py = yChests + pad + Math.random() * span
+                const a = Math.random() * Math.PI * 2
+                const speedMul = typeof cfg.GLOW_SPEED === "number" ? cfg.GLOW_SPEED : gp.speedMulDefault
+                const distMul = typeof cfg.GLOW_DISTANCE === "number" ? cfg.GLOW_DISTANCE : gp.distMulDefault
+                const sp = (gp.speedMin + Math.random() * gp.speedRandom) * speedMul * distMul
+                const lifeBase = gp.lifeBase + Math.random() * gp.lifeRandom
+                const maxL = lifeBase * Math.min(gp.lifeDistCap, gp.lifeDistBase + distMul * gp.lifeDistScale)
+                idleChestGlow.push({
+                    x: px,
+                    y: py,
+                    vx: Math.cos(a) * sp,
+                    vy: Math.sin(a) * sp,
+                    life: maxL,
+                    maxLife: maxL,
+                    size: gp.sizeMin + Math.random() * gp.sizeRandom,
+                    texSrc: cfg.GLOW_TEXTURE,
+                    tint: cfg.COLOR || "#ffffff",
+                    drag: gp.drag
+                })
+            }
+            for (let i = idleChestGlow.length - 1; i >= 0; i--) {
+                const p = idleChestGlow[i]
+                p.life -= dt
+                if (p.life <= 0) {
+                    idleChestGlow.splice(i, 1)
+                    continue
+                }
+                p.x += p.vx * dt
+                p.y += p.vy * dt
+                const dg = typeof p.drag === "number" ? p.drag : 0.987
+                p.vx *= dg
+                p.vy *= dg
+            }
+        }
 
         const drawGrid = (grid, chests, pickaxes, ctx2, overlay) => {
             const { cssW, cssH, scale, offsetX, yBlocks, yChests } = layoutRef.current
@@ -362,24 +667,45 @@ const MinerField = (props) => {
             }
 
             drawChestRow(ctx2, chests || demoChests, yChests)
+            drawIdleChestGlow(ctx2)
 
             if (overlay) overlay(ctx2)
             ctx2.restore()
         }
 
-        drawGrid(demoGrid, demoChests, pickaxesForIdleCanvas, ctx)
+        const idleTick = (now) => {
+            const dt = Math.min((now - idleGlowClock) / 1000, 0.06)
+            idleGlowClock = now
+            const { yChests } = layoutRef.current
+            stepIdleChestGlow(dt, demoChests, yChests)
+            drawGrid(demoGrid, demoChests, pickaxesForIdleCanvas, ctx)
+            idleRafRef.current = requestAnimationFrame(idleTick)
+        }
+        idleRafRef.current = requestAnimationFrame(idleTick)
+
+        idleCanvasRedrawRef.current = () => {
+            const c = canvasRef.current
+            if (!c) return
+            const cctx = c.getContext("2d")
+            if (!cctx) return
+            drawGrid(demoGrid, demoChests, pickaxesForIdleCanvas, cctx)
+        }
 
         return () => {
-            clearAnimation()
-            if (resizeObserverRef.current) {
-                resizeObserverRef.current.disconnect()
-                resizeObserverRef.current = null
+            if (idleRafRef.current) {
+                cancelAnimationFrame(idleRafRef.current)
+                idleRafRef.current = null
             }
+            idleCanvasRedrawRef.current = null
         }
-    }, [roundData, pickaxesForIdleCanvas, ROWS, COLS, CELL_SIZE_PX, GRID_GAP_PX, BLOCKS, PICKAXES, demoGrid, demoChests])
+    }, [roundData, pickaxesForIdleCanvas, ROWS, COLS, CELL_SIZE_PX, GRID_GAP_PX, BLOCKS, PICKAXES, CHESTS, demoGrid, demoChests])
 
     useEffect(() => {
         if (!roundData) return
+
+        suppressSoundRef.current = false
+
+        const fallSlotOverlays = new Map()
 
         const canvas = canvasRef.current
         if (!canvas) return
@@ -390,6 +716,8 @@ const MinerField = (props) => {
         fitCanvasToContainer(canvas, worldW, worldH)
 
         clearAnimation()
+        chestBounceT0Ref.current.clear()
+        chestLabelShownRef.current.clear()
 
         const apiField = roundData?.field
         const apiBlocks = apiField?.Blocks
@@ -442,15 +770,117 @@ const MinerField = (props) => {
         const pickaxes = Array.from({ length: totalPickaxeSlots }, (_, i) => pickaxesRaw[i] ?? null)
 
         const revealStateRef = { current: null }
+        const introHidePickaxesRef = { current: true }
+        const emptySlotsDuringIntro = Array.from({ length: totalPickaxeSlots }, () => null)
+
+        const currentGrid = baseGrid.map(row => row.slice())
+        const currentChests = baseChests.map(c => ({ ...c }))
+
+        const blockHp = Array.from({ length: ROWS }, (_, r) =>
+            Array.from({ length: COLS }, (_, c) => {
+                const key = currentGrid?.[r]?.[c]
+                return key ? (BLOCKS?.[key]?.HEALTH ?? 1) : 0
+            })
+        )
+
+        const pickaxeHp = Array.from({ length: totalPickaxeSlots }, (_, i) => {
+            const key = pickaxes?.[i]
+            return key ? (PICKAXES?.[key]?.HEALTH ?? 1) : 0
+        })
+
+        const shakesRef = { current: new Map() }
+        const particlesRef = { current: [] }
+        let lastParticleTs = performance.now()
+
+        const pickaxeKeys = Object.keys(PICKAXES)
+        const pickaxesToRenderRef = {
+            current: Array.from({ length: totalPickaxeSlots }, (_, i) => ({
+                mode: "static",
+                key: pickaxeKeys[i % Math.max(1, pickaxeKeys.length)] || null,
+                nextKey: pickaxeKeys[(i + 1) % Math.max(1, pickaxeKeys.length)] || null,
+                offset: 0,
+                bounce: 0,
+                bounceRot: 0
+            }))
+        }
+
+        const roundChestGlow = []
+        const roundSpawnAcc = Array.from({ length: COLS }, () => 0)
+        let roundGlowClock = performance.now()
+
+        const drawRoundChestGlow = (ctx2) => {
+            for (const p of roundChestGlow) {
+                const tex = getImage(p.texSrc)
+                const alpha = Math.max(0, Math.min(1, p.life / p.maxLife))
+                const s = p.size
+                drawTintedGlowSprite(ctx2, tex, p.x, p.y, s, p.tint, alpha)
+            }
+        }
+
+        const stepRoundChestGlow = (dt, chests, yChests) => {
+            for (let c = 0; c < COLS; c++) {
+                const chest = chests?.[c]
+                const q = chest?.quality || "common"
+                const cfg = CHESTS?.[q]
+                if (!cfg?.GLOW || !cfg?.GLOW_TEXTURE) continue
+                const opened = typeof chest?.multiplier === "number" && chest?.multiplier !== -1
+                if (opened) continue
+                const gp = chestGlowParticleParams(cfg)
+                roundSpawnAcc[c] += dt
+                if (roundSpawnAcc[c] < gp.spawnInterval) continue
+                roundSpawnAcc[c] = 0
+                const cellLeft = c * (CELL_SIZE_PX + GRID_GAP_PX)
+                const pad = Math.max(2, CELL_SIZE_PX * gp.cellPadMult)
+                const span = Math.max(1, CELL_SIZE_PX - pad * 2)
+                const px = cellLeft + pad + Math.random() * span
+                const py = yChests + pad + Math.random() * span
+                const a = Math.random() * Math.PI * 2
+                const speedMul = typeof cfg.GLOW_SPEED === "number" ? cfg.GLOW_SPEED : gp.speedMulDefault
+                const distMul = typeof cfg.GLOW_DISTANCE === "number" ? cfg.GLOW_DISTANCE : gp.distMulDefault
+                const sp = (gp.speedMin + Math.random() * gp.speedRandom) * speedMul * distMul
+                const lifeBase = gp.lifeBase + Math.random() * gp.lifeRandom
+                const maxL = lifeBase * Math.min(gp.lifeDistCap, gp.lifeDistBase + distMul * gp.lifeDistScale)
+                roundChestGlow.push({
+                    x: px,
+                    y: py,
+                    vx: Math.cos(a) * sp,
+                    vy: Math.sin(a) * sp,
+                    life: maxL,
+                    maxLife: maxL,
+                    size: gp.sizeMin + Math.random() * gp.sizeRandom,
+                    texSrc: cfg.GLOW_TEXTURE,
+                    tint: cfg.COLOR || "#ffffff",
+                    drag: gp.drag
+                })
+            }
+            for (let i = roundChestGlow.length - 1; i >= 0; i--) {
+                const p = roundChestGlow[i]
+                p.life -= dt
+                if (p.life <= 0) {
+                    roundChestGlow.splice(i, 1)
+                    continue
+                }
+                p.x += p.vx * dt
+                p.y += p.vy * dt
+                const dg = typeof p.drag === "number" ? p.drag : 0.987
+                p.vx *= dg
+                p.vy *= dg
+            }
+        }
 
         const drawGrid = (grid, chests, overlay) => {
             const { cssW, cssH, scale, offsetX, yBlocks, yChests } = layoutRef.current
+            const nowGlowStep = performance.now()
+            const gdt = Math.min((nowGlowStep - roundGlowClock) / 1000, 0.06)
+            roundGlowClock = nowGlowStep
+            stepRoundChestGlow(gdt, chests || demoChests, yChests)
+
             ctx.clearRect(0, 0, cssW, cssH)
             ctx.save()
             ctx.translate(offsetX, 0)
             ctx.scale(scale, scale)
 
-            drawPickaxeRow(ctx, pickaxesToRenderRef.current)
+            drawPickaxeRow(ctx, introHidePickaxesRef.current ? emptySlotsDuringIntro : pickaxesToRenderRef.current)
 
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
@@ -538,16 +968,13 @@ const MinerField = (props) => {
             }
 
             drawChestRow(ctx, chests || demoChests, yChests)
+            drawRoundChestGlow(ctx)
 
             if (overlay) overlay(ctx)
             ctx.restore()
         }
 
         const winFromServer = Number(roundData?.winAmount ?? roundData?.win ?? roundData?.payout ?? 0) || 0
-
-        const shakesRef = { current: new Map() }
-        const particlesRef = { current: [] }
-        let lastParticleTs = performance.now()
 
         const updateAndDrawParticles = (ctx2) => {
             const now = performance.now()
@@ -621,18 +1048,6 @@ const MinerField = (props) => {
             }
         }
 
-        const pickaxeKeys = Object.keys(PICKAXES)
-        const pickaxesToRenderRef = {
-            current: Array.from({ length: totalPickaxeSlots }, (_, i) => ({
-                mode: "static",
-                key: pickaxeKeys[i % Math.max(1, pickaxeKeys.length)] || null,
-                nextKey: pickaxeKeys[(i + 1) % Math.max(1, pickaxeKeys.length)] || null,
-                offset: 0,
-                bounce: 0,
-                bounceRot: 0
-            }))
-        }
-
         const runReveal = () => new Promise((resolve) => {
             const deadline = performance.now() + 1400
             const tick = (now) => {
@@ -680,109 +1095,188 @@ const MinerField = (props) => {
             rafRef.current = requestAnimationFrame(tick)
         })
 
-        const currentGrid = baseGrid.map(row => row.slice())
-        const currentChests = baseChests.map(c => ({ ...c }))
-
-        const openChestStep = (col) => {
-            const chest = currentChests?.[col]
-            const quality = chest?.quality || "common"
-            const multiplier = chest?.multiplier
-            const isOpened = typeof multiplier === "number" && multiplier !== -1
-            if (!isOpened) return
-            playSound(CHESTS?.[quality]?.OPEN_SOUND)
-            drawGrid(currentGrid, currentChests, (g) => {
-                const x = col * (CELL_SIZE_PX + GRID_GAP_PX)
-                const y = layoutRef.current.yChests
-                g.fillStyle = "rgba(255,255,255,0.22)"
-                g.fillRect(x, y, CELL_SIZE_PX, CELL_SIZE_PX)
+        const drawFallOverlaysOnCtx = (g) => {
+            fallSlotOverlays.forEach((ov) => {
+                const x = ov.col * (CELL_SIZE_PX + GRID_GAP_PX)
+                drawPickaxeIcon(g, ov.pickaxeKey, x, ov.yWorld, {
+                    rotation: ov.angle || 0,
+                    scale: 1
+                })
             })
         }
 
-        const blockHp = Array.from({ length: ROWS }, (_, r) =>
-            Array.from({ length: COLS }, (_, c) => {
-                const key = currentGrid?.[r]?.[c]
-                return key ? (BLOCKS?.[key]?.HEALTH ?? 1) : 0
-            })
-        )
-
-        const pickaxeHp = Array.from({ length: totalPickaxeSlots }, (_, i) => {
-            const key = pickaxes?.[i]
-            return key ? (PICKAXES?.[key]?.HEALTH ?? 1) : 0
-        })
-
-        const fallOverlayRef = { current: null }
-
         const drawWithOverlay = () => {
             drawGrid(currentGrid, currentChests, (g) => {
-                const ov = fallOverlayRef.current
-                if (ov) {
-                    const x = ov.col * (CELL_SIZE_PX + GRID_GAP_PX)
-                    const y = ov.yWorld
-                    drawPickaxeIcon(g, ov.pickaxeKey, x, y, {
-                        rotation: ov.angle || 0,
-                        scale: 1
-                    })
-                }
+                drawFallOverlaysOnCtx(g)
                 updateAndDrawParticles(g)
             })
         }
 
-        const animateParticlesFor = (durationMs = 180) => new Promise((resolve) => {
-            const start = performance.now()
+        const waitWithOverlayTicks = (pauseMs) => new Promise((resolve) => {
+            const ms = Math.max(0, Number(pauseMs) || 0)
+            if (ms <= 0) {
+                resolve()
+                return
+            }
+            const t0 = performance.now()
+            let rafId = 0
             const tick = (now) => {
                 drawWithOverlay()
-                if (now - start >= durationMs || particlesRef.current.length === 0) {
+                if (now - t0 >= ms) {
+                    pickaxeFallRafIdsRef.current.delete(rafId)
                     resolve()
                     return
                 }
-                rafRef.current = requestAnimationFrame(tick)
+                pickaxeFallRafIdsRef.current.delete(rafId)
+                rafId = requestAnimationFrame(tick)
+                pickaxeFallRafIdsRef.current.add(rafId)
             }
-            rafRef.current = requestAnimationFrame(tick)
+            rafId = requestAnimationFrame(tick)
+            pickaxeFallRafIdsRef.current.add(rafId)
+        })
+
+        const openChestStep = (col) => new Promise((resolve) => {
+            const chest = currentChests?.[col]
+            const quality = chest?.quality || "common"
+            const multiplier = chest?.multiplier
+            const isOpened = typeof multiplier === "number" && multiplier !== -1
+            if (!isOpened) {
+                resolve()
+                return
+            }
+            const raw = Number(multiplier)
+            chest.multiplier = Math.floor(raw * 100) / 100
+
+            const t0 = performance.now()
+            chestBounceT0Ref.current.set(col, t0)
+            playSound(CHESTS?.[quality]?.OPEN_SOUND)
+            const total = 440
+            let rafId = 0
+            const tick = (now) => {
+                drawWithOverlay()
+                if (now - t0 < total) {
+                    pickaxeFallRafIdsRef.current.delete(rafId)
+                    rafId = requestAnimationFrame(tick)
+                    pickaxeFallRafIdsRef.current.add(rafId)
+                } else {
+                    pickaxeFallRafIdsRef.current.delete(rafId)
+                    chestBounceT0Ref.current.delete(col)
+                    chestLabelShownRef.current.add(col)
+                    drawWithOverlay()
+                    resolve()
+                }
+            }
+            rafId = requestAnimationFrame(tick)
+            pickaxeFallRafIdsRef.current.add(rafId)
+        })
+
+        let chestOpenChain = Promise.resolve()
+        const queueOpenChest = (col) => {
+            const p = chestOpenChain.then(() => openChestStep(col))
+            chestOpenChain = p.catch(() => { })
+            return p
+        }
+
+        const animateParticlesFor = (durationMs = 180) => new Promise((resolve) => {
+            const start = performance.now()
+            let rafId = 0
+            const tick = (now) => {
+                drawWithOverlay()
+                if (now - start >= durationMs || particlesRef.current.length === 0) {
+                    pickaxeFallRafIdsRef.current.delete(rafId)
+                    resolve()
+                    return
+                }
+                pickaxeFallRafIdsRef.current.delete(rafId)
+                rafId = requestAnimationFrame(tick)
+                pickaxeFallRafIdsRef.current.add(rafId)
+            }
+            rafId = requestAnimationFrame(tick)
+            pickaxeFallRafIdsRef.current.add(rafId)
         })
 
         const easeOutQuad = (t) => 1 - (1 - t) * (1 - t)
 
-        const animateFall = (col, fromY, toY, pickaxeKey, durationMs = PICKAXE_FALL_DURATION_MS, spins = PICKAXE_FALL_SPINS) => new Promise((resolve) => {
+        const animateFall = (slotIndex, col, fromY, toY, pickaxeKey, durationMs = PICKAXE_FALL_DURATION_MS, spins = PICKAXE_FALL_SPINS, impactSound = null) => new Promise((resolve) => {
+            const dy = toY - fromY
+            const ady = Math.abs(dy)
+            const snapEps = 1.5
+            if (ady < snapEps) {
+                if (impactSound) playSound(impactSound)
+                const endAngle = Math.PI * 2 * spins
+                fallSlotOverlays.set(slotIndex, { col, yWorld: toY, pickaxeKey, angle: endAngle })
+                drawWithOverlay()
+                resolve(endAngle)
+                return
+            }
+            const minFallForFullSpin = Math.max(20, CELL_SIZE_PX * 0.5)
+            const spinEff = spins * Math.min(1, ady / minFallForFullSpin)
+            const endAngle = Math.PI * 2 * spinEff
             const start = performance.now()
+            let rafId = 0
             const tick = (now) => {
                 const t = Math.min((now - start) / durationMs, 1)
-                const y = fromY + (toY - fromY) * easeOutQuad(t)
-                const angle = t * Math.PI * 2 * spins
-                fallOverlayRef.current = { col, yWorld: y, pickaxeKey, angle }
+                const e = easeOutQuad(t)
+                const y = fromY + dy * e
+                const angle = e * endAngle
+                fallSlotOverlays.set(slotIndex, { col, yWorld: y, pickaxeKey, angle })
                 drawWithOverlay()
                 if (t < 1) {
-                    rafRef.current = requestAnimationFrame(tick)
+                    pickaxeFallRafIdsRef.current.delete(rafId)
+                    rafId = requestAnimationFrame(tick)
+                    pickaxeFallRafIdsRef.current.add(rafId)
                 } else {
-                    resolve(angle)
+                    if (impactSound) playSound(impactSound)
+                    fallSlotOverlays.set(slotIndex, { col, yWorld: toY, pickaxeKey, angle: endAngle })
+                    drawWithOverlay()
+                    pickaxeFallRafIdsRef.current.delete(rafId)
+                    resolve(endAngle)
                 }
             }
-            rafRef.current = requestAnimationFrame(tick)
+            rafId = requestAnimationFrame(tick)
+            pickaxeFallRafIdsRef.current.add(rafId)
         })
 
-        const animatePickaxeBounce = (col, yBase, pickaxeKey, angleBase = 0) => new Promise((resolve) => {
-            const duration = PICKAXE_BOUNCE_DURATION_MS
+        const animatePickaxeBounce = (slotIndex, col, yBase, pickaxeKey, angleBase = 0, impactSound = null, opts = null) => new Promise((resolve) => {
+            const duration = opts?.durationMs ?? PICKAXE_BOUNCE_DURATION_MS
             const baseJump = Math.max(34, CELL_SIZE_PX * 0.72)
-            const jump = baseJump * PICKAXE_BOUNCE_HEIGHT_MULT
+            const heightMult = opts?.jumpHeightMult != null
+                ? opts.jumpHeightMult
+                : PICKAXE_BOUNCE_HEIGHT_MULT
+            const jump = baseJump * heightMult
+            const turnScale = opts?.recoil
+                ? Math.min(1, Math.max(0, Number(PICKAXE_RECOIL_SPIN_TURNS) || 0))
+                : Math.min(1, jump / (baseJump * 0.72))
             const start = performance.now()
+            let rafId = 0
             const tick = (now) => {
                 const t = Math.min((now - start) / duration, 1)
                 const lift = Math.sin(t * Math.PI)
+                const rot = easeOutQuad(t)
                 const y = yBase - lift * jump
-                const extraSpin = lift * Math.PI * 2
-                const angle = angleBase + extraSpin
-                fallOverlayRef.current = { col, yWorld: y, pickaxeKey, angle }
+                const angle = angleBase + rot * Math.PI * 2 * turnScale
+                fallSlotOverlays.set(slotIndex, { col, yWorld: y, pickaxeKey, angle })
                 drawWithOverlay()
                 if (t < 1) {
-                    rafRef.current = requestAnimationFrame(tick)
+                    pickaxeFallRafIdsRef.current.delete(rafId)
+                    rafId = requestAnimationFrame(tick)
+                    pickaxeFallRafIdsRef.current.add(rafId)
                 } else {
-                    resolve(angleBase + Math.PI * 2)
+                    if (impactSound) playSound(impactSound)
+                    const landed = angleBase + Math.PI * 2 * turnScale
+                    fallSlotOverlays.set(slotIndex, { col, yWorld: yBase, pickaxeKey, angle: landed })
+                    drawWithOverlay()
+                    pickaxeFallRafIdsRef.current.delete(rafId)
+                    resolve(landed)
                 }
             }
-            rafRef.current = requestAnimationFrame(tick)
+            rafId = requestAnimationFrame(tick)
+            pickaxeFallRafIdsRef.current.add(rafId)
         })
 
         const hitFlash = (row, col, broke) => {
             drawGrid(currentGrid, currentChests, (g) => {
+                drawFallOverlaysOnCtx(g)
                 const { yBlocks } = layoutRef.current
                 const x = col * (CELL_SIZE_PX + GRID_GAP_PX)
                 const y = yBlocks + row * (CELL_SIZE_PX + GRID_GAP_PX)
@@ -791,15 +1285,9 @@ const MinerField = (props) => {
                 updateAndDrawParticles(g)
             })
 
-            const shakeDuration = 240
-            const shakeAmp = broke ? 3 : 5
+            const shakeDuration = 150
+            const shakeAmp = broke ? 2.5 : 4
             shakesRef.current.set(`${row}:${col}`, { start: performance.now(), duration: shakeDuration, amp: shakeAmp })
-
-            timersRef.current.push(setTimeout(() => {
-                drawGrid(currentGrid, currentChests, (g) => {
-                    updateAndDrawParticles(g)
-                })
-            }, shakeDuration + 20))
         }
 
         const chestOpened = Array.from({ length: COLS }, () => false)
@@ -822,15 +1310,14 @@ const MinerField = (props) => {
                 const blockKey = currentGrid?.[row]?.[col]
                 if (!blockKey) continue
 
+                const blockCfg = BLOCKS?.[blockKey]
                 const targetY = layoutRef.current.yBlocks + row * (CELL_SIZE_PX + GRID_GAP_PX) - CELL_SIZE_PX * 0.55
-                spinAngle = await animateFall(col, currentY, targetY, pickaxeKey)
+                spinAngle = await animateFall(slotIndex, col, currentY, targetY, pickaxeKey, PICKAXE_FALL_DURATION_MS, PICKAXE_FALL_SPINS, blockCfg?.HIT_SOUND)
                 currentY = targetY
 
-                const blockCfg = BLOCKS?.[blockKey]
                 const baseDamage = Math.max(1, Math.ceil((blockCfg?.HEALTH || 1) / 3))
 
                 while (hp > 0 && blockHp[row][col] > 0) {
-                    playSound(blockCfg?.HIT_SOUND)
                     const willBreakBlock = blockHp[row][col] - baseDamage <= 0
                     const willBreakPick = hp - Math.min(hp, baseDamage, blockHp[row][col]) <= 0
                     hitFlash(row, col, willBreakBlock)
@@ -847,43 +1334,60 @@ const MinerField = (props) => {
                         spawnBreakParticles(row, col, blockCfg?.COLOR)
                         currentGrid[row][col] = null
                         drawWithOverlay()
+                        if (!pickaxeDestroyed) {
+                            spinAngle = await animatePickaxeBounce(slotIndex, col, currentY, pickaxeKey, spinAngle, null, {
+                                durationMs: PICKAXE_RECOIL_AFTER_BREAK_MS,
+                                jumpHeightMult: PICKAXE_RECOIL_JUMP_MULT,
+                                recoil: true
+                            })
+                        }
                     }
 
                     if (pickaxeDestroyed) {
+                        fallSlotOverlays.delete(slotIndex)
                         playSound(PICKAXES?.[pickaxeKey]?.BREAK_SOUND)
                         spawnPickaxeBreakParticles(col, currentY, PICKAXES?.[pickaxeKey]?.COLOR)
-                        drawWithOverlay()
-                        await animateParticlesFor(260)
+                        drawGrid(currentGrid, currentChests, (g) => {
+                            drawFallOverlaysOnCtx(g)
+                            updateAndDrawParticles(g)
+                        })
+                        await animateParticlesFor(110)
                     }
 
                     if (blockDestroyed || pickaxeDestroyed) {
                         break
                     }
 
-                    spinAngle = await animatePickaxeBounce(col, currentY, pickaxeKey, spinAngle)
-                    await new Promise(r => timersRef.current.push(setTimeout(r, 80)))
+                    spinAngle = await animatePickaxeBounce(slotIndex, col, currentY, pickaxeKey, spinAngle, blockCfg?.HIT_SOUND)
+                    await waitWithOverlayTicks(PICKAXE_BETWEEN_HIT_DELAY_MS)
                 }
 
                 if (hp <= 0) break
 
-                await new Promise(r => timersRef.current.push(setTimeout(r, 120)))
+                await waitWithOverlayTicks(45)
             }
 
-            fallOverlayRef.current = null
+            fallSlotOverlays.delete(slotIndex)
             drawWithOverlay()
 
             const columnCleared = Array.from({ length: ROWS }, (_, r) => !currentGrid?.[r]?.[col]).every(Boolean)
             const chestMult = currentChests?.[col]?.multiplier
             if (!chestOpened[col] && columnCleared && typeof chestMult === "number" && chestMult !== -1) {
                 chestOpened[col] = true
-                openChestStep(col)
-                await new Promise(r => timersRef.current.push(setTimeout(r, 180)))
+                await queueOpenChest(col)
             }
         }
 
         const runAll = async () => {
-            for (let slotIndex = 0; slotIndex < totalPickaxeSlots; slotIndex++) {
-                await runPickaxeFromSlot(slotIndex)
+            const pauseMs = Math.max(0, Number(PICKAXE_ROW_PAUSE_MS) || 0)
+            for (let r = 0; r < PICKAXE_ROW_COUNT; r++) {
+                const base = r * COLS
+                await Promise.all(
+                    Array.from({ length: COLS }, (_, c) => runPickaxeFromSlot(base + c))
+                )
+                if (r < PICKAXE_ROW_COUNT - 1 && pauseMs > 0) {
+                    await waitWithOverlayTicks(pauseMs)
+                }
             }
         }
 
@@ -970,16 +1474,19 @@ const MinerField = (props) => {
             })
 
             if (stoppedCount.value < totalPickaxeSlots) {
+                if (!soundEnabledRef.current) stopMinerRouletteSound()
                 rafRef.current = requestAnimationFrame(animateSpin)
                 return
             }
 
             const bouncesPending = bounceState.some((b) => b.start > 0 && now < b.start + b.duration)
             if (bouncesPending) {
+                if (!soundEnabledRef.current) stopMinerRouletteSound()
                 rafRef.current = requestAnimationFrame(animateSpin)
                 return
             }
 
+            stopMinerRouletteSound()
             drawGrid(currentGrid, currentChests)
 
             timersRef.current.push(setTimeout(() => {
@@ -988,12 +1495,50 @@ const MinerField = (props) => {
         }
 
         const startSpinWithIntro = async () => {
+            introHidePickaxesRef.current = true
             await runInitialBlocksReveal()
+            introHidePickaxesRef.current = false
+            startMinerRouletteSound()
             rafRef.current = requestAnimationFrame(animateSpin)
         }
 
+        roundCanvasRedrawRef.current = drawWithOverlay
+
         startSpinWithIntro()
+
+        return () => {
+            suppressSoundRef.current = true
+            roundCanvasRedrawRef.current = null
+            chestBounceT0Ref.current.clear()
+            chestLabelShownRef.current.clear()
+            clearAnimation()
+        }
     }, [roundData, ROWS, COLS, CELL_SIZE_PX, GRID_GAP_PX, BLOCKS, PICKAXES, CHESTS, BREAK_TEXTURES, SLOT_TEXTURE, demoGrid, demoChests])
+
+    useEffect(() => {
+        const canvas = canvasRef.current
+        const el = containerRef.current
+        if (!canvas || !el) return
+
+        const worldW = COLS * CELL_SIZE_PX + (COLS - 1) * GRID_GAP_PX
+        const { worldH } = getWorldMetrics()
+
+        const apply = () => {
+            fitCanvasToContainer(canvas, worldW, worldH)
+            requestAnimationFrame(() => {
+                roundCanvasRedrawRef.current?.()
+                idleCanvasRedrawRef.current?.()
+            })
+        }
+
+        const ro = new ResizeObserver(() => apply())
+        ro.observe(el)
+        apply()
+
+        return () => {
+            ro.disconnect()
+        }
+    }, [COLS, ROWS, CELL_SIZE_PX, GRID_GAP_PX, PICKAXE_ROW_COUNT])
 
     return (
         <div

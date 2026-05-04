@@ -7,14 +7,16 @@ import DEEPSLATE_BLOCK from "@/shared/images/games/miner/blocks/deepslate.webp"
 
 import WOODEN_PICKAXE from "@/shared/images/games/miner/pickaxes/wooden_pickaxe.webp"
 import IRON_PICKAXE from "@/shared/images/games/miner/pickaxes/iron_pickaxe.webp"
-import DUAMOND_PICKAXE from "@/shared/images/games/miner/pickaxes/diamond_pickaxe.webp"
+import DIAMOND_PICKAXE from "@/shared/images/games/miner/pickaxes/diamond_pickaxe.webp"
 
 import SLOT_TEXTURE from "@/shared/images/games/miner/slot.webp"
 import GLOW_TEXTURE from "@/shared/images/games/miner/glow.webp"
 
-import CHEST_OPEN from "@/shared/audio/miner/chests/open.mp3"
+import CHEST_OPEN_SOUND from "@/shared/audio/miner/chests/open.mp3"
 
 import PICKAXE_BREAK from "@/shared/audio/miner/pickaxes/break.mp3"
+
+import PICKAXE_ROULETE_SOUND from "@/shared/audio/slot.mp3"
 
 import BLOCK_HIT from "@/shared/audio/miner/blocks/hit.mp3"
 import BLOCK_HIT_DIRT from "@/shared/audio/miner/blocks/hit_dirt.mp3"
@@ -34,10 +36,16 @@ import BLOCK_BREAK_STAGE7 from "@/shared/images/games/miner/destroy_stage_7.png"
 import BLOCK_BREAK_STAGE8 from "@/shared/images/games/miner/destroy_stage_8.png"
 import BLOCK_BREAK_STAGE9 from "@/shared/images/games/miner/destroy_stage_9.png"
 
+import CHEST from "@/shared/images/games/miner/chests/chest.webp"
+import CHEST_OPEN from "@/shared/images/games/miner/chests/chest_open.webp"
+
 export const MINER_CONFIG = {
     MINER_MIN_BET: 10,
     MINER_MAX_BET: 1000,
     MINER_BET_PRESETS: [10, 25, 50, 100, 250],
+
+    MINER_SOUND_VOLUME: 0.28,
+    MINER_PICKAXE_ROULETE_SOUND: PICKAXE_ROULETE_SOUND, 
 
     ROWS: 5,
     COLS: 5,
@@ -49,7 +57,37 @@ export const MINER_CONFIG = {
     PICKAXE_FALL_SPINS: 1,
 
     PICKAXE_BOUNCE_DURATION_MS: 480,
-    PICKAXE_BOUNCE_HEIGHT_MULT: 1.4,
+    PICKAXE_BOUNCE_HEIGHT_MULT: 1.05,
+    PICKAXE_ROW_PAUSE_MS: 260,
+    PICKAXE_RECOIL_AFTER_BREAK_MS: 130,
+    PICKAXE_RECOIL_JUMP_MULT: 0.4,
+    PICKAXE_RECOIL_SPIN_TURNS: 0.22,
+    PICKAXE_BETWEEN_HIT_DELAY_MS: 10,
+
+
+    CHEST_GLOW_PARTICLE_DEFAULTS: {
+        /** Секунды между попытками заспавнить партикл на один сундук */
+        SPAWN_INTERVAL_SEC: 0.065,
+        /** Отступ от края ячейки сундука как доля CELL_SIZE_PX (спавн внутри прямоугольника) */
+        CELL_PADDING_MULT: 0.1,
+        /** Скорость: (SPEED_MIN + random * SPEED_RANDOM) * GLOW_SPEED * GLOW_DISTANCE */
+        SPEED_MIN: 28,
+        SPEED_RANDOM: 52,
+        /** Жизнь: (LIFE_BASE_SEC + random * LIFE_RANDOM_SEC) * min(LIFE_DIST_CAP, LIFE_DIST_BASE + GLOW_DISTANCE * LIFE_DIST_SCALE) */
+        LIFE_BASE_SEC: 0.72,
+        LIFE_RANDOM_SEC: 0.48,
+        LIFE_DIST_BASE: 0.72,
+        LIFE_DIST_SCALE: 0.22,
+        LIFE_DIST_CAP: 1.45,
+        /** Размер спрайта: SIZE_MIN_PX + random * SIZE_RANDOM_PX */
+        SIZE_MIN_PX: 7,
+        SIZE_RANDOM_PX: 11,
+        /** Затухание скорости за тик (0.97–0.999) */
+        DRAG: 0.987,
+        /** Если у сундука не заданы GLOW_SPEED / GLOW_DISTANCE */
+        SPEED_MUL_DEFAULT: 0.5,
+        DIST_MUL_DEFAULT: 1.75
+    },
 
     SLOT_TEXTURE: SLOT_TEXTURE,
     BREAK_TEXTURES: [
@@ -149,7 +187,7 @@ export const MINER_CONFIG = {
         },
 
         "diamond": {
-            TEXTURE: DUAMOND_PICKAXE,
+            TEXTURE: DIAMOND_PICKAXE,
             COLOR: "#35d5e6",
 
             HIT_SOUND: "",
@@ -161,47 +199,70 @@ export const MINER_CONFIG = {
 
     CHESTS: {
         "common": {
-            TEXTURE: null,
-            OPEN_TEXTURE: null,
+            TEXTURE: CHEST,
+            OPEN_TEXTURE: CHEST_OPEN,
             COLOR: "#b87333",
 
-            OPEN_SOUND: CHEST_OPEN,
-            
+            OPEN_SOUND: CHEST_OPEN_SOUND,
+
             GLOW_TEXTURE: GLOW_TEXTURE,
-            GLOW: false
+            GLOW: false,
+            GLOW_SPEED: 0.5,
+            GLOW_DISTANCE: 1.75
         },
 
         "uncommon": {
-            TEXTURE: null,
-            OPEN_TEXTURE: null,
+            TEXTURE: CHEST,
+            OPEN_TEXTURE: CHEST_OPEN,
             COLOR: "#3cb371",
 
-            OPEN_SOUND: CHEST_OPEN,
-            
+            OPEN_SOUND: CHEST_OPEN_SOUND,
+
             GLOW_TEXTURE: GLOW_TEXTURE,
-            GLOW: false
+            GLOW: false,
+            GLOW_SPEED: 0.5,
+            GLOW_DISTANCE: 1.75
         },
 
         "rare": {
-            TEXTURE: null,
-            OPEN_TEXTURE: null,
+            TEXTURE: CHEST,
+            OPEN_TEXTURE: CHEST_OPEN,
             COLOR: "#4b7bec",
 
-            OPEN_SOUND: CHEST_OPEN,
-            
+            OPEN_SOUND: CHEST_OPEN_SOUND,
+
             GLOW_TEXTURE: GLOW_TEXTURE,
-            GLOW: false
+            GLOW: true,
+            GLOW_SPEED: 0.45,
+            GLOW_DISTANCE: 0.05,
+            GLOW_SPAWN_INTERVAL_SEC: 0.05,
+            GLOW_CELL_PADDING_MULT: 0.12,
+            GLOW_SPEED_MIN: 20,
+            GLOW_SPEED_RANDOM: 36,
+            GLOW_LIFE_BASE_SEC: 0.55,
+            GLOW_DRAG: 0.5
         },
 
         "epic": {
-            TEXTURE: null,
-            OPEN_TEXTURE: null,
+            TEXTURE: CHEST,
+            OPEN_TEXTURE: CHEST_OPEN,
             COLOR: "#9b59b6",
 
-            OPEN_SOUND: CHEST_OPEN,
-            
+            OPEN_SOUND: CHEST_OPEN_SOUND,
+
             GLOW_TEXTURE: GLOW_TEXTURE,
-            GLOW: false
+            GLOW: true,
+            GLOW_SPEED: 0.05,
+            GLOW_DISTANCE: 15,
+            GLOW_SPAWN_INTERVAL_SEC: 0.07,
+            GLOW_CELL_PADDING_MULT: 0.08,
+            GLOW_SPEED_MIN: 20,
+            GLOW_SPEED_RANDOM: 50,
+            GLOW_LIFE_BASE_SEC: 0.5,
+            GLOW_LIFE_RANDOM_SEC: 0.3,
+            GLOW_SIZE_MIN_PX: 5,
+            GLOW_SIZE_RANDOM_PX: 10,
+            GLOW_DRAG: 0.99
         }
     }
 }
