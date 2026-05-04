@@ -1,18 +1,24 @@
 import STONE_BLOCK from "@/shared/images/games/miner/blocks/stone.webp"
-import IRON_BLOCK from "@/shared/images/games/miner/blocks/iron_block.webp"
+import IRON_BLOCK from "@/shared/images/games/miner/blocks/iron.webp"
 import OBSIDIAN_BLOCK from "@/shared/images/games/miner/blocks/obsidian.webp"
+import GRASS_BLOCK from "@/shared/images/games/miner/blocks/grass.webp"
+import BASALT_BLOCK from "@/shared/images/games/miner/blocks/basalt.webp"
+import DEEPSLATE_BLOCK from "@/shared/images/games/miner/blocks/deepslate.webp"
 
 import WOODEN_PICKAXE from "@/shared/images/games/miner/pickaxes/wooden_pickaxe.webp"
 import IRON_PICKAXE from "@/shared/images/games/miner/pickaxes/iron_pickaxe.webp"
 import DUAMOND_PICKAXE from "@/shared/images/games/miner/pickaxes/diamond_pickaxe.webp"
 
 import SLOT_TEXTURE from "@/shared/images/games/miner/slot.webp"
+import GLOW_TEXTURE from "@/shared/images/games/miner/glow.webp"
 
 import CHEST_OPEN from "@/shared/audio/miner/chests/open.mp3"
 
 import PICKAXE_BREAK from "@/shared/audio/miner/pickaxes/break.mp3"
 
 import BLOCK_HIT from "@/shared/audio/miner/blocks/hit.mp3"
+import BLOCK_HIT_DIRT from "@/shared/audio/miner/blocks/hit_dirt.mp3"
+import BLOCK_BREAK_DIRT from "@/shared/audio/miner/blocks/break_dirt.mp3"
 import BLOCK_BREAK_NORMAL from "@/shared/audio/miner/blocks/break_normal.mp3"
 import BLOCK_BREAK_POOR from "@/shared/audio/miner/blocks/break_poor.mp3"
 import BLOCK_BREAK_RICH from "@/shared/audio/miner/blocks/break_rich.mp3"
@@ -77,7 +83,37 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_NORMAL,
 
-            HEALTH: 10
+            HEALTH: 7
+        },
+
+        "grass": {
+            TEXTURE: GRASS_BLOCK,
+            COLOR: "#457551",
+
+            HIT_SOUND: BLOCK_HIT_DIRT,
+            BREAK_SOUND: BLOCK_BREAK_DIRT,
+
+            HEALTH: 2
+        },
+
+        "deepslate": {
+            TEXTURE: DEEPSLATE_BLOCK,
+            COLOR: "#232325",
+
+            HIT_SOUND: BLOCK_HIT,
+            BREAK_SOUND: BLOCK_BREAK_RICH,
+
+            HEALTH: 11
+        },
+
+        "basalt": {
+            TEXTURE: BASALT_BLOCK,
+            COLOR: "#3d383d",
+
+            HIT_SOUND: BLOCK_HIT,
+            BREAK_SOUND: BLOCK_BREAK_POOR,
+
+            HEALTH: 8
         },
 
         "obsidian": {
@@ -87,7 +123,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_RICH,
 
-            HEALTH: 20
+            HEALTH: 17
         }
     },
 
@@ -99,7 +135,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
 
-            HEALTH: 5
+            HEALTH: 7
         },
 
         "iron": {
@@ -109,7 +145,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
 
-            HEALTH: 10
+            HEALTH: 14
         },
 
         "diamond": {
@@ -119,7 +155,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
 
-            HEALTH: 15
+            HEALTH: 21
         }
     },
 
@@ -129,7 +165,10 @@ export const MINER_CONFIG = {
             OPEN_TEXTURE: null,
             COLOR: "#b87333",
 
-            OPEN_SOUND: CHEST_OPEN
+            OPEN_SOUND: CHEST_OPEN,
+            
+            GLOW_TEXTURE: GLOW_TEXTURE,
+            GLOW: false
         },
 
         "uncommon": {
@@ -137,7 +176,10 @@ export const MINER_CONFIG = {
             OPEN_TEXTURE: null,
             COLOR: "#3cb371",
 
-            OPEN_SOUND: CHEST_OPEN
+            OPEN_SOUND: CHEST_OPEN,
+            
+            GLOW_TEXTURE: GLOW_TEXTURE,
+            GLOW: false
         },
 
         "rare": {
@@ -145,7 +187,10 @@ export const MINER_CONFIG = {
             OPEN_TEXTURE: null,
             COLOR: "#4b7bec",
 
-            OPEN_SOUND: CHEST_OPEN
+            OPEN_SOUND: CHEST_OPEN,
+            
+            GLOW_TEXTURE: GLOW_TEXTURE,
+            GLOW: false
         },
 
         "epic": {
@@ -153,7 +198,10 @@ export const MINER_CONFIG = {
             OPEN_TEXTURE: null,
             COLOR: "#9b59b6",
 
-            OPEN_SOUND: CHEST_OPEN
+            OPEN_SOUND: CHEST_OPEN,
+            
+            GLOW_TEXTURE: GLOW_TEXTURE,
+            GLOW: false
         }
     }
 }
