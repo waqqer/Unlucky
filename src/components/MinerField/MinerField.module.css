@@ -1,11 +1,11 @@
 .miner-game {
     display: flex;
     flex-direction: column;
-    gap: 20px;
     width: 100%;
     max-width: 100%;
     min-height: 500px;
-    padding: 20px;
+    height: 100%;
+    padding: 14px;
     background: rgba(30, 41, 59, 0.2);
     background-size: cover;
     background-repeat: no-repeat;
@@ -13,4 +13,15 @@
     border-radius: 20px;
     backdrop-filter: saturate(150%);
     overflow: hidden;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+}
+
+.miner-game canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
 }

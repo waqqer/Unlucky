@@ -2,7 +2,8 @@ import { AccountContext } from "@/context/AccountContext"
 import MinerField from "@/components/MinerField"
 import { MINER_CONFIG } from "@/shared/configs"
 import BetInput from "@/components/BetInput"
-import { useCallback, useState, useContext } from "react"
+import { MinerApi } from "@/api/game"
+import { useCallback, useState, useContext, useRef, useEffect } from "react"
 import BetPresets from "@/components/BetPresets"
 import Button from "@/components/Button"
 import VictoryScreen from "@/widgets/VictoryScreen"
@@ -17,20 +18,68 @@ const MinerGame = (props) => {
     const {
         MINER_MAX_BET,
         MINER_BET_PRESETS,
-        MINER_MIN_BET
+        MINER_MIN_BET,
+        COLS,
+        ROWS
     } = MINER_CONFIG
 
-    const { account, updateUser, user } = useContext(AccountContext)
+    const { account, updateUser, user, refreshAccount } = useContext(AccountContext)
+
+    const isMountedRef = useRef(true)
 
     const [isPlaying, setIsPlaying] = useState(false)
     const [bet, setBet] = useState(10)
     const [winAmount, setWinAmount] = useState(null)
     const [showVictory, setShowVictory] = useState(false)
     const [isRequestPending, setIsRequestPending] = useState(false)
+    const [roundData, setRoundData] = useState(null)
 
-    const play = useCallback(() => {
-
+    useEffect(() => {
+        isMountedRef.current = true
+        return () => {
+            isMountedRef.current = false
+        }
     }, [])
+
+    const play = useCallback(async () => {
+        if (isRequestPending || isPlaying) return
+        if (!account?.UUID) return
+
+        setIsRequestPending(true)
+        setIsPlaying(true)
+        setShowVictory(false)
+        setWinAmount(null)
+        setRoundData(null)
+
+        try {
+            const result = await MinerApi.play(account.UUID, bet, COLS, ROWS)
+            if (!isMountedRef.current) return
+
+            setRoundData(result || {})
+
+            const winFromServer = (result?.winAmount ?? result?.win ?? result?.payout ?? 0)
+            const newBalance = result?.newBalance ?? result?.balance
+
+            if (typeof newBalance === "number") {
+                updateUser({ balance: newBalance.toString() })
+            }
+
+            const safeWin = Number(winFromServer) || 0
+            setWinAmount(safeWin)
+        } catch (error) {
+            console.error("Miner game error:", error)
+        } finally {
+            if (!isMountedRef.current) return
+            setIsRequestPending(false)
+            setIsPlaying(false)
+            refreshAccount?.()
+        }
+    }, [isRequestPending, isPlaying, account, bet, COLS, ROWS, updateUser, refreshAccount])
+
+    const handleRoundComplete = useCallback(({ winAmount: completedWin } = {}) => {
+        const safeWin = Number(completedWin ?? winAmount) || 0
+        if (safeWin > 0) setShowVictory(true)
+    }, [winAmount])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -38,13 +87,18 @@ const MinerGame = (props) => {
 
     const balance = parseFloat(account?.balance || 0)
     const hasEnoughBalance = bet <= balance
-    const canPlay = !user && !isPlaying && bet >= MINER_MIN_BET && hasEnoughBalance
+    const canPlay = !!user && !!account?.UUID && !isRequestPending && !isPlaying && bet >= MINER_MIN_BET && bet <= MINER_MAX_BET && hasEnoughBalance
 
     return (
         <>
             <div className={`${styles["miner-game"]} ${className}`}>
 
-                <MinerField soundEnabled={soundEnabled} />
+                <MinerField
+                    soundEnabled={soundEnabled}
+                    roundData={roundData}
+                    isPlaying={isPlaying}
+                    onRoundComplete={handleRoundComplete}
+                />
 
                 <div className={styles["controls-section"]}>
                     <div className={styles["bet-section"]}>

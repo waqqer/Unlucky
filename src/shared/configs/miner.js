@@ -6,6 +6,8 @@ import WOODEN_PICKAXE from "@/shared/images/games/miner/pickaxes/wooden_pickaxe.
 import IRON_PICKAXE from "@/shared/images/games/miner/pickaxes/iron_pickaxe.webp"
 import DUAMOND_PICKAXE from "@/shared/images/games/miner/pickaxes/diamond_pickaxe.webp"
 
+import SLOT_TEXTURE from "@/shared/images/games/miner/slot.webp"
+
 import CHEST_OPEN from "@/shared/audio/miner/chests/open.mp3"
 
 import PICKAXE_BREAK from "@/shared/audio/miner/pickaxes/break.mp3"
@@ -22,10 +24,15 @@ export const MINER_CONFIG = {
 
     ROWS: 5,
     COLS: 5, 
+    CELL_SIZE_PX: 64,
+    GRID_GAP_PX: 6,
+
+    SLOT_TEXTURE: SLOT_TEXTURE,
 
     BLOCKS: {
         "stone": {
             TEXTURE: STONE_BLOCK,
+            COLOR: "#7b7b7b",
 
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_POOR,
@@ -35,6 +42,7 @@ export const MINER_CONFIG = {
 
         "iron": {
             TEXTURE: IRON_BLOCK,
+            COLOR: "#c7bdb1",
 
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_NORMAL,
@@ -44,6 +52,7 @@ export const MINER_CONFIG = {
 
         "obsidian": {
             TEXTURE: OBSIDIAN_BLOCK,
+            COLOR: "#2b2233",
 
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_RICH,
@@ -55,6 +64,7 @@ export const MINER_CONFIG = {
     PICKAXES: {
         "wooden": {
             TEXTURE: WOODEN_PICKAXE,
+            COLOR: "#a0703b",
 
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
@@ -64,6 +74,7 @@ export const MINER_CONFIG = {
 
         "iron": {
             TEXTURE: IRON_PICKAXE,
+            COLOR: "#d4d4d4",
 
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
@@ -73,6 +84,7 @@ export const MINER_CONFIG = {
 
         "diamond": {
             TEXTURE: DUAMOND_PICKAXE,
+            COLOR: "#35d5e6",
 
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
@@ -83,29 +95,33 @@ export const MINER_CONFIG = {
 
     CHESTS: {
         "common": {
-            TEXTURE: "",
-            OPEN_TEXTURE: "",
+            TEXTURE: null,
+            OPEN_TEXTURE: null,
+            COLOR: "#b87333",
 
             OPEN_SOUND: CHEST_OPEN
         },
 
         "uncommon": {
-            TEXTURE: "",
-            OPEN_TEXTURE: "",
+            TEXTURE: null,
+            OPEN_TEXTURE: null,
+            COLOR: "#3cb371",
 
             OPEN_SOUND: CHEST_OPEN
         },
 
         "rare": {
-            TEXTURE: "",
-            OPEN_TEXTURE: "",
+            TEXTURE: null,
+            OPEN_TEXTURE: null,
+            COLOR: "#4b7bec",
 
             OPEN_SOUND: CHEST_OPEN
         },
 
         "epic": {
-            TEXTURE: "",
-            OPEN_TEXTURE: "",
+            TEXTURE: null,
+            OPEN_TEXTURE: null,
+            COLOR: "#9b59b6",
 
             OPEN_SOUND: CHEST_OPEN
         }

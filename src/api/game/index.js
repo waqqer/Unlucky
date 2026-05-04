@@ -81,17 +81,22 @@ export const MinerApi = {
     play: async (uuid, bet, cols, rows) => {
         const body = {
             uuid,
-            bet,
+            bet: typeof bet === "number" ? bet : parseFloat(bet) || 0,
             cols,
             rows
         }
 
-        const responce = await fetch(BASE_URL + "/miner", {
+        const response = await fetch(BASE_URL + "/miner", {
             method: "POST",
             headers: HEADERS,
             body: JSON.stringify(body)
         })
 
-        return responce.json()
+        if (!response.ok) {
+            const errorText = await response.text()
+            throw new Error(`Miner API error: ${response.status} ${errorText}`)
+        }
+
+        return response.json()
     }
 }
