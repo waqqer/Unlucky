@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import ProfileButton from "../ProfileButton"
+import styles from "./UserControlls.module.css"
 
 const UserControlls = (props) => {
     const {
@@ -16,11 +17,12 @@ const UserControlls = (props) => {
 
     return (
         <div className={`${className}`}>
-            <ProfileButton text="Профиль" onClick={openProfile} />
+            {(account && <ProfileButton text="Профиль" onClick={openProfile} />)}
             {(account?.role ?? "USER") === "ADMIN" && <ProfileButton text="Админ. панель" link="/admin" /> }
             <ProfileButton text="О нас" onClick={openAbout} />
             {children}
             <ProfileButton text="Главная" link="/" className="pc-hide" />
+            <p className={styles.warn}>Войдите в<br/>аккаунт!</p>
         </div>
     )
 }
