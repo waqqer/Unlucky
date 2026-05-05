@@ -9,9 +9,9 @@ const GamesList = () => {
     
     return (
         <div className={styles["games-list"]}>
-            {games.map(e =>
+            {games.map((e, i) =>
                 <GameCard 
-                    key={e.key}
+                    key={i}
                     title={e.title}
                     desc={e.desc}
                     image={e.img}
