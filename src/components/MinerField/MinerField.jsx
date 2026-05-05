@@ -1340,7 +1340,6 @@ const MinerField = (props) => {
 
                 while (hp > 0 && blockHp[row][col] > 0) {
                     const willBreakBlock = blockHp[row][col] - baseDamage <= 0
-                    const willBreakPick = hp - Math.min(hp, baseDamage, blockHp[row][col]) <= 0
                     hitFlash(row, col, willBreakBlock)
 
                     const damage = Math.min(hp, baseDamage, blockHp[row][col])
