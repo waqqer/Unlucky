@@ -177,7 +177,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
 
-            HEALTH: 7
+            HEALTH: 9
         },
 
         "iron": {
@@ -187,7 +187,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
 
-            HEALTH: 17
+            HEALTH: 15
         },
 
         "diamond": {
