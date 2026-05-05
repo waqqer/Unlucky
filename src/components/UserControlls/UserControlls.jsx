@@ -12,17 +12,27 @@ const UserControlls = (props) => {
     } = props
 
     const {
-        account
+        account,
+        user
     } = useContext(AccountContext)
 
     return (
         <div className={`${className}`}>
-            {(account && <ProfileButton text="Профиль" onClick={openProfile} />)}
-            {(account?.role ?? "USER") === "ADMIN" && <ProfileButton text="Админ. панель" link="/admin" /> }
+            {user !== null && (
+                <ProfileButton text="Профиль" onClick={openProfile} />
+            )}
+
+            {(account?.role ?? "USER") === "ADMIN" && <ProfileButton text="Админ. панель" link="/admin" />}
             <ProfileButton text="О нас" onClick={openAbout} />
             {children}
             <ProfileButton text="Главная" link="/" className="pc-hide" />
-            <p className={styles.warn}>Войдите в<br/>аккаунт!</p>
+
+            {user === null && account === null && (
+                <p className={styles.warn}>Ошибка СПм!</p>
+            )}
+            {user !== null && account === null && (
+                <p className={styles.warn}>Тех. работы!</p>
+            )}
         </div>
     )
 }

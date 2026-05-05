@@ -23,7 +23,6 @@ export const AccountProvider = ({ children }) => {
                 setIsLoaded(true)
             })
             .catch(err => {
-                console.error("Failed to load user data:", err)
                 setIsLoaded(false)
             })
     }, [spwUser])
