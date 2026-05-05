@@ -369,6 +369,7 @@ const MinerField = (props) => {
             const texOpen = getImage(chestCfg?.OPEN_TEXTURE)
             const drawTex = visualOpen && texOpen?.complete ? texOpen : texClosed
             const hasChestTex = !!(drawTex && drawTex.complete)
+            ctx.imageSmoothingEnabled = false
             if (!hasChestTex) {
                 ctx.fillStyle = chestCfg?.COLOR || "#8b5a2b"
                 ctx.fillRect(x, y, CELL_SIZE_PX, CELL_SIZE_PX)
@@ -377,7 +378,7 @@ const MinerField = (props) => {
             }
 
             if (!visualOpen) {
-                ctx.fillStyle = "rgba(0,0,0,0.45)"
+                ctx.fillStyle = "rgba(0,0,0,0.3)"
                 ctx.fillRect(x, y, CELL_SIZE_PX, CELL_SIZE_PX)
             } else if (multAlpha > 0.02) {
                 const cx = x + CELL_SIZE_PX / 2

@@ -38,6 +38,10 @@ import BLOCK_BREAK_STAGE9 from "@/shared/images/games/miner/destroy_stage_9.png"
 
 import CHEST from "@/shared/images/games/miner/chests/chest.webp"
 import CHEST_OPEN from "@/shared/images/games/miner/chests/chest_open.webp"
+import RARE_CHEST from "@/shared/images/games/miner/chests/rare_chest.webp"
+import RARE_CHEST_OPEN from "@/shared/images/games/miner/chests/rare_chest_open.webp"
+import EPIC_CHEST from "@/shared/images/games/miner/chests/epic_chest.webp"
+import EPIC_CHEST_OPEN from "@/shared/images/games/miner/chests/epic_chest_open.webp"
 
 export const MINER_CONFIG = {
     MINER_MIN_BET: 10,
@@ -225,9 +229,9 @@ export const MINER_CONFIG = {
         },
 
         "rare": {
-            TEXTURE: CHEST,
-            OPEN_TEXTURE: CHEST_OPEN,
-            COLOR: "#4b7bec",
+            TEXTURE: RARE_CHEST,
+            OPEN_TEXTURE: RARE_CHEST_OPEN,
+            COLOR: "#FCB428",
 
             OPEN_SOUND: CHEST_OPEN_SOUND,
 
@@ -244,9 +248,9 @@ export const MINER_CONFIG = {
         },
 
         "epic": {
-            TEXTURE: CHEST,
-            OPEN_TEXTURE: CHEST_OPEN,
-            COLOR: "#9b59b6",
+            TEXTURE: EPIC_CHEST,
+            OPEN_TEXTURE: EPIC_CHEST_OPEN,
+            COLOR: "#5DF0E9",
 
             OPEN_SOUND: CHEST_OPEN_SOUND,
 
