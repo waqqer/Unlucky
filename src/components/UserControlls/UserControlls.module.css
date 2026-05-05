@@ -31,4 +31,8 @@
     .warn {
         font-size: 1rem;
     }
+
+    .warn::before {
+        display: none;
+    }
 }
