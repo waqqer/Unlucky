@@ -43,7 +43,7 @@
 }
 
 .gif {
-    transform: translateX(-25%);
+    transform: translateX(-20%);
 }
 
 @media (max-width: 630px) {

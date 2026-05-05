@@ -17,10 +17,6 @@ const MainTitle = () => {
                         loading="eagle"
                         width={1000}
                     />
-                    <h1 className={styles.title}>
-                        <span>Un</span>
-                        <span className={styles["purple-part"]}>lucky</span>
-                    </h1>
                 </div>
             </Title>
         </Container>
