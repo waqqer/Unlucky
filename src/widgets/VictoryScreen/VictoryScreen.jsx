@@ -3,8 +3,8 @@ import VictoryVideo from "../VictoryVideo";
 import styles from "./VictoryScreen.module.css";
 
 const AUTO_CLOSE_DELAY = 3000;
-const STEP_INTERVAL_MS = 120;        
-const MAX_STEPS = 150;     
+/** Ограничение длительности набора суммы (большие выигрыши не растягивают экран на минуты). */
+const COUNT_UP_DURATION_MS = 2200;
 
 const formatAmount = (value) => {
     const num = Number(value);
@@ -21,6 +21,14 @@ const formatAmount = (value) => {
     }).format(safe);
 };
 
+const easeOutQuad = (t) => 1 - (1 - t) * (1 - t);
+
+const toCountTarget = (raw) => {
+    const n = Number(raw);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(0, Math.round(n));
+};
+
 const VictoryScreen = (props) => {
     const {
         isOpen,
@@ -32,7 +40,7 @@ const VictoryScreen = (props) => {
     const [displayAmount, setDisplayAmount] = useState(0);
     const hasTriggeredComplete = useRef(false);
     const closeTimerRef = useRef(null);
-    const intervalRef = useRef(null);
+    const countUpRafRef = useRef(null);
     const amountRef = useRef(null);
 
     const handleClose = useCallback(() => {
@@ -49,39 +57,42 @@ const VictoryScreen = (props) => {
     useEffect(() => {
         if (!isOpen) {
             setDisplayAmount(0);
-            if (intervalRef.current) clearInterval(intervalRef.current);
+            if (countUpRafRef.current != null) {
+                cancelAnimationFrame(countUpRafRef.current);
+                countUpRafRef.current = null;
+            }
             return;
         }
 
-        if (intervalRef.current) clearInterval(intervalRef.current);
-
-        let current = 0;
-        const target = winAmount;
-
-        let step = 1;
-        let totalSteps = target;
-        if (target > MAX_STEPS) {
-            step = Math.ceil(target / MAX_STEPS);
-            totalSteps = Math.ceil(target / step);
+        if (countUpRafRef.current != null) {
+            cancelAnimationFrame(countUpRafRef.current);
+            countUpRafRef.current = null;
         }
 
-        intervalRef.current = setInterval(() => {
-            let newValue = current + step;
-            if (newValue >= target) {
-                newValue = target;
-                setDisplayAmount(newValue);
+        const target = toCountTarget(winAmount);
+        const start = performance.now();
+
+        const tick = (now) => {
+            const t = target === 0 ? 1 : Math.min(1, (now - start) / COUNT_UP_DURATION_MS);
+            const eased = easeOutQuad(t);
+            const value = target === 0 ? 0 : Math.min(target, Math.round(eased * target));
+            setDisplayAmount(value);
+            if (t < 1) {
+                countUpRafRef.current = requestAnimationFrame(tick);
+            } else {
+                setDisplayAmount(target);
                 triggerPopAnimation();
-                clearInterval(intervalRef.current);
-                intervalRef.current = null;
-                return;
+                countUpRafRef.current = null;
             }
-            setDisplayAmount(newValue);
-            triggerPopAnimation();
-            current = newValue;
-        }, STEP_INTERVAL_MS);
+        };
+
+        countUpRafRef.current = requestAnimationFrame(tick);
 
         return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current);
+            if (countUpRafRef.current != null) {
+                cancelAnimationFrame(countUpRafRef.current);
+                countUpRafRef.current = null;
+            }
         };
     }, [isOpen, winAmount, triggerPopAnimation]);
 
@@ -97,10 +108,7 @@ const VictoryScreen = (props) => {
             onVictoryComplete();
         }
 
-        let steps = winAmount;
-        if (winAmount > MAX_STEPS) steps = Math.ceil(winAmount / Math.ceil(winAmount / MAX_STEPS));
-        const animationDuration = steps * STEP_INTERVAL_MS;
-        const closeDelay = animationDuration + AUTO_CLOSE_DELAY;
+        const closeDelay = COUNT_UP_DURATION_MS + AUTO_CLOSE_DELAY;
 
         closeTimerRef.current = setTimeout(() => {
             handleClose();

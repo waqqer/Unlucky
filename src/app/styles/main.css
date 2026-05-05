@@ -15,7 +15,7 @@ html {
     height: 100vh;
 }
 
-button::selection, input[type="button"]::selection {
+button::selection, input[type="button"]::selection, img {
     background-color: transparent;
 }
 

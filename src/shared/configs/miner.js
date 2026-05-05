@@ -211,8 +211,7 @@ export const MINER_CONFIG = {
 
             GLOW_TEXTURE: GLOW_TEXTURE,
             GLOW: false,
-            GLOW_SPEED: 0.5,
-            GLOW_DISTANCE: 1.75
+            GLOW_SPEED: 0.5
         },
 
         "uncommon": {
@@ -223,9 +222,7 @@ export const MINER_CONFIG = {
             OPEN_SOUND: CHEST_OPEN_SOUND,
 
             GLOW_TEXTURE: GLOW_TEXTURE,
-            GLOW: false,
-            GLOW_SPEED: 0.5,
-            GLOW_DISTANCE: 1.75
+            GLOW: false
         },
 
         "rare": {

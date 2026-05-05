@@ -210,6 +210,29 @@ const MinerField = (props) => {
         ctx2.restore()
     }
 
+    const drawChestGlowParticle = (ctx2, p) => {
+        const tex = getImage(p.texSrc)
+        const alpha = Math.max(0, Math.min(1, p.life / p.maxLife))
+        const s = p.size
+        if (tex?.complete) {
+            drawTintedGlowSprite(ctx2, tex, p.x, p.y, s, p.tint, alpha)
+            return
+        }
+        ctx2.save()
+        ctx2.globalAlpha = alpha * 0.88
+        const r = Math.max(1.5, s * 0.48)
+        const g = ctx2.createRadialGradient(p.x, p.y, 0, p.x, p.y, r)
+        const core = p.tint || "#ffffff"
+        g.addColorStop(0, core)
+        g.addColorStop(0.5, core)
+        g.addColorStop(1, "rgba(255,255,255,0)")
+        ctx2.fillStyle = g
+        ctx2.beginPath()
+        ctx2.arc(p.x, p.y, r, 0, Math.PI * 2)
+        ctx2.fill()
+        ctx2.restore()
+    }
+
     const fitCanvasToContainer = (canvas, worldW, worldH) => {
         const container = containerRef.current
         if (!container) return
@@ -576,10 +599,7 @@ const MinerField = (props) => {
 
         const drawIdleChestGlow = (ctx2) => {
             for (const p of idleChestGlow) {
-                const tex = getImage(p.texSrc)
-                const alpha = Math.max(0, Math.min(1, p.life / p.maxLife))
-                const s = p.size
-                drawTintedGlowSprite(ctx2, tex, p.x, p.y, s, p.tint, alpha)
+                drawChestGlowParticle(ctx2, p)
             }
         }
 
@@ -593,31 +613,32 @@ const MinerField = (props) => {
                 if (opened) continue
                 const gp = chestGlowParticleParams(cfg)
                 idleSpawnAcc[c] += dt
-                if (idleSpawnAcc[c] < gp.spawnInterval) continue
-                idleSpawnAcc[c] = 0
-                const cellLeft = c * (CELL_SIZE_PX + GRID_GAP_PX)
-                const pad = Math.max(2, CELL_SIZE_PX * gp.cellPadMult)
-                const span = Math.max(1, CELL_SIZE_PX - pad * 2)
-                const px = cellLeft + pad + Math.random() * span
-                const py = yChests + pad + Math.random() * span
-                const a = Math.random() * Math.PI * 2
-                const speedMul = typeof cfg.GLOW_SPEED === "number" ? cfg.GLOW_SPEED : gp.speedMulDefault
-                const distMul = typeof cfg.GLOW_DISTANCE === "number" ? cfg.GLOW_DISTANCE : gp.distMulDefault
-                const sp = (gp.speedMin + Math.random() * gp.speedRandom) * speedMul * distMul
-                const lifeBase = gp.lifeBase + Math.random() * gp.lifeRandom
-                const maxL = lifeBase * Math.min(gp.lifeDistCap, gp.lifeDistBase + distMul * gp.lifeDistScale)
-                idleChestGlow.push({
-                    x: px,
-                    y: py,
-                    vx: Math.cos(a) * sp,
-                    vy: Math.sin(a) * sp,
-                    life: maxL,
-                    maxLife: maxL,
-                    size: gp.sizeMin + Math.random() * gp.sizeRandom,
-                    texSrc: cfg.GLOW_TEXTURE,
-                    tint: cfg.COLOR || "#ffffff",
-                    drag: gp.drag
-                })
+                while (idleSpawnAcc[c] >= gp.spawnInterval) {
+                    idleSpawnAcc[c] -= gp.spawnInterval
+                    const cellLeft = c * (CELL_SIZE_PX + GRID_GAP_PX)
+                    const pad = Math.max(2, CELL_SIZE_PX * gp.cellPadMult)
+                    const span = Math.max(1, CELL_SIZE_PX - pad * 2)
+                    const px = cellLeft + pad + Math.random() * span
+                    const py = yChests + pad + Math.random() * span
+                    const a = Math.random() * Math.PI * 2
+                    const speedMul = typeof cfg.GLOW_SPEED === "number" ? cfg.GLOW_SPEED : gp.speedMulDefault
+                    const distMul = typeof cfg.GLOW_DISTANCE === "number" ? cfg.GLOW_DISTANCE : gp.distMulDefault
+                    const sp = (gp.speedMin + Math.random() * gp.speedRandom) * speedMul * distMul
+                    const lifeBase = gp.lifeBase + Math.random() * gp.lifeRandom
+                    const maxL = lifeBase * Math.min(gp.lifeDistCap, gp.lifeDistBase + distMul * gp.lifeDistScale)
+                    idleChestGlow.push({
+                        x: px,
+                        y: py,
+                        vx: Math.cos(a) * sp,
+                        vy: Math.sin(a) * sp,
+                        life: maxL,
+                        maxLife: maxL,
+                        size: gp.sizeMin + Math.random() * gp.sizeRandom,
+                        texSrc: cfg.GLOW_TEXTURE,
+                        tint: cfg.COLOR || "#ffffff",
+                        drag: gp.drag
+                    })
+                }
             }
             for (let i = idleChestGlow.length - 1; i >= 0; i--) {
                 const p = idleChestGlow[i]
@@ -812,10 +833,7 @@ const MinerField = (props) => {
 
         const drawRoundChestGlow = (ctx2) => {
             for (const p of roundChestGlow) {
-                const tex = getImage(p.texSrc)
-                const alpha = Math.max(0, Math.min(1, p.life / p.maxLife))
-                const s = p.size
-                drawTintedGlowSprite(ctx2, tex, p.x, p.y, s, p.tint, alpha)
+                drawChestGlowParticle(ctx2, p)
             }
         }
 
@@ -829,31 +847,32 @@ const MinerField = (props) => {
                 if (opened) continue
                 const gp = chestGlowParticleParams(cfg)
                 roundSpawnAcc[c] += dt
-                if (roundSpawnAcc[c] < gp.spawnInterval) continue
-                roundSpawnAcc[c] = 0
-                const cellLeft = c * (CELL_SIZE_PX + GRID_GAP_PX)
-                const pad = Math.max(2, CELL_SIZE_PX * gp.cellPadMult)
-                const span = Math.max(1, CELL_SIZE_PX - pad * 2)
-                const px = cellLeft + pad + Math.random() * span
-                const py = yChests + pad + Math.random() * span
-                const a = Math.random() * Math.PI * 2
-                const speedMul = typeof cfg.GLOW_SPEED === "number" ? cfg.GLOW_SPEED : gp.speedMulDefault
-                const distMul = typeof cfg.GLOW_DISTANCE === "number" ? cfg.GLOW_DISTANCE : gp.distMulDefault
-                const sp = (gp.speedMin + Math.random() * gp.speedRandom) * speedMul * distMul
-                const lifeBase = gp.lifeBase + Math.random() * gp.lifeRandom
-                const maxL = lifeBase * Math.min(gp.lifeDistCap, gp.lifeDistBase + distMul * gp.lifeDistScale)
-                roundChestGlow.push({
-                    x: px,
-                    y: py,
-                    vx: Math.cos(a) * sp,
-                    vy: Math.sin(a) * sp,
-                    life: maxL,
-                    maxLife: maxL,
-                    size: gp.sizeMin + Math.random() * gp.sizeRandom,
-                    texSrc: cfg.GLOW_TEXTURE,
-                    tint: cfg.COLOR || "#ffffff",
-                    drag: gp.drag
-                })
+                while (roundSpawnAcc[c] >= gp.spawnInterval) {
+                    roundSpawnAcc[c] -= gp.spawnInterval
+                    const cellLeft = c * (CELL_SIZE_PX + GRID_GAP_PX)
+                    const pad = Math.max(2, CELL_SIZE_PX * gp.cellPadMult)
+                    const span = Math.max(1, CELL_SIZE_PX - pad * 2)
+                    const px = cellLeft + pad + Math.random() * span
+                    const py = yChests + pad + Math.random() * span
+                    const a = Math.random() * Math.PI * 2
+                    const speedMul = typeof cfg.GLOW_SPEED === "number" ? cfg.GLOW_SPEED : gp.speedMulDefault
+                    const distMul = typeof cfg.GLOW_DISTANCE === "number" ? cfg.GLOW_DISTANCE : gp.distMulDefault
+                    const sp = (gp.speedMin + Math.random() * gp.speedRandom) * speedMul * distMul
+                    const lifeBase = gp.lifeBase + Math.random() * gp.lifeRandom
+                    const maxL = lifeBase * Math.min(gp.lifeDistCap, gp.lifeDistBase + distMul * gp.lifeDistScale)
+                    roundChestGlow.push({
+                        x: px,
+                        y: py,
+                        vx: Math.cos(a) * sp,
+                        vy: Math.sin(a) * sp,
+                        life: maxL,
+                        maxLife: maxL,
+                        size: gp.sizeMin + Math.random() * gp.sizeRandom,
+                        texSrc: cfg.GLOW_TEXTURE,
+                        tint: cfg.COLOR || "#ffffff",
+                        drag: gp.drag
+                    })
+                }
             }
             for (let i = roundChestGlow.length - 1; i >= 0; i--) {
                 const p = roundChestGlow[i]
