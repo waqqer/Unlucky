@@ -8,6 +8,7 @@ import DEEPSLATE_BLOCK from "@/shared/images/games/miner/blocks/deepslate.webp"
 import WOODEN_PICKAXE from "@/shared/images/games/miner/pickaxes/wooden_pickaxe.webp"
 import IRON_PICKAXE from "@/shared/images/games/miner/pickaxes/iron_pickaxe.webp"
 import DIAMOND_PICKAXE from "@/shared/images/games/miner/pickaxes/diamond_pickaxe.webp"
+import NETHERITE_PICKAXE from "@/shared/images/games/miner/pickaxes/netherite_pickaxe.webp"
 
 import SLOT_TEXTURE from "@/shared/images/games/miner/slot.webp"
 import GLOW_TEXTURE from "@/shared/images/games/miner/glow.webp"
@@ -48,7 +49,7 @@ export const MINER_CONFIG = {
     MINER_MAX_BET: 1000,
     MINER_BET_PRESETS: [10, 25, 50, 100, 250],
 
-    MINER_SOUND_VOLUME: 0.28,
+    MINER_SOUND_VOLUME: 0.15,
     MINER_PICKAXE_ROULETE_SOUND: PICKAXE_ROULETE_SOUND, 
 
     ROWS: 5,
@@ -70,25 +71,25 @@ export const MINER_CONFIG = {
 
 
     CHEST_GLOW_PARTICLE_DEFAULTS: {
-        /** Секунды между попытками заспавнить партикл на один сундук */
+        // Секунды между попытками заспавнить партикл на один сундук
         SPAWN_INTERVAL_SEC: 0.065,
-        /** Отступ от края ячейки сундука как доля CELL_SIZE_PX (спавн внутри прямоугольника) */
+        // Отступ от края ячейки сундука как доля CELL_SIZE_PX
         CELL_PADDING_MULT: 0.1,
-        /** Скорость: (SPEED_MIN + random * SPEED_RANDOM) * GLOW_SPEED * GLOW_DISTANCE */
+        // Скорость: (SPEED_MIN + random * SPEED_RANDOM) * GLOW_SPEED * GLOW_DISTANCE
         SPEED_MIN: 28,
         SPEED_RANDOM: 52,
-        /** Жизнь: (LIFE_BASE_SEC + random * LIFE_RANDOM_SEC) * min(LIFE_DIST_CAP, LIFE_DIST_BASE + GLOW_DISTANCE * LIFE_DIST_SCALE) */
+        // Жизнь
         LIFE_BASE_SEC: 0.72,
         LIFE_RANDOM_SEC: 0.48,
         LIFE_DIST_BASE: 0.72,
         LIFE_DIST_SCALE: 0.22,
         LIFE_DIST_CAP: 1.45,
-        /** Размер спрайта: SIZE_MIN_PX + random * SIZE_RANDOM_PX */
+        // Размер спрайта: SIZE_MIN_PX + random * SIZE_RANDOM_PX
         SIZE_MIN_PX: 7,
         SIZE_RANDOM_PX: 11,
-        /** Затухание скорости за тик (0.97–0.999) */
+        // Затухание скорости за тик
         DRAG: 0.987,
-        /** Если у сундука не заданы GLOW_SPEED / GLOW_DISTANCE */
+        // Если у сундука не заданы GLOW_SPEED / GLOW_DISTANCE
         SPEED_MUL_DEFAULT: 0.5,
         DIST_MUL_DEFAULT: 1.75
     },
@@ -198,6 +199,16 @@ export const MINER_CONFIG = {
             BREAK_SOUND: PICKAXE_BREAK,
 
             HEALTH: 25
+        },
+
+        "netherite": {
+            TEXTURE: NETHERITE_PICKAXE,
+            COLOR: "#272323",
+
+            HIT_SOUND: "",
+            BREAK_SOUND: PICKAXE_BREAK,
+
+            HEALTH: 40
         }
     },
 
