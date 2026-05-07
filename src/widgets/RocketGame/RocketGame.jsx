@@ -310,7 +310,7 @@ const RocketGame = (props) => {
                         <Button
                             className={styles["play-btn"]}
                             onClick={startGame}
-                            isDisabled={isRequestPending || bet < ROCKET_MIN_BET || (!demoMode && !user)}
+                            isDisabled={isRequestPending || bet < ROCKET_MIN_BET || (!demoMode && !user) || showVictory}
                             activateOnSpace={true}
                         >
                             {isRequestPending ? "Загрузка..." : "Сыграть"}

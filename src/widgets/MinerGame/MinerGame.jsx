@@ -105,7 +105,7 @@ const MinerGame = (props) => {
 
     const balance = parseFloat(account?.balance || 0)
     const hasEnoughBalance = bet <= balance
-    const canPlay = !!user && !!account?.UUID && !isRequestPending && !isPlaying && bet >= MINER_MIN_BET && bet <= MINER_MAX_BET && hasEnoughBalance
+    const canPlay = !!user && !!account?.UUID && !isRequestPending && !isPlaying && bet >= MINER_MIN_BET && bet <= MINER_MAX_BET && hasEnoughBalance && !showVictory
 
     return (
         <>

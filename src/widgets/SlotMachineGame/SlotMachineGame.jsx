@@ -287,7 +287,7 @@ const SlotMachineGame = (props) => {
     const balance = toNumber(account?.balance)
     const hasEnoughBalance = demoMode || bet <= balance
     const isBetInRange = bet >= SLOTS_MIN_BET && bet <= SLOTS_MAX_BET
-    const canSpin = !isRequestPending && !isSpinning && isBetInRange && hasEnoughBalance
+    const canSpin = !isRequestPending && !isSpinning && isBetInRange && hasEnoughBalance && !showVictory
 
     return (
         <>
