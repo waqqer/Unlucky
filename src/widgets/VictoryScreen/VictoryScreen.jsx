@@ -124,7 +124,7 @@ const VictoryScreen = (props) => {
         <div className={styles["victory-screen"]}>
             <VictoryVideo className={styles["victory-video"]} />
             <div className={styles["victory-content"]}>
-                <h1 className={styles["victory-title"]}>Ты победил</h1>
+                <h1 className={styles["victory-title"]}>Ты победил!</h1>
                 <p ref={amountRef} className={styles["victory-amount"]}>
                     +{formatAmount(displayAmount)} Ар
                 </p>
