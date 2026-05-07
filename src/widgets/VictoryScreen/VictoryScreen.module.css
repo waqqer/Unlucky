@@ -11,8 +11,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.336);
+    background: rgba(0, 0, 0, 0.42);
     overflow: hidden;
+}
+
+.fade-up {
+    animation: fading 1.25s ease;
+}
+
+@keyframes fading {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 .victory-video {

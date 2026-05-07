@@ -41,9 +41,17 @@ const VictoryScreen = (props) => {
     const closeTimerRef = useRef(null)
     const countUpRafRef = useRef(null)
     const amountRef = useRef(null)
+    const screenRef = useRef(null)
 
     const handleClose = useCallback(() => {
-        if (onClose) onClose()
+        if(screenRef.current) {
+            screenRef.current.classList.add(styles["fade-up"]);
+        }
+
+        setTimeout(() => {
+            if (onClose)
+                onClose()
+        }, 1250)
     }, [onClose])
 
     const triggerPopAnimation = useCallback(() => {
@@ -121,7 +129,7 @@ const VictoryScreen = (props) => {
     if (!isOpen) return null
 
     return (
-        <div className={styles["victory-screen"]}>
+        <div className={styles["victory-screen"]} ref={screenRef}>
             <VictoryVideo className={styles["victory-video"]} />
             <div className={styles["victory-content"]}>
                 <h1 className={styles["victory-title"]}>Ты победил!</h1>
