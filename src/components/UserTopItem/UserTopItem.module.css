@@ -50,7 +50,7 @@
 .stats {
     transition: all 0.2s ease;
     display: flex;
-    gap: 20px;
+    gap: 10px;
 }
 
 .stats>* {
@@ -125,9 +125,7 @@
 
     .stats>* {
         text-align: center;
-        opacity: 0.9;
         padding: 3px 6px;
-        background: rgba(82, 163, 122, 0.137);
     }
 
     .item:hover .stats>* {

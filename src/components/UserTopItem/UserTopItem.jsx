@@ -10,7 +10,8 @@ const UserTopItem = (props) => {
             nickname: "example",
             uuid: "",
             amount: 10000,
-            wins: 100000
+            wins: 100000,
+            role: "USER"
         }
     } = props
 
@@ -19,7 +20,8 @@ const UserTopItem = (props) => {
     return (
         <div className={styles.item}>
             <div className={styles["user-info"]}>
-                {number && <p className={styles.number}>{number}</p>}
+                {number && (<p className={styles.number}>{number} </p>)}
+                
                 <img
                     className={styles.head}
                     src={head}
@@ -31,6 +33,7 @@ const UserTopItem = (props) => {
                 />
 
                 <p className={styles.name}>{userData.nickname}</p>
+                {userData.role === "ADMIN" && (<p className="mobile-hide" title="Администратор"><i className="fa-solid fa-star"></i></p>)}
             </div>
 
             <div className={styles.stats}>
