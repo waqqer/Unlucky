@@ -116,7 +116,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_POOR,
 
-            HEALTH: 5
+            HEALTH: 6
         },
 
         "iron": {
@@ -126,7 +126,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_NORMAL,
 
-            HEALTH: 7
+            HEALTH: 8
         },
 
         "grass": {
@@ -166,7 +166,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_RICH,
 
-            HEALTH: 17
+            HEALTH: 20
         }
     },
 
