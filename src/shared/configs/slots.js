@@ -14,6 +14,6 @@ export const SLOTS_CONFIG = {
 
     SYMBOLS: ["star", "amethyst", "redstone", "coal", "iron", "gold", "diamond"],
 
-    INITIAL_REELS: ["coal", "coal", "coal"],
+    INITIAL_REELS: ["amethyst", "star", "redstone"],
     INITIAL_STOPPED: [false, false, false]
 }
