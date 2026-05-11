@@ -116,7 +116,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_POOR,
 
-            HEALTH: 6
+            HEALTH: 5
         },
 
         "iron": {
@@ -126,7 +126,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_NORMAL,
 
-            HEALTH: 8
+            HEALTH: 7
         },
 
         "grass": {
@@ -146,7 +146,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_RICH,
 
-            HEALTH: 13
+            HEALTH: 15
         },
 
         "basalt": {
@@ -156,7 +156,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_POOR,
 
-            HEALTH: 8
+            HEALTH: 10
         },
 
         "obsidian": {
@@ -166,7 +166,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: BLOCK_HIT,
             BREAK_SOUND: BLOCK_BREAK_RICH,
 
-            HEALTH: 22
+            HEALTH: 24
         }
     },
 
@@ -188,7 +188,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
 
-            HEALTH: 16
+            HEALTH: 15
         },
 
         "diamond": {
@@ -208,7 +208,7 @@ export const MINER_CONFIG = {
             HIT_SOUND: "",
             BREAK_SOUND: PICKAXE_BREAK,
 
-            HEALTH: 40
+            HEALTH: 35
         }
     },
 
