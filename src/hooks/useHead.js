@@ -1,4 +1,4 @@
-const minecraft_heads_url = "https://mc-heads.net/avatar/"
+const minecraft_heads_url = "https://avatars.spworlds.ru/face/"
 
 const useHead = (data) => {
     if(typeof data === "string") {
