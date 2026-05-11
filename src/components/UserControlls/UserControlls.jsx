@@ -22,6 +22,7 @@ const UserControlls = (props) => {
                 <ProfileButton text="Профиль" onClick={openProfile} />
             )}
             {(account?.role ?? "USER") === "ADMIN" && <ProfileButton text="Админ. панель" link="/admin" />}
+            <ProfileButton text="Рейтинг" link="/top" className="mobile-hide" />
             <ProfileButton text="О нас" onClick={openAbout} />
             {children}
             <ProfileButton text="Главная" link="/" className="pc-hide" />

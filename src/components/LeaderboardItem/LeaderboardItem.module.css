@@ -1,0 +1,101 @@
+.leader {
+    background-color: rgba(30, 41, 59, 0.2);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px;
+
+    transition: all 0.2s ease;
+}
+
+.leader:hover {
+    border-color: white;
+}
+
+.info {
+    display: flex;
+    gap: 20px;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.id {
+    opacity: 0.2;
+    font-weight: lighter;
+
+    height: 100%;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.name {
+    font-size: 1.25rem;
+    font-weight: normal;
+    height: 100%;
+    max-width: 300px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.first {
+    border: 1px dashed rgb(255, 175, 54);
+    background-color: rgba(202, 144, 67, 0.1);
+}
+
+.first:hover {
+    border: 1px dashed rgb(255, 217, 160);
+}
+
+.first h2 {
+    color: rgb(255, 175, 54);
+    animation: colorShift 5s ease-in-out infinite;
+    transition: all 0.5s ease;
+}
+
+.first .id {
+    opacity: 1;
+}
+
+.value {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    font-size: 1rem;
+}
+
+.value i {
+    color: rgb(255, 175, 54);
+    animation: colorShift 5s ease-in-out infinite;
+    filter: brightness(80%);
+    transition: all 0.5s ease;
+}
+
+@keyframes colorShift {
+    0% {
+        color: rgb(255, 175, 54);
+    }
+    25% {
+        color: rgb(197, 152, 83);
+    }
+    50% {
+        color: rgb(255, 153, 0);
+    }
+    75% {
+        color: rgb(255, 175, 54);
+    }
+    100% {
+        color: rgb(212, 132, 13);
+    }
+}
