@@ -40,14 +40,14 @@ export const BADGES_CONFIG = {
         "lucky": {
             title: "Везунчик",
             descripton: "Капуцк, ты везунчик! Целых 5 побед подряд...",
-            icon: WINNER_BADGE,
+            icon: LUCKY_BADGE,
             quality: "EPIC"
         },
 
         "rich": {
             title: "Богач",
             descripton: "Даётся за выйгрышь больше 1000 ар.",
-            icon: WINNER_BADGE,
+            icon: RICH_BADGE,
             quality: "EPIC"
         },
     },
