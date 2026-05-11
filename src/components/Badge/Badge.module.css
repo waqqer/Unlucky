@@ -1,0 +1,73 @@
+.badge {
+    position: relative;
+}
+
+.icon {
+    transition: all 0.2s ease;
+    image-rendering: pixelated;
+}
+
+.badge:hover .icon {
+    filter: brightness(140%);
+    transform: translateY(-2px) scale(105%, 105%);
+}
+
+.badge:hover .info {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.info {
+    z-index: 2;
+    opacity: 0;
+    position: absolute;
+
+    visibility: hidden;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    top: -150%;
+    left: -25%;
+
+    border-radius: 10px;
+
+    background-color: rgba(31, 31, 31, 1);
+
+    transition: all 0.2s ease;
+    transform: translateY(10px);
+
+    max-width: 400px;
+    min-width: 200px;
+}
+
+.title {
+    width: 100%;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+
+    background: var(--color);
+    background: linear-gradient(30deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 30%, rgba(255, 255, 255, 0.3) 63%, rgba(255, 255, 255, 0) 100%), var(--color);
+
+    padding-inline: 10px;
+    padding-block: 2px;
+}
+
+.title h3 {
+    font-weight: 600;
+}
+
+.desc {
+    margin-bottom: 5px;
+    padding-inline: 10px;
+    text-wrap: balance;
+}
+
+.desc p {
+    letter-spacing: 1.2px;
+    opacity: 0.8;
+    font-weight: lighter;
+    font-size: 0.75rem;
+}

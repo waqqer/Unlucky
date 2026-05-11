@@ -1,15 +1,18 @@
 import ProfileInfo from "@/components/ProfileInfo"
 import ModalExitButton from "@/components/ModalExitButton"
 import BalanceSection from "../BalanceSection"
+import { AccountContext } from "@/context/AccountContext"
 import HistorySection from "../HistorySection"
-import StatsSection from "../StatsSection"
-import { memo } from "react"
+import { memo, useContext } from "react"
 import styles from "./ProfileModal.module.css"
+import BadgesSection from "../BadgesSection";
  
 const ProfileModal = (props) => {
     const {
         close
     } = props
+
+    const { account } = useContext(AccountContext)
 
     return (
         <>
@@ -19,6 +22,7 @@ const ProfileModal = (props) => {
 
             <div className={styles.list}>
                 <BalanceSection />
+                {account?.badges && account?.badges.length > 0 && (<BadgesSection />)}
                 <HistorySection className="mobile-hide" />
             </div>
         </>

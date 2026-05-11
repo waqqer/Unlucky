@@ -21,7 +21,7 @@ const UserControlls = (props) => {
             {user !== null && (
                 <ProfileButton text="Профиль" onClick={openProfile} />
             )}
-
+<ProfileButton text="Профиль" onClick={openProfile} />
             {(account?.role ?? "USER") === "ADMIN" && <ProfileButton text="Админ. панель" link="/admin" />}
             <ProfileButton text="О нас" onClick={openAbout} />
             {children}
