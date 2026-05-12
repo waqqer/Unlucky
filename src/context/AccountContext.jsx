@@ -154,7 +154,7 @@ export const AccountProvider = ({ children }) => {
         refreshAccount,
         termsAccepted,
         acceptTerms
-    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted])
+    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge])
 
     return (
         <AccountContext.Provider value={values}>
