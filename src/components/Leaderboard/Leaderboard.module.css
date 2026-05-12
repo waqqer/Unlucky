@@ -54,3 +54,9 @@
         min-height: 400px;
     }
 }
+
+@media (max-width: 630px) {
+    .top {
+        width: 100%;
+    }
+}

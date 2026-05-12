@@ -1,6 +1,7 @@
 import { memo } from "react"
 import useHead from "@/hooks/useHead"
 import styles from "./LeaderboardItem.module.css"
+import Badgedeco from "../BadgeDeco"
 
 const top_styles = {
     1: styles.first,
@@ -31,7 +32,7 @@ const LeaderboardItem = (props) => {
                         width={40}
                         height={40}
                     />
-                    <h2 className={styles.name}>{name || "noname"}</h2>
+                    <h2 className={styles.name}>{name || "noname"} <Badgedeco uuid={uuid} className="mobile-hide" /> </h2>
                 </div>
             </div>
 

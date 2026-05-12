@@ -52,6 +52,16 @@ const UserApi = {
         return fetch(URL + `/${uuid.trim()}/badges`)
                 .then(res => res.json())
     },
+
+    setCurrentBadge: async (uuid, badge) => {
+        return fetch(URL + `/${uuid.trim()}/badges`, {
+            method: "PUT",
+            headers: HEADERS,
+            body: JSON.stringify({
+                badge: badge
+            })
+        })
+    },
     
     acceptTerms: async (uuid) => {
         return fetch(URL + `/${uuid.trim()}/accept`, {

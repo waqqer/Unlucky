@@ -14,7 +14,7 @@ const OutModal = (props) => {
         onError
     } = props
 
-    const { spm, user, account } = useContext(AccountContext)
+    const { user, account } = useContext(AccountContext)
 
     const [amount, setAmount] = useState(10)
     const [card, setCard] = useState(null)

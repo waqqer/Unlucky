@@ -13,13 +13,27 @@ export const AccountProvider = ({ children }) => {
     const [isLoaded, setIsLoaded] = useState(false)
 
     const [account, setAccount] = useState(null)
+
     const [badges, setBadges] = useState([])
+    const [currentBadge, setCurrentBadge] = useState(null)
 
     const updateBadges = useCallback(() => {
         if(!spwUser)
             return
         
-        UserApi.getBadges(spwUser.minecraftUUID).then(data => setBadges(data))
+        UserApi.getBadges(spwUser.minecraftUUID)
+            .then(data => {
+                setCurrentBadge(data.current || null)
+                setBadges(data.list || [])
+            })
+    }, [spwUser])
+
+    const changeCurrentBadge = useCallback((name) => {
+        if (!spwUser)
+            return
+
+        setCurrentBadge(name)
+        UserApi.setCurrentBadge(spwUser.minecraftUUID, name)
     }, [spwUser])
 
     useEffect(() => {
@@ -132,6 +146,8 @@ export const AccountProvider = ({ children }) => {
         isLoaded,
         updateUser,
         badges,
+        currentBadge,
+        changeCurrentBadge,
         updateBadges,
         changeBalance,
         getBalance,

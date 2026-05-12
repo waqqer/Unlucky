@@ -15,11 +15,10 @@
 }
 
 .nickname {
+    display: flex;
+    line-height: 32px;
+    gap: 10px;
     transition: opacity 0.2s ease;
-}
-
-.nickname:hover {
-    opacity: 0.7;
 }
 
 .uuid {

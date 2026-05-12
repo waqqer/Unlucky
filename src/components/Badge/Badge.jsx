@@ -1,18 +1,21 @@
-import { memo, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { BADGES_CONFIG } from "@/shared/configs"
+import { AccountContext } from "@/context/AccountContext"
 import styles from "./Badge.module.css"
 
 const Badge = (props) => {
     const {
-        name = "slots"
+        name = ""
     } = props
 
     const {
-        badges,
         colors,
         null_badge_icon
     } = BADGES_CONFIG
 
+    const { changeCurrentBadge, currentBadge, badges } = useContext(AccountContext)
+
+    const [canChange, setCanChange] = useState(true)
     const [badge, setBadge] = useState({
         title: "Badge",
         descripton: "...",
@@ -21,13 +24,24 @@ const Badge = (props) => {
     })
 
     useEffect(() => {
-        const b = badges[name]
+        const b = BADGES_CONFIG.badges[name]
         if (b)
             setBadge(b)
-    }, [])
+    }, [name, badges, currentBadge])
+
+    const handleClick = useCallback(() => {
+        if(canChange) {
+            changeCurrentBadge(name)
+
+            setCanChange(false)
+            setTimeout(() => {
+                setCanChange(true)
+            }, 3000)
+        }
+    }, [name, canChange])
 
     return (
-        <div className={`${styles.badge}`} style={{ "--color": `${colors[badge.quality]}` }}>
+        <div className={`${styles.badge} ${currentBadge === name && styles.active}`} style={{ "--color": `${colors[badge.quality]}` }}>
             <div className={styles.info}>
                 <div className={styles.title}>
                     <h3>{badge.title}</h3>
@@ -43,11 +57,12 @@ const Badge = (props) => {
                 alt="badge icon"
                 draggable={false}
                 loading="lazy"
-                width={40}
-                height={40}
+                width={44}
+                height={44}
+                onClick={handleClick}
             />
         </div>
     )
 }
 
-export default memo(Badge)
+export default Badge

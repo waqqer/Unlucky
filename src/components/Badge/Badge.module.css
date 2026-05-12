@@ -1,5 +1,6 @@
 .badge {
     position: relative;
+    transition: all 0.15s ease;
 }
 
 .icon {
@@ -8,8 +9,8 @@
 }
 
 .badge:hover .icon {
-    filter: brightness(140%);
-    transform: translateY(-2px) scale(105%, 105%);
+    filter: brightness(110%);
+    transform: translateY(-2px);
 }
 
 .badge:hover .info {
@@ -18,19 +19,31 @@
     transform: translateY(0px);
 }
 
+.badge:active .icon {
+    filter: brightness(70%);
+    transform: translateY(3px);
+}
+
+.active .icon {
+    background-color: rgba(0, 0, 0, 0.363);
+    border-radius: 10px;
+    padding: 2px;
+}
+
 .info {
-    z-index: 2;
+    z-index: 3;
     opacity: 0;
     position: absolute;
 
     visibility: hidden;
+    pointer-events: none;
 
     display: flex;
     flex-direction: column;
     gap: 5px;
 
     top: -150%;
-    left: -25%;
+    left: -15%;
 
     border-radius: 10px;
 
