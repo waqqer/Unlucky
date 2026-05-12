@@ -14,8 +14,6 @@
     justify-content: start;
 
     gap: 20px;
-
-    transition: all 1s ease;
 }
 
 .title {
@@ -47,6 +45,13 @@
 @media (max-width: 1000px) {
     .top {
         width: 45%;
+        padding: 15px;
+        margin: 8px;
+    }
+
+    .title {
+        font-size: 1.3rem;
+        width: 95%;
     }
 
     .list {
@@ -58,5 +63,21 @@
 @media (max-width: 630px) {
     .top {
         width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border-radius: 15px;
+    }
+
+    .title {
+        font-size: 1.2rem;
+        width: 100%;
+        padding-bottom: 8px;
+    }
+
+    .list {
+        max-height: 350px;
+        min-height: 350px;
+        gap: 8px;
+        margin-top: 0;
     }
 }

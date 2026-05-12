@@ -1,4 +1,4 @@
-import { memo } from "react"
+import { memo, useEffect, useState } from "react"
 import useHead from "@/hooks/useHead"
 import styles from "./LeaderboardItem.module.css"
 import Badgedeco from "../BadgeDeco"
@@ -19,8 +19,26 @@ const LeaderboardItem = (props) => {
 
     const head = useHead(uuid)
 
+    const [isMobile, setIsMobile] = useState(false)
+    const [isTablet, setIsTablet] = useState(false)
+
+    useEffect(() => {
+        const checkSize = () => {
+            const width = window.innerWidth
+            setIsMobile(width <= 630)
+            setIsTablet(width <= 1000 && width > 630)
+        }
+
+        checkSize()
+        window.addEventListener("resize", checkSize)
+        return () => window.removeEventListener("resize", checkSize)
+    }, [])
+
+    const iconSize = isMobile ? 32 : isTablet ? 36 : 40
+    const badgeClassName = isMobile ? "" : "mobile-hide"
+
     return (
-        <div key={id} className={`${styles.leader} ${top_styles[id] || ""}`}>
+        <div key={id} className={`${styles.leader} ${top_styles[id] || ""} ${isMobile ? styles.mobile : ""}`}>
             <div className={styles.info}>
                 <h2 className={styles.id}>#{id}</h2>
                 <div className={`${styles.user}`}>
@@ -29,10 +47,13 @@ const LeaderboardItem = (props) => {
                         alt="leader head icon" 
                         draggable={false}
                         loading="lazy"
-                        width={40}
-                        height={40}
+                        width={iconSize}
+                        height={iconSize}
                     />
-                    <h2 className={styles.name}>{name || "noname"} <Badgedeco uuid={uuid} className="mobile-hide" /> </h2>
+                    <h2 className={styles.name}>
+                        {name || "noname"}
+                        <Badgedeco uuid={uuid} className={badgeClassName} size={isMobile ? 16 : 20} />
+                    </h2>
                 </div>
             </div>
 

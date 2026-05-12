@@ -122,3 +122,68 @@
         color: rgb(212, 132, 13);
     }
 }
+
+@media (max-width: 1000px) {
+    .leader {
+        padding: 12px;
+    }
+
+    .info {
+        gap: 15px;
+    }
+
+    .name {
+        font-size: 1.1rem;
+        max-width: 200px;
+    }
+
+    .value {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 630px) {
+    .leader {
+        padding: 10px;
+    }
+
+    .leader.mobile {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .info {
+        gap: 10px;
+        width: 100%;
+    }
+
+    .id {
+        font-size: 0.9rem;
+    }
+
+    .user {
+        justify-content: center;
+    }
+
+    .user img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .name {
+        font-size: 0.95rem;
+        max-width: 180px;
+        gap: 3px;
+        justify-content: center;
+    }
+
+    .value {
+        font-size: 0.9rem;
+        justify-content: center;
+    }
+
+    .value i {
+        font-size: 1rem;
+    }
+}
