@@ -50,12 +50,21 @@ export const BADGES_CONFIG = {
             icon: RICH_BADGE,
             quality: "EPIC"
         },
+
+        "tester": {
+            title: "Бета-тестер",
+            descripton: "Даётся за участие в бета-тесте Unlucky",
+            icon: RICH_BADGE,
+            quality: "LIMITED"
+        },
     },
 
     colors: {
-        "BASIC": 'rgb(122, 122, 122)',
-        "GOOD": '#6ebd4f',
-        "EPIC": '#df46d2'
+        "BASIC": '#677751',
+        "GOOD": '#57b0c0',
+        "EPIC": '#df46d2',
+        "LEGENDARY": '#ffa048',
+        "LIMITED": '#eb3a3a',
     },
 
     null_badge_icon: NULL_BADGE
