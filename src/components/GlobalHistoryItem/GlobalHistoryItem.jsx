@@ -1,6 +1,7 @@
 import styles from "./GlobalHistoryItem.module.css"
 import useHead from "@/hooks/useHead"
 import { useEffect, useState } from "react"
+import BadgeDeco from "../BadgeDeco";
 
 const GlobalHistoryItem = (props) => {
     const {
@@ -40,7 +41,7 @@ const GlobalHistoryItem = (props) => {
                 draggable={false}
             />
             <div className={styles.data}>
-                <h1 className={styles.username}>{username}</h1>
+                <h1 className={styles.username}>{username} <BadgeDeco uuid={userUUID} size={20} /></h1>
                 <h1 className={styles["game-name"]}>{title}</h1>
             </div>
             <div className={styles.result}>
