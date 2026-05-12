@@ -1,15 +1,19 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./BadgesSection.module.css"
 import Badge from "@/components/Badge"
 
 const BadgesSection = () => {
-    const { account } = useContext(AccountContext)
+    const { badges, updateBadges } = useContext(AccountContext)
+
+    useEffect(() => {
+        updateBadges()
+    }, [])
 
     return (
         <div className={styles["badge-section"]}>
             <div className={styles.box}>
-                {account.badges.map((b, i) => <Badge key={i} name={b} />)}
+                {badges.map((b, i) => <Badge key={i} name={b} />)}
             </div>
         </div>
     )

@@ -6,6 +6,7 @@ import SLOTS_BADGE from "@/shared/images/badges/slots_badge.webp"
 import WINNER_BADGE from "@/shared/images/badges/winner_badge.webp"
 import RICH_BADGE from "@/shared/images/badges/rich_badge.webp"
 import LUCKY_BADGE from "@/shared/images/badges/lucky_badge.webp"
+import TESTER_BADGE from "@/shared/images/badges/tester_badge.webp"
 
 export const BADGES_CONFIG = {
     badges: {
@@ -54,7 +55,7 @@ export const BADGES_CONFIG = {
         "tester": {
             title: "Бета-тестер",
             descripton: "Даётся за участие в бета-тесте Unlucky",
-            icon: RICH_BADGE,
+            icon: TESTER_BADGE,
             quality: "LIMITED"
         },
     },

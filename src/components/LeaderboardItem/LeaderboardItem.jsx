@@ -2,6 +2,12 @@ import { memo } from "react"
 import useHead from "@/hooks/useHead"
 import styles from "./LeaderboardItem.module.css"
 
+const top_styles = {
+    1: styles.first,
+    2: styles.second,
+    3: styles.third
+}
+
 const LeaderboardItem = (props) => {
     const {
         id,
@@ -13,7 +19,7 @@ const LeaderboardItem = (props) => {
     const head = useHead(uuid)
 
     return (
-        <div key={id} className={`${styles.leader} ${id === 1 && styles.first}`}>
+        <div key={id} className={`${styles.leader} ${top_styles[id] || ""}`}>
             <div className={styles.info}>
                 <h2 className={styles.id}>#{id}</h2>
                 <div className={`${styles.user}`}>

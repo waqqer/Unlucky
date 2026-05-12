@@ -2,7 +2,9 @@ import UserProfile from "@/widgets/UserProfile"
 import styles from "./TopPage.module.css"
 import Leaderboard from "@/components/Leaderboard";
 import { useEffect, useState } from "react";
-import TopApi from "../../api/top";
+import TopApi from "@/api/top";
+import Button from "@/components/Button"
+import { useNavigate } from "react-router";
 
 const limits = {
     byGames: 20,
@@ -21,11 +23,22 @@ const TopPage = () => {
         TopApi.getByWins(limits.byWins).then(d => setWins(d))
     }, [])
 
+    const nav = useNavigate()
+
+    const handleGoHome = () => {
+        nav('/')
+    }
+
     return (
         <>
             <header>
                 <UserProfile />
             </header>
+
+            <Button className={`${styles["home-btn"]} mobile-hide back-style`} onClick={handleGoHome}>
+                <i className="fa-solid fa-arrow-left"></i>
+                <span>Главная</span>
+            </Button>
 
             <main className={styles.main}>
                 <h1 className={styles.title}>Рейтинг</h1>

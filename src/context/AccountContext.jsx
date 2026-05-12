@@ -11,7 +11,16 @@ export const AccountProvider = ({ children }) => {
     const head = useHead(spwUser)
 
     const [isLoaded, setIsLoaded] = useState(false)
+
     const [account, setAccount] = useState(null)
+    const [badges, setBadges] = useState([])
+
+    const updateBadges = useCallback(() => {
+        if(!spwUser)
+            return
+        
+        UserApi.getBadges(spwUser.minecraftUUID).then(data => setBadges(data))
+    }, [spwUser])
 
     useEffect(() => {
         if (!spwUser)
@@ -25,6 +34,8 @@ export const AccountProvider = ({ children }) => {
             .catch(err => {
                 setIsLoaded(false)
             })
+
+        updateBadges()
     }, [spwUser])
 
     const updateUser = useCallback((newData) => {
@@ -120,6 +131,8 @@ export const AccountProvider = ({ children }) => {
         account,
         isLoaded,
         updateUser,
+        badges,
+        updateBadges,
         changeBalance,
         getBalance,
         refreshAccount,

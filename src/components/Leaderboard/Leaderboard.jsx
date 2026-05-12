@@ -13,7 +13,7 @@ const Leaderboard = (props) => {
             <h1 className={styles.title}>{title}</h1>
             <div className={styles.list}>
                 {data.length > 0 && data.map((d, i) => 
-                    <Leaderboarditem id={i + 1} uuid={d.uuid} name={d.name} value={d.value}/>
+                    <Leaderboarditem key={i} id={i + 1} uuid={d.uuid} name={d.name} value={d.value}/>
                 )}
             </div>
         </div>

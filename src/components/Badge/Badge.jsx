@@ -21,7 +21,6 @@ const Badge = (props) => {
     })
 
     useEffect(() => {
-        console.log(badges[name])
         const b = badges[name]
         if (b)
             setBadge(b)
@@ -44,8 +43,8 @@ const Badge = (props) => {
                 alt="badge icon"
                 draggable={false}
                 loading="lazy"
-                width={48}
-                height={48}
+                width={40}
+                height={40}
             />
         </div>
     )

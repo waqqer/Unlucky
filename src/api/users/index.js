@@ -47,6 +47,11 @@ const UserApi = {
         return fetch(URL + `/${uuid.trim()}/cards`)
                 .then(res => res.json())
     },
+
+    getBadges: async (uuid) => {
+        return fetch(URL + `/${uuid.trim()}/badges`)
+                .then(res => res.json())
+    },
     
     acceptTerms: async (uuid) => {
         return fetch(URL + `/${uuid.trim()}/accept`, {
