@@ -52,7 +52,7 @@ const LeaderboardItem = (props) => {
                     />
                     <h2 className={styles.name}>
                         {name || "noname"}
-                        <Badgedeco uuid={uuid} className={badgeClassName} size={isMobile ? 16 : 20} />
+                        <Badgedeco uuid={uuid} className={badgeClassName} size={isMobile ? 20 : 24} />
                     </h2>
                 </div>
             </div>
