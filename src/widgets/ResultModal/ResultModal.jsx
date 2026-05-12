@@ -1,7 +1,6 @@
 import { memo } from "react"
-import ModalExitButton from "@/components/ModalExitButton"
 import styles from "./ResultModal.module.css"
-import Button from "../../components/Button/Button"
+import Button from "@/components/Button/Button"
 
 const ResultModal = (props) => {
     const {
