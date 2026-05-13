@@ -11,6 +11,8 @@
     padding: 15px;
 
     transition: all 0.2s ease;
+
+    width: 100%;
 }
 
 .leader:hover {
@@ -35,14 +37,14 @@
 .user {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .name {
     font-size: 1.25rem;
     font-weight: normal;
     height: 100%;
-    max-width: 300px;
+    max-width: 10vw;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -125,37 +127,21 @@
 
 @media (max-width: 1000px) {
     .leader {
-        padding: 12px;
-    }
-
-    .info {
-        gap: 15px;
-    }
-
-    .name {
-        font-size: 1.1rem;
-        max-width: 200px;
-    }
-
-    .value {
-        font-size: 0.95rem;
-    }
-}
-
-@media (max-width: 630px) {
-    .leader {
         padding: 10px;
     }
 
+    .user {
+        gap: 4px;
+    }
+
     .leader.mobile {
-        flex-direction: column;
         gap: 10px;
         text-align: center;
+        justify-content: space-between;
     }
 
     .info {
         gap: 10px;
-        width: 100%;
     }
 
     .id {
@@ -179,7 +165,7 @@
     }
 
     .value {
-        font-size: 0.9rem;
+        font-size: 1.15rem;
         justify-content: center;
     }
 

@@ -34,6 +34,9 @@ const BadgeDeco = (props) => {
                 src={icon}
                 alt="user badge"
                 className={`${styles.icon} ${className}`}
+                style={{
+                    "--size": size
+                }}
                 width={size}
                 height={size}
                 draggable={false}

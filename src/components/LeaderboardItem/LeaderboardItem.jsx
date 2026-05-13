@@ -35,10 +35,9 @@ const LeaderboardItem = (props) => {
     }, [])
 
     const iconSize = isMobile ? 32 : isTablet ? 36 : 40
-    const badgeClassName = isMobile ? "" : "mobile-hide"
 
     return (
-        <div key={id} className={`${styles.leader} ${top_styles[id] || ""} ${isMobile ? styles.mobile : ""}`}>
+        <div key={id} className={`${styles.leader} ${top_styles[id] || ""} ${isTablet || isMobile ? styles.mobile : ""}`}>
             <div className={styles.info}>
                 <h2 className={styles.id}>#{id}</h2>
                 <div className={`${styles.user}`}>
@@ -52,8 +51,9 @@ const LeaderboardItem = (props) => {
                     />
                     <h2 className={styles.name}>
                         {name || "noname"}
-                        <Badgedeco uuid={uuid} className={badgeClassName} size={isMobile ? 20 : 24} />
                     </h2>
+
+                    <Badgedeco uuid={uuid} className={"mobile-hide"} size={isMobile || isTablet ? 8 : 24} />
                 </div>
             </div>
 

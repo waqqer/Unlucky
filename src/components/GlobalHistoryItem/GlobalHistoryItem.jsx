@@ -41,7 +41,10 @@ const GlobalHistoryItem = (props) => {
                 draggable={false}
             />
             <div className={styles.data}>
-                <h1 className={styles.username}>{username} <BadgeDeco uuid={userUUID} size={20} /></h1>
+                <div className={styles.user}>
+                    <h1 className={styles.username}>{username}</h1>
+                    <BadgeDeco uuid={userUUID} size={20} />
+                </div>
                 <h1 className={styles["game-name"]}>{title}</h1>
             </div>
             <div className={styles.result}>

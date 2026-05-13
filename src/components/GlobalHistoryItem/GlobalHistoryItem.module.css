@@ -57,6 +57,8 @@
     font-size: 14px;
     font-weight: 600;
     margin: 0;
+
+    max-width: 10vw;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -64,6 +66,12 @@
     display: flex;
     gap: 5px;
     line-height: 20px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 5px
 }
 
 .game-name {
@@ -89,6 +97,26 @@
     font-size: 14px;
     font-weight: 700;
     margin: 0;
+}
+
+@media (max-width: 1200px) {
+    .result-text {
+        font-size: 10px;
+    }
+
+    .amount {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 1050px) {
+    .result-text {
+        display: none;
+    }
+
+    .amount {
+        font-size: 10px;
+    }
 }
 
 .amount::after {

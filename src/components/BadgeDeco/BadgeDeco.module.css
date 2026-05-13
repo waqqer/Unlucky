@@ -1,3 +1,5 @@
 .icon {
     image-rendering: pixelated;
+    width: var(--size) !important;
+    height: var(--size) !important;
 }

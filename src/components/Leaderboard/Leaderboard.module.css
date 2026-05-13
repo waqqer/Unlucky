@@ -34,6 +34,7 @@
     min-height: 650px;
 
     overflow-y: auto;
+    overflow-x: hidden;
 
     display: flex;
     flex-direction: column;
@@ -44,7 +45,7 @@
 
 @media (max-width: 1000px) {
     .top {
-        width: 45%;
+        width: 1000%;
         padding: 15px;
         margin: 8px;
     }
@@ -62,7 +63,6 @@
 
 @media (max-width: 630px) {
     .top {
-        width: 100%;
         padding: 12px;
         margin: 5px 0;
         border-radius: 15px;
