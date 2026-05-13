@@ -3,3 +3,54 @@
     width: var(--size) !important;
     height: var(--size) !important;
 }
+
+.tooltip {
+    position: fixed;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-radius: 10px;
+    background-color: rgba(31, 31, 31, 0.7);
+    transform: translateY(10px);
+    max-width: 200px;
+    min-width: 200px;
+    transition: all 0.2s ease;
+}
+
+.tooltipVisible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0px);
+}
+
+.title {
+    width: 100%;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background: var(--color);
+    background: linear-gradient(30deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 30%, rgba(255, 255, 255, 0.3) 63%, rgba(255, 255, 255, 0) 100%), var(--color);
+    padding-inline: 10px;
+    padding-block: 2px;
+}
+
+.title h3 {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.desc {
+    margin-bottom: 5px;
+    padding-inline: 10px;
+    text-wrap: balance;
+}
+
+.desc p {
+    letter-spacing: 1.1px;
+    opacity: 0.8;
+    font-weight: lighter;
+    font-size: 0.65rem;
+}
