@@ -40,7 +40,7 @@ const Badge = (props) => {
             setCanChange(false)
             setTimeout(() => {
                 setCanChange(true)
-            }, 5000)
+            }, 2000)
         }
     }, [name, canChange])
 

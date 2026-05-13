@@ -56,6 +56,19 @@
     max-width: 250px;
 }
 
+.home {
+    background-color: transparent;
+    border: 3px solid white;
+    color: white;
+
+    width: 200px;
+}
+
+.home:hover {
+    color: black;
+    background-color: white;
+}
+
 @media (max-width: 630px) {
     .main h1 {
         font-size: 1.2rem;

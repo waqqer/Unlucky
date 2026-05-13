@@ -27,7 +27,7 @@ const ProfileInfo = (props) => {
                 className={styles.head}
             />
             <div>
-                <h1 className={styles.nickname}>{user?.username ?? "Username"} <BadgeDeco /></h1>
+                <h1 className={styles.nickname}>{user?.username ?? "Username"} <BadgeDeco info={false} /></h1>
                 {isLoaded === true ?
                     <p className={styles.uuid}>{`ID: ${account.id}`}</p> :
                     <Placeholder />

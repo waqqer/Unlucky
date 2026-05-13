@@ -43,6 +43,7 @@ function App() {
         <Route path='/miner' element={<MinerGamePage />} />
 
         <Route path='/top' element={<TopPage />} />
+        <Route path='/terms' element={<TermsPage preview={true}/>} />
       </Routes>
     </HashRouter>
   )

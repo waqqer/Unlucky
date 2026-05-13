@@ -35,8 +35,31 @@
 .btn-box {
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 10px;
+}
+
+.buttons {
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.terms {
+    opacity: 0.3;
+    text-decoration: none;
+    font-weight: lighter;
+    font-size: 0.8rem;
+
+    transition: all 0.3s ease;
+}
+
+.terms:hover {
+    text-decoration: underline dashed; 
+    opacity: 0.5;
 }
 
 @media (max-width: 630px) {
@@ -48,7 +71,7 @@
         margin-right: 1px;
     }
 
-    .btn-box {
+    .buttons {
         flex-direction: column;
     }
 

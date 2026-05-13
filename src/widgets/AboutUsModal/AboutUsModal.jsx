@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useState } from "react"
 import useSPW from "@/hooks/useSPW"
 import styles from "./AboutUsModal.module.css"
 import Button from "../../components/Button/Button"
+import { Link } from "react-router";
 
 const AboutUsModal = (props) => {
     const {
@@ -41,31 +42,34 @@ const AboutUsModal = (props) => {
             </p>
 
             <div className={styles["btn-box"]}>
-                {spm !== null ? (
-                    <>
-                        <Button onClick={openTelegram} className={`${styles["btn"]} ${styles["telegram"]}`} >
-                            <i className="fab fa-telegram-plane"></i>
-                            Telegram
-                        </Button>
+                <div className={styles.buttons}>
+                    {spm !== null ? (
+                        <>
+                            <Button onClick={openTelegram} className={`${styles["btn"]} ${styles["telegram"]}`} >
+                                <i className="fab fa-telegram-plane"></i>
+                                Telegram
+                            </Button>
 
-                        <Button onClick={openYT} className={`${styles["btn"]} ${styles["yt"]}`} >
-                            <i className="fab fa-youtube"></i>
-                            YouTube
-                        </Button>
-                    </>
-                ) : (
-                    <>
-                        <LinkButton to="https://t.me/shadowmonya" className={`${styles["btn"]} ${styles["telegram"]}`} external>
-                            <i className="fab fa-telegram-plane"></i>
-                            Telegram
-                        </LinkButton>
+                            <Button onClick={openYT} className={`${styles["btn"]} ${styles["yt"]}`} >
+                                <i className="fab fa-youtube"></i>
+                                YouTube
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <LinkButton to="https://t.me/shadowmonya" className={`${styles["btn"]} ${styles["telegram"]}`} external>
+                                <i className="fab fa-telegram-plane"></i>
+                                Telegram
+                            </LinkButton>
 
-                        <LinkButton to="https://youtube.com/@ShadowMonya" className={`${styles["btn"]} ${styles["yt"]}`} external>
-                            <i className="fab fa-youtube"></i>
-                            YouTube
-                        </LinkButton>
-                    </>
-                )}
+                            <LinkButton to="https://youtube.com/@ShadowMonya" className={`${styles["btn"]} ${styles["yt"]}`} external>
+                                <i className="fab fa-youtube"></i>
+                                YouTube
+                            </LinkButton>
+                        </>
+                    )}
+                </div>
+                <Link to="/terms" className={styles.terms}>Условия пользования Unlucky</Link>
             </div>
         </>
     )

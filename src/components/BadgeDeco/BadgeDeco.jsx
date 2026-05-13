@@ -9,7 +9,8 @@ const BadgeDeco = (props) => {
     const {
         uuid,
         size = 32,
-        className = ""
+        className = "",
+        info = true
     } = props
 
     const [badgeName, setBadgeName] = useState(null)
@@ -91,7 +92,6 @@ const BadgeDeco = (props) => {
                     src={icon}
                     alt="user badge"
                     className={`${styles.icon} ${className}`}
-                    style={{ "--size": size }}
                     width={size}
                     height={size}
                     draggable={false}
@@ -100,7 +100,7 @@ const BadgeDeco = (props) => {
                     onMouseLeave={hideTooltip}
                 />
             )}
-            {show && badgeInfo && createPortal(
+            {show && badgeInfo && info && createPortal(
                 <div
                     className={`${styles.tooltip} ${visible ? styles.tooltipVisible : ""}`}
                     style={{
