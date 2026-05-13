@@ -33,7 +33,7 @@ export const AccountProvider = ({ children }) => {
             return
 
         setCurrentBadge(name)
-        UserApi.setCurrentBadge(spwUser.minecraftUUID, name)
+        UserApi.setCurrentBadge(spwUser.minecraftUUID, name || "")
     }, [spwUser])
 
     useEffect(() => {

@@ -30,8 +30,12 @@ const Badge = (props) => {
     }, [name, badges, currentBadge])
 
     const handleClick = useCallback(() => {
-        if(canChange) {
-            changeCurrentBadge(name)
+        if (canChange) {
+            if (currentBadge === name) {
+                changeCurrentBadge(null)
+            } else {
+                changeCurrentBadge(name)
+            }
 
             setCanChange(false)
             setTimeout(() => {
