@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./AutoReroll.module.css"
 
 const AutoReroll = (props) => {
@@ -23,4 +24,4 @@ const AutoReroll = (props) => {
     )
 }
 
-export default AutoReroll
+export default memo(AutoReroll)

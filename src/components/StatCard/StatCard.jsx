@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./StatCard.module.css"
 
 const StatCard = (props) => {
@@ -22,4 +23,4 @@ const StatCard = (props) => {
     )
 }
 
-export default StatCard
+export default memo(StatCard)

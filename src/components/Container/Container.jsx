@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./Container.module.css"
 
 const Container = (props) => {
@@ -15,4 +16,4 @@ const Container = (props) => {
     )
 }
 
-export default Container
+export default memo(Container)

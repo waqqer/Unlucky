@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { memo, useContext, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./BadgesSection.module.css"
 import Badge from "@/components/Badge"
@@ -19,4 +19,4 @@ const BadgesSection = () => {
     )
 }
 
-export default BadgesSection
+export default memo(BadgesSection)

@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./DemoMode.module.css"
 
 const DemoMode = (props) => {
@@ -23,4 +24,4 @@ const DemoMode = (props) => {
     )
 }
 
-export default DemoMode
+export default memo(DemoMode)

@@ -1,6 +1,6 @@
 import styles from "./MinerField.module.css"
 import { MINER_CONFIG } from "@/shared/configs"
-import { useEffect, useMemo, useRef } from "react"
+import { memo, useEffect, useMemo, useRef } from "react"
 import minerBackground from "@/shared/images/games/miner/background.webp"
 
 const MinerField = (props) => {
@@ -1571,4 +1571,4 @@ const MinerField = (props) => {
     )
 }
 
-export default MinerField
+export default memo(MinerField)

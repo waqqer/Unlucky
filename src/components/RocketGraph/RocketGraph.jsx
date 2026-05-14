@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useState } from "react"
+import { memo, useRef, useEffect, useCallback, useState } from "react"
 import styles from "./RocketGraph.module.css"
 import rocketImg from "@/shared/images/games/rocket/rocket.webp"
 import { ROCKET_CONFIG } from "@/shared/configs"
@@ -433,4 +433,4 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
     )
 }
 
-export default RocketGraph
+export default memo(RocketGraph)

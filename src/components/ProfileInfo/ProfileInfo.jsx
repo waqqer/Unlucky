@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { memo, useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import Placeholder from "../Placeholder"
 import styles from "./ProfileInfo.module.css"
@@ -37,4 +37,4 @@ const ProfileInfo = (props) => {
     )
 }
 
-export default ProfileInfo
+export default memo(ProfileInfo)

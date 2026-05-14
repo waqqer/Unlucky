@@ -20,4 +20,4 @@ const Leaderboard = (props) => {
     )
 }
 
-export default Leaderboard
+export default memo(Leaderboard)

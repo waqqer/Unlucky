@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./HistoryItem.module.css"
 
 const HistoryItem = (props) => {
@@ -73,4 +74,4 @@ const HistoryItem = (props) => {
     )
 }
 
-export default HistoryItem
+export default memo(HistoryItem)

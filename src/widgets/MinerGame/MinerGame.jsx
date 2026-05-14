@@ -3,7 +3,7 @@ import MinerField from "@/components/MinerField"
 import { MINER_CONFIG } from "@/shared/configs"
 import BetInput from "@/components/BetInput"
 import { MinerApi } from "@/api/game"
-import { useCallback, useState, useContext, useRef, useEffect } from "react"
+import { memo, useCallback, useState, useContext, useRef, useEffect } from "react"
 import BetPresets from "@/components/BetPresets"
 import Button from "@/components/Button"
 import VictoryScreen from "@/widgets/VictoryScreen"
@@ -169,4 +169,4 @@ const MinerGame = (props) => {
     )
 }
 
-export default MinerGame
+export default memo(MinerGame)

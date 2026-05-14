@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./Title.module.css"
 
 const Title = (props) => {
@@ -13,4 +14,4 @@ const Title = (props) => {
     )
 }
 
-export default Title
+export default memo(Title)

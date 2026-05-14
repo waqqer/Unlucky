@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { memo, useState, useEffect, useCallback } from "react"
 import StatsGroup from "@/components/StatsGroup"
 import GStatsApi from "@/api/g_stats"
 import Placeholder from "@/components/Placeholder"
@@ -67,4 +67,4 @@ const GamesStats = () => {
     )
 }
 
-export default GamesStats
+export default memo(GamesStats)

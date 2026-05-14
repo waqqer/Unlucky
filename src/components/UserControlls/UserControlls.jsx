@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { memo, useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import ProfileButton from "../ProfileButton"
 import styles from "./UserControlls.module.css"
@@ -37,4 +37,4 @@ const UserControlls = (props) => {
     )
 }
 
-export default UserControlls
+export default memo(UserControlls)

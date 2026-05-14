@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./StatsGroup.module.css"
 
 const StatsGroup = (props) => {
@@ -17,4 +18,4 @@ const StatsGroup = (props) => {
     )
 }
 
-export default StatsGroup
+export default memo(StatsGroup)

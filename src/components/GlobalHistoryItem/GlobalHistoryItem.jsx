@@ -1,6 +1,6 @@
 import styles from "./GlobalHistoryItem.module.css"
 import useHead from "@/hooks/useHead"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import BadgeDeco from "../BadgeDeco";
 
 const GlobalHistoryItem = (props) => {
@@ -59,4 +59,4 @@ const GlobalHistoryItem = (props) => {
     )
 }
 
-export default GlobalHistoryItem
+export default memo(GlobalHistoryItem)

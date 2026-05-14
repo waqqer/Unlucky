@@ -1,5 +1,5 @@
 import ModalExitButton from "@/components/ModalExitButton"
-import { useContext, useState, useCallback, useEffect } from "react"
+import { memo, useContext, useState, useCallback, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import Button from "@/components/Button"
 import styles from "./OutModal.module.css"
@@ -146,4 +146,4 @@ const OutModal = (props) => {
     )
 }
 
-export default OutModal
+export default memo(OutModal)

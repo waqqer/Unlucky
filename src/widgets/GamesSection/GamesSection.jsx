@@ -1,6 +1,6 @@
 import GamesList from "@/components/GamesList"
 import Container from "@/components/Container"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import styles from "./GamesSection.module.css"
 
 const messages = [
@@ -31,4 +31,4 @@ const GamesSection = () => {
     )
 }
 
-export default GamesSection
+export default memo(GamesSection)

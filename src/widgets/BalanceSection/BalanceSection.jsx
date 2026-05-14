@@ -1,7 +1,7 @@
 import Button from "@/components/Button"
 import Modal from 'react-modal'
 import Placeholder from "@/components/Placeholder"
-import { useCallback, useContext, useState } from "react"
+import { memo, useCallback, useContext, useState } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import PaymentModal from "../PaymentModal"
 import styles from "./BalanceSection.module.css"
@@ -129,4 +129,4 @@ const BalanceSection = (props) => {
     )
 }
 
-export default BalanceSection
+export default memo(BalanceSection)

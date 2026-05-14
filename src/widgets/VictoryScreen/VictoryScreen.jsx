@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, useState } from "react"
+import { memo, useEffect, useCallback, useRef, useState } from "react"
 import VictoryVideo from "../VictoryVideo"
 import styles from "./VictoryScreen.module.css"
 
@@ -141,4 +141,4 @@ const VictoryScreen = (props) => {
     )
 }
 
-export default VictoryScreen
+export default memo(VictoryScreen)

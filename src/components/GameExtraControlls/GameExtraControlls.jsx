@@ -1,3 +1,4 @@
+import { memo } from "react"
 import Button from "@/components/Button"
 import LinkButton from "@/components/LinkButton"
 import styles from "./GameExtraControlls.module.css"
@@ -18,4 +19,4 @@ const GameExtraControlls = (props) => {
 
 }
 
-export default GameExtraControlls
+export default memo(GameExtraControlls)

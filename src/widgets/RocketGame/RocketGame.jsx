@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback, useRef, useEffect } from "react"
+import { memo, useState, useContext, useCallback, useRef, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import { RocketApi } from "@/api/game"
 import { useSyncRefs, useGameSounds } from "@/hooks"
@@ -346,4 +346,4 @@ const RocketGame = (props) => {
     )
 }
 
-export default RocketGame
+export default memo(RocketGame)

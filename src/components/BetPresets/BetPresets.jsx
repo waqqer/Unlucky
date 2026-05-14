@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./BetPresets.module.css"
 
 const BetPresets = (props) => {
@@ -24,4 +25,4 @@ const BetPresets = (props) => {
     )
 }
 
-export default BetPresets
+export default memo(BetPresets)

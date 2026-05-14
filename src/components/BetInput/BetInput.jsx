@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./BetInput.module.css"
 
 const BetInput = (props) => {
@@ -51,4 +52,4 @@ const BetInput = (props) => {
     )
 }
 
-export default BetInput
+export default memo(BetInput)

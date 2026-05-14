@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styles from "./AdminInfoBlock.module.css"
 
 const AdminInfoBlock = (props) => {
@@ -13,4 +14,4 @@ const AdminInfoBlock = (props) => {
     )
 }
 
-export default AdminInfoBlock
+export default memo(AdminInfoBlock)

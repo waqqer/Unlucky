@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react"
+import { memo, useRef, useState, useCallback } from "react"
 import diamondImg from "@/shared/images/games/slots/diamond.webp"
 import goldImg from "@/shared/images/games/slots/gold.webp"
 import ironImg from "@/shared/images/games/slots/iron.webp"
@@ -71,4 +71,4 @@ const SlotReel = (props) => {
     )
 }
 
-export default SlotReel
+export default memo(SlotReel)

@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback, useRef, useEffect } from "react"
+import { memo, useState, useContext, useCallback, useRef, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import { SlotsApi } from "@/api/game"
 import { useSyncRefs } from "@/hooks"
@@ -358,4 +358,4 @@ const SlotMachineGame = (props) => {
     )
 }
 
-export default SlotMachineGame
+export default memo(SlotMachineGame)

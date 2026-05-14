@@ -1,6 +1,6 @@
 import ModalExitButton from "@/components/ModalExitButton"
 import Button from "@/components/Button"
-import { useCallback, useState, useContext } from "react"
+import { memo, useCallback, useState, useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./PaymentModal.module.css"
 import PaymentApi from "@/api/payments"
@@ -93,4 +93,4 @@ const PaymentModal = (props) => {
     )
 }
 
-export default PaymentModal
+export default memo(PaymentModal)

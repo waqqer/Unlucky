@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, forwardRef } from "react"
+import { memo, useState, useEffect, useCallback, forwardRef } from "react"
 import HistoryApi from "@/api/history"
 import Title from "@/components/Title"
 import GlobalHistoryList from "@/components/GlobalHistoryList"
@@ -42,4 +42,4 @@ const GameHistory = forwardRef((props, ref) => {
     )
 })
 
-export default GameHistory
+export default memo(GameHistory)

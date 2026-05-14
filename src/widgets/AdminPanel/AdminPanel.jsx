@@ -1,5 +1,6 @@
 import Container from "@/components/Container"
 import Button from "@/components/Button"
+import { memo } from "react"
 import { useNavigate } from "react-router"
 import OnlineStats from "@/widgets/OnlineStats"
 import ArStats from "@/widgets/ArStats"
@@ -35,4 +36,4 @@ const AdminPanel = () => {
     )
 }
 
-export default AdminPanel
+export default memo(AdminPanel)

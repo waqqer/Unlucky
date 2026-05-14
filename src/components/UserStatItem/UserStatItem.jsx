@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./UserStatItem.module.css"
 
 const UserStatItem = (props) => {
@@ -18,4 +19,4 @@ const UserStatItem = (props) => {
     )
 }
 
-export default UserStatItem
+export default memo(UserStatItem)

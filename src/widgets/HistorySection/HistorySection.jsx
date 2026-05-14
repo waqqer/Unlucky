@@ -1,7 +1,7 @@
 import HistoryItem from "@/components/HistoryItem"
 import HistoryList from "@/components/HistoryList"
 import Button from "@/components/Button"
-import { useState, useCallback, useEffect, useContext } from "react"
+import { memo, useState, useCallback, useEffect, useContext } from "react"
 import Modal from 'react-modal'
 import HistoryApi from "@/api/history"
 import { AccountContext } from "@/context/AccountContext"
@@ -67,4 +67,4 @@ const HistorySection = (props) => {
     )
 }
 
-export default HistorySection
+export default memo(HistorySection)

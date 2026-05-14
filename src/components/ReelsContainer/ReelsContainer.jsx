@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./ReelsContainer.module.css"
 
 const ReelsContainer = (props) => {
@@ -13,4 +14,4 @@ const ReelsContainer = (props) => {
     )
 }
 
-export default ReelsContainer
+export default memo(ReelsContainer)

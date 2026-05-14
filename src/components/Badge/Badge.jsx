@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react"
+import { memo, useCallback, useContext, useEffect, useState } from "react"
 import { BADGES_CONFIG } from "@/shared/configs"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./Badge.module.css"
@@ -69,4 +69,4 @@ const Badge = (props) => {
     )
 }
 
-export default Badge
+export default memo(Badge)

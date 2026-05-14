@@ -1,3 +1,4 @@
+import { memo } from "react"
 import styles from "./RocketField.module.css"
 
 const RocketField = ({ multiplier, isCrashed }) => {
@@ -29,4 +30,4 @@ const RocketField = ({ multiplier, isCrashed }) => {
     )
 }
 
-export default RocketField
+export default memo(RocketField)

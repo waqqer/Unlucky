@@ -1,6 +1,6 @@
 import styles from "./GlobalHistoryList.module.css"
 import GlobalHistoryItem from "@/components/GlobalHistoryItem"
-import { useEffect, useState, useRef } from "react"
+import { memo, useEffect, useState, useRef } from "react"
 
 const GlobalHistoryList = (props) => {
     const {
@@ -60,4 +60,4 @@ const GlobalHistoryList = (props) => {
     )
 }
 
-export default GlobalHistoryList
+export default memo(GlobalHistoryList)
