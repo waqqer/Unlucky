@@ -57,7 +57,7 @@ const Badge = (props) => {
 
             <img
                 className={`${styles.icon}`}
-                src={badge.icon}
+                src={badge.icon || null_badge_icon}
                 alt="badge icon"
                 draggable={false}
                 loading="lazy"

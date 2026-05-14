@@ -63,14 +63,14 @@ export const BADGES_CONFIG = {
         "marathon": {
             title: "Задрот",
             descripton: "Сыграй 100 или более игр",
-            icon: null,
+            icon: NULL_BADGE,
             quality: "GOOD"
         },
 
         "loser": {
             title: "Лузер",
             descripton: "Проиграй 5 или более игр",
-            icon: null,
+            icon: NULL_BADGE,
             quality: "GOOD"
         },
 
