@@ -6,6 +6,7 @@ import SLOTS_BADGE from "@/shared/images/badges/slots_badge.webp"
 import WINNER_BADGE from "@/shared/images/badges/winner_badge.webp"
 import RICH_BADGE from "@/shared/images/badges/rich_badge.webp"
 import LUCKY_BADGE from "@/shared/images/badges/lucky_badge.webp"
+import LUCKY2_BADGE from "@/shared/images/badges/lucky2_badge.webp"
 import TESTER_BADGE from "@/shared/images/badges/tester_badge.webp"
 
 export const BADGES_CONFIG = {
@@ -45,11 +46,32 @@ export const BADGES_CONFIG = {
             quality: "EPIC"
         },
 
+        "lucky2": {
+            title: "Везунчик II",
+            descripton: "10 Побед подряд... Как так?",
+            icon: LUCKY2_BADGE,
+            quality: "LEGENDARY"
+        },
+
         "rich": {
             title: "Богач",
             descripton: "Даётся за выйгрышь больше 1000 ар.",
             icon: RICH_BADGE,
-            quality: "EPIC"
+            quality: "LEGENDARY"
+        },
+
+        "marathon": {
+            title: "Задрот",
+            descripton: "Сыграй 100 или более игр",
+            icon: null,
+            quality: "GOOD"
+        },
+
+        "loser": {
+            title: "Лузер",
+            descripton: "Проиграй 5 или более игр",
+            icon: null,
+            quality: "GOOD"
         },
 
         "tester": {
