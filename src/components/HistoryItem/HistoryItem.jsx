@@ -12,29 +12,22 @@ const HistoryItem = (props) => {
 
     let createdAt = null
 
-    const isEmptyObject = (val) =>
-        typeof val === 'object' && val !== null && !Array.isArray(val) && Object.keys(val).length === 0
-
-    const rawDate = isEmptyObject(data.game_date)
-        ? (data.created_at ?? data.createdAt ?? data.date ?? data.timestamp ?? data.datetime ?? null)
-        : (data.game_date ?? null)
-
-    if (rawDate) {
+    if (data.game_date) {
         try {
-            if (typeof rawDate === 'string') {
-                createdAt = new Date(rawDate.trim().replace(' ', 'T'))
-            } else if (rawDate instanceof Date) {
-                createdAt = rawDate
-            } else if (typeof rawDate === 'number') {
-                createdAt = new Date(rawDate)
-            } else if (typeof rawDate === 'object') {
-                const extracted = rawDate.date || rawDate.datetime || rawDate.time || null
+            if (typeof data.game_date === 'string') {
+                createdAt = new Date(data.game_date.trim().replace(' ', 'T'))
+            } else if (data.game_date instanceof Date) {
+                createdAt = data.game_date
+            } else if (typeof data.game_date === 'number') {
+                createdAt = new Date(data.game_date)
+            } else if (typeof data.game_date === 'object') {
+                const extracted = data.game_date.date || data.game_date.datetime || data.game_date.time || null
                 if (typeof extracted === 'string') {
                     createdAt = new Date(extracted.trim().replace(' ', 'T'))
                 }
             }
         } catch (e) {
-            console.error("Failed to parse date:", rawDate, e)
+            console.error("Failed to parse date:", data.game_date, e)
         }
     }
 
