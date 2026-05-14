@@ -103,6 +103,10 @@ const MinerGame = (props) => {
         setBet(preset)
     }
 
+    const handleCloseVictory = useCallback(() => {
+        setShowVictory(false)
+    }, [])
+
     const balance = parseFloat(account?.balance || 0)
     const hasEnoughBalance = bet <= balance
     const canPlay = !!user && !!account?.UUID && !isRequestPending && !isPlaying && bet >= MINER_MIN_BET && bet <= MINER_MAX_BET && hasEnoughBalance && !showVictory
@@ -158,7 +162,7 @@ const MinerGame = (props) => {
 
             <VictoryScreen
                 isOpen={showVictory}
-                onClose={() => setShowVictory(false)}
+                onClose={handleCloseVictory}
                 winAmount={winAmount}
             />
         </>

@@ -55,7 +55,7 @@ export const BADGES_CONFIG = {
 
         "rich": {
             title: "Богач",
-            descripton: "Даётся за выйгрышь больше 1000 ар.",
+            descripton: "Даётся за выйгрышь 1000 или более ар",
             icon: RICH_BADGE,
             quality: "LEGENDARY"
         },

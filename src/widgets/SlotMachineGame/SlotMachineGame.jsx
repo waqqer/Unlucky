@@ -111,6 +111,10 @@ const SlotMachineGame = (props) => {
         setDemoMode(prev => !prev)
     }, [])
 
+    const handleCloseVictory = useCallback(() => {
+        setShowVictory(false)
+    }, [])
+
     const getRandomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
 
     const scheduleAutoReroll = useCallback(() => {
@@ -347,7 +351,7 @@ const SlotMachineGame = (props) => {
 
             <VictoryScreen
                 isOpen={showVictory}
-                onClose={() => setShowVictory(false)}
+                onClose={handleCloseVictory}
                 winAmount={winAmount}
             />
         </>

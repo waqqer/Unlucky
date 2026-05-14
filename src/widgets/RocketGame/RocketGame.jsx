@@ -76,6 +76,10 @@ const RocketGame = (props) => {
         setDemoMode(prev => !prev)
     }, [])
 
+    const handleCloseVictory = useCallback(() => {
+        setShowVictory(false)
+    }, [])
+
     const applyBalanceAndHistory = useCallback((result) => {
         if (result && typeof result.balance === "number") {
             updateUser({ balance: result.balance.toString() })
@@ -334,7 +338,7 @@ const RocketGame = (props) => {
             {!demoMode && (
                 <VictoryScreen
                     isOpen={showVictory}
-                    onClose={() => setShowVictory(false)}
+                    onClose={handleCloseVictory}
                     winAmount={winAmount}
                 />
             )}
