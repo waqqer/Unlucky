@@ -19,8 +19,8 @@ const SlotsGamePage = () => {
     const [aboutSlots, setAboutSlots] = useState(false)
     const [soundEnabled, setSoundEnabled] = useState(true)
 
-    const openAboutSlots = useCallback(() => setAboutSlots(true))
-    const closeAboutSlots = useCallback(() => setAboutSlots(false))
+    const openAboutSlots = useCallback(() => setAboutSlots(true), [])
+    const closeAboutSlots = useCallback(() => setAboutSlots(false), [])
 
     const toggleSound = useCallback(() => {
         setSoundEnabled(prev => !prev)

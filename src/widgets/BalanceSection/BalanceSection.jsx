@@ -26,17 +26,17 @@ const BalanceSection = (props) => {
     const [outSucces, setOutSucces] = useState(true)
     const [outMessage, setOutMessage] = useState("")
 
-    const сlosePayment = useCallback(() => setPaymentModal(false))
+    const сlosePayment = useCallback(() => setPaymentModal(false), [])
     const openPayment = useCallback(() => {
         if (isLoaded) {
             setPaymentModal(true)
         }
     }, [isLoaded])
 
-    const сloseResult = useCallback(() => setResultModal(false))
-    const openResult = useCallback(() => setResultModal(true))
+    const сloseResult = useCallback(() => setResultModal(false), [])
+    const openResult = useCallback(() => setResultModal(true), [])
 
-    const closeOut = useCallback(() => setOutModal(false))
+    const closeOut = useCallback(() => setOutModal(false), [])
     const openOut = useCallback(() => {
         if (isLoaded) {
             setOutModal(true)
@@ -51,7 +51,7 @@ const BalanceSection = (props) => {
         setOutSucces(false)
         setOutMessage(data.message)
         openResult()
-    }, [])
+    }, [refreshAccount, openResult])
 
     const onOut = useCallback(() => {
         setOutSucces(true)
@@ -63,7 +63,7 @@ const BalanceSection = (props) => {
         setTimeout(() => {
             refreshAccount()
         }, 1000)
-    }, [])
+    }, [closeOut, openResult, refreshAccount])
 
     const onPayment = useCallback(() => {
         setOutModal(false)

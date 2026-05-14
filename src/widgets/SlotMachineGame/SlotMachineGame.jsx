@@ -54,7 +54,6 @@ const SlotMachineGame = (props) => {
     const [stoppedReels, setStoppedReels] = useState(INITIAL_STOPPED)
 
     const [autoRerollEnabled, setAutoRerollEnabled] = useState(false)
-    const [consecutiveLosses, setConsecutiveLosses] = useState(0)
 
     const [demoMode, setDemoMode] = useState(false)
     const [pendingAutoRerollAfterVictory, setPendingAutoRerollAfterVictory] = useState(false)
@@ -104,7 +103,6 @@ const SlotMachineGame = (props) => {
             }
             return newValue
         })
-        setConsecutiveLosses(0)
     }, [])
 
     const handleDemoToggle = useCallback(() => {
@@ -123,7 +121,7 @@ const SlotMachineGame = (props) => {
             if (!autoRerollEnabledRef.current) return
             spin()
         }, AUTO_REROLL_DELAY_MS)
-    }, [])
+    }, [autoRerollEnabledRef, spin])
 
     const spin = useCallback(async () => {
         if (isRequestPending || isSpinning) return
@@ -218,13 +216,10 @@ const SlotMachineGame = (props) => {
                         if (!demoModeRef.current) {
                             if (isWin) {
                                 setShowVictory(true)
-                                setConsecutiveLosses(0)
 
                                 if (autoRerollEnabledRef.current) {
                                     setPendingAutoRerollAfterVictory(true)
                                 }
-                            } else {
-                                setConsecutiveLosses(prev => prev + 1)
                             }
                         }
 
@@ -265,7 +260,7 @@ const SlotMachineGame = (props) => {
             setIsRequestPending(false)
             setAutoRerollEnabled(false)
         }
-    }, [isSpinning, isRequestPending, accountRef, updateUser, onGameComplete, onHistoryUpdate, stopAudio, clearTimers, scheduleAutoReroll])
+    }, [isSpinning, isRequestPending, accountRef, updateUser, onGameComplete, onHistoryUpdate, stopAudio, clearTimers, scheduleAutoReroll, autoRerollEnabledRef, bet, betRef, demoModeRef, soundEnabledRef])
 
     const handlePresetSelect = (preset) => {
         setBet(preset)
@@ -286,7 +281,7 @@ const SlotMachineGame = (props) => {
                 }
             }
         }
-    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, scheduleAutoReroll])
+    }, [showVictory, pendingAutoRerollAfterVictory, autoRerollEnabled, scheduleAutoReroll, accountRef, betRef, demoModeRef])
 
     const balance = toNumber(account?.balance)
     const hasEnoughBalance = demoMode || bet <= balance

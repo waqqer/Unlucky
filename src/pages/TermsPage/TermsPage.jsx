@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useEffect, useState } from "react"
+import { memo, useCallback, useContext, useState } from "react"
 import styles from "./TermsPage.module.css"
 import Button from "@/components/Button"
 import { AccountContext } from "@/context/AccountContext"
@@ -18,7 +18,7 @@ const TermsPage = (props) => {
             setAccepted(true)
             acceptTerms()
         }
-    }, [user])
+    }, [user, acceptTerms, preview])
 
     return (
         <main className={styles.main}>

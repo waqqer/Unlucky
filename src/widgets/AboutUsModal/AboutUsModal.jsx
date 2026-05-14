@@ -1,6 +1,6 @@
 import LinkButton from "@/components/LinkButton"
 import ModalExitButton from "@/components/ModalExitButton"
-import { memo, useCallback, useEffect, useState } from "react"
+import { memo, useCallback } from "react"
 import useSPW from "@/hooks/useSPW"
 import styles from "./AboutUsModal.module.css"
 import Button from "../../components/Button/Button"

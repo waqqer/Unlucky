@@ -24,14 +24,14 @@ const HistorySection = (props) => {
             setHistotyModal(true)
     }, [history])
 
-    const closeHistory = useCallback(() => setHistotyModal(false))
+    const closeHistory = useCallback(() => setHistotyModal(false), [])
     useEffect(() => {
         HistoryApi.getByUuid(user?.minecraftUUID)
             .then(data => setHistory(data ?? []))
             .catch(() => {
                 setHistory([])
             })
-    }, [user?.username])
+    }, [user?.username, user?.minecraftUUID])
 
     const rendered_list = history.slice(0, 5)
 

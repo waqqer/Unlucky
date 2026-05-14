@@ -233,7 +233,7 @@ const MinerField = (props) => {
         ctx2.restore()
     }
 
-    const fitCanvasToContainer = (canvas, worldW, worldH) => {
+    const fitCanvasToContainer = (canvas, worldW) => {
         const container = containerRef.current
         if (!container) return
 
@@ -436,6 +436,7 @@ const MinerField = (props) => {
             a.pause()
             a.currentTime = 0
         } catch {
+            /* noop */
         }
     }
 
@@ -455,6 +456,7 @@ const MinerField = (props) => {
             a.currentTime = 0
             void a.play().catch(() => { })
         } catch {
+            /* noop */
         }
     }
 
@@ -466,6 +468,7 @@ const MinerField = (props) => {
                     a.pause()
                     a.currentTime = 0
                 } catch {
+                    /* noop */
                 }
             })
         })
@@ -498,6 +501,7 @@ const MinerField = (props) => {
             audio.currentTime = 0
             void audio.play().catch(() => { })
         } catch {
+            /* noop */
         }
     }
 
@@ -507,6 +511,7 @@ const MinerField = (props) => {
             try {
                 cancelAnimationFrame(id)
             } catch {
+                /* noop */
             }
         })
         pickaxeFallRafIdsRef.current.clear()
@@ -529,6 +534,7 @@ const MinerField = (props) => {
         onAnimationCompleteRef.current = onAnimationComplete
     }, [onRoundComplete, onAnimationComplete])
 
+    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => () => {
         suppressSoundRef.current = true
         stopAllMinerSounds()
@@ -539,6 +545,7 @@ const MinerField = (props) => {
             idleRafRef.current = null
         }
     }, [])
+    /* eslint-enable react-hooks/exhaustive-deps */
 
     useEffect(() => {
         const soundUrls = new Set()
@@ -579,6 +586,7 @@ const MinerField = (props) => {
         preload()
     }, [SLOT_TEXTURE, BREAK_TEXTURES, CHESTS])
 
+    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         if (roundData) return
 
@@ -586,9 +594,8 @@ const MinerField = (props) => {
         if (!canvas) return
 
         const worldW = COLS * CELL_SIZE_PX + (COLS - 1) * GRID_GAP_PX
-        const { worldH } = getWorldMetrics()
-
-        fitCanvasToContainer(canvas, worldW, worldH)
+        const metrics = getWorldMetrics()
+        fitCanvasToContainer(canvas, worldW, metrics.worldH)
 
         const ctx = canvas.getContext("2d")
         if (!ctx) return
@@ -722,7 +729,9 @@ const MinerField = (props) => {
             idleCanvasRedrawRef.current = null
         }
     }, [roundData, pickaxesForIdleCanvas, ROWS, COLS, CELL_SIZE_PX, GRID_GAP_PX, BLOCKS, PICKAXES, CHESTS, demoGrid, demoChests])
+    /* eslint-enable react-hooks/exhaustive-deps */
 
+    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         if (!roundData) return
 
@@ -733,14 +742,17 @@ const MinerField = (props) => {
         const canvas = canvasRef.current
         if (!canvas) return
         const worldW = COLS * CELL_SIZE_PX + (COLS - 1) * GRID_GAP_PX
-        const { worldH } = getWorldMetrics()
+        const metrics = getWorldMetrics()
         const ctx = canvas.getContext("2d")
         if (!ctx) return
-        fitCanvasToContainer(canvas, worldW, worldH)
+        fitCanvasToContainer(canvas, worldW, metrics.worldH)
 
         clearAnimation()
         chestBounceT0Ref.current.clear()
         chestLabelShownRef.current.clear()
+
+        const bounceT0 = chestBounceT0Ref.current
+        const labelShown = chestLabelShownRef.current
 
         const apiField = roundData?.field
         const apiBlocks = apiField?.Blocks
@@ -1529,12 +1541,14 @@ const MinerField = (props) => {
         return () => {
             suppressSoundRef.current = true
             roundCanvasRedrawRef.current = null
-            chestBounceT0Ref.current.clear()
-            chestLabelShownRef.current.clear()
+            bounceT0.clear()
+            labelShown.clear()
             clearAnimation()
         }
     }, [roundData, ROWS, COLS, CELL_SIZE_PX, GRID_GAP_PX, BLOCKS, PICKAXES, CHESTS, BREAK_TEXTURES, SLOT_TEXTURE, demoGrid, demoChests])
+    /* eslint-enable react-hooks/exhaustive-deps */
 
+    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         const canvas = canvasRef.current
         const el = containerRef.current
@@ -1559,6 +1573,7 @@ const MinerField = (props) => {
             ro.disconnect()
         }
     }, [COLS, ROWS, CELL_SIZE_PX, GRID_GAP_PX, PICKAXE_ROW_COUNT])
+    /* eslint-enable react-hooks/exhaustive-deps */
 
     return (
         <div

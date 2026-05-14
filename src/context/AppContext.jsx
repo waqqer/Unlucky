@@ -33,7 +33,7 @@ export const AppProvider = ({ children }) => {
                 setTimeout(connect, 5000)
             }
 
-            socket.onerror = (err) => {}
+            socket.onerror = () => {}
         }
 
         connect()

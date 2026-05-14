@@ -16,11 +16,11 @@ const UserProfile = (props) => {
     const [aboutUsModal, setAboutUsModal] = useState(false);
     const [profileModal, setProfileModal] = useState(false);
 
-    const openAboutUs = useCallback(() => setAboutUsModal(true))
-    const closeAboutUs = useCallback(() => setAboutUsModal(false))
+    const openAboutUs = useCallback(() => setAboutUsModal(true), [])
+    const closeAboutUs = useCallback(() => setAboutUsModal(false), [])
 
-    const openProfile = useCallback(() => setProfileModal(true))
-    const closeProfile = useCallback(() => setProfileModal(false))
+    const openProfile = useCallback(() => setProfileModal(true), [])
+    const closeProfile = useCallback(() => setProfileModal(false), [])
 
     return (
         <>

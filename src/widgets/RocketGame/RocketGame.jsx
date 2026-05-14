@@ -151,7 +151,7 @@ const RocketGame = (props) => {
         }
 
         animationFrameRef.current = requestAnimationFrame(animate)
-    }, [sendResult, demoModeRef])
+    }, [sendResult, demoModeRef, crashedPointRef, isFlyingRef, soundsRef])
 
     const startGame = useCallback(async () => {
         if (isRequestPendingRef.current || isFlyingRef.current) return
@@ -210,7 +210,7 @@ const RocketGame = (props) => {
             setIsFlying(false)
             isFlyingRef.current = false
         }
-    }, [getBalance, resetRoundState, startAnimation, stopAnimation])
+    }, [getBalance, resetRoundState, startAnimation, stopAnimation, accountRef, betRef, demoModeRef, isFlyingRef, soundsRef, crashedPointRef, isRequestPendingRef])
 
     const cashOut = useCallback(() => {
         if (!isFlyingRef.current || hasCashedOutRef.current || isCrashed) return
@@ -268,7 +268,7 @@ const RocketGame = (props) => {
                 setIsCrashed(false)
             }, 500)
         }
-    }, [isCrashed, sendResult, stopAnimation])
+    }, [isCrashed, sendResult, stopAnimation, accountRef, betRef, demoModeRef, isFlyingRef, soundsRef])
 
     return (
         <>

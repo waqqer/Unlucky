@@ -45,12 +45,12 @@ export const AccountProvider = ({ children }) => {
                 setAccount(data)
                 setIsLoaded(true)
             })
-            .catch(err => {
+            .catch(() => {
                 setIsLoaded(false)
             })
 
         updateBadges()
-    }, [spwUser])
+    }, [spwUser, updateBadges])
 
     const updateUser = useCallback((newData) => {
         setAccount(prev => prev ? { ...prev, ...newData } : newData)
@@ -110,7 +110,7 @@ export const AccountProvider = ({ children }) => {
             return
 
         try {
-            UserApi.acceptTerms(uuid).then(d => {
+            UserApi.acceptTerms(uuid).then(() => {
                 window.location.reload()
             })
         } catch (error) {
@@ -136,7 +136,7 @@ export const AccountProvider = ({ children }) => {
             spm.off("paymentResponse", paymentReact)
             spm.off("openPaymentResponse", paymentReact)
         }
-    }, [spm])
+    }, [spm, refreshAccount])
 
     const values = useMemo(() => ({
         user: spwUser,
@@ -154,7 +154,7 @@ export const AccountProvider = ({ children }) => {
         refreshAccount,
         termsAccepted,
         acceptTerms
-    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge])
+    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge, changeCurrentBadge, updateBadges])
 
     return (
         <AccountContext.Provider value={values}>

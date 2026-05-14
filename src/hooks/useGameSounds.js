@@ -28,6 +28,7 @@ const useGameSounds = (enabled) => {
             oscillator.start(ctx.currentTime)
             oscillator.stop(ctx.currentTime + duration)
         } catch {
+            /* noop */
         }
     }, [enabled, getAudioContext])
 

@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useEffect, useState } from "react"
+import { memo, useCallback, useContext, useMemo, useState } from "react"
 import { BADGES_CONFIG } from "@/shared/configs"
 import { AccountContext } from "@/context/AccountContext"
 import styles from "./Badge.module.css"
@@ -13,21 +13,18 @@ const Badge = (props) => {
         null_badge_icon
     } = BADGES_CONFIG
 
-    const { changeCurrentBadge, currentBadge, badges } = useContext(AccountContext)
+    const { changeCurrentBadge, currentBadge } = useContext(AccountContext)
 
     const [canChange, setCanChange] = useState(true)
-    const [badge, setBadge] = useState({
-        title: "Badge",
-        descripton: "...",
-        icon: null_badge_icon,
-        quality: "BASIC"
-    })
 
-    useEffect(() => {
-        const b = BADGES_CONFIG.badges[name]
-        if (b)
-            setBadge(b)
-    }, [name, badges, currentBadge])
+    const badge = useMemo(() => {
+        return BADGES_CONFIG.badges[name] || {
+            title: "Badge",
+            descripton: "...",
+            icon: null_badge_icon,
+            quality: "BASIC"
+        }
+    }, [name, null_badge_icon])
 
     const handleClick = useCallback(() => {
         if (canChange) {
@@ -42,7 +39,7 @@ const Badge = (props) => {
                 setCanChange(true)
             }, 2000)
         }
-    }, [name, canChange])
+    }, [name, canChange, currentBadge, changeCurrentBadge])
 
     return (
         <div className={`${styles.badge} ${currentBadge === name && styles.active}`} style={{ "--color": `${colors[badge.quality]}` }}>

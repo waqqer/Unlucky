@@ -4,7 +4,7 @@ import Title from "@/components/Title"
 import GlobalHistoryList from "@/components/GlobalHistoryList"
 import styles from "./GameHistory.module.css"
 
-const GameHistory = forwardRef((props, ref) => {
+const GameHistory = forwardRef((props) => {
     const {
         className = "",
         gameName = "Слоты",

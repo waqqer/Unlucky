@@ -1,8 +1,12 @@
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 
 const useSyncRefs = (...values) => {
-    const refs = useRef(values.map(() => ({ current: undefined })))
-    refs.current.forEach((ref, i) => { ref.current = values[i] })
+    const refs = useRef(values.map((v) => ({ current: v })))
+    useEffect(() => {
+        values.forEach((v, i) => {
+            refs.current[i].current = v
+        })
+    }, [values])
     return refs.current
 }
 

@@ -26,7 +26,7 @@ const PaymentModal = (props) => {
             spm.openPayment(d.code)
             onPayment()
         })
-    }, [amount, user, spm])
+    }, [amount, user, spm, onPayment])
 
     const isSubmitDisabled = !amount || amount < 1 || !user
 

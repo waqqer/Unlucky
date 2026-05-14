@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext, memo } from "react"
+import { useState, useEffect, useContext, memo } from "react"
 import StatsGroup from "@/components/StatsGroup"
 import StatCard from "@/components/StatCard"
 import Placeholder from "@/components/Placeholder"

@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { BADGES_CONFIG } from "@/shared/configs/badges"
 import { AccountContext } from "@/context/AccountContext"
@@ -13,49 +13,38 @@ const BadgeDeco = (props) => {
         info = true
     } = props
 
-    const [badgeName, setBadgeName] = useState(null)
+    const [fetchedBadge, setFetchedBadge] = useState(null)
     const [show, setShow] = useState(false)
     const [visible, setVisible] = useState(false)
     const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 })
     const iconRef = useRef(null)
     const hideTimerRef = useRef(null)
-    const { currentBadge, badges } = useContext(AccountContext)
+    const { currentBadge } = useContext(AccountContext)
 
     useEffect(() => {
         if (!uuid) return
 
         UserApi.getBadges(uuid).then(d => {
-            setBadgeName(d.current || null)
+            setFetchedBadge(d.current || null)
         })
     }, [uuid])
 
-    useEffect(() => {
-        if (uuid) return
-
-        setBadgeName(currentBadge || null)
-    }, [uuid, currentBadge, badges])
-
-    useEffect(() => {
-        if (!show) return
-        const handleHide = () => hideTooltip()
-        window.addEventListener("scroll", handleHide, true)
-        window.addEventListener("resize", handleHide)
-        return () => {
-            window.removeEventListener("scroll", handleHide, true)
-            window.removeEventListener("resize", handleHide)
-        }
-    }, [show])
-
-    useEffect(() => {
-        return () => {
-            if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
-        }
-    }, [])
+    const badgeName = useMemo(() => {
+        if (!uuid) return currentBadge || null
+        return fetchedBadge
+    }, [uuid, currentBadge, fetchedBadge])
 
     const icon = badgeName ? BADGES_CONFIG.badges[badgeName]?.icon || null : null
     const badgeInfo = badgeName ? BADGES_CONFIG.badges[badgeName] : null
 
-    const showTooltip = () => {
+    const hideTooltip = useCallback(() => {
+        setVisible(false)
+        hideTimerRef.current = setTimeout(() => {
+            setShow(false)
+        }, 200)
+    }, [])
+
+    const showTooltip = useCallback(() => {
         if (!badgeInfo || !iconRef.current) return
         const rect = iconRef.current.getBoundingClientRect()
         const tooltipHeight = 100
@@ -75,14 +64,24 @@ const BadgeDeco = (props) => {
         requestAnimationFrame(() => {
             requestAnimationFrame(() => setVisible(true))
         })
-    }
+    }, [badgeInfo])
 
-    const hideTooltip = () => {
-        setVisible(false)
-        hideTimerRef.current = setTimeout(() => {
-            setShow(false)
-        }, 200)
-    }
+    useEffect(() => {
+        if (!show) return
+        const handleHide = () => hideTooltip()
+        window.addEventListener("scroll", handleHide, true)
+        window.addEventListener("resize", handleHide)
+        return () => {
+            window.removeEventListener("scroll", handleHide, true)
+            window.removeEventListener("resize", handleHide)
+        }
+    }, [show, hideTooltip])
+
+    useEffect(() => {
+        return () => {
+            if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
+        }
+    }, [])
 
     return (
         <>

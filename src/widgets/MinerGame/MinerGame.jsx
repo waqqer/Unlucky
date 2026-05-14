@@ -77,8 +77,9 @@ const MinerGame = (props) => {
             pendingBalanceRef.current = null
             if (isMountedRef.current) setIsPlaying(false)
         } finally {
-            if (!isMountedRef.current) return
-            setIsRequestPending(false)
+            if (isMountedRef.current) {
+                setIsRequestPending(false)
+            }
         }
     }, [isRequestPending, isPlaying, account, bet, COLS, ROWS, PICKAXE_ROWS])
 
@@ -127,8 +128,8 @@ const MinerGame = (props) => {
                     <div className={styles["bet-section"]}>
                         <img
                             className={`${styles.gif} mobile-hide`}
-                            src="https://media.tenor.com/MhX9j6cmTkAAAAAi/minecraft-discord.gif" 
-                            alt="dance gif" 
+                            src="https://media.tenor.com/MhX9j6cmTkAAAAAi/minecraft-discord.gif"
+                            alt="dance gif"
                             draggable={false}
                             loading="lazy"
                         />

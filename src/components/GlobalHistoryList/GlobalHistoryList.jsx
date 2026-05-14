@@ -1,6 +1,6 @@
 import styles from "./GlobalHistoryList.module.css"
 import GlobalHistoryItem from "@/components/GlobalHistoryItem"
-import { memo, useEffect, useState, useRef } from "react"
+import { memo, useMemo, useRef } from "react"
 
 const GlobalHistoryList = (props) => {
     const {
@@ -8,22 +8,10 @@ const GlobalHistoryList = (props) => {
         history = []
     } = props
 
-    const [displayedHistory, setDisplayedHistory] = useState([])
-    const [newItemIndices, setNewItemIndices] = useState(new Set())
-    const prevHistoryRef = useRef([])
-    const isFirstLoad = useRef(true)
+    const prevHistoryRef = useRef(history.slice().reverse())
+    const reversed = useMemo(() => history.slice().reverse(), [history])
 
-    useEffect(() => {
-        const reversed = history.slice().reverse()
-        
-        if (isFirstLoad.current) {
-            isFirstLoad.current = false
-            setDisplayedHistory(reversed)
-            setNewItemIndices(new Set())
-            prevHistoryRef.current = reversed
-            return
-        }
-
+    const newItemIndices = useMemo(() => {
         const newIndices = new Set()
         const prevIds = new Set(prevHistoryRef.current.map(item => item?.id))
 
@@ -33,12 +21,11 @@ const GlobalHistoryList = (props) => {
             }
         })
 
-        setDisplayedHistory(reversed)
-        setNewItemIndices(newIndices)
         prevHistoryRef.current = reversed
-    }, [history])
+        return newIndices
+    }, [reversed])
 
-    if (!displayedHistory || displayedHistory.length === 0) {
+    if (!reversed || reversed.length === 0) {
         return (
             <div className={`${styles["history-list"]} ${className}`}>
                 <p className={styles["not-found-message"]}>Тут пока ничего нет...</p>
@@ -48,7 +35,7 @@ const GlobalHistoryList = (props) => {
 
     return (
         <div className={`${styles["history-list"]} ${className}`}>
-            {displayedHistory.map((item, index) => (
+            {reversed.map((item, index) => (
                 <GlobalHistoryItem
                     key={item.id}
                     data={item}

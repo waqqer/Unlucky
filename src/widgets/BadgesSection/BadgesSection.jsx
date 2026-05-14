@@ -8,7 +8,7 @@ const BadgesSection = () => {
 
     useEffect(() => {
         updateBadges()
-    }, [])
+    }, [updateBadges])
 
     return (
         <div className={styles["badge-section"]}>

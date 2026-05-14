@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react"
+import { memo, useMemo } from "react"
 import styles from "./SPCard.module.css"
 
 const colors = {
@@ -23,13 +23,10 @@ const SPCard = (props) => {
         selected
     } = props
 
-    const [color, setColor] = useState("gray")
-
-    useEffect(() => {
+    const color = useMemo(() => {
         const num = Number(String(code)[0])
-        const newColor = colors[num]
-        setColor(newColor)
-    }, [])
+        return colors[num] || "gray"
+    }, [code])
 
     return (
         <div className={`${styles.card} ${styles[color]} ${selected ? styles.selected : ""}`} onClick={onSelect}>

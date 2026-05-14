@@ -113,7 +113,7 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
             rot: (Math.random() - 0.5) * 2,
             size: 0.8 + Math.random() * 0.8
         }))
-    }, [PARTICLE_COUNT])
+    }, [])
 
     const buildExplosionSeeds = useCallback(() => {
         const spriteCount = Math.max(1, (EXPLOSION_SPRITES?.length || 1))
@@ -131,7 +131,7 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
                 jitterY: (Math.random() - 0.5) * EXPLOSION_SPREAD
             }
         })
-    }, [EXPLOSION_PARTICLE_COUNT, EXPLOSION_SPREAD, EXPLOSION_SPRITES])
+    }, [])
 
     useEffect(() => {
         if (!isCrashed) return
@@ -151,7 +151,7 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
         return () => {
             if (raf) cancelAnimationFrame(raf)
         }
-    }, [isCrashed, EXPLOSION_DURATION_MS, buildExplosionSeeds])
+    }, [isCrashed, buildExplosionSeeds])
 
     const updateDimensions = useCallback(() => {
         const container = containerRef.current
