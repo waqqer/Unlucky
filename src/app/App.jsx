@@ -1,14 +1,8 @@
 import { HashRouter, Route, Routes } from "react-router"
-import { MainPage, NotFoundPage } from "@/pages"
+import { MainPage, NotFoundPage, TopPage, TermsPage, MinerGamePage, AdminPage, SlotsGamePage, RocketGamePage } from "@/pages"
 import Modal from 'react-modal'
-import AdminPage from "@/pages/AdminPage"
-import SlotsGamePage from "@/pages/SlotsGamePage"
-import RocketGamePage from "@/pages/RocketGamePage"
 import { useContext } from "react"
 import { AccountContext } from "@/context/AccountContext"
-import MinerGamePage from "../pages/MinerGamePage"
-import TermsPage from "../pages/TermsPage"
-import TopPage from "../pages/TopPage"
 import "./styles"
 
 Modal.setAppElement("#root")

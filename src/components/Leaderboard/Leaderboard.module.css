@@ -14,6 +14,8 @@
     justify-content: start;
 
     gap: 20px;
+
+    width: 100%;
 }
 
 .title {

@@ -29,7 +29,7 @@ const AboutUsModal = (props) => {
         <>
             <ModalExitButton modal={close} />
             <i className={`${styles["icon"]} fa-solid fa-rocket`}></i>
-            <h1>О проекте Unlucky</h1>
+            <h1 className={styles.title}>О проекте Unlucky</h1>
 
             <p className={styles.desc}>
                 <b>Unlucky</b> - Онлайн казино на сервере СПм. Мы предоставляем вам игры, для веселого проведения досуга.

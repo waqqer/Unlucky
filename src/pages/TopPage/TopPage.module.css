@@ -80,6 +80,36 @@
 
 @media (max-width: 630px) {
     .main {
-        padding-top: 12vh;
+        padding-top: 18vh;
+        padding-bottom: 5vh;
+        height: 100%;
+    }
+
+    .title {
+        position: relative;
+        font-size: 1.7rem;
+        color: aliceblue;
+    }
+
+    .title::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        opacity: 0.8;
+        left: 0%;
+        background-color: rgb(156, 156, 156);
+        border-radius: 5px;
+        width: 100%;
+        height: 2px;
+
+        animation: title_underline 1.7s ease;
+    }
+}
+
+@keyframes title_underline {
+    from {
+        opacity: 0;
+        width: 0%;
+        color: white;
     }
 }

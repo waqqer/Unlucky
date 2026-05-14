@@ -73,9 +73,22 @@
 
     .buttons {
         flex-direction: column;
+        width: 85%;
+        opacity: 0.8;
     }
 
     .btn {
         width: 100%;
+    }
+
+    .title {
+        font-size: 1.4rem;
+        text-align: start;
+        width: 100%;
+    }
+
+    .desc {
+        font-size: 0.9rem;
+        opacity: 0.8;
     }
 }

@@ -79,3 +79,9 @@
         min-height: 550px;
     }
 }
+
+@media (max-width: 630px) {
+    .container {
+        margin-top: 20vh;
+    }
+}
