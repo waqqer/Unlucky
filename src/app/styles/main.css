@@ -10,9 +10,12 @@
 
 html {
     overflow-y: auto;
+    overflow-x: hidden;
     scroll-behavior: smooth;
+    scrollbar-gutter: auto;
 
     height: 100vh;
+    width: 100vw;
 }
 
 button::selection, input[type="button"]::selection, img::selection {
