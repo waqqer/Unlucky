@@ -21,3 +21,13 @@
 
     flex-wrap: wrap;
 }
+
+@media (max-width: 1000px) {
+    .badge-section {
+        padding: 8px 10px;
+    }
+
+    .box {
+        gap: 12px
+    }
+}
