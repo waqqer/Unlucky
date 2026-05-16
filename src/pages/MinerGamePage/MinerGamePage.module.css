@@ -54,6 +54,8 @@
     flex-direction: column;
     gap: 15px;
     line-height: 1.6;
+
+    width: 100%;
 }
 
 .game-description h3 {

@@ -1,4 +1,4 @@
-import { memo, useState, useContext, useCallback, useRef, useEffect } from "react"
+import { useState, useContext, useCallback, useRef, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import { SlotsApi } from "@/api/game"
 import { useSyncRefs } from "@/hooks"
@@ -121,7 +121,7 @@ const SlotMachineGame = (props) => {
             if (!autoRerollEnabledRef.current) return
             spin()
         }, AUTO_REROLL_DELAY_MS)
-    }, [autoRerollEnabledRef, spin])
+    }, [autoRerollEnabledRef])
 
     const spin = useCallback(async () => {
         if (isRequestPending || isSpinning) return
@@ -353,4 +353,4 @@ const SlotMachineGame = (props) => {
     )
 }
 
-export default memo(SlotMachineGame)
+export default SlotMachineGame

@@ -3,8 +3,9 @@ import ModalExitButton from "@/components/ModalExitButton"
 import { memo, useCallback } from "react"
 import useSPW from "@/hooks/useSPW"
 import styles from "./AboutUsModal.module.css"
-import Button from "../../components/Button/Button"
-import { Link } from "react-router";
+import Button from "@/components/Button/Button"
+import Icon from "@/shared/images/logo.webp"
+import { Link } from "react-router"
 
 const AboutUsModal = (props) => {
     const {
@@ -28,7 +29,12 @@ const AboutUsModal = (props) => {
     return (
         <>
             <ModalExitButton modal={close} />
-            <i className={`${styles["icon"]} fa-solid fa-rocket`}></i>
+            <img
+                src={Icon}
+                alt=""
+                className={`mobile-hide`}
+                width={258}
+            />
             <h1 className={styles.title}>О проекте Unlucky</h1>
 
             <p className={styles.desc}>

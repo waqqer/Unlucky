@@ -131,6 +131,36 @@
     transform: scale(105%, 105%);
 }
 
+.item-list {
+    max-height: 30vh;
+    overflow-y: auto;
+}
+
+.item-list > li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+    font-size: 1.3rem;
+    transition: all 0.15s ease;
+    border-radius: 10px;
+
+    & p::before {
+        content: "- ";
+        opacity: 0.3;
+        font-weight: lighter;
+    }
+
+    &:hover {
+        transform: scale(97%, 97%);
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        transform: scale(95%, 95%);
+    }
+}
+
 @media (max-width: 1600px) {
     .gif {
         display: none;

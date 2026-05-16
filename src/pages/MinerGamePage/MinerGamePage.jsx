@@ -72,16 +72,11 @@ const MinerGamePage = () => {
                 closeTimeoutMS={300}
             >
                 <ModalExitButton modal={closeAboutMiner} />
-                <h2>Инструкция к игре "Майнер"</h2>
+                <h2>Описание игры "Майнер"</h2>
                 <div className={styles["game-description"]}>
                     <p className="mobile-hide">
-                        <strong>Майнер</strong> - авпвап
+                        <strong>Майнер</strong> - игра где рандом решает какие кирки выпадут, какие блоки им предстоит сломать и какой лут ждет в итоге! 
                     </p>
-
-                    <h3>🎮 Как играть:</h3>
-                    <ol>
-
-                    </ol>
                 </div>
             </Modal>
         </>

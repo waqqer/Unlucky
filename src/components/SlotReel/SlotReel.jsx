@@ -8,7 +8,7 @@ import starImg from "@/shared/images/games/slots/star.webp"
 import redstoneImg from "@/shared/images/games/slots/redstone.webp"
 import styles from "./SlotReel.module.css"
 
-const SYMBOL_IMAGES = {
+export const SYMBOL_IMAGES = {
     diamond: diamondImg,
     gold: goldImg,
     iron: ironImg,

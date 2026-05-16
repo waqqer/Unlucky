@@ -68,6 +68,10 @@
     transform: scale(105%, 105%);
 }
 
+.game-description hr {
+    opacity: 0.3;
+}
+
 @media (max-width: 1500px) {
     .gif {
         display: none;

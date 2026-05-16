@@ -8,6 +8,7 @@ import { useCallback, useState } from "react"
 import GameExtraControlls from "@/components/GameExtraControlls"
 import Modal from 'react-modal'
 import styles from "./SlotsGamePage.module.css"
+import { SYMBOL_IMAGES } from "../../components/SlotReel/SlotReel";
 
 const SlotsGamePage = () => {
     const [refreshCounter, setRefreshCounter] = useState(0)
@@ -78,19 +79,42 @@ const SlotsGamePage = () => {
                 closeTimeoutMS={300}
             >
                 <ModalExitButton modal={closeAboutSlots} />
-                <h2>Инструкция к игре "Слоты"</h2>
+                <h2>Описание игры "Слоты"</h2>
                 <div className={styles["game-description"]}>
                     <p className="mobile-hide">
-                        <strong>Слоты</strong> - классическая азартная игра, где вам нужно собрать
-                        одинаковые символы на одной линии для победы!
+                        <strong>Слоты</strong> - игра где нужно выбить в ряд 3 предмета <i>(чем дороже предмет, тем больше <b>X</b>🤫)</i>
                     </p>
 
-                    <h3>🎮 Как играть:</h3>
-                    <ol>
-                        <li>Выберите размер ставки (от 1 до 10000 Ар)</li>
-                        <li>Нажмите кнопку <strong>"Сыграть"</strong> или пробел</li>
-                        <li>Дождитесь результата вращения барабанов</li>
-                        <li>Получите выигрыш при совпадении символов!</li>
+                    <h3>• Предметы:</h3>
+                    <ol className={styles["item-list"]}>
+                        <li>
+                            <img src={SYMBOL_IMAGES.star} alt="star" width={64} height={64} />
+                            <p><b>(2.7%)</b> - ×5</p>
+                        </li>
+                        <li>
+                            <img src={SYMBOL_IMAGES.diamond} alt="diamond" width={64} height={64} />
+                            <p><b>(7.7%)</b> - ×3</p>
+                        </li>
+                        <li>
+                            <img src={SYMBOL_IMAGES.gold} alt="gold" width={64} height={64} />
+                            <p><b>(11.4%)</b> - ×2</p>
+                        </li>
+                        <li>
+                            <img src={SYMBOL_IMAGES.iron} alt="iron" width={64} height={64} />
+                            <p><b>(18.2%)</b> - ×1.2</p>
+                        </li>
+                        <li>
+                            <img src={SYMBOL_IMAGES.coal} alt="coal" width={64} height={64} />
+                            <p><b>(14.1%)</b> - ×0</p>
+                        </li>
+                        <li>
+                            <img src={SYMBOL_IMAGES.amethyst} alt="amethyst" width={64} height={64} />
+                            <p><b>(2.3%)</b> - ×0</p>
+                        </li>
+                        <li>
+                            <img src={SYMBOL_IMAGES.redstone} alt="redstone" width={64} height={64} />
+                            <p><b>(2.3%)</b> - ×0</p>
+                        </li>
                     </ol>
                 </div>
             </Modal>
