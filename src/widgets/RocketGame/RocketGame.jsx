@@ -176,23 +176,11 @@ const RocketGame = (props) => {
         try {
             let crashPoint
 
-            if (demoModeRef.current) {
-                const r = Math.random()
-                if (r < 0.33) {
-                    crashPoint = 1 + Math.random() * 1.5
-                } else if (r < 0.66) {
-                    crashPoint = 2.5 + Math.random() * 2.5
-                } else {
-                    crashPoint = 5 + Math.random() * 10
-                }
-                crashPoint = Math.round(crashPoint * 100) / 100
-            } else {
-                const result = await RocketApi.crash()
-                if (!result || typeof result.crashPoint !== "number") {
-                    throw new Error("Некорректная точка краша от сервера")
-                }
-                crashPoint = result.crashPoint
+            const result = await RocketApi.crash()
+            if (!result || typeof result.crashPoint !== "number") {
+                throw new Error("Некорректная точка краша от сервера")
             }
+            crashPoint = result.crashPoint
 
             setCrashedPoint(crashPoint)
             crashedPointRef.current = crashPoint
