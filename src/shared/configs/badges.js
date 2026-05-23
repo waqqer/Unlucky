@@ -60,7 +60,7 @@ export const BADGES_CONFIG = {
             quality: "LEGENDARY"
         },
 
-        "marathon": {
+        /*"marathon": {
             title: "Задрот",
             descripton: "Сыграй 100 или более игр",
             icon: NULL_BADGE,
@@ -72,7 +72,7 @@ export const BADGES_CONFIG = {
             descripton: "Проиграй 5 или более игр",
             icon: NULL_BADGE,
             quality: "GOOD"
-        },
+        },*/
 
         "tester": {
             title: "Бета-тестер",

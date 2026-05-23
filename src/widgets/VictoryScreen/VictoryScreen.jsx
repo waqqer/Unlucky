@@ -2,8 +2,8 @@ import { memo, useEffect, useCallback, useRef, useState } from "react"
 import VictoryVideo from "../VictoryVideo"
 import styles from "./VictoryScreen.module.css"
 
-const AUTO_CLOSE_DELAY = 3000
-const COUNT_UP_DURATION_MS = 2200
+const AUTO_CLOSE_DELAY = 2500
+const COUNT_UP_DURATION_MS = 2000
 
 const formatAmount = (value) => {
     const num = Number(value)

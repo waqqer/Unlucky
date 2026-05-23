@@ -41,6 +41,10 @@ const Badge = (props) => {
         }
     }, [name, canChange, currentBadge, changeCurrentBadge])
 
+    if(!Object.hasOwn(BADGES_CONFIG.badges, name)) {
+        return
+    }
+
     return (
         <div className={`${styles.badge} ${currentBadge === name && styles.active}`} style={{ "--color": `${colors[badge.quality]}` }}>
             <div className={styles.info}>
