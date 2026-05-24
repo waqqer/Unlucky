@@ -19,6 +19,7 @@
     min-width: 350px;
 
     transition: all 0.75s ease;
+    z-index: 100000000;
 }
 
 @keyframes badge-in {
@@ -49,7 +50,7 @@
     justify-content: center;
     gap: 10px;
 
-    & > * {
+    &>* {
         width: 100%;
     }
 }
@@ -107,5 +108,35 @@
     to {
         opacity: 0;
         transform: translateY(-100px);
+    }
+}
+
+@media (max-width: 1000px) {
+    .icon {
+        height: 30%;
+        width: 30%;
+    }
+
+    .info {
+        gap: 5px;
+    }
+
+    .message {
+        font-size: 1rem;
+    }
+
+    .title {
+        font-size: 1rem;
+    }
+
+    .desc {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+}
+
+@media (max-width: 630px) {
+    .badge-message {
+        display: none;
     }
 }

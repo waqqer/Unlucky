@@ -39,11 +39,11 @@ export const AppProvider = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        let url = import.meta.env.VITE_BACKEND_URL
+        if(!user)
+            return
 
-        if(user) {
-            url = `${url}?uuid=${user.minecraftUUID}`
-        }
+        let url = import.meta.env.VITE_BACKEND_URL
+        url = `${url}/${user.minecraftUUID}`
 
         const connect = () => {
             const socket = new WebSocket(url)
@@ -61,7 +61,14 @@ export const AppProvider = ({ children }) => {
                 }
 
                 if (data.type === "badge") {
-                    showBadgeMessage(data.name)
+                    if(data.timeout) {
+                        setTimeout(() => {
+                            showBadgeMessage(data.name)
+                        }, data.timeout)
+                    }
+                    else {
+                        showBadgeMessage(data.name)
+                    }
                 }
             }
 
@@ -84,7 +91,7 @@ export const AppProvider = ({ children }) => {
                 clearTimeout(timeoutRef.current)
             }
         }
-    }, [showBadgeMessage])
+    }, [showBadgeMessage, user])
 
     const values = useMemo(() => ({
         isConnected,

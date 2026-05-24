@@ -4,9 +4,9 @@ import { AppProvider } from '@/context/AppContext';
 import App from './app'
 
 createRoot(document.getElementById('root')).render(
-  <AppProvider>
-    <AccountProvider>
+  <AccountProvider>
+    <AppProvider>
       <App />
-    </AccountProvider>
-  </AppProvider>
+    </AppProvider>
+  </AccountProvider>
 )
