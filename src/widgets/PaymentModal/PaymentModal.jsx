@@ -75,7 +75,7 @@ const PaymentModal = (props) => {
                                 className={styles["preset-btn"]}
                                 onClick={() => setAmount(preset)}
                             >
-                                +{preset}
+                                {preset}
                             </button>
                         ))}
                     </div>

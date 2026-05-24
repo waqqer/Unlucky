@@ -45,7 +45,7 @@ import EPIC_CHEST from "@/shared/images/games/miner/chests/epic_chest.webp"
 import EPIC_CHEST_OPEN from "@/shared/images/games/miner/chests/epic_chest_open.webp"
 
 export const MINER_CONFIG = {
-    MINER_MIN_BET: 10,
+    MINER_MIN_BET: 5,
     MINER_MAX_BET: 1000,
     MINER_BET_PRESETS: [10, 25, 50, 100, 250],
 

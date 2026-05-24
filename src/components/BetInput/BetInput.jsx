@@ -15,7 +15,7 @@ const BetInput = (props) => {
     const handleChange = (e) => {
         const val = parseInt(e.target.value, 10)
         if (isNaN(val) || val < 0) {
-            onChange(0)
+            onChange()
         } else if (val < min) {
             onChange(min)
         } else if (val > max) {

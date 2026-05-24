@@ -102,7 +102,7 @@ const OutModal = (props) => {
                                     onClick={() => setAmount(preset)}
                                     disabled={preset > (account?.balance ?? 1000)}
                                 >
-                                    +{preset}
+                                    {preset}
                                 </button>
                             ))}
                         </div>
