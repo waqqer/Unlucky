@@ -1,6 +1,7 @@
-import { createContext, useEffect, useMemo, useState, useRef, useCallback } from "react"
+import { createContext, useEffect, useMemo, useState, useRef, useCallback, useContext } from "react"
 import { createPortal } from "react-dom"
 import BadgeMessage from "@/components/BadgeMessage"
+import { AccountContext } from "./AccountContext";
 
 export const AppContext = createContext({})
 
@@ -11,6 +12,7 @@ export const AppProvider = ({ children }) => {
     const [peak, setPeak] = useState(0)
     const [isConnected, setIsConnected] = useState(false)
     const [badgeMessage, setBadgeMessage] = useState(null)
+    const { user } = useContext(AccountContext)
 
     const socketRef = useRef(null)
     const timeoutRef = useRef(null)
@@ -19,23 +21,29 @@ export const AppProvider = ({ children }) => {
         setBadgeMessage(null)
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current)
+            timeoutRef.current = null
         }
-    }, [timeoutRef.current])
+    }, [])
 
     const showBadgeMessage = useCallback((badgeName) => {
         setBadgeMessage(badgeName)
 
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current)
+            timeoutRef.current = null
         }
 
         timeoutRef.current = setTimeout(() => {
             setBadgeMessage(null)
         }, badgeShowTime + 500)
-    }, [timeoutRef.current])
+    }, [])
 
     useEffect(() => {
-        const url = import.meta.env.VITE_BACKEND_URL
+        let url = import.meta.env.VITE_BACKEND_URL
+
+        if(user) {
+            url = `${url}?uuid=${user.minecraftUUID}`
+        }
 
         const connect = () => {
             const socket = new WebSocket(url)
@@ -83,7 +91,7 @@ export const AppProvider = ({ children }) => {
         online,
         peak,
         showBadgeMessage
-    }), [isConnected, online, peak])
+    }), [isConnected, online, peak, showBadgeMessage])
 
     return (
         <AppContext.Provider value={values}>
