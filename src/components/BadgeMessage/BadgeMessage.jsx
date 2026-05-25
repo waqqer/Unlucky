@@ -3,6 +3,8 @@ import { BADGES_CONFIG } from "@/shared/configs"
 import xp from "@/shared/audio/xp.mp3"
 import styles from "./BadgeMessage.module.css"
 
+const messageVolume = 0.05
+
 const BadgeMessage = (props) => {
     const {
         badge = "",
@@ -18,7 +20,7 @@ const BadgeMessage = (props) => {
     }, [badge, BADGES_CONFIG])
 
     const c = useMemo(() => {
-        if(b) {
+        if (b) {
             return BADGES_CONFIG.colors[b.quality]
         }
         return null
@@ -26,7 +28,11 @@ const BadgeMessage = (props) => {
 
     useEffect(() => {
         if (boxRef.current && soundRef.current) {
-            soundRef.current.play()
+            const soundTimer = setTimeout(() => {
+                soundRef.current.volume = messageVolume
+                soundRef.current.play()
+            }, 250)
+
             const timer = setTimeout(() => {
                 boxRef.current.classList.add(styles.fade)
             }, time)
@@ -38,6 +44,7 @@ const BadgeMessage = (props) => {
             return () => {
                 clearTimeout(timer)
                 clearTimeout(removeTimer)
+                clearTimeout(soundTimer)
             }
         }
     }, [boxRef.current, time, onClose, soundRef.current])

@@ -2,6 +2,7 @@ import UserProfile from "@/widgets/UserProfile"
 import MainTitle from "@/widgets/MainTitle"
 import GamesSection from "@/widgets/GamesSection"
 import styles from "./MainPage.module.css"
+import BadgeMessage from "../../components/BadgeMessage/BadgeMessage";
 
 const MainPage = () => {
     return (

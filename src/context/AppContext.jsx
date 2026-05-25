@@ -39,7 +39,7 @@ export const AppProvider = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        if(!user)
+        if (!user)
             return
 
         let url = import.meta.env.VITE_BACKEND_URL
@@ -61,13 +61,15 @@ export const AppProvider = ({ children }) => {
                 }
 
                 if (data.type === "badge") {
-                    if(data.timeout) {
-                        setTimeout(() => {
+                    if (data.show) {
+                        if (data.timeout) {
+                            setTimeout(() => {
+                                showBadgeMessage(data.name)
+                            }, data.timeout)
+                        }
+                        else {
                             showBadgeMessage(data.name)
-                        }, data.timeout)
-                    }
-                    else {
-                        showBadgeMessage(data.name)
+                        }
                     }
                 }
             }

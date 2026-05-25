@@ -7,12 +7,12 @@
     border: 2px solid var(--color);
     box-shadow: 0px 0px 10px 0px var(--color);
 
-    padding: 1%;
+    padding: 0.8%;
 
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
 
     animation: badge-in 0.75s ease;
 
@@ -20,6 +20,8 @@
 
     transition: all 0.75s ease;
     z-index: 100000000;
+
+    border-radius: 2px;
 }
 
 @keyframes badge-in {
@@ -48,7 +50,7 @@
     flex-direction: column;
     align-items: start;
     justify-content: center;
-    gap: 10px;
+    gap: 5px;
 
     &>* {
         width: 100%;
@@ -132,6 +134,18 @@
     .desc {
         font-size: 0.8rem;
         opacity: 0.9;
+    }
+
+    .badge-message {
+        top: 15px;
+        left: 25px;
+
+        padding: 0.75%;
+        gap: 10px;
+        min-width: 250px;
+
+        border-radius: 5px;
+        backdrop-filter: saturate(3);
     }
 }
 
