@@ -9,6 +9,7 @@ export const AccountContext = createContext({})
 export const AccountProvider = ({ children }) => {
     const { user: spwUser, spm } = useSPW()
     const head = useHead(spwUser)
+    const fullhead = useHead(spwUser, "head")
 
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -142,6 +143,7 @@ export const AccountProvider = ({ children }) => {
         user: spwUser,
         spm,
         head,
+        fullhead,
         account,
         isLoaded,
         updateUser,

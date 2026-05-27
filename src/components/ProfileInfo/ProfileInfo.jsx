@@ -10,7 +10,7 @@ const ProfileInfo = (props) => {
     } = props
 
     const {
-        head,
+        fullhead,
         user,
         isLoaded,
         account
@@ -19,7 +19,7 @@ const ProfileInfo = (props) => {
     return (
         <div className={`${styles["profile-section"]} ${className}`}>
             <img 
-                src={head}
+                src={fullhead}
                 width={64}
                 height={64}
                 loading="lazy"
