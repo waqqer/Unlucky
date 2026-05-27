@@ -1,7 +1,7 @@
 import Title from "@/components/Title"
 import { memo } from "react"
 import Container from "@/components/Container"
-import Logo from "@/shared/images/logo.webp"
+import { Logo } from "@/shared/images"
 import styles from "./MainTitle.module.css"
 
 const MainTitle = () => {

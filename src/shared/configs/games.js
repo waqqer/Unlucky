@@ -1,12 +1,10 @@
-import SlotsImage from "@/shared/images/slots.webp"
-import MinerImage from "@/shared/images/miner.webp"
-import RocketImage from "@/shared/images/rocket.webp"
+import { Slots, Rocket, Miner } from "@/shared/images"
 
 export const GAMES_CONFIG = [
     {
         title: "Слоты",
         desc: "Выбей ряд одинаковых предметов и получай ИКСЫ!",
-        img: SlotsImage,
+        img: Slots,
         url: "/slots",
         enable: true
     },
@@ -14,7 +12,7 @@ export const GAMES_CONFIG = [
     {
         title: "Майнер",
         desc: "От твоей удачи зависит кирка, которая поможет добраться до лута!",
-        img: MinerImage,
+        img: Miner,
         url: "/miner",
         enable: true
     },
@@ -22,7 +20,7 @@ export const GAMES_CONFIG = [
     {
         title: "Ракета",
         desc: "Ракета набирает высоту, а с ней растёт твой выигрыш. Успей остановиться!",
-        img: RocketImage,
+        img: Rocket,
         url: "/rocket",
         enable: true
     }
