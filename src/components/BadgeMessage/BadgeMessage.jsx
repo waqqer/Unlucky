@@ -71,7 +71,7 @@ const BadgeMessage = (props) => {
                 <div className={styles.content}>
                     <h3 className={styles.title}>{b.title}</h3>
 
-                    <p className={styles.desc}>{b.descripton}</p>
+                    <p className={styles.desc}>{b.description}</p>
                 </div>
             </div>
         </div>

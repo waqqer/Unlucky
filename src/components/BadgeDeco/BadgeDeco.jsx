@@ -114,7 +114,7 @@ const BadgeDeco = (props) => {
                         <h3>{badgeInfo.title}</h3>
                     </div>
                     <div className={styles.desc}>
-                        <p>{badgeInfo.descripton}</p>
+                        <p>{badgeInfo.description}</p>
                     </div>
                 </div>,
                 document.body

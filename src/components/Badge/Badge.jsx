@@ -20,7 +20,7 @@ const Badge = (props) => {
     const badge = useMemo(() => {
         return BADGES_CONFIG.badges[name] || {
             title: "Badge",
-            descripton: "...",
+            description: "...",
             icon: null_badge_icon,
             quality: "BASIC"
         }
@@ -52,7 +52,7 @@ const Badge = (props) => {
                     <h3>{badge.title}</h3>
                 </div>
                 <div className={styles.desc}>
-                    <p>{badge.descripton}</p>
+                    <p>{badge.description}</p>
                 </div>
             </div>
 

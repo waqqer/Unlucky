@@ -13,70 +13,70 @@ export const BADGES_CONFIG = {
     badges: {
         "slots": {
             title: "Азарт",
-            descripton: "Даётся за первую игру в `Слоты`",
+            description: "Выдаётся за первую игру в `Слоты`",
             icon: SLOTS_BADGE,
             quality: "BASIC"
         },
 
         "miner": {
             title: "Рудокоп",
-            descripton: "Даётся за первую игру в `Майнер`",
+            description: "Выдаётся за первую игру в `Майнер`",
             icon: MINER_BADGE,
             quality: "BASIC"
         },
 
         "rocket": {
             title: "К звёздам!",
-            descripton: "Даётся за первую игру в `Ракета`",
+            description: "Выдаётся за первую игру в `Ракета`",
             icon: ROCKET_BADGE,
             quality: "BASIC"
         },
 
         "winner": {
             title: "Победитель",
-            descripton: "Даётся за первую победу в любой из игр",
+            description: "Выдаётся за первую победу в любой игре",
             icon: WINNER_BADGE,
             quality: "GOOD"
         },
 
         "lucky": {
             title: "Везунчик",
-            descripton: "Капуцк, ты везунчик! Целых 5 побед подряд...",
+            description: "Одержать 5 побед подряд",
             icon: LUCKY_BADGE,
             quality: "EPIC"
         },
 
         "lucky2": {
-            title: "Везунчик II",
-            descripton: "10 Побед подряд... Как так?",
+            title: "Абсолютный везунчик",
+            description: "Одержать 10 побед подряд",
             icon: LUCKY2_BADGE,
             quality: "LEGENDARY"
         },
 
         "rich": {
             title: "Богач",
-            descripton: "Даётся за выйгрышь 1000 или более ар",
+            description: "Выиграть 1000 AR или больше за одну игру",
             icon: RICH_BADGE,
             quality: "LEGENDARY"
         },
 
         /*"marathon": {
-            title: "Задрот",
-            descripton: "Сыграй 100 или более игр",
+            title: "Марафон",
+            description: "Сыграть 100 или более игр",
             icon: NULL_BADGE,
             quality: "GOOD"
         },
 
         "loser": {
-            title: "Лузер",
-            descripton: "Проиграй 5 или более игр",
+            title: "Неудачник",
+            description: "Проиграть 5 или более игр",
             icon: NULL_BADGE,
             quality: "GOOD"
         },*/
 
         "tester": {
             title: "Бета-тестер",
-            descripton: "Даётся за участие в бета-тесте Unlucky",
+            description: "Выдаётся за участие в бета-тесте Unlucky",
             icon: TESTER_BADGE,
             quality: "LIMITED"
         },
