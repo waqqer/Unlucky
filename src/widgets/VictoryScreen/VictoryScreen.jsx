@@ -44,7 +44,7 @@ const VictoryScreen = (props) => {
     const screenRef = useRef(null)
 
     const handleClose = useCallback(() => {
-        if(screenRef.current) {
+        if (screenRef.current) {
             screenRef.current.classList.add(styles["fade-up"]);
         }
 
@@ -53,6 +53,13 @@ const VictoryScreen = (props) => {
                 onClose()
         }, 1250)
     }, [onClose])
+
+    const handleClick = useCallback((e) => {
+        if (closeTimerRef.current)
+            clearTimeout(closeTimerRef.current)
+
+        handleClose()
+    }, [handleClose])
 
     const triggerPopAnimation = useCallback(() => {
         if (!amountRef.current) return
@@ -121,10 +128,19 @@ const VictoryScreen = (props) => {
             handleClose()
         }, closeDelay)
 
+        const eventsTimer = setTimeout(() => {
+            document.addEventListener("keydown", handleClick)
+            document.addEventListener("click", handleClick)
+        }, 500)
+
         return () => {
             if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+
+            clearTimeout(eventsTimer)
+            document.removeEventListener("keydown", handleClick)
+            document.removeEventListener("click", handleClick)
         }
-    }, [isOpen, handleClose, onVictoryComplete, winAmount])
+    }, [isOpen, handleClose, onVictoryComplete, winAmount, handleClick])
 
     if (!isOpen) return null
 
