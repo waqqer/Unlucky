@@ -21,9 +21,9 @@ export const AccountProvider = ({ children }) => {
     const [isValid, setIsValid] = useState(false)
 
     useEffect(() => {
-        if (!spwUser)
+        if(!spwUser)
             return
-
+        
         Promise.all([
             fetch("https://playerdb.co/api/player/minecraft/" + spwUser.username)
                 .then(() => true)

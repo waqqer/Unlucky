@@ -13,7 +13,8 @@ const HistorySection = (props) => {
     } = props
 
     const {
-        user
+        user,
+        account
     } = useContext(AccountContext)
 
     const [historyModal, setHistotyModal] = useState(false);
@@ -26,12 +27,15 @@ const HistorySection = (props) => {
 
     const closeHistory = useCallback(() => setHistotyModal(false), [])
     useEffect(() => {
+        if(!account)
+            return
+        
         HistoryApi.getByUuid(user?.minecraftUUID)
             .then(data => setHistory(data ?? []))
             .catch(() => {
                 setHistory([])
             })
-    }, [user?.username, user?.minecraftUUID])
+    }, [user?.username, user?.minecraftUUID, account])
 
     const rendered_list = history.slice(0, 5)
 

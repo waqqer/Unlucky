@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import SPWMini from "spwmini/client"
 
 const useSPW = () => {
-    const [spm, setSpm] = useState(null)
+    const spmRef = useRef(null)
     const [user, setUser] = useState(null)
 
     useEffect(() => {
+        if (spmRef.current)
+            return
+
         const app = new SPWMini(import.meta.env.VITE_APP_ID)
-        setSpm(app)
+        spmRef.current = app
 
         const initHandle = (userData) => {
             setUser(userData)
@@ -19,11 +22,12 @@ const useSPW = () => {
         return () => {
             app.off('initResponse', initHandle)
             app.dispose()
+            spmRef.current = null
         }
     }, [])
 
     return {
-        spm,
+        spm: spmRef.current,
         user
     }
 }

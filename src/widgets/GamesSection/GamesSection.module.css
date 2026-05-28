@@ -19,6 +19,15 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+@media (max-width: 700px) {
+    .game-rnd-message {
+        font-size: 3vh;
+        letter-spacing: 1.3px;
+
+        padding-inline: 30px;
+    }
+}
+
 @media (max-width: 630px) {
     .game-rnd-message {
         display: none;
