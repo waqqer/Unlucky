@@ -25,7 +25,7 @@ export const AccountProvider = ({ children }) => {
             return
         
         Promise.all([
-            fetch("https://playerdb.co/api/player/minecraft/" + spwUser.username)
+            fetch("https://playerdb.co/api/player/minecraft/" + spwUser.minecraftUUID)
                 .then(() => true)
                 .catch(() => false),
 
