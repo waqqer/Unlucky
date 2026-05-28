@@ -33,6 +33,7 @@ const AboutUsModal = (props) => {
 
         const date = new Date(account.terms_accept_date);
         const time = date.toLocaleDateString("ru-RU", {
+            year: "numeric",
             day: "numeric",
             month: "long",
             hour: "2-digit",

@@ -302,7 +302,7 @@ const RocketGame = (props) => {
                         <Button
                             className={styles["play-btn"]}
                             onClick={startGame}
-                            isDisabled={isRequestPending || bet < ROCKET_MIN_BET || (!demoMode && !user) || showVictory}
+                            isDisabled={isRequestPending || bet < ROCKET_MIN_BET || (!demoMode && !user) || showVictory || !account}
                             activateOnSpace={true}
                         >
                             {isRequestPending ? "Загрузка..." : "Сыграть"}
@@ -314,10 +314,7 @@ const RocketGame = (props) => {
                             isDisabled={hasCashedOut || isCrashed}
                             activateOnSpace={true}
                         >
-                            {hasCashedOut ? "Забрано!" : currentMultiplier < 1
-                                ? `Забрать ${formatMoney(bet * currentMultiplier)} Ар`
-                                : `Забрать ${formatMoney(bet * currentMultiplier)} Ар`
-                            }
+                            {hasCashedOut ? "Забрано!" : `Забрать ${formatMoney(bet * currentMultiplier)} Ар`}
                         </Button>
                     )}
                 </div>

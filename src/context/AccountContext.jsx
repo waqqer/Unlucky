@@ -18,10 +18,29 @@ export const AccountProvider = ({ children }) => {
     const [badges, setBadges] = useState([])
     const [currentBadge, setCurrentBadge] = useState(null)
 
-    const updateBadges = useCallback(() => {
-        if(!spwUser)
+    const [isValid, setIsValid] = useState(false)
+
+    useEffect(() => {
+        if (!spwUser)
             return
-        
+
+        Promise.all([
+            fetch("https://playerdb.co/api/player/minecraft/" + spwUser.username)
+                .then(() => true)
+                .catch(() => false),
+
+            spm.validateUser(import.meta.env.VITE_BACKEND_URL + "/validate")
+                .then(d => d === 1 ? true : false)
+                .catch(() => false)
+        ]).then(([minecraftValid, spValid]) => {
+            setIsValid(minecraftValid && spValid)
+        })
+    }, [spwUser])
+
+    const updateBadges = useCallback(() => {
+        if (!spwUser)
+            return
+
         UserApi.getBadges(spwUser.minecraftUUID)
             .then(data => {
                 setCurrentBadge(data.current || null)
@@ -38,7 +57,7 @@ export const AccountProvider = ({ children }) => {
     }, [spwUser])
 
     useEffect(() => {
-        if (!spwUser)
+        if (!spwUser || !isValid)
             return
 
         UserApi.getOrCreate(spwUser, "USER")
@@ -51,7 +70,7 @@ export const AccountProvider = ({ children }) => {
             })
 
         updateBadges()
-    }, [spwUser, updateBadges])
+    }, [spwUser, updateBadges, isValid])
 
     const updateUser = useCallback((newData) => {
         setAccount(prev => prev ? { ...prev, ...newData } : newData)
@@ -121,7 +140,7 @@ export const AccountProvider = ({ children }) => {
     }, [spwUser])
 
     useEffect(() => {
-        if (!spm)
+        if (!spm || !isValid)
             return
 
         const paymentReact = () => {
@@ -137,7 +156,7 @@ export const AccountProvider = ({ children }) => {
             spm.off("paymentResponse", paymentReact)
             spm.off("openPaymentResponse", paymentReact)
         }
-    }, [spm, refreshAccount])
+    }, [spm, refreshAccount, isValid])
 
     const values = useMemo(() => ({
         user: spwUser,
@@ -155,8 +174,9 @@ export const AccountProvider = ({ children }) => {
         getBalance,
         refreshAccount,
         termsAccepted,
-        acceptTerms
-    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge, changeCurrentBadge, updateBadges])
+        acceptTerms,
+        isValid
+    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge, changeCurrentBadge, updateBadges, isValid])
 
     return (
         <AccountContext.Provider value={values}>

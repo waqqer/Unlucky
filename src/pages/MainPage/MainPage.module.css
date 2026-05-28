@@ -35,3 +35,9 @@
     flex-direction: column;
     justify-content: space-around;
 }
+
+@media (max-width: 700px) {
+    .footer {
+        display: none;
+    }
+}
