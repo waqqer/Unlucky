@@ -21,12 +21,13 @@ export const AccountProvider = ({ children }) => {
     const [isValid, setIsValid] = useState(false)
 
     useEffect(() => {
-        if(!spwUser)
+        if (!spwUser)
             return
-        
+
         Promise.all([
             fetch("https://playerdb.co/api/player/minecraft/" + spwUser.minecraftUUID)
-                .then(() => true)
+                .then(d => d.json())
+                .then(d => d.data?.player?.username === spwUser.username ? true : false)
                 .catch(() => false),
 
             spm.validateUser(import.meta.env.VITE_BACKEND_URL + "/validate")
