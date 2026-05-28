@@ -1,6 +1,7 @@
 import LinkButton from "@/components/LinkButton"
 import ModalExitButton from "@/components/ModalExitButton"
-import { memo, useCallback } from "react"
+import { memo, useCallback, useContext } from "react"
+import { AccountContext } from "@/context/AccountContext"
 import useSPW from "@/hooks/useSPW"
 import styles from "./AboutUsModal.module.css"
 import Button from "@/components/Button/Button"
@@ -12,7 +13,7 @@ const AboutUsModal = (props) => {
         close
     } = props
 
-    const { spm } = useSPW()
+    const { spm, account, termsAccepted } = useContext(AccountContext)
 
     const openTelegram = useCallback(() => {
         if (spm) {
@@ -25,6 +26,20 @@ const AboutUsModal = (props) => {
             spm.openURL("https://youtube.com/@ShadowMonya")
         }
     }, [spm])
+
+    const getDate = useCallback(() => {
+        if(!account && !account.terms_accept_date)
+            return "Ошибка!"
+
+        const date = new Date(account.terms_accept_date);
+        const time = date.toLocaleDateString("ru-RU", {
+            day: "numeric",
+            month: "long",
+            hour: "2-digit",
+            minute: "2-digit"
+        })
+        return time
+    }, [account])
 
     return (
         <>
@@ -76,6 +91,7 @@ const AboutUsModal = (props) => {
                     )}
                 </div>
                 <Link to="/terms" className={styles.terms}>Условия пользования Unlucky</Link>
+                {termsAccepted() && account && <p className={styles.terms_date}>Дата принятия вами условий пользования: {getDate()}</p>}
             </div>
         </>
     )
