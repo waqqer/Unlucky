@@ -13,6 +13,7 @@ const LeaderboardItem = (props) => {
     const {
         id,
         uuid = "",
+        badge = "",
         name = "noname",
         value = 0
     } = props
@@ -43,7 +44,7 @@ const LeaderboardItem = (props) => {
                 <div className={`${styles.user}`}>
                     <img 
                         src={head} 
-                        alt="leader head icon" 
+                        alt="head" 
                         draggable={false}
                         loading="lazy"
                         width={iconSize}
@@ -53,7 +54,7 @@ const LeaderboardItem = (props) => {
                         {name || "noname"}
                     </h2>
 
-                    <Badgedeco uuid={uuid} className={"mobile-hide"} size={isMobile || isTablet ? 8 : 24} />
+                    <Badgedeco badge={badge} className={"mobile-hide"} size={isMobile || isTablet ? 8 : 24} />
                 </div>
             </div>
 

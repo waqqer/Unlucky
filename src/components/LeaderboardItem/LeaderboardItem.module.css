@@ -44,7 +44,7 @@
     font-size: 1.25rem;
     font-weight: normal;
     height: 100%;
-    max-width: 10vw;
+    max-width: 9vw;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -125,7 +125,7 @@
     }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1400px) {
     .leader {
         padding: 10px;
     }

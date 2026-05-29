@@ -2,12 +2,12 @@ import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } f
 import { createPortal } from "react-dom"
 import { BADGES_CONFIG } from "@/shared/configs/badges"
 import { AccountContext } from "@/context/AccountContext"
-import UserApi from "@/api/users";
+import UserApi from "@/api/users"
 import styles from "./BadgeDeco.module.css"
 
 const BadgeDeco = (props) => {
     const {
-        uuid,
+        badge,
         size = 32,
         className = "",
         info = true
@@ -19,23 +19,13 @@ const BadgeDeco = (props) => {
     const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 })
     const iconRef = useRef(null)
     const hideTimerRef = useRef(null)
-    const { currentBadge } = useContext(AccountContext)
 
     useEffect(() => {
-        if (!uuid) return
+        setFetchedBadge(badge)
+    }, [badge])
 
-        UserApi.getBadges(uuid).then(d => {
-            setFetchedBadge(d.current || null)
-        })
-    }, [uuid])
-
-    const badgeName = useMemo(() => {
-        if (!uuid) return currentBadge || null
-        return fetchedBadge
-    }, [uuid, currentBadge, fetchedBadge])
-
-    const icon = badgeName ? BADGES_CONFIG.badges[badgeName]?.icon || null : null
-    const badgeInfo = badgeName ? BADGES_CONFIG.badges[badgeName] : null
+    const icon = fetchedBadge ? BADGES_CONFIG.badges[fetchedBadge]?.icon || null : null
+    const badgeInfo = fetchedBadge ? BADGES_CONFIG.badges[fetchedBadge] : null
 
     const hideTooltip = useCallback(() => {
         setVisible(false)

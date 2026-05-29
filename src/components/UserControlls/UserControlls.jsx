@@ -26,13 +26,6 @@ const UserControlls = (props) => {
             <ProfileButton text="О нас" onClick={openAbout} />
             {children}
             <ProfileButton text="Главная" link="/" className="pc-hide" />
-
-            {user === null && account === null && (
-                <p className={styles.warn}>Ошибка СПм!</p>
-            )}
-            {user !== null && account === null && (
-                <p className={styles.warn}>Тех. работы!</p>
-            )}
         </div>
     )
 }

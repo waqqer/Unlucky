@@ -26,6 +26,7 @@ const GlobalHistoryItem = (props) => {
     const title = data.game_name ?? "???"
     const username = data.user?.name ?? "Неизвестно"
     const userUUID = data.user?.UUID ?? ""
+    const badge = data.user?.current_badge ?? ""
     const avatarUrl = useHead(userUUID)
 
     return (
@@ -43,7 +44,7 @@ const GlobalHistoryItem = (props) => {
             <div className={styles.data}>
                 <div className={styles.user}>
                     <h1 className={styles.username}>{username}</h1>
-                    <BadgeDeco uuid={userUUID} size={20} />
+                    <BadgeDeco badge={badge} size={20} />
                 </div>
                 <h1 className={styles["game-name"]}>{title}</h1>
             </div>
