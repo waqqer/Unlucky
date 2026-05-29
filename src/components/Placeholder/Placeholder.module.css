@@ -1,25 +1,35 @@
+.loader-box {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0;
+
+    border-radius: 15px;
+    background-color: transparent;
+
+    max-height: 50px;
+}
+
 .loader {
     display: inline-block;
-    background: linear-gradient(90deg,
-            #7e90a0 0%,
-            #b0b8c0 30%,
-            #d1d1d1 50%,
-            #b0b8c0 70%,
-            #7e90a0 100%);
+    background-color: gray;
     background-size: 200% 100%;
-    border-radius: 7px;
     padding: 10px;
-    margin-top: 5px;
     width: 100%;
-    animation: wave 10s ease infinite;
+    animation: wave 8s ease infinite;
+    opacity: 0.8;
 }
 
 @keyframes wave {
-    0% {
-        background-position: 200% 0;
+    from {
+        background-color: gray;
     }
 
-    100% {
-        background-position: -200% 0;
+    50% {
+        background-color: rgb(255, 255, 255);
+    }
+
+    to {
+        background-color: gray;
     }
 }
