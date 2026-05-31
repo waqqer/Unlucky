@@ -9,6 +9,12 @@ let currentSpUser = null
 let refreshPromise = null
 let refreshTimer = null
 
+function normalizeUuid(value) {
+    if (typeof value !== "string")
+        return ""
+    return value.replace(/-/g, "").toLowerCase()
+}
+
 function isValidTokenString(token) {
     return typeof token === "string" && token.length > 0 && token !== "undefined" && token !== "null"
 }
@@ -59,6 +65,11 @@ function parseJwtPayload(token) {
     } catch {
         return null
     }
+}
+
+export function getTokenUuid() {
+    const payload = parseJwtPayload(getToken())
+    return typeof payload?.uuid === "string" ? payload.uuid : null
 }
 
 export function isTokenExpired(token = getToken(), bufferMs = EXPIRY_BUFFER_MS) {
@@ -114,7 +125,12 @@ export async function ensureValidToken(spUser) {
         setSpUser(spUser)
 
     const token = getToken()
-    if (token && !isTokenExpired(token))
+    const tokenUuid = getTokenUuid()
+    const spUuid = spUser?.minecraftUUID
+    const uuidMatches = !spUuid || !tokenUuid
+        || normalizeUuid(tokenUuid) === normalizeUuid(spUuid)
+
+    if (token && !isTokenExpired(token) && uuidMatches)
         return token
 
     return refreshToken(spUser)

@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState, useRef, useCallback, useCo
 import { createPortal } from "react-dom"
 import BadgeMessage from "@/components/BadgeMessage"
 import { AccountContext } from "./AccountContext";
+import { ensureValidToken, getToken, getTokenUuid } from "@/api/auth"
 
 export const AppContext = createContext({})
 
@@ -12,7 +13,7 @@ export const AppProvider = ({ children }) => {
     const [peak, setPeak] = useState(0)
     const [isConnected, setIsConnected] = useState(false)
     const [badgeMessage, setBadgeMessage] = useState(null)
-    const { user } = useContext(AccountContext)
+    const { user, isLoaded } = useContext(AccountContext)
 
     const socketRef = useRef(null)
     const timeoutRef = useRef(null)
@@ -39,18 +40,28 @@ export const AppProvider = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        if (!user)
+        if (!user || !isLoaded)
             return
 
-        let url = import.meta.env.VITE_BACKEND_URL
-        url = `${url}/${user.minecraftUUID}`
+        let cancelled = false
 
-        const connect = () => {
+        const connect = async () => {
+            await ensureValidToken(user)
+            const token = getToken()
+            const uuid = getTokenUuid() || user.minecraftUUID
+            if (cancelled || !token || !uuid)
+                return
+
+            let url = import.meta.env.VITE_BACKEND_URL
+            url = url.replace(/^https:/, "wss:").replace(/^http:/, "ws:")
+            url = `${url.replace(/\/$/, "")}/${uuid}?token=${encodeURIComponent(token)}`
+
             const socket = new WebSocket(url)
             socketRef.current = socket
 
             socket.onopen = () => {
-                setIsConnected(true)
+                if (!cancelled)
+                    setIsConnected(true)
             }
 
             socket.onmessage = (ev) => {
@@ -76,7 +87,8 @@ export const AppProvider = ({ children }) => {
 
             socket.onclose = () => {
                 setIsConnected(false)
-                setTimeout(connect, 5000)
+                if (!cancelled)
+                    setTimeout(connect, 5000)
             }
 
             socket.onerror = () => { }
@@ -85,6 +97,8 @@ export const AppProvider = ({ children }) => {
         connect()
 
         return () => {
+            cancelled = true
+
             if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
                 socketRef.current.close();
             }
@@ -93,7 +107,7 @@ export const AppProvider = ({ children }) => {
                 clearTimeout(timeoutRef.current)
             }
         }
-    }, [showBadgeMessage, user])
+    }, [user, isLoaded])
 
     const values = useMemo(() => ({
         isConnected,
