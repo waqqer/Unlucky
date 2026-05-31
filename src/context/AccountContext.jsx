@@ -31,7 +31,16 @@ export const AccountProvider = ({ children }) => {
                 .catch(() => false),
 
             spm.validateUser(import.meta.env.VITE_BACKEND_URL + "/validate")
-                .then(d => d === 1 ? true : false)
+                .then(d => {
+                    switch (typeof d) {
+                        case "number":
+                            return d === 1 ? true : false
+                        case "boolean":
+                            return d
+                        default:
+                            return false
+                    }
+                })
                 .catch(() => false)
         ]).then(([minecraftValid, spValid]) => {
             setIsValid(minecraftValid && spValid)
