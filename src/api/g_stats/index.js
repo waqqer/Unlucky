@@ -1,25 +1,22 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const URL = fetchUrl + "/g_stats"
-
-const HEADERS = {
-    "Content-Type": "application/json"
-}
 
 const GStatsApi = {
 
     get: async () => {
-        return fetch(URL)
+        return authFetch(URL)
             .then(res => res.json())
     },
 
     gamesStats: async () => {
-        return fetch(URL + "/games")
+        return authFetch(URL + "/games")
             .then(res => res.json())
     },
 
     getUserCount: async () => {
-        return fetch(URL + "/acc_count")
+        return authFetch(URL + "/acc_count")
             .then(res => res.json())
     },
 
@@ -44,9 +41,11 @@ const GStatsApi = {
         if (typeof stats?.total_amount === "number")
             data.total_amount = stats.total_amount
 
-        return fetch(URL, {
+        return authFetch(URL, {
             method: "PUT",
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         }).then(res => res.json())
     }

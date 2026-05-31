@@ -3,6 +3,7 @@ import useSPW from "@/hooks/useSpw"
 import useHead from "@/hooks/useHead"
 import UserApi from "@/api/users"
 import BalanceApi from "@/api/balance"
+import { setToken, setSpUser, ensureValidToken, clearTokenRefreshTimer } from "@/api/auth"
 
 export const AccountContext = createContext({})
 
@@ -17,35 +18,6 @@ export const AccountProvider = ({ children }) => {
 
     const [badges, setBadges] = useState([])
     const [currentBadge, setCurrentBadge] = useState(null)
-
-    const [isValid, setIsValid] = useState(false)
-
-    useEffect(() => {
-        if (!spwUser)
-            return
-
-        Promise.all([
-            fetch("https://playerdb.co/api/player/minecraft/" + spwUser.minecraftUUID)
-                .then(d => d.json())
-                .then(d => d.data?.player?.username === spwUser.username ? true : false)
-                .catch(() => false),
-
-            spm.validateUser(import.meta.env.VITE_BACKEND_URL + "/validate")
-                .then(d => {
-                    switch (typeof d) {
-                        case "number":
-                            return d === 1 ? true : false
-                        case "boolean":
-                            return d
-                        default:
-                            return false
-                    }
-                })
-                .catch(() => false)
-        ]).then(([minecraftValid, spValid]) => {
-            setIsValid(minecraftValid && spValid)
-        })
-    }, [spwUser])
 
     const updateBadges = useCallback(() => {
         if (!spwUser)
@@ -67,20 +39,57 @@ export const AccountProvider = ({ children }) => {
     }, [spwUser])
 
     useEffect(() => {
-        if (!spwUser || !isValid)
+        if (!spwUser)
             return
 
-        UserApi.getOrCreate(spwUser, "USER")
-            .then(data => {
-                setAccount(data)
-                setIsLoaded(true)
-            })
-            .catch(() => {
-                setIsLoaded(false)
-            })
+        setSpUser(spwUser)
 
-        updateBadges()
-    }, [spwUser, updateBadges, isValid])
+        let cancelled = false
+
+        const initAccount = async () => {
+            try {
+                const existingToken = await ensureValidToken(spwUser)
+                if (cancelled)
+                    return
+
+                if (existingToken) {
+                    const data = await UserApi.getByUuid(spwUser.minecraftUUID)
+                    if (cancelled)
+                        return
+
+                    if (data?.UUID) {
+                        setAccount(data)
+                        setIsLoaded(true)
+                        updateBadges()
+                        return
+                    }
+                }
+
+                const data = await UserApi.getOrCreate(spwUser)
+                if (cancelled)
+                    return
+
+                if (setToken(data?.token)) {
+                    setAccount(data)
+                    setIsLoaded(true)
+                    updateBadges()
+                }
+            } catch {
+                if (!cancelled)
+                    setIsLoaded(false)
+            }
+        }
+
+        initAccount()
+
+        return () => {
+            cancelled = true
+        }
+    }, [spwUser, updateBadges])
+
+    useEffect(() => {
+        return () => clearTokenRefreshTimer()
+    }, [])
 
     const updateUser = useCallback((newData) => {
         setAccount(prev => prev ? { ...prev, ...newData } : newData)
@@ -126,12 +135,12 @@ export const AccountProvider = ({ children }) => {
     }, [spwUser])
 
     const termsAccepted = useCallback(() => {
-        if (!account) {
+        if (!account || !isLoaded) {
             return true
         }
 
         return account.terms_accept
-    }, [account])
+    }, [account, isLoaded])
 
     const acceptTerms = useCallback(() => {
         const uuid = spwUser?.minecraftUUID
@@ -150,7 +159,7 @@ export const AccountProvider = ({ children }) => {
     }, [spwUser])
 
     useEffect(() => {
-        if (!spm || !isValid)
+        if (!spm)
             return
 
         const paymentReact = () => {
@@ -166,7 +175,7 @@ export const AccountProvider = ({ children }) => {
             spm.off("paymentResponse", paymentReact)
             spm.off("openPaymentResponse", paymentReact)
         }
-    }, [spm, refreshAccount, isValid])
+    }, [spm, refreshAccount])
 
     const values = useMemo(() => ({
         user: spwUser,
@@ -184,9 +193,8 @@ export const AccountProvider = ({ children }) => {
         getBalance,
         refreshAccount,
         termsAccepted,
-        acceptTerms,
-        isValid
-    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge, changeCurrentBadge, updateBadges, isValid])
+        acceptTerms
+    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge, changeCurrentBadge, updateBadges])
 
     return (
         <AccountContext.Provider value={values}>

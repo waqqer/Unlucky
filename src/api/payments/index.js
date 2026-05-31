@@ -1,10 +1,7 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const URL = fetchUrl + "/payment"
-
-const HEADERS = {
-    "Content-Type": "application/json"
-}
 
 const PaymentApi = {
     new: async (amount, uuid) => {
@@ -13,23 +10,27 @@ const PaymentApi = {
             uuid
         }
 
-        return fetch(URL, {
+        return authFetch(URL, {
             method: "POST",
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(body)
         }).then(d => d.json())
     },
 
     transaction: async (number, uuid, amount) => {
-        const body ={
+        const body = {
             number: String(number),
             uuid: String(uuid),
             amount: Number(amount)
         }
 
-        return fetch(URL + "/out", {
+        return authFetch(URL + "/out", {
             method: "POST",
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(body)
         }).then(d => d.json())
     }

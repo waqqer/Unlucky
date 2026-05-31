@@ -1,10 +1,7 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const URL = fetchUrl + "/balance"
-
-const HEADERS = {
-    "Content-Type": "application/json"
-}
 
 const BalanceApi = {
 
@@ -12,7 +9,7 @@ const BalanceApi = {
         if (!uuid || uuid.trim() === "")
             return null
 
-        return fetch(URL + `/${uuid.trim()}`)
+        return authFetch(URL + `/${uuid.trim()}`)
             .then(res => res.json())
     },
 
@@ -28,9 +25,11 @@ const BalanceApi = {
             balance: value
         }
 
-        return fetch(URL + `/${uuid.trim()}`, {
+        return authFetch(URL + `/${uuid.trim()}`, {
             method: "PATCH",
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         }).then(res => res.json())
     }

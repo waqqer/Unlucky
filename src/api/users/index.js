@@ -1,4 +1,5 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const URL = fetchUrl + "/user"
 
@@ -13,7 +14,7 @@ const UserApi = {
         if (typeof limit === "number" && limit > 1)
             l = limit
 
-        return fetch(URL + `?limit=${l}`)
+        return authFetch(URL + `?limit=${l}`)
             .then(res => res.json())
     },
 
@@ -21,19 +22,14 @@ const UserApi = {
         if (!uuid || uuid.trim() === "")
             return null
 
-        return fetch(URL + `/${uuid.trim()}`)
+        return authFetch(URL + `/${uuid.trim()}`)
             .then(res => res.json())
     },
 
-    getOrCreate: async (sp_user, role) => {
-        let r = "USER"
-        if (role === "USER" || role === "ADMIN")
-            r = role
-
+    getOrCreate: async (sp_user) => {
         const data = {
             name: sp_user.username,
-            UUID: sp_user.minecraftUUID,
-            role: r
+            UUID: sp_user.minecraftUUID
         }
 
         return fetch(URL, {
@@ -44,17 +40,17 @@ const UserApi = {
     },
 
     getCards: async (uuid) => {
-        return fetch(URL + `/${uuid.trim()}/cards`)
-                .then(res => res.json())
+        return authFetch(URL + `/${uuid.trim()}/cards`)
+            .then(res => res.json())
     },
 
     getBadges: async (uuid) => {
-        return fetch(URL + `/${uuid.trim()}/badges`)
-                .then(res => res.json())
+        return authFetch(URL + `/${uuid.trim()}/badges`)
+            .then(res => res.json())
     },
 
     setCurrentBadge: async (uuid, badge) => {
-        return fetch(URL + `/${uuid.trim()}/badges`, {
+        return authFetch(URL + `/${uuid.trim()}/badges`, {
             method: "PUT",
             headers: HEADERS,
             body: JSON.stringify({
@@ -64,7 +60,7 @@ const UserApi = {
     },
     
     acceptTerms: async (uuid) => {
-        return fetch(URL + `/${uuid.trim()}/accept`, {
+        return authFetch(URL + `/${uuid.trim()}/accept`, {
             method: "POST",
             headers: HEADERS
         }).then(res => res.json())

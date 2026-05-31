@@ -1,10 +1,7 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const URL = fetchUrl + "/history"
-
-const HEADERS = {
-    "Content-Type": "application/json"
-}
 
 const HistoryApi = {
 
@@ -17,7 +14,7 @@ const HistoryApi = {
         if (game)
             url += `&game=${game}`
 
-        return fetch(url)
+        return authFetch(url)
             .then(res => res.json())
     },
 
@@ -29,7 +26,7 @@ const HistoryApi = {
         if (typeof limit === "number" && limit > 1)
             l = limit
 
-        return fetch(URL + `/${uuid.trim()}?limit=${l}`)
+        return authFetch(URL + `/${uuid.trim()}?limit=${l}`)
             .then(res => res.json())
     },
 
@@ -49,9 +46,11 @@ const HistoryApi = {
             amount: a
         }
 
-        return fetch(URL + `/${uuid.trim()}`, {
+        return authFetch(URL + `/${uuid.trim()}`, {
             method: "POST",
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         }).then(res => res.json())
     }

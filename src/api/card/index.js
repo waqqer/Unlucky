@@ -1,14 +1,11 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const URL = fetchUrl + "/card"
 
-const HEADERS = {
-    "Content-Type": "application/json"
-}
-
 const CardApi = {
     CardInfo: async () => {
-        return fetch(URL).then(e => e.json())
+        return authFetch(URL).then(e => e.json())
     }
 }
 

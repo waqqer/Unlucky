@@ -13,7 +13,8 @@ const useSPW = () => {
         spmRef.current = app
 
         const initHandle = (userData) => {
-            setUser(userData)
+            if (userData?.minecraftUUID)
+                setUser(userData)
         }
 
         app.on('initResponse', initHandle)

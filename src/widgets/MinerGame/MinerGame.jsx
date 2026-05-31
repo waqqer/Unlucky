@@ -56,7 +56,7 @@ const MinerGame = (props) => {
         setRoundData(null)
 
         try {
-            const result = await MinerApi.play(account.UUID, bet, COLS, ROWS, PICKAXE_ROWS)
+            const result = await MinerApi.play(account.UUID, bet)
             if (!isMountedRef.current) return
 
             setRoundData(result || {})

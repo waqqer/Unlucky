@@ -1,10 +1,7 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const BASE_URL = fetchUrl + "/game"
-
-const HEADERS = {
-    "Content-Type": "application/json"
-}
 
 export const SlotsApi = {
     spin: async (uuid, bet) => {
@@ -13,9 +10,11 @@ export const SlotsApi = {
             bet: typeof bet === "number" ? bet : parseFloat(bet) || 0
         }
 
-        const response = await fetch(BASE_URL + "/slots", {
+        const response = await authFetch(BASE_URL + "/slots", {
             method: 'POST',
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(requestBody)
         })
 
@@ -41,9 +40,11 @@ export const SlotsApi = {
 
 export const RocketApi = {
     crash: async () => {
-        const response = await fetch(BASE_URL + "/rocket/crash", {
+        const response = await authFetch(BASE_URL + "/rocket/crash", {
             method: 'POST',
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({})
         })
 
@@ -62,9 +63,11 @@ export const RocketApi = {
             isWin
         }
 
-        const response = await fetch(BASE_URL + `/rocket/result/${uuid}`, {
+        const response = await authFetch(BASE_URL + `/rocket/result/${uuid}`, {
             method: 'POST',
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(requestBody)
         })
 
@@ -78,18 +81,17 @@ export const RocketApi = {
 }
 
 export const MinerApi = {
-    play: async (uuid, bet, cols, rows, pickaxeRows = 1) => {
+    play: async (uuid, bet) => {
         const body = {
             uuid,
-            bet: typeof bet === "number" ? bet : parseFloat(bet) || 0,
-            cols,
-            rows,
-            pickaxeRows
+            bet: typeof bet === "number" ? bet : parseFloat(bet) || 0
         }
 
-        const response = await fetch(BASE_URL + "/miner", {
+        const response = await authFetch(BASE_URL + "/miner", {
             method: "POST",
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(body)
         })
 

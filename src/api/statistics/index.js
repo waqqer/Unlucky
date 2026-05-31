@@ -1,10 +1,7 @@
 import { fetchUrl } from "../config"
+import { authFetch } from "../auth"
 
 const URL = fetchUrl + "/stats"
-
-const HEADERS = {
-    "Content-Type": "application/json"
-}
 
 const StatsApi = {
 
@@ -12,7 +9,7 @@ const StatsApi = {
         if (!uuid || uuid.trim() === "")
             return null
 
-        return fetch(URL + `/${uuid.trim()}`)
+        return authFetch(URL + `/${uuid.trim()}`)
             .then(res => res.json())
     },
 
@@ -36,9 +33,11 @@ const StatsApi = {
             game_count: g
         }
 
-        return fetch(URL + `/${uuid.trim()}`, {
+        return authFetch(URL + `/${uuid.trim()}`, {
             method: "PUT",
-            headers: HEADERS,
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         }).then(res => res.json())
     }

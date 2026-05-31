@@ -436,7 +436,6 @@ const MinerField = (props) => {
             a.pause()
             a.currentTime = 0
         } catch {
-            /* noop */
         }
     }
 
@@ -456,7 +455,6 @@ const MinerField = (props) => {
             a.currentTime = 0
             void a.play().catch(() => { })
         } catch {
-            /* noop */
         }
     }
 
@@ -468,7 +466,6 @@ const MinerField = (props) => {
                     a.pause()
                     a.currentTime = 0
                 } catch {
-                    /* noop */
                 }
             })
         })
@@ -501,7 +498,6 @@ const MinerField = (props) => {
             audio.currentTime = 0
             void audio.play().catch(() => { })
         } catch {
-            /* noop */
         }
     }
 
@@ -511,7 +507,6 @@ const MinerField = (props) => {
             try {
                 cancelAnimationFrame(id)
             } catch {
-                /* noop */
             }
         })
         pickaxeFallRafIdsRef.current.clear()
@@ -534,7 +529,6 @@ const MinerField = (props) => {
         onAnimationCompleteRef.current = onAnimationComplete
     }, [onRoundComplete, onAnimationComplete])
 
-    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => () => {
         suppressSoundRef.current = true
         stopAllMinerSounds()
@@ -545,7 +539,6 @@ const MinerField = (props) => {
             idleRafRef.current = null
         }
     }, [])
-    /* eslint-enable react-hooks/exhaustive-deps */
 
     useEffect(() => {
         const soundUrls = new Set()
@@ -586,7 +579,6 @@ const MinerField = (props) => {
         preload()
     }, [SLOT_TEXTURE, BREAK_TEXTURES, CHESTS])
 
-    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         if (roundData) return
 
@@ -729,9 +721,7 @@ const MinerField = (props) => {
             idleCanvasRedrawRef.current = null
         }
     }, [roundData, pickaxesForIdleCanvas, ROWS, COLS, CELL_SIZE_PX, GRID_GAP_PX, BLOCKS, PICKAXES, CHESTS, demoGrid, demoChests])
-    /* eslint-enable react-hooks/exhaustive-deps */
 
-    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         if (!roundData) return
 
@@ -1546,9 +1536,7 @@ const MinerField = (props) => {
             clearAnimation()
         }
     }, [roundData, ROWS, COLS, CELL_SIZE_PX, GRID_GAP_PX, BLOCKS, PICKAXES, CHESTS, BREAK_TEXTURES, SLOT_TEXTURE, demoGrid, demoChests])
-    /* eslint-enable react-hooks/exhaustive-deps */
 
-    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         const canvas = canvasRef.current
         const el = containerRef.current
@@ -1573,7 +1561,6 @@ const MinerField = (props) => {
             ro.disconnect()
         }
     }, [COLS, ROWS, CELL_SIZE_PX, GRID_GAP_PX, PICKAXE_ROW_COUNT])
-    /* eslint-enable react-hooks/exhaustive-deps */
 
     return (
         <div
