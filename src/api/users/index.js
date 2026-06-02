@@ -27,14 +27,9 @@ const UserApi = {
     },
 
     getOrCreate: async (sp_user) => {
-        const data = {
-            name: sp_user.username,
-            UUID: sp_user.minecraftUUID
-        }
-
         return fetch(URL, {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify(sp_user),
             headers: HEADERS
         }).then(res => res.json())
     },

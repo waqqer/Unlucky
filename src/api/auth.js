@@ -1,6 +1,5 @@
 import { fetchUrl } from "./config"
 
-const TOKEN_KEY = "token"
 const EXPIRY_BUFFER_MS = 60_000
 const REFRESH_BEFORE_MS = 5 * 60_000
 
@@ -23,15 +22,6 @@ export function getToken() {
     if (isValidTokenString(memoryToken))
         return memoryToken
 
-    const stored = localStorage.getItem(TOKEN_KEY)
-    if (isValidTokenString(stored)) {
-        memoryToken = stored
-        return stored
-    }
-
-    if (stored !== null)
-        localStorage.removeItem(TOKEN_KEY)
-
     return null
 }
 
@@ -40,7 +30,6 @@ export function setToken(token) {
         return false
 
     memoryToken = token
-    localStorage.setItem(TOKEN_KEY, token)
     scheduleTokenRefresh()
     return true
 }
@@ -90,10 +79,7 @@ async function requestNewToken(spUser = currentSpUser) {
     const response = await fetch(fetchUrl + "/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name: spUser.username,
-            UUID: spUser.minecraftUUID
-        })
+        body: JSON.stringify(spUser)
     })
 
     if (!response.ok)
