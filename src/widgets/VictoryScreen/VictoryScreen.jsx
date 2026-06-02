@@ -108,7 +108,6 @@ const VictoryScreen = (props) => {
                 countUpRafRef.current = null
             }
         }
-        // Анимация суммы только при открытии; смена winAmount не перезапускает экран.
     }, [isOpen, triggerPopAnimation])
 
     useEffect(() => {
@@ -141,7 +140,6 @@ const VictoryScreen = (props) => {
             document.removeEventListener("keydown", handleClick)
             document.removeEventListener("click", handleClick)
         }
-        // Таймеры и звук запускаем только при открытии, не при смене winAmount (game_settled).
     }, [isOpen, handleClose, onVictoryComplete, handleClick])
 
     if (!isOpen) return null
