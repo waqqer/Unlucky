@@ -241,7 +241,7 @@ const RocketGraph = ({ multiplier, isCrashed, isFlying, crashedPoint, hasCashedO
 
         if (!isFlying && !isCrashed) return
 
-        const startMult = 0.7
+        const startMult = ROCKET_CONFIG.START_MULTIPLIER
         const currentMult = multiplier ?? startMult
         
         const targetMultiplier = (isCrashed && !hasCashedOut) ? crashedPoint : currentMult

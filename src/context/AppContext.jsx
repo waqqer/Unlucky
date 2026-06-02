@@ -17,6 +17,18 @@ export const AppProvider = ({ children }) => {
 
     const socketRef = useRef(null)
     const timeoutRef = useRef(null)
+    const wsListenersRef = useRef(new Set())
+
+    const sendWsMessage = useCallback((message) => {
+        if (socketRef.current?.readyState === WebSocket.OPEN) {
+            socketRef.current.send(JSON.stringify(message))
+        }
+    }, [])
+
+    const subscribeWsMessage = useCallback((handler) => {
+        wsListenersRef.current.add(handler)
+        return () => wsListenersRef.current.delete(handler)
+    }, [])
 
     const closeBadgeMessage = useCallback(() => {
         setBadgeMessage(null)
@@ -65,7 +77,12 @@ export const AppProvider = ({ children }) => {
             }
 
             socket.onmessage = (ev) => {
-                const data = JSON.parse(ev.data)
+                let data
+                try {
+                    data = JSON.parse(ev.data)
+                } catch {
+                    return
+                }
                 if (data.type === "onlineCount") {
                     setOnline(data.count)
                     setPeak(data.peak)
@@ -83,6 +100,8 @@ export const AppProvider = ({ children }) => {
                         }
                     }
                 }
+
+                wsListenersRef.current.forEach((handler) => handler(data))
             }
 
             socket.onclose = () => {
@@ -113,8 +132,10 @@ export const AppProvider = ({ children }) => {
         isConnected,
         online,
         peak,
-        showBadgeMessage
-    }), [isConnected, online, peak, showBadgeMessage])
+        showBadgeMessage,
+        sendWsMessage,
+        subscribeWsMessage
+    }), [isConnected, online, peak, showBadgeMessage, sendWsMessage, subscribeWsMessage])
 
     return (
         <AppContext.Provider value={values}>

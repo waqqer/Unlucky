@@ -39,36 +39,13 @@ export const SlotsApi = {
 }
 
 export const RocketApi = {
-    crash: async () => {
-        const response = await authFetch(BASE_URL + "/rocket/crash", {
-            method: 'POST',
+    demo: async () => {
+        const response = await fetch(BASE_URL + "/rocket/demo", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({})
-        })
-
-        if (!response.ok) {
-            const errorText = await response.text()
-            throw new Error(`Rocket API error: ${response.status} ${errorText}`)
-        }
-
-        return response.json()
-    },
-
-    result: async (uuid, bet, multiplier, isWin) => {
-        const requestBody = {
-            bet: typeof bet === "number" ? bet : parseFloat(bet) || 0,
-            multiplier: typeof multiplier === "number" ? multiplier : parseFloat(multiplier) || 0,
-            isWin
-        }
-
-        const response = await authFetch(BASE_URL + `/rocket/result/${uuid}`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestBody)
         })
 
         if (!response.ok) {
