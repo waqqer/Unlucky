@@ -2,7 +2,6 @@ import { createContext, useEffect, useMemo, useState, useCallback } from "react"
 import useSPW from "@/hooks/useSpw"
 import useHead from "@/hooks/useHead"
 import UserApi from "@/api/users"
-import BalanceApi from "@/api/balance"
 import { setToken, setSpUser, ensureValidToken, clearTokenRefreshTimer } from "@/api/auth"
 
 export const AccountContext = createContext({})
@@ -95,24 +94,6 @@ export const AccountProvider = ({ children }) => {
         setAccount(prev => prev ? { ...prev, ...newData } : newData)
     }, [])
 
-    const changeBalance = useCallback(async (amount) => {
-        const userUuid = spwUser?.minecraftUUID || account?.UUID
-        if (!userUuid || !account) {
-            return null
-        }
-
-        try {
-            const result = await BalanceApi.change(userUuid, amount)
-            if (result) {
-                setAccount(prev => prev ? { ...prev, balance: result.balance?.toString() || prev.balance } : prev)
-            }
-            return result
-        } catch (error) {
-            console.error("Ошибка при смене баланса:", error)
-            return null
-        }
-    }, [spwUser, account])
-
     const getBalance = useCallback(() => {
         return parseFloat(account?.balance || 0)
     }, [account])
@@ -189,12 +170,11 @@ export const AccountProvider = ({ children }) => {
         currentBadge,
         changeCurrentBadge,
         updateBadges,
-        changeBalance,
         getBalance,
         refreshAccount,
         termsAccepted,
         acceptTerms
-    }), [spwUser, spm, head, account, isLoaded, updateUser, changeBalance, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge, changeCurrentBadge, updateBadges])
+    }), [spwUser, spm, head, account, isLoaded, updateUser, getBalance, refreshAccount, acceptTerms, termsAccepted, badges, currentBadge, changeCurrentBadge, updateBadges])
 
     return (
         <AccountContext.Provider value={values}>

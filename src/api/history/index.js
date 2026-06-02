@@ -28,31 +28,6 @@ const HistoryApi = {
 
         return authFetch(URL + `/${uuid.trim()}?limit=${l}`)
             .then(res => res.json())
-    },
-
-    create: async (uuid, game_name, result, amount) => {
-        let res = "WIN"
-        let a = 0
-
-        if (result === "WIN" || result === "LOSE")
-            res = result
-
-        if (typeof amount === "number")
-            a = amount
-
-        const data = {
-            game_name: game_name,
-            result: res,
-            amount: a
-        }
-
-        return authFetch(URL + `/${uuid.trim()}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        }).then(res => res.json())
     }
 }
 
