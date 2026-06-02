@@ -43,6 +43,7 @@ const RocketGame = (props) => {
     const activeRoundIdRef = useRef(null)
     const roundPhaseRef = useRef("idle")
     const hasCashedOutRef = useRef(false)
+    const victoryShownRef = useRef(false)
     const lastMilestoneRef = useRef(1)
 
     const [bet, setBet] = useState(10)
@@ -62,13 +63,22 @@ const RocketGame = (props) => {
 
     const updateUserRef = useRef(updateUser)
     const onHistoryUpdateRef = useRef(onHistoryUpdate)
-    const showVictoryRef = useRef(showVictory)
 
     useEffect(() => {
         updateUserRef.current = updateUser
         onHistoryUpdateRef.current = onHistoryUpdate
-        showVictoryRef.current = showVictory
-    }, [updateUser, onHistoryUpdate, showVictory])
+    }, [updateUser, onHistoryUpdate])
+
+    const openVictoryScreen = useCallback((amount) => {
+        if (victoryShownRef.current) return
+
+        victoryShownRef.current = true
+        if (typeof amount === "number") {
+            setWinAmount(amount)
+        }
+        soundsRef.current.playCashOut()
+        setShowVictory(true)
+    }, [soundsRef])
 
     const stopAnimation = useCallback(() => {
         if (animationFrameRef.current) {
@@ -147,6 +157,7 @@ const RocketGame = (props) => {
 
         setWinAmount(null)
         setShowVictory(false)
+        victoryShownRef.current = false
         applyMultiplierImmediate(START_MULTIPLIER)
         lastMilestoneRef.current = 1
         roundPhaseRef.current = "idle"
@@ -208,15 +219,11 @@ const RocketGame = (props) => {
                     if (typeof data.multiplier === "number") {
                         applyMultiplierImmediate(data.multiplier)
                     }
-                    if (typeof data.winAmount === "number") {
-                        setWinAmount(data.winAmount)
-                    }
                     if (typeof data.balance === "number") {
                         updateUserRef.current({ balance: data.balance.toString() })
                     }
 
-                    soundsRef.current.playCashOut()
-                    setShowVictory(true)
+                    openVictoryScreen(data.winAmount)
                     break
                 }
 
@@ -261,9 +268,7 @@ const RocketGame = (props) => {
                         if (typeof data.multiplier === "number") {
                             applyMultiplierImmediate(data.multiplier)
                         }
-                        if (!showVictoryRef.current) {
-                            setShowVictory(true)
-                        }
+                        // Экран победы уже показан на game_won — только синхронизируем баланс/историю.
                     } else {
                         setHasCashedOut(false)
                         hasCashedOutRef.current = false
@@ -303,6 +308,7 @@ const RocketGame = (props) => {
         resetRoundState,
         setTargetMultiplier,
         applyMultiplierImmediate,
+        openVictoryScreen,
         endRoundVisual,
         soundsRef,
         isFlyingRef,
@@ -320,6 +326,7 @@ const RocketGame = (props) => {
     }, [])
 
     const handleCloseVictory = useCallback(() => {
+        victoryShownRef.current = false
         setShowVictory(false)
     }, [])
 
