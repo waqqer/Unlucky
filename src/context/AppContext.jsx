@@ -66,12 +66,16 @@ export const AppProvider = ({ children }) => {
 
             let url = import.meta.env.VITE_BACKEND_URL
             url = url.replace(/^https:/, "wss:").replace(/^http:/, "ws:")
-            url = `${url.replace(/\/$/, "")}/${uuid}?token=${encodeURIComponent(token)}`
+            url = `${url.replace(/\/$/, "")}/${uuid}`
 
             const socket = new WebSocket(url)
             socketRef.current = socket
 
             socket.onopen = () => {
+                socket.send(JSON.stringify({
+                    type: "auth",
+                    token
+                }))
                 if (!cancelled)
                     setIsConnected(true)
             }
