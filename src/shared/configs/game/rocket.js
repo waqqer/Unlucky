@@ -5,7 +5,7 @@ import Particle4 from "@/shared/images/games/rocket/lava.webp"
 
 export const ROCKET_CONFIG = {
     START_MULTIPLIER: 0.7,
-    MULTIPLIER_SPEED: 0.25,
+    MULTIPLIER_SPEED: 0.5,
     MULTIPLIER_PRECISION: 100,
 
     MIN_BET: 1,

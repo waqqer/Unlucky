@@ -37,6 +37,9 @@ const RocketGame = (props) => {
 
     const isMountedRef = useRef(true)
     const animationFrameRef = useRef(null)
+    const smoothingFrameRef = useRef(null)
+    const displayMultiplierRef = useRef(START_MULTIPLIER)
+    const targetMultiplierRef = useRef(START_MULTIPLIER)
     const activeRoundIdRef = useRef(null)
     const roundPhaseRef = useRef("idle")
     const hasCashedOutRef = useRef(false)
@@ -79,23 +82,58 @@ const RocketGame = (props) => {
         return () => {
             isMountedRef.current = false
             stopAnimation()
+            if (smoothingFrameRef.current) {
+                cancelAnimationFrame(smoothingFrameRef.current)
+                smoothingFrameRef.current = null
+            }
         }
     }, [stopAnimation])
 
-    const applyMultiplier = useCallback((multiplier) => {
+    const setTargetMultiplier = useCallback((multiplier) => {
+        const numericMultiplier = Number(multiplier)
+        if (!Number.isFinite(numericMultiplier)) return
+        targetMultiplierRef.current = numericMultiplier
+    }, [])
+
+    const applyMultiplierImmediate = useCallback((multiplier) => {
         const numericMultiplier = Number(multiplier)
         if (!Number.isFinite(numericMultiplier)) return
 
+        targetMultiplierRef.current = numericMultiplier
+        displayMultiplierRef.current = numericMultiplier
         setCurrentMultiplier(numericMultiplier)
+    }, [])
 
-        const currentWhole = Math.floor(numericMultiplier)
-        if (
-            roundPhaseRef.current === "running" &&
-            currentWhole > lastMilestoneRef.current &&
-            !hasCashedOutRef.current
-        ) {
-            soundsRef.current.playTick()
-            lastMilestoneRef.current = currentWhole
+    useEffect(() => {
+        const smooth = () => {
+            if (roundPhaseRef.current === "running") {
+                const current = displayMultiplierRef.current
+                const target = targetMultiplierRef.current
+                const diff = target - current
+
+                if (Math.abs(diff) > 0.0001) {
+                    const next = current + diff * 0.55
+                    displayMultiplierRef.current = next
+                    setCurrentMultiplier(next)
+
+                    const currentWhole = Math.floor(next)
+                    if (currentWhole > lastMilestoneRef.current && !hasCashedOutRef.current) {
+                        soundsRef.current.playTick()
+                        lastMilestoneRef.current = currentWhole
+                    }
+                }
+            }
+
+            smoothingFrameRef.current = requestAnimationFrame(smooth)
+        }
+
+        smoothingFrameRef.current = requestAnimationFrame(smooth)
+
+        return () => {
+            if (smoothingFrameRef.current) {
+                cancelAnimationFrame(smoothingFrameRef.current)
+                smoothingFrameRef.current = null
+            }
         }
     }, [soundsRef])
 
@@ -109,10 +147,10 @@ const RocketGame = (props) => {
 
         setWinAmount(null)
         setShowVictory(false)
-        applyMultiplier(START_MULTIPLIER)
+        applyMultiplierImmediate(START_MULTIPLIER)
         lastMilestoneRef.current = 1
         roundPhaseRef.current = "idle"
-    }, [applyMultiplier, crashedPointRef])
+    }, [applyMultiplierImmediate, crashedPointRef])
 
     const endRoundVisual = useCallback(() => {
         roundPhaseRef.current = "ended"
@@ -144,7 +182,7 @@ const RocketGame = (props) => {
 
                     setIsFlying(true)
                     isFlyingRef.current = true
-                    applyMultiplier(START_MULTIPLIER)
+                    applyMultiplierImmediate(START_MULTIPLIER)
 
                     if (typeof data.balance === "number") {
                         updateUserRef.current({ balance: data.balance.toString() })
@@ -156,7 +194,7 @@ const RocketGame = (props) => {
                 case "tick": {
                     if (!isCurrentRound || roundPhaseRef.current !== "running") break
                     if (typeof data.multiplier !== "number") break
-                    applyMultiplier(data.multiplier)
+                    setTargetMultiplier(data.multiplier)
                     break
                 }
 
@@ -168,7 +206,7 @@ const RocketGame = (props) => {
                     hasCashedOutRef.current = true
 
                     if (typeof data.multiplier === "number") {
-                        applyMultiplier(data.multiplier)
+                        applyMultiplierImmediate(data.multiplier)
                     }
                     if (typeof data.winAmount === "number") {
                         setWinAmount(data.winAmount)
@@ -193,7 +231,7 @@ const RocketGame = (props) => {
                     if (typeof data.crashPoint === "number") {
                         setCrashedPoint(data.crashPoint)
                         crashedPointRef.current = data.crashPoint
-                        applyMultiplier(data.crashPoint)
+                        applyMultiplierImmediate(data.crashPoint)
                     }
                     if (typeof data.balance === "number") {
                         updateUserRef.current({ balance: data.balance.toString() })
@@ -221,7 +259,7 @@ const RocketGame = (props) => {
                         setIsCrashed(false)
 
                         if (typeof data.multiplier === "number") {
-                            applyMultiplier(data.multiplier)
+                            applyMultiplierImmediate(data.multiplier)
                         }
                         if (!showVictoryRef.current) {
                             setShowVictory(true)
@@ -234,7 +272,7 @@ const RocketGame = (props) => {
                         if (typeof data.crashPoint === "number") {
                             setCrashedPoint(data.crashPoint)
                             crashedPointRef.current = data.crashPoint
-                            applyMultiplier(data.crashPoint)
+                            applyMultiplierImmediate(data.crashPoint)
                         }
                     }
 
@@ -263,7 +301,8 @@ const RocketGame = (props) => {
     }, [
         subscribeWsMessage,
         resetRoundState,
-        applyMultiplier,
+        setTargetMultiplier,
+        applyMultiplierImmediate,
         endRoundVisual,
         soundsRef,
         isFlyingRef,
