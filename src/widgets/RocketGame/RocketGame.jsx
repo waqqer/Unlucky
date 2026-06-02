@@ -37,11 +37,9 @@ const RocketGame = (props) => {
 
     const isMountedRef = useRef(true)
     const animationFrameRef = useRef(null)
-    const smoothingFrameRef = useRef(null)
     const activeRoundIdRef = useRef(null)
+    const roundPhaseRef = useRef("idle")
     const hasCashedOutRef = useRef(false)
-    const currentMultiplierRef = useRef(START_MULTIPLIER)
-    const targetMultiplierRef = useRef(START_MULTIPLIER)
     const lastMilestoneRef = useRef(1)
 
     const [bet, setBet] = useState(10)
@@ -59,6 +57,16 @@ const RocketGame = (props) => {
         bet, isFlying, isRequestPending, crashedPoint, account, sounds, demoMode
     )
 
+    const updateUserRef = useRef(updateUser)
+    const onHistoryUpdateRef = useRef(onHistoryUpdate)
+    const showVictoryRef = useRef(showVictory)
+
+    useEffect(() => {
+        updateUserRef.current = updateUser
+        onHistoryUpdateRef.current = onHistoryUpdate
+        showVictoryRef.current = showVictory
+    }, [updateUser, onHistoryUpdate, showVictory])
+
     const stopAnimation = useCallback(() => {
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current)
@@ -71,12 +79,25 @@ const RocketGame = (props) => {
         return () => {
             isMountedRef.current = false
             stopAnimation()
-            if (smoothingFrameRef.current) {
-                cancelAnimationFrame(smoothingFrameRef.current)
-                smoothingFrameRef.current = null
-            }
         }
     }, [stopAnimation])
+
+    const applyMultiplier = useCallback((multiplier) => {
+        const numericMultiplier = Number(multiplier)
+        if (!Number.isFinite(numericMultiplier)) return
+
+        setCurrentMultiplier(numericMultiplier)
+
+        const currentWhole = Math.floor(numericMultiplier)
+        if (
+            roundPhaseRef.current === "running" &&
+            currentWhole > lastMilestoneRef.current &&
+            !hasCashedOutRef.current
+        ) {
+            soundsRef.current.playTick()
+            lastMilestoneRef.current = currentWhole
+        }
+    }, [soundsRef])
 
     const resetRoundState = useCallback(() => {
         setHasCashedOut(false)
@@ -88,188 +109,140 @@ const RocketGame = (props) => {
 
         setWinAmount(null)
         setShowVictory(false)
-        setCurrentMultiplier(START_MULTIPLIER)
-        currentMultiplierRef.current = START_MULTIPLIER
-        targetMultiplierRef.current = START_MULTIPLIER
+        applyMultiplier(START_MULTIPLIER)
         lastMilestoneRef.current = 1
-    }, [crashedPointRef])
+        roundPhaseRef.current = "idle"
+    }, [applyMultiplier, crashedPointRef])
 
-    const applyTick = useCallback((multiplier) => {
-        const numericMultiplier = Number(multiplier)
-        if (!Number.isFinite(numericMultiplier)) return
-        targetMultiplierRef.current = numericMultiplier
-    }, [])
-
-    const applyMultiplierImmediately = useCallback((multiplier) => {
-        const numericMultiplier = Number(multiplier)
-        if (!Number.isFinite(numericMultiplier)) return
-        setCurrentMultiplier(numericMultiplier)
-        currentMultiplierRef.current = numericMultiplier
-        targetMultiplierRef.current = numericMultiplier
-    }, [])
-
-    useEffect(() => {
-        const smooth = () => {
-            const current = currentMultiplierRef.current
-            const target = targetMultiplierRef.current
-            const diff = target - current
-
-            if (Math.abs(diff) > 0.0001) {
-                const next = current + diff * 0.22
-                setCurrentMultiplier(next)
-                currentMultiplierRef.current = next
-
-                const currentWhole = Math.floor(next)
-                if (currentWhole > lastMilestoneRef.current && !hasCashedOutRef.current) {
-                    soundsRef.current.playTick()
-                    lastMilestoneRef.current = currentWhole
-                }
-            }
-
-            smoothingFrameRef.current = requestAnimationFrame(smooth)
-        }
-
-        smoothingFrameRef.current = requestAnimationFrame(smooth)
-
-        return () => {
-            if (smoothingFrameRef.current) {
-                cancelAnimationFrame(smoothingFrameRef.current)
-                smoothingFrameRef.current = null
-            }
-        }
-    }, [soundsRef])
+    const endRoundVisual = useCallback(() => {
+        roundPhaseRef.current = "ended"
+        setIsFlying(false)
+        isFlyingRef.current = false
+    }, [isFlyingRef])
 
     useEffect(() => {
         if (demoModeRef.current) return undefined
 
-        const isCurrentRoundMessage = (data) => {
-            if (!activeRoundIdRef.current) return false
-            if (!data || typeof data !== "object") return false
-            // Backward-compatible mode: если сервер не прислал roundId,
-            // считаем сообщение относящимся к текущему активному раунду.
-            if (!("roundId" in data) || !data.roundId) return true
-            return data.roundId === activeRoundIdRef.current
-        }
-
         const unsubscribe = subscribeWsMessage((data) => {
-            if (!isMountedRef.current) return
+            if (!isMountedRef.current || !data || typeof data !== "object") return
+
+            const roundId = typeof data.roundId === "string" ? data.roundId : null
+            const isCurrentRound = roundId && roundId === activeRoundIdRef.current
 
             switch (data.type) {
-                case "game_started":
-                    if (!data.roundId || typeof data.roundId !== "string") {
-                        break
-                    }
-                    activeRoundIdRef.current = data.roundId
+                case "game_started": {
+                    if (!roundId) break
+
+                    activeRoundIdRef.current = roundId
+                    roundPhaseRef.current = "running"
+
                     setIsRequestPending(false)
                     isRequestPendingRef.current = false
                     resetRoundState()
+                    activeRoundIdRef.current = roundId
+                    roundPhaseRef.current = "running"
+
                     setIsFlying(true)
                     isFlyingRef.current = true
-                    applyMultiplierImmediately(START_MULTIPLIER)
+                    applyMultiplier(START_MULTIPLIER)
+
                     if (typeof data.balance === "number") {
-                        updateUser({ balance: data.balance.toString() })
+                        updateUserRef.current({ balance: data.balance.toString() })
                     }
                     soundsRef.current.playStart()
                     break
+                }
 
-                case "tick":
-                    if (!isCurrentRoundMessage(data)) {
-                        break
-                    }
-                    if (isFlyingRef.current && !hasCashedOutRef.current && typeof data.multiplier === "number") {
-                        applyTick(data.multiplier)
-                    }
+                case "tick": {
+                    if (!isCurrentRound || roundPhaseRef.current !== "running") break
+                    if (typeof data.multiplier !== "number") break
+                    applyMultiplier(data.multiplier)
                     break
+                }
 
-                case "game_won":
-                    if (!isCurrentRoundMessage(data)) {
-                        break
-                    }
+                case "game_won": {
+                    if (!isCurrentRound) break
+
+                    endRoundVisual()
                     setHasCashedOut(true)
                     hasCashedOutRef.current = true
-                    setIsFlying(false)
-                    isFlyingRef.current = false
+
                     if (typeof data.multiplier === "number") {
-                        applyMultiplierImmediately(data.multiplier)
+                        applyMultiplier(data.multiplier)
                     }
                     if (typeof data.winAmount === "number") {
                         setWinAmount(data.winAmount)
                     }
                     if (typeof data.balance === "number") {
-                        updateUser({ balance: data.balance.toString() })
+                        updateUserRef.current({ balance: data.balance.toString() })
                     }
+
                     soundsRef.current.playCashOut()
                     setShowVictory(true)
                     break
+                }
 
-                case "game_crash":
-                    if (!isCurrentRoundMessage(data)) {
-                        break
-                    }
+                case "game_crash": {
+                    if (!isCurrentRound) break
+
+                    endRoundVisual()
+                    setHasCashedOut(false)
+                    hasCashedOutRef.current = false
                     setIsCrashed(true)
-                    setIsFlying(false)
-                    isFlyingRef.current = false
+
                     if (typeof data.crashPoint === "number") {
                         setCrashedPoint(data.crashPoint)
                         crashedPointRef.current = data.crashPoint
-                        applyMultiplierImmediately(data.crashPoint)
+                        applyMultiplier(data.crashPoint)
                     }
                     if (typeof data.balance === "number") {
-                        updateUser({ balance: data.balance.toString() })
+                        updateUserRef.current({ balance: data.balance.toString() })
                     }
+
                     soundsRef.current.playCrash()
                     break
+                }
 
-                case "game_settled":
-                    // Для settled допускаем обновление баланса даже по старому раунду,
-                    // чтобы не терять финализацию при out-of-order.
+                case "game_settled": {
                     if (typeof data.balance === "number") {
-                        updateUser({ balance: data.balance.toString() })
+                        updateUserRef.current({ balance: data.balance.toString() })
                     }
 
-                    if (!isCurrentRoundMessage(data)) {
-                        if (onHistoryUpdate) onHistoryUpdate()
+                    if (!isCurrentRound) {
+                        onHistoryUpdateRef.current?.()
                         break
                     }
 
-                    const wasFlying = isFlyingRef.current
-                    const settledIsWin = !!data.isWin
+                    endRoundVisual()
 
-                    // Гарантируем финальный UI-стейт даже если клиент не успел
-                    // обработать game_won/game_crash (race между событиями).
-                    setIsFlying(false)
-                    isFlyingRef.current = false
-
-                    if (settledIsWin) {
-                        const wasCashedOut = hasCashedOutRef.current
+                    if (data.isWin) {
                         setHasCashedOut(true)
                         hasCashedOutRef.current = true
-                        if (typeof data.multiplier === "number") {
-                            applyMultiplierImmediately(data.multiplier)
-                        }
+                        setIsCrashed(false)
 
-                        if (!wasCashedOut && !showVictory) {
-                            soundsRef.current.playCashOut()
+                        if (typeof data.multiplier === "number") {
+                            applyMultiplier(data.multiplier)
+                        }
+                        if (!showVictoryRef.current) {
                             setShowVictory(true)
                         }
-                        setIsCrashed(false)
                     } else {
                         setHasCashedOut(false)
                         hasCashedOutRef.current = false
                         setIsCrashed(true)
+
                         if (typeof data.crashPoint === "number") {
                             setCrashedPoint(data.crashPoint)
                             crashedPointRef.current = data.crashPoint
-                            applyMultiplierImmediately(data.crashPoint)
-                        }
-                        if (wasFlying) {
-                            soundsRef.current.playCrash()
+                            applyMultiplier(data.crashPoint)
                         }
                     }
 
-                    if (onHistoryUpdate) onHistoryUpdate()
+                    onHistoryUpdateRef.current?.()
                     activeRoundIdRef.current = null
+                    roundPhaseRef.current = "idle"
                     break
+                }
 
                 case "game_error":
                     console.error("Rocket game error:", data.message)
@@ -277,6 +250,8 @@ const RocketGame = (props) => {
                     isRequestPendingRef.current = false
                     setIsFlying(false)
                     isFlyingRef.current = false
+                    activeRoundIdRef.current = null
+                    roundPhaseRef.current = "idle"
                     break
 
                 default:
@@ -287,13 +262,10 @@ const RocketGame = (props) => {
         return unsubscribe
     }, [
         subscribeWsMessage,
-        updateUser,
-        onHistoryUpdate,
         resetRoundState,
-        applyTick,
-        applyMultiplierImmediately,
+        applyMultiplier,
+        endRoundVisual,
         soundsRef,
-        isCrashed,
         isFlyingRef,
         isRequestPendingRef,
         crashedPointRef,
@@ -326,7 +298,6 @@ const RocketGame = (props) => {
             const roundedMult = Math.round(mult * MULTIPLIER_PRECISION) / MULTIPLIER_PRECISION
 
             setCurrentMultiplier(roundedMult)
-            currentMultiplierRef.current = roundedMult
 
             const currentWhole = Math.floor(roundedMult)
             if (currentWhole > lastMilestone.current && !hasCashedOutRef.current) {
@@ -343,6 +314,7 @@ const RocketGame = (props) => {
                 setIsCrashed(true)
                 setIsFlying(false)
                 isFlyingRef.current = false
+                roundPhaseRef.current = "idle"
                 soundsRef.current.playCrash()
             }
         }
@@ -368,6 +340,7 @@ const RocketGame = (props) => {
 
         setCrashedPoint(roundedCrash)
         crashedPointRef.current = roundedCrash
+        roundPhaseRef.current = "running"
         setIsFlying(true)
         isFlyingRef.current = true
         soundsRef.current.playStart()
@@ -397,6 +370,7 @@ const RocketGame = (props) => {
         stopAnimation()
         resetRoundState()
         activeRoundIdRef.current = null
+        roundPhaseRef.current = "idle"
 
         setIsRequestPending(true)
         isRequestPendingRef.current = true
@@ -420,7 +394,7 @@ const RocketGame = (props) => {
         if (!isFlyingRef.current || hasCashedOutRef.current || isCrashed) return
 
         if (demoModeRef.current) {
-            const currentMult = currentMultiplierRef.current
+            const currentMult = currentMultiplier
             const currentBet = betRef.current
 
             if (currentMult < 1) {
@@ -429,6 +403,7 @@ const RocketGame = (props) => {
                 setIsFlying(false)
                 isFlyingRef.current = false
                 setIsCrashed(true)
+                roundPhaseRef.current = "idle"
                 stopAnimation()
                 setWinAmount(0)
                 soundsRef.current.playCrash()
@@ -441,6 +416,7 @@ const RocketGame = (props) => {
             hasCashedOutRef.current = true
             setIsFlying(false)
             isFlyingRef.current = false
+            roundPhaseRef.current = "idle"
             stopAnimation()
             setWinAmount(win)
             soundsRef.current.playCashOut()
@@ -455,7 +431,7 @@ const RocketGame = (props) => {
         }
 
         sendWsMessage({ type: "cashout", roundId: activeRoundIdRef.current || undefined })
-    }, [isCrashed, sendWsMessage, stopAnimation, betRef, demoModeRef, isFlyingRef, soundsRef])
+    }, [isCrashed, currentMultiplier, sendWsMessage, stopAnimation, betRef, demoModeRef, isFlyingRef, soundsRef])
 
     return (
         <>
