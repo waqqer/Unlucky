@@ -1,8 +1,0 @@
-export { default as MainPage } from "./MainPage"
-export { default as NotFoundPage } from "./NotFoundPage"
-export { default as SlotsGamePage } from "./SlotsGamePage"
-export { default as AdminPage } from "./AdminPage"
-export { default as RocketGamePage } from "./RocketGamePage"
-export { default as MinerGamePage } from "./MinerGamePage"
-export { default as TopPage } from "./TopPage"
-export { default as TermsPage } from "./TermsPage"
