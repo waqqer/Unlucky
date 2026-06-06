@@ -268,7 +268,6 @@ const RocketGame = (props) => {
                         if (typeof data.multiplier === "number") {
                             applyMultiplierImmediate(data.multiplier)
                         }
-                        // Экран победы уже показан на game_won — только синхронизируем баланс/историю.
                     } else {
                         setHasCashedOut(false)
                         hasCashedOutRef.current = false

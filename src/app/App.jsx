@@ -1,9 +1,10 @@
-import { HashRouter, Route, Routes } from "react-router"
+import { HashRouter, Route, Routes, useLocation } from "react-router"
 import { MainPage, NotFoundPage, TopPage, TermsPage, MinerGamePage, AdminPage, SlotsGamePage, RocketGamePage } from "@/pages"
 import Modal from 'react-modal'
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AccountContext } from "@/context/AccountContext"
 import "./styles"
+import UpdBalance from "../components/UpdBalance"
 
 Modal.setAppElement("#root")
 
@@ -26,6 +27,9 @@ function App() {
 
   return (
     <HashRouter>
+
+      <UpdBalance />
+
       <Routes>
         <Route path='/' element={<MainPage />} />
         <Route path='*' element={<NotFoundPage />} />
@@ -37,7 +41,7 @@ function App() {
         <Route path='/miner' element={<MinerGamePage />} />
 
         <Route path='/top' element={<TopPage />} />
-        <Route path='/terms' element={<TermsPage preview={true}/>} />
+        <Route path='/terms' element={<TermsPage preview={true} />} />
       </Routes>
     </HashRouter>
   )
