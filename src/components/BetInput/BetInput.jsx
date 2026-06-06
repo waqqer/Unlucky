@@ -13,11 +13,15 @@ const BetInput = (props) => {
     } = props
 
     const handleChange = (e) => {
+        if (e.target.value === "") {
+            onChange("")
+            return
+        }
+
         const val = parseInt(e.target.value, 10)
-        if (isNaN(val) || val < 0) {
-            onChange()
-        } else if (val < min) {
-            onChange(min)
+        
+        if (isNaN(val)) {
+            onChange("")
         } else if (val > max) {
             onChange(max)
         } else {
@@ -26,8 +30,9 @@ const BetInput = (props) => {
     }
 
     const handleBlur = () => {
-        const val = typeof value === "number" ? value : 0
-        if (val < min) {
+        const val = typeof value === "number" ? value : parseInt(value, 10)
+        
+        if (isNaN(val) || val < min) {
             onChange(min)
         } else if (val > max) {
             onChange(max)
