@@ -1,0 +1,36 @@
+.logoContainer {
+    position: relative;
+    display: inline-flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1;
+}
+
+.logoContainer::before {
+    content: "";
+    position: absolute;
+
+    top: -80px;
+    bottom: -80px;
+    left: -80px;
+    right: -80px;
+
+    z-index: -1;
+
+    background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+
+    background-size: 30px 30px, 30px 30px;
+    background-position: center;
+
+    -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 70%);
+    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 70%);
+}
+
+.logoImg {
+    display: block;
+    height: auto;
+}

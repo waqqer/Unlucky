@@ -1,0 +1,39 @@
+.title {
+    text-align: center;
+    width: 100%;
+    background-color: transparent;
+    margin-block: 5px;
+}
+
+.animate {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.el {
+    opacity: 0;
+    animation: ElShow var(--speed) ease;
+}
+
+.el-showed {
+    opacity: 1;
+    animation: none;
+}
+
+@keyframes ElShow {
+    from {
+        color: gray;
+        opacity: 0;
+        filter: blur(1px);
+    }
+
+    20% {
+        transform: translateY(-5px) translateX(15px);
+    }
+
+    to {
+        opacity: 1;
+    }
+}

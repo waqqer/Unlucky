@@ -1,0 +1,16 @@
+.section {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    padding-inline: 10%;
+    padding-block: 3%;
+
+    gap: 25px;
+
+    flex: 1;
+}

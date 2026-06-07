@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from "react-router"
 import { MainPage } from "@/Pages"
+import "./styles"
 
 const App = () => {
     return (
