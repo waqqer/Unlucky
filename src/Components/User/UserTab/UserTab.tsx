@@ -2,8 +2,9 @@ import { memo } from "react"
 import styles from "./UserTab.module.css"
 import UserTabInfo from "../UserTabInfo"
 import UserTabControlls from "../UserTabControlls"
+import type { Classable } from "@/Shared/Types/PropsTypes"
 
-interface UserTabProps {
+interface UserTabProps extends Classable {
     className?: string
 }
 const UserTab = (props: UserTabProps) => {

@@ -1,22 +1,27 @@
 import { memo } from "react"
 import { LogoImg } from "@/Shared/Assets/Images"
 import styles from "./Logo.module.css"
+import type { Classable } from "@/Shared/Types/PropsTypes"
 
-interface LogoProps {
+interface LogoProps extends Classable {
     className?: string,
     width?: number,
-    height?: number
+    height?: number,
+    background?: boolean
 }
 
 const Logo = (props: LogoProps) => {
     const {
         className = "",
         width = 128,
-        height
+        height,
+        background = false
     } = props
 
     return (
-        <div className={`${styles.logoContainer} ${className}`}>
+        <div className={`${styles.logoContainer} ${className}`} style={{
+            ["--grid" as any]: background ? "block" : "none"
+        }}>
             <img 
                 src={LogoImg}
                 alt="UnLucky Logo"

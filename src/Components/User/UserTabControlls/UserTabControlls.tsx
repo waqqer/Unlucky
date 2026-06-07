@@ -1,7 +1,8 @@
 import { memo, type ReactNode } from "react"
 import UserTabButton from "../UserTabButton"
+import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
 
-interface UserTabControllsProps {
+interface UserTabControllsProps extends Classable, Parent {
     children?: ReactNode,
     className?: string
 }

@@ -12,7 +12,7 @@ const MainPage = () => {
     return (
         <Page>
             <Section>
-                <Logo width={500} />
+                <Logo width={500} background />
                 <SectionTitle text={Randomizer.getRandomEl(PagesConfig.MainPage_title)} />
                 <GamesList />
                 <ParticleBackground />

@@ -2,8 +2,9 @@ import type { GameInfo } from "@/Shared/Configs"
 import { memo, useCallback } from "react"
 import { useNavigate } from "react-router"
 import styles from "./GameCard.module.css"
+import type { Classable } from "@/Shared/Types/PropsTypes"
 
-interface GameCardProps {
+interface GameCardProps extends Classable {
     className?: string,
     gameData: GameInfo
 }

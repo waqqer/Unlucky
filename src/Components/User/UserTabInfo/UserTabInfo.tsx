@@ -1,6 +1,7 @@
 import { memo } from "react"
 import styles from "./UserTabInfo.module.css"
 import useHead from "@/Hooks/userHead"
+import Username from "../Username";
 
 const UserTabInfo = () => {
     const head = useHead();
@@ -19,9 +20,7 @@ const UserTabInfo = () => {
             </div>
 
             <div className={styles.info}>
-                <span className={styles.nickname}>
-                    Username
-                </span>
+                <Username className={styles.nickname} />
 
                 <span className={styles.balance}>
                     1000

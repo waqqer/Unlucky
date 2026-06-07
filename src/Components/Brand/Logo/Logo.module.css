@@ -11,6 +11,7 @@
 .logoContainer::before {
     content: "";
     position: absolute;
+    display: var(--grid);
 
     top: -80px;
     bottom: -80px;

@@ -3,8 +3,9 @@ import { loadSlim } from "@tsparticles/slim"
 import Particles, { ParticlesProvider } from "@tsparticles/react"
 import { memo } from "react"
 import styles from "./ParticleBackground.module.css"
+import type { Classable } from "@/Shared/Types/PropsTypes"
 
-interface ParticleBackgroundProps {
+interface ParticleBackgroundProps extends Classable {
     customConfig?: RecursivePartial<IOptions>
     className?: string
 }
