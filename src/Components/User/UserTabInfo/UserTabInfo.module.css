@@ -1,0 +1,37 @@
+.about {
+    display: flex;
+}
+
+.avatar {
+    border-radius: 5px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+
+    padding-left: 15px;
+    text-align: start;
+
+    align-items: start;
+    justify-content: center;
+}
+
+.nickname {
+    font-weight: 600;
+    color: white;
+    font-family: 0.95rem;
+}
+
+.balance {
+    color: #e8ccff;
+    font-size: 1rem;
+}
+
+.balance::after {
+    content: " Ар";
+}
+
+.head {
+    border-radius: 5px;
+}

@@ -17,6 +17,11 @@ const MainPage = () => {
                 <GamesList />
                 <ParticleBackground />
             </Section>
+
+            <Section>
+                <SectionTitle text={"Рейтинг"} animate={false} />
+                
+            </Section>
         </Page>
     )
 }

@@ -23,7 +23,7 @@
 
 .game-card:nth-child(even) {
     animation: card-fade 1s ease;
-    animation-delay: 0.05s;
+    animation-delay: 0.15s;
 }
 
 .game-card:nth-child(odd) {
