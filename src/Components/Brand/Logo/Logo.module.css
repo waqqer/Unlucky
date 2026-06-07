@@ -35,3 +35,18 @@
     display: block;
     height: auto;
 }
+
+@media (max-width: 650px) {
+    .logoContainer {
+        width: 100vw;
+    }
+    
+    .logoContainer::before {
+        left: 0px;
+        right: 0px;
+    }
+
+    .logoImg {
+        width: 90vw;
+    }
+}

@@ -20,7 +20,6 @@ const MainPage = () => {
 
             <Section>
                 <SectionTitle text={"Рейтинг"} animate={false} />
-                
             </Section>
         </Page>
     )

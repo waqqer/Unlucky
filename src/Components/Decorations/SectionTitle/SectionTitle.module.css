@@ -37,3 +37,32 @@
         opacity: 1;
     }
 }
+
+@media (max-width: 650px) {
+    .title {
+        margin-block: 3%;
+        font-size: 0.8rem;
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        padding-bottom: 20px;
+    }
+
+    .animate {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .el {
+        animation: ElShow-Mobile var(--speed) ease;
+    }
+}
+
+@keyframes ElShow-Mobile {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

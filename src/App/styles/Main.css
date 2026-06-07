@@ -11,6 +11,7 @@ img::selection {
     background-color: transparent;
 }
 
-body {
+main {
     background-color: var(--BG-COLOR);
+    z-index: 0;
 }
