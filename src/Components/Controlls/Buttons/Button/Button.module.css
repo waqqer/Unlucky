@@ -1,0 +1,66 @@
+.btn {
+    margin: 5px;
+    padding: 15px 50px;
+
+    color: white;
+    background: rgba(20, 15, 31, 0.6);
+    background: linear-gradient(135deg, rgba(20, 17, 29, 0.6), rgba(69, 31, 105, 0.4));
+    box-shadow: 0px 7px 6px 0px rgba(15, 15, 15, 0.25);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+
+    font-size: 1.1rem;
+    letter-spacing: 1.2px;
+
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: rgb(101, 81, 148);
+    transform: translateY(-2px);
+    border-color: white;
+    box-shadow: 0px 7px 6px 0px rgba(255, 255, 255, 0.25);
+    border-radius: 5px;
+}
+
+.btn:active {
+    transform: translateY(4px) scale(0.95);
+    border-radius: 1px;
+    box-shadow: 0px 7px 6px 0px rgba(15, 15, 15, 0.25);
+}
+
+.shine {
+    position: absolute;
+    background: #3c98ba;
+    background: radial-gradient(
+        circle,
+        rgba(128, 106, 155, 0.8) 0%,
+        rgba(111, 76, 114, 0.7) 30%,
+        transparent 70%
+    );
+
+    height: 100px;
+    width: 100px;
+
+    visibility: hidden;
+    opacity: 0.5;
+
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+@media (max-width: 700px) {
+    .shine {
+        display: none;
+    }
+}

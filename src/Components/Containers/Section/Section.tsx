@@ -1,20 +1,22 @@
 import { memo, type ReactNode } from "react"
 import styles from "./Section.module.css"
-import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
+import type { Classable, Identical, Parent } from "@/Shared/Types/PropsTypes"
 
-interface SectionProps extends Classable, Parent {
+interface SectionProps extends Classable, Parent, Identical {
     className?: string,
-    children?: ReactNode
+    children?: ReactNode,
+    id?: string
 }
 
 const Section = (props: SectionProps) => {
     const {
         className = "",
-        children
+        children,
+        id = ""
     } = props
 
     return (
-        <section className={`${styles.section} ${className}`}>
+        <section id={id} className={`${styles.section} ${className}`}>
             {children}
         </section>
     )

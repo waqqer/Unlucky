@@ -11,6 +11,10 @@ img::selection {
     background-color: transparent;
 }
 
+body {
+    background-color: rgb(15, 14, 15);
+}
+
 main {
     background-color: var(--BG-COLOR);
     z-index: 0;

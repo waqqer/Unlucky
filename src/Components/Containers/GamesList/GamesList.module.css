@@ -10,6 +10,13 @@
     gap: 20px;
 }
 
+@media (max-width: 1000px) {
+    .games {
+        gap: 15px;
+        width: 100vw;
+    }
+}
+
 @media (max-width: 650px) {
     .games {
         flex-direction: column;

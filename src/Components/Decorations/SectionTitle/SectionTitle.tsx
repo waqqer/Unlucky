@@ -3,8 +3,8 @@ import styles from "./SectionTitle.module.css"
 import type { Classable } from "@/Shared/Types/PropsTypes"
 
 interface SectionTitleProps extends Classable {
-    animate?: boolean,
-    className?: string,
+    animate?: boolean
+    className?: string
     animSpeed?: number
     text: string
 }

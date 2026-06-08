@@ -1,0 +1,79 @@
+.btn {
+    margin: 5px;
+    padding: 12px 30px;
+
+    color: white;
+    text-decoration: none;
+    background: rgba(20, 15, 31, 0.6);
+    background: linear-gradient(135deg, rgba(64, 39, 139, 0.6), rgba(82, 20, 139, 0.685));
+    box-shadow: 0px 7px 6px 0px rgba(15, 15, 15, 0.25);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+
+    font-size: 1.1rem;
+    letter-spacing: 1.2px;
+
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+.btn > svg {
+    height: 100%;
+    fill: white;
+    width: 100%;
+
+    min-height: 30px;
+    min-width: 30px;
+    max-height: 30px;
+    max-width: 30px;
+}
+
+.btn:hover {
+    background-color: rgb(114, 39, 184);
+    transform: translateY(-2px);
+    border-color: rgb(81, 108, 230);
+    box-shadow: 0px 7px 6px 0px rgb(81, 108, 230, 0.25);
+    border-radius: 5px;
+}
+
+.btn:active {
+    transform: translateY(4px) scale(0.95);
+    box-shadow: 0px 7px 6px 0px rgba(15, 15, 15, 0.25);
+}
+
+
+
+
+
+.telegram {
+    background: none;
+    background-color: rgb(83, 83, 196);
+
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.telegram:hover {
+    background-color: rgb(116, 116, 228);
+    border-color: white;
+}
+
+.youtube {
+    background: none;
+    background-color: rgb(196, 83, 83);
+
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.youtube:hover {
+    background-color: rgb(241, 139, 139);
+    border-color: white;
+}

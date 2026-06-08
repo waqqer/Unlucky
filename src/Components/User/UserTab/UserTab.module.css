@@ -48,5 +48,6 @@
         border-radius: 0px;
         border: none;
         border-bottom: 1px solid white;
+        background-color: rgba(21, 22, 39, 0.7);
     }
 }

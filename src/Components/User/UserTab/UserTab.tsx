@@ -15,7 +15,7 @@ const UserTab = (props: UserTabProps) => {
     return (
         <nav className={`${styles.tab} ${className}`}>
             <UserTabInfo />
-            <UserTabControlls className={styles.controlls}/>
+            <UserTabControlls className={styles.controlls} />
         </nav>
     )
 }

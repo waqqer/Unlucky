@@ -7,3 +7,11 @@ export interface Classable {
 export interface Parent {
     children?: ReactNode
 }
+
+export interface Identical {
+    id?: string
+}
+
+export interface Clickable {
+    onClick?: () => void
+}
