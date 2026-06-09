@@ -1,5 +1,5 @@
 import { memo, type ReactNode } from "react"
-import UserTabButton from "../UserTabButton"
+import UserTabButton from "../../Controlls/Buttons/UserTabButton"
 import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
 import Window from "@/Components/Containers/Window"
 import useModal from "@/Hooks/useModal"
@@ -23,7 +23,7 @@ const UserTabControlls = (props: UserTabControllsProps) => {
         <>
             <div className={`${className}`}>
                 <UserTabButton onClick={profile.open}>Профиль</UserTabButton>
-                <UserTabButton>Адм. панель</UserTabButton>
+                <UserTabButton link="/admin">Адм. панель</UserTabButton>
                 <UserTabButton onClick={about.open}>О нас</UserTabButton>
 
                 {children}
