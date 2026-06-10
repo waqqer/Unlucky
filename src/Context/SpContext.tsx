@@ -1,14 +1,19 @@
-import useHead from "@/Hooks/userHead";
 import useSP from "@/Hooks/useSP";
-import type { UUID } from "@/Shared/Types/UserTypes";
-import { createContext, type ReactNode } from "react";
+import { createContext, useMemo } from "react";
 
 export const SpContext = createContext({})
 
-interface SpProviderProps {
-    children?: ReactNode
-}
+export const SpProvider = ({ children }: any) => {
+    const spUser = useSP()
+    console.log(spUser.user)
 
-export const SpProvider = (props: SpProviderProps) => {
-    
+    const values = useMemo(() => ({
+        
+    }), [])
+
+    return (
+        <SpContext.Provider value={values}>
+            {children}
+        </SpContext.Provider>
+    )
 }

@@ -1,13 +1,12 @@
 import type { Classable, Identical, Parent } from "@/Shared/Types/PropsTypes"
-import { memo, useCallback, type MouseEventHandler, type MouseEvent, useRef } from "react"
+import { memo, useCallback, type MouseEvent, useRef } from "react"
 import styles from "./Button.module.css"
-import type { BaseButton } from "../types"
+import { ButtonStyle, type BaseButton } from "../types"
 
 interface ButtonProps extends Classable, Identical, Parent, BaseButton {
-    onHoverStart?: MouseEventHandler<HTMLButtonElement>
-    onHoverEnd?: MouseEventHandler<HTMLButtonElement>
-    onHoverMove?: MouseEventHandler<HTMLButtonElement>
+    type?: ButtonStyle
 }
+
 
 const Button = (props: ButtonProps) => {
     const {
@@ -17,7 +16,9 @@ const Button = (props: ButtonProps) => {
         onHoverStart,
         onHoverEnd,
         onHoverMove,
-        children
+        children,
+        type = ButtonStyle.PRIMARY,
+        disabled = false
     } = props
 
     const shineRef = useRef<HTMLSpanElement>(null)
@@ -58,12 +59,13 @@ const Button = (props: ButtonProps) => {
 
     return (
         <button
-            className={`${styles.btn} ${className}`}
+            className={`${styles.btn} ${styles[type]} ${className}`}
             onClick={onClick}
             id={id}
             onMouseEnter={handleHoverStart}
             onMouseLeave={handleHoverEnd}
             onMouseMove={handleHover}
+            disabled={disabled}
         >
             <span className={styles.shine} ref={shineRef}></span>
             {children}

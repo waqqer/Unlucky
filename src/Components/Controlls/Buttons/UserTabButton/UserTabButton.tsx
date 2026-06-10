@@ -1,13 +1,10 @@
-import { memo, type MouseEventHandler, type ReactNode } from "react"
+import { memo } from "react"
 import { Link } from "react-router"
 import styles from "./UserTabButton.module.css"
-import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
+import type { Classable, Clickable, Parent } from "@/Shared/Types/PropsTypes"
 
-interface UserTabButtonProps extends Classable, Parent {
-    children?: ReactNode,
-    onClick?: MouseEventHandler
-    link?: string,
-    className?: string
+interface UserTabButtonProps extends Classable, Parent, Clickable {
+    link?: string
 }
 
 const UserTabButton = (props: UserTabButtonProps) => {

@@ -10,8 +10,6 @@ interface UsernameProps extends Classable {
 const Username = (props: UsernameProps) => {
     const {
         className = "",
-        withBadge = true,
-        withFire = true,
         userName
     } = props
 

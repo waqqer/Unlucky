@@ -1,5 +1,5 @@
 import UserTabInfo from "@/Components/User/UserTabInfo"
-import { memo, useCallback, useRef, useState } from "react"
+import { memo, useCallback, useState } from "react"
 import styles from "./SideBar.module.css"
 import type { Parent } from "@/Shared/Types/PropsTypes"
 

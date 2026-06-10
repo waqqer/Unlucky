@@ -5,6 +5,8 @@ export interface BaseButton extends Clickable {
     onHoverStart?: MouseEventHandler
     onHoverEnd?: MouseEventHandler
     onHoverMove?: MouseEventHandler
+
+    disabled?: boolean
 }
 
 export interface BaseLinkButton extends Clickable {
@@ -14,3 +16,12 @@ export interface BaseLinkButton extends Clickable {
 
     to: string
 }
+
+export const ButtonStyle = {
+    PRIMARY: "primary",
+    SECONDARY: "secondary",
+    DANGER: "danger",
+    APPLY: "apply"
+} as const
+
+export type ButtonStyle = typeof ButtonStyle[keyof typeof ButtonStyle] 

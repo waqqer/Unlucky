@@ -21,7 +21,7 @@ const LeaderboardList = (props: LeaderboardListProps) => {
             {title && <h1 className={styles.title}>{title}</h1>}
             <div className={styles.list}>
                 {data.map((v, i) => (
-                    <LeaderboardItem data={v}/>
+                    <LeaderboardItem data={v} key={i} />
                 ))}
             </div>
         </div>

@@ -4,6 +4,7 @@ import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
 import Window from "@/Components/Containers/Window"
 import useModal from "@/Hooks/useModal"
 import AboutUsModal from "@/widgets/Modals/AboutUsModal"
+import ProfileModal from "@/widgets/Modals/ProfileModal/ProfileModal"
 
 interface UserTabControllsProps extends Classable, Parent {
     children?: ReactNode,
@@ -34,7 +35,7 @@ const UserTabControlls = (props: UserTabControllsProps) => {
                 closeCallback={profile.close}
                 label="Profile modal"
             >
-                <h1>Hello world</h1>
+                <ProfileModal />
             </Window>
 
             <Window

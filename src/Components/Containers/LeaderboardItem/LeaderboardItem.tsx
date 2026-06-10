@@ -19,11 +19,11 @@ const LeaderboardItem = (props: LeaderboardItemProps) => {
     } = props
 
     const { play } = useSound(hoverSound, {
-        volume: 0.005
+        volume: 0.001
     })
 
     return (
-        <div className={`${styles.item} ${className}`} onMouseEnter={play}>
+        <div className={`${styles.item} ${className}`} onMouseEnter={play} >
             <div className={styles.user}>
                 <Head size={48}/>
                 <Username userName={data} withFire={false} />

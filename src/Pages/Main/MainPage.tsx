@@ -22,6 +22,10 @@ const MainPage = () => {
             </Section>
 
             <Section>
+                <SectionTitle text={"Фонды"} animate={false} />
+            </Section>
+
+            <Section>
                 <SectionTitle text={"Рейтинг"} animate={false} />
 
                 <div className={styles.leaders}>

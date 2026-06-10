@@ -6,7 +6,6 @@ import AdmOnlineSection from "./Sections/Online/AdmOnlineSection"
 import SideBar from "@/Components/Controlls/SideBar"
 import UserTabButton from "@/Components/Controlls/Buttons/UserTabButton"
 import AdmStatsSection from "./Sections/Stats/AdmStatsSection"
-import Stats from "./Sections/Stats"
 
 type AdminSections = {
     [key: string]: ReactNode
