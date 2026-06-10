@@ -2,16 +2,22 @@ import type { Classable } from "@/Shared/Types/PropsTypes"
 import { memo } from "react"
 
 interface UsernameProps extends Classable {
-    className?: string
+    className?: string,
+    withBadge?: boolean,
+    withFire?: boolean,
+    userName?: string
 }
 const Username = (props: UsernameProps) => {
     const {
-        className = ""
+        className = "",
+        withBadge = true,
+        withFire = true,
+        userName
     } = props
 
     return (
         <div className={className}>
-            <span>Username</span>
+            <span>{userName}</span>
         </div>
     )
 }

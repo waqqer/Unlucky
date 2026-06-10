@@ -7,6 +7,8 @@ import { Randomizer } from "@/Shared/Utils"
 import { PagesConfig } from "@/Shared/Configs"
 import Section from "@/Components/Containers/Section"
 import GamesList from "@/Components/Containers/GamesList"
+import styles from "./Main.module.css"
+import LeaderboardList from "@/Components/Containers/LeaderboardList"
 
 const MainPage = () => {
     return (
@@ -21,6 +23,12 @@ const MainPage = () => {
 
             <Section>
                 <SectionTitle text={"Рейтинг"} animate={false} />
+
+                <div className={styles.leaders}>
+                    <LeaderboardList data={[1, 3, 4]} title="По кол-ву побед"/>
+                    <LeaderboardList data={[1, 3, 4]} title="По кол-ву игр"/>
+                    <LeaderboardList data={[1, 3, 4, 1, 3, 4, 1, 3, 4]} title="По балансу"/>
+                </div>
             </Section>
         </Page>
     )
