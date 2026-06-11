@@ -12,6 +12,8 @@ export const setAccessToken = (token: string) => {
     _user = token ? jwtDecode<UserPayload>(token) : null
 }
 
+export const getAccessToken = () => _accessToken
+
 export const $api = axios.create({
     baseURL: import.meta.env.VITE_BACKEND!
 })

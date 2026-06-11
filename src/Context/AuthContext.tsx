@@ -13,7 +13,7 @@ export interface AuthContextValues {
     spm: SPWMini | null
 }
 
-export const AuthContext = createContext<AuthContextValues | undefined>(undefined)
+export const AuthContext = createContext<AuthContextValues>(undefined!)
 
 export const AuthProvider = ({ children }: any) => {
     const { user: spUser, spm } = useSP()
