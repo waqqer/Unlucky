@@ -3,6 +3,7 @@ import styles from "./ProfileModal.module.css"
 import UserTabInfo from "@/Components/User/UserTabInfo"
 import Button from "@/Components/Controlls/Buttons/Button"
 import { ButtonStyle } from "@/Components/Controlls/Buttons/types"
+import { toast } from "react-toastify"
 
 const ProfileModal = () => {
     return (
@@ -23,7 +24,7 @@ const ProfileModal = () => {
                 </div>
 
                 <div className={styles["balance-btn"]}>
-                    <Button type={ButtonStyle.APPLY}>Пополнить</Button>
+                    <Button type={ButtonStyle.APPLY} onClick={() => toast.error("Hi thee", { theme: "dark"})}>Пополнить</Button>
                     <Button>Вывести</Button>
                 </div>
             </div>
