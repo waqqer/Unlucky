@@ -1,5 +1,5 @@
 import { AccountContext } from "@/Context/AccountContext"
-import useHead from "@/Hooks/userHead"
+import useHead from "@/Hooks/useHead"
 import { memo, useContext, useEffect, useState } from "react"
 
 interface HeadProps {
@@ -14,7 +14,7 @@ const Head = (props: HeadProps) => {
     } = props
 
     const { user: spUser } = useContext(AccountContext)
-    const [head, setHead] = useState<string>("steve")
+    const [head, setHead] = useState<string>(useHead("steve"))
     
     useEffect(() => {
         if(user) {
