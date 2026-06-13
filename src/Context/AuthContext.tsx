@@ -1,9 +1,10 @@
-import { $api, getUser, setAccessToken } from "@/Api/Api"
-import useSP from "@/Hooks/useSP";
-import type { UserPayload } from "@/Shared/Types/UserTypes";
+import { $api, setAccessToken, subscribeUserChange } from "@/Api/Api"
+import useSP from "@/Hooks/useSP"
+import type { UserPayload } from "@/Shared/Types/UserTypes"
 import { createContext, useEffect, useMemo, useState } from "react"
-import type SPWMini from "spwmini/client";
-import type { User } from "spwmini/types";
+import { toast } from "react-toastify"
+import type SPWMini from "spwmini/client"
+import type { User } from "spwmini/types"
 
 export interface AuthContextValues {
     user: User | null
@@ -22,8 +23,23 @@ export const AuthProvider = ({ children }: any) => {
     const [user, setUser] = useState<UserPayload | null>(null)
 
     useEffect(() => {
+        subscribeUserChange((updatedUser) => {
+            setUser(updatedUser)
+            setIsAuth(!!updatedUser)
+
+            console.log(updatedUser)
+        })
+    }, [])
+
+    useEffect(() => {
         const initAuth = async () => {
             const savedRefresh = localStorage.getItem("refresh_token")
+
+            if(user) {
+                setIsLoading(false)
+                return
+            }
+
             if (savedRefresh) {
                 try {
                     const res = await $api.post("/private/api/auth/refresh", {
@@ -34,11 +50,10 @@ export const AuthProvider = ({ children }: any) => {
                     setAccessToken(access)
                     localStorage.setItem("refresh_token", refresh)
 
-                    setUser(getUser())
-                    setIsAuth(true)
                     setIsLoading(false)
                     return
                 } catch {
+                    toast.error("Ошибка авторизации")
                     localStorage.removeItem("refresh_token")
                 }
             }
@@ -50,10 +65,9 @@ export const AuthProvider = ({ children }: any) => {
 
                     setAccessToken(access)
                     localStorage.setItem('refresh_token', refresh)
-
-                    setUser(getUser())
-                    setIsAuth(true)
+                    toast.success("Авторизован!")
                 } catch {
+                    toast.error("Ошибка авторизации")
                     console.error("Ошибка авторизации")
                 } finally {
                     setIsLoading(false)

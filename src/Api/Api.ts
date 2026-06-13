@@ -1,21 +1,30 @@
 import type { UserPayload } from "@/Shared/Types/UserTypes"
 import axios, { type InternalAxiosRequestConfig, AxiosError } from "axios"
 import { jwtDecode } from "jwt-decode"
+import API_URL from "./Config"
 
 let _accessToken = ""
 let _user: UserPayload | null = null
+let _onUserChangeCallback: ((user: UserPayload | null) => void) | null = null
 
-export const getUser = () => _user;
+export const getUser = () => _user
+export const getAccessToken = () => _accessToken
 
 export const setAccessToken = (token: string) => {
     _accessToken = token
     _user = token ? jwtDecode<UserPayload>(token) : null
+
+    if(_onUserChangeCallback) {
+        _onUserChangeCallback(_user)
+    }
 }
 
-export const getAccessToken = () => _accessToken
+export const subscribeUserChange = (callback: (user: UserPayload | null) => void) => {
+    _onUserChangeCallback = callback
+}
 
 export const $api = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND!
+    baseURL: API_URL
 })
 
 let isRefreshing = false
@@ -67,13 +76,12 @@ $api.interceptors.response.use(
 
             return new Promise((resolve, reject) => {
                 axios
-                    .post(import.meta.env.VITE_BACKEND! + "/private/api/auth/refresh", { refresh: savedRefreshToken })
+                    .post(API_URL + "/private/api/auth/refresh", { refresh: savedRefreshToken })
                     .then((res) => {
                         const { access, refresh } = res.data
 
-                        _accessToken = access
-                        _user = jwtDecode<UserPayload>(access) 
-                        
+                        setAccessToken(access)
+
                         localStorage.setItem('refresh_token', refresh)
 
                         if (originalReq.headers) {
@@ -86,8 +94,7 @@ $api.interceptors.response.use(
                     .catch((refreshError) => {
                         proccesQueue(refreshError, null)
                         localStorage.removeItem("refresh_token")
-                        _accessToken = ""
-                        _user = null
+                        setAccessToken("")
                         reject(refreshError)
                     })
                     .finally(() => {

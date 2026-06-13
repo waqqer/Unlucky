@@ -2,8 +2,9 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { AuthContext } from "./AuthContext"
 import type { OnlineStats } from "@/Shared/Types/ServiceTypes"
 import connectSocket from "@/Api/Wss"
+import { toast } from "react-toastify"
 
-export interface OnlineContextValues extends OnlineStats {}
+export interface OnlineContextValues extends OnlineStats { }
 
 export const OnlineContext = createContext<OnlineContextValues>(undefined!)
 
@@ -24,7 +25,11 @@ export const OnlineProvider = ({ children }: any) => {
             setPeak(data.peak)
         })
 
+        socket.on("connect_error", _ => toast.error("Невозможно подключиться к серверу!"))
+
         return () => {
+            socket.off("connect_error")
+            socket.off("connect_failed")
             socket.off("online_update")
             socket.disconnect()
         }

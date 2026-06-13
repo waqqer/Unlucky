@@ -7,3 +7,5 @@ export interface UserPayload {
     UUID: string
     name: string
 }
+
+export type UserRole = "USER" | "ADMIN"

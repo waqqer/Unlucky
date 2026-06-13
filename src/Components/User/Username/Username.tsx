@@ -1,5 +1,6 @@
+import { AccountContext } from "@/Context/AccountContext"
 import type { Classable } from "@/Shared/Types/PropsTypes"
-import { memo } from "react"
+import { memo, useContext } from "react"
 
 interface UsernameProps extends Classable {
     className?: string,
@@ -13,9 +14,11 @@ const Username = (props: UsernameProps) => {
         userName
     } = props
 
+    const { user } = useContext(AccountContext)
+
     return (
         <div className={className}>
-            <span>{userName}</span>
+            <span>{userName || user?.username || "Username"}</span>
         </div>
     )
 }

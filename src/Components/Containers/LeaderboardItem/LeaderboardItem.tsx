@@ -11,6 +11,10 @@ interface LeaderboardItemProps extends Classable {
     valueName?: string
 }
 
+const sound_config = {
+    volume: 0.001
+}
+
 const LeaderboardItem = (props: LeaderboardItemProps) => {
     const {
         className = "",
@@ -18,9 +22,7 @@ const LeaderboardItem = (props: LeaderboardItemProps) => {
         valueName = "Побед"
     } = props
 
-    const { play } = useSound(hoverSound, {
-        volume: 0.001
-    })
+    const { play } = useSound(hoverSound, sound_config)
 
     return (
         <div className={`${styles.item} ${className}`} onMouseEnter={play} >

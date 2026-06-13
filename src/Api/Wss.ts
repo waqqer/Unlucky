@@ -1,15 +1,17 @@
 import { io } from "socket.io-client"
 import { getAccessToken } from "./Api"
-
-const base_url = import.meta.env.VITE_BACKEND || "https://unlucky-wqqqaa.amvera.io"
+import API_URL from "./Config"
 
 const connectSocket = (url: string) => {
-    const socket = io(base_url + url, {
+    const socket = io(API_URL + url, {
         auth: {
             token: getAccessToken()
         },
         transports: ["websocket"],
-        timeout: 5000
+        timeout: 5000,
+        reconnection: true,
+        reconnectionAttempts: 3,
+        reconnectionDelay: 3000
     })
 
     return socket

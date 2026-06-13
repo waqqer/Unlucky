@@ -32,7 +32,7 @@ const useSound = (soundUrl: string, config?: UseSoundProps) => {
             return
 
         sound.current.currentTime = 0
-        sound.current.play()
+        sound.current.play().catch((_) => _)
 
         isPlaying.current = true
     }, [])

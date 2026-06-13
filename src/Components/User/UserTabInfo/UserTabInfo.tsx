@@ -1,8 +1,9 @@
-import { memo } from "react"
+import { memo, useContext } from "react"
 import styles from "./UserTabInfo.module.css"
 import useHead from "@/Hooks/userHead"
 import Username from "../Username";
 import type { Classable } from "@/Shared/Types/PropsTypes";
+import { AccountContext } from "@/Context/AccountContext";
 
 interface UserTabInfoProps extends Classable {
     size?: number
@@ -21,6 +22,9 @@ const UserTabInfo = (props: UserTabInfoProps) => {
     } = props
 
     const head = useHead();
+
+    const { userInfo } = useContext(AccountContext)
+
     return (
         <div className={`${styles.about} ${className}`}>
             <div className={`${styles.avatar} ${avatarClass}`}>
@@ -36,10 +40,10 @@ const UserTabInfo = (props: UserTabInfoProps) => {
             </div>
 
             <div className={styles.info}>
-                <Username className={`${styles.nickname} ${usernameClass}`} userName="Username"/>
+                <Username className={`${styles.nickname} ${usernameClass}`} />
 
                 <span className={`${styles.balance} ${balanceClass}`}>
-                    1000
+                    {userInfo?.balance || 1234}
                 </span>
             </div>
         </div>
