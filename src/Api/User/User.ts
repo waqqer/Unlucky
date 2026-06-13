@@ -1,6 +1,6 @@
 import { $api } from "../Api"
-import type { UserInfo } from "./Types";
-import type { UUID } from "@/Shared/Types/UserTypes";
+import type { UserInfo } from "./Types"
+import type { UUID } from "@/Shared/Types/UserTypes"
 
 class UserApi {
     public static async getUser(uuid: string | UUID): Promise<UserInfo> {
