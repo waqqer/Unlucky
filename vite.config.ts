@@ -6,7 +6,21 @@ export default defineConfig({
   plugins: [react()],
   base: "/Unlucky/",
   build: {
-    outDir: "build"
+    outDir: "build",
+    chunkSizeWarningLimit: 1000,
+
+    rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("socket.io") || id.includes("axios")) {
+              return "network-vendor"
+            }
+          }
+          return "vendor"
+        }
+      }
+    }
   },
   resolve: {
     alias: {
