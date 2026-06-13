@@ -1,6 +1,5 @@
 import { memo, type ReactNode } from "react"
 import styles from "./Page.module.css"
-import UserTab from "@/Components/User/UserTab"
 import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
 
 interface PageProps extends Classable, Parent {
@@ -24,7 +23,7 @@ const Page = (props: PageProps) => {
                 {customHeader ?
                     customHeader
                     :
-                    <UserTab />
+                    <></>
                 }
             </header>
 

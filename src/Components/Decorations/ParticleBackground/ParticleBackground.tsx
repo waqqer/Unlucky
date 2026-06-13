@@ -4,47 +4,11 @@ import Particles, { ParticlesProvider } from "@tsparticles/react"
 import { memo } from "react"
 import styles from "./ParticleBackground.module.css"
 import type { Classable } from "@/Shared/Types/PropsTypes"
+import Config from "./Config"
 
 interface ParticleBackgroundProps extends Classable {
     customConfig?: RecursivePartial<IOptions>
     className?: string
-}
-
-export const ParticledDefaultConfig: RecursivePartial<IOptions> = {
-    key: "basic",
-    name: "Basic",
-    particles: {
-        number: {
-            value: 350,
-            density: {
-                enable: true
-            }
-        },
-        shape: {
-            type: "circle"
-        },
-        opacity: {
-            value: 0.5
-        },
-        size: {
-            value: { min: 1, max: 3 }
-        },
-        links: {
-            enable: true,
-            distance: 120,
-            color: "#ffffff",
-            opacity: 0.35,
-            width: 1
-        },
-        move: {
-            enable: true,
-            speed: 3
-        }
-    },
-    background: {
-        color: "#00000000",
-        opacity: 0.1
-    }
 }
 
 const ParticlesInit = async (engine: Engine) => {
@@ -53,7 +17,7 @@ const ParticlesInit = async (engine: Engine) => {
 
 const ParticleBackground = (props: ParticleBackgroundProps) => {
     const {
-        customConfig = ParticledDefaultConfig,
+        customConfig = Config,
         className = ""
     } = props
 
