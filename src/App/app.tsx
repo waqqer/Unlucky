@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route } from "react-router"
 import { MainPage } from "@/Pages"
 import "./styles"
 import AdminPage from "@/Pages/Admin/AdminPage"
+import NotFoundPage from "@/Pages/NotFound/NotFoundPage"
 
 const App = () => {
     return (
@@ -9,6 +10,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/admin" element={<AdminPage />} />
+                <Route path="*" element={<NotFoundPage /> } />
             </Routes>
         </HashRouter>
     )
