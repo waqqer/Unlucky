@@ -1,5 +1,6 @@
+import { AccountContext } from "@/Context/AccountContext"
 import useHead from "@/Hooks/userHead"
-import { memo } from "react"
+import { memo, useContext, useEffect, useState } from "react"
 
 interface HeadProps {
     user?: string,
@@ -12,9 +13,21 @@ const Head = (props: HeadProps) => {
         size = 32
     } = props
 
+    const { user: spUser } = useContext(AccountContext)
+    const [head, setHead] = useState<string>("steve")
+    
+    useEffect(() => {
+        if(user) {
+            setHead(useHead(user))
+        }
+        else if(spUser) {
+            setHead(useHead(spUser.minecraftUUID))
+        }
+    }, [user, spUser])
+
     return (
         <img 
-            src={useHead(user)} 
+            src={head} 
             alt="User head"
             height={size}
             width={size}

@@ -26,8 +26,6 @@ export const AuthProvider = ({ children }: any) => {
         subscribeUserChange((updatedUser) => {
             setUser(updatedUser)
             setIsAuth(!!updatedUser)
-
-            console.log(updatedUser)
         })
     }, [])
 
