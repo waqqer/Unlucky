@@ -7,7 +7,8 @@ const Section = (props: UIBaseContainer) => {
         id = "",
         className = "",
         children,
-        justify = "center"
+        justify = "center",
+        align = "center"
     } = props
 
     return (
@@ -15,7 +16,8 @@ const Section = (props: UIBaseContainer) => {
             className={`${styles.section} ${className}`} 
             id={id}
             style={{
-                justifyContent: justify
+                justifyContent: justify,
+                alignItems: align
             }}
         >
             {children}
