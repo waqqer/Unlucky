@@ -5,7 +5,8 @@ export interface UIBaseButton extends Clickable, Parent, Classable {
 }
 
 export interface UILinkedBaseButton extends UIBaseButton, Clickable, Parent, Classable {
-    to?: string
+    to?: string,
+    icon?: boolean
 }
 
 export interface UIKeybindedButton extends UIBaseButton, Clickable, Parent, Classable {
