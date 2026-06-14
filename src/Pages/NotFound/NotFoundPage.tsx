@@ -2,7 +2,7 @@ import { memo } from "react"
 import Page from "../Page"
 import ParticleBackground from "@/Components/Decorations/ParticleBackground"
 import Section from "@/Components/Containers/Section"
-import LinkedButton from "@/Components/Controlls/Buttons/LinkedButton/LinkedButton"
+import LinkedButton from "@/Components/Controlls/Buttons/LinkedButton"
 import styles from "./NotFoundPage.module.css"
 
 const NotFoundPage = () => {

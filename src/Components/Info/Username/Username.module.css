@@ -1,0 +1,9 @@
+.username {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: start;
+    text-align: start;
+
+    width: 100%;
+}

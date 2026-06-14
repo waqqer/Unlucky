@@ -1,0 +1,18 @@
+.nav-btn {
+    background-color: rgba(87, 87, 87, 0.15);
+    width: 100%;
+
+    font-weight: normal;
+    color: rgb(172, 172, 172);
+}
+
+.nav-btn:hover {
+    background-color: rgba(190, 190, 190, 0.15);
+    color: white;
+    border-color: white;
+    transform: translateY(-2px)
+}
+
+.nav-btn:active {
+    transform: translateY(0);
+}

@@ -1,0 +1,18 @@
+.balance {
+    opacity: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    width: 100%;
+
+    gap: 7px;
+}
+
+.balance::after {
+    content: " Ар";
+    color: rgb(255, 255, 255);
+    opacity: 1;
+    font-weight: bold;
+}

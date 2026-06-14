@@ -17,7 +17,7 @@ const LeaderboardBox = (props: Classable) => {
     useEffect(() => {
         if(!isAuth) 
             return
-        
+
         const fetchData = async () => {
             const data = await LeadersApi.getAll(20)
             setLeaders(data)
@@ -39,7 +39,7 @@ const LeaderboardBox = (props: Classable) => {
             <Leaderboard title="По кол-ву побед">
                 {leaders &&
                     leaders.winLeaders.map((v, i) => (
-                        <LeaderboardItem text="Кол-во побед" value={v.value} name={v.name} uuid={v.UUID} index={i + 1} key={i}/>
+                        <LeaderboardItem text="Побед" value={v.value} name={v.name} uuid={v.UUID} index={i + 1} key={i}/>
                     ))
                 }
             </Leaderboard>
@@ -47,7 +47,7 @@ const LeaderboardBox = (props: Classable) => {
             <Leaderboard title="По кол-ву игр">
                 {leaders &&
                     leaders.gameLeaders.map((v, i) => (
-                        <LeaderboardItem text="Кол-во игр" value={v.value} name={v.name} uuid={v.UUID} index={i + 1} key={i}/>
+                        <LeaderboardItem text="Игр" value={v.value} name={v.name} uuid={v.UUID} index={i + 1} key={i}/>
                     ))
                 }
             </Leaderboard>

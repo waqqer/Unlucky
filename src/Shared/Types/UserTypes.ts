@@ -8,4 +8,8 @@ export interface UserPayload {
     name: string
 }
 
+export interface Wallet {
+    balance: number
+}
+
 export type UserRole = "USER" | "ADMIN"

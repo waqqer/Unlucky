@@ -9,7 +9,7 @@ const LinkedButton = (props: UILinkedBaseButton) => {
         type = "DEFAULT",
         children,
         to,
-        icon = false,
+        icon = true,
         onClick
     } = props
 

@@ -3,13 +3,13 @@ import Page from "../Page"
 import { memo } from "react"
 import styles from "./Main.module.css"
 import Section from "@/Components/Containers/Section"
-import Separator from "@/Components/Decorations/Separator/Separator"
-import Logo from "@/Components/Brand/Logo/Logo"
-import SectionTitle from "@/Components/Decorations/SectionTitle/SectionTitle"
+import Separator from "@/Components/Decorations/Separator"
+import Logo from "@/Components/Brand/Logo"
+import SectionTitle from "@/Components/Decorations/SectionTitle"
 import { randomElement } from "blaze-engine"
 import { PagesConfig } from "@/Shared/Configs"
 import GamesList from "@/widgets/GamesList/GamesList"
-import LeaderboardBox from "@/widgets/Leaderboard/LeaderboardBox/LeaderboardBox"
+import LeaderboardBox from "@/widgets/Leaderboard/LeaderboardBox"
 
 const MainPage = () => {
     return (
@@ -27,8 +27,8 @@ const MainPage = () => {
                 <SectionTitle text="Фонды" />
             </Section>
 
-            <Section justify="stretch" className="hide--mobile">
-                <SectionTitle text="Рейтинг" />
+            <Section justify="space-between" className="hide--mobile">
+                <SectionTitle text="Главные лудоманы" className={styles["leader-title"]} />
 
                 <LeaderboardBox />
             </Section>

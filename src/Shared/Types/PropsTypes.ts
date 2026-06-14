@@ -19,3 +19,7 @@ export interface Clickable {
 export interface Resizable {
     size?: number
 }
+
+export interface Linked {
+    to?: string
+}
