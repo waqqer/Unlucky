@@ -4,8 +4,7 @@ type KeybindConfig = {
     onRepeating?: boolean
     mode?: "keydown" | "keyup" | "keypress",
     element?: HTMLElement | Window | Document,
-    preventDefault?: boolean,
-    exec: () => void
+    preventDefault?: boolean
 }
 
 type KeybindHookCallback = () => void
