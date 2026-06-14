@@ -9,6 +9,7 @@ import SectionTitle from "@/Components/Decorations/SectionTitle/SectionTitle"
 import { randomElement } from "blaze-engine"
 import { PagesConfig } from "@/Shared/Configs"
 import GamesList from "@/widgets/GamesList/GamesList"
+import LeaderboardBox from "@/widgets/Leaderboard/LeaderboardBox/LeaderboardBox"
 
 const MainPage = () => {
     return (
@@ -26,8 +27,10 @@ const MainPage = () => {
                 <SectionTitle text="Фонды" />
             </Section>
 
-            <Section className="hide--mobile">
+            <Section justify="stretch" className="hide--mobile">
                 <SectionTitle text="Рейтинг" />
+
+                <LeaderboardBox />
             </Section>
         </Page>
     )
