@@ -6,6 +6,9 @@
 
     background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px) saturate(150%);
+    will-change: backdrop-filter;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
     padding: 10px 20px;
 
     border: 1px solid rgb(110, 110, 110);
