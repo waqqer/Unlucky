@@ -19,7 +19,10 @@ const Leaderboard = (props: UILeaderboardProps) => {
             <h2 className={styles.title}>{title}</h2>
             <Separator size={100} />
             <div className={styles.list}>
-                {children}
+                {children ?
+                    children 
+                    :
+                    <p className={styles.error}>Тут пока ничего нет...(</p>}
             </div>
         </div>
     )

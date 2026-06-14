@@ -6,13 +6,19 @@ import hoverSound from "@/Shared/Assets/Audio/hover.mp3"
 
 interface UILeaderboardItemProps {
     text: string,
-    value: number
+    value: number,
+    uuid: string,
+    name: string,
+    index: number
 }
 
 const LeaderboardItem = (props: UILeaderboardItemProps) => {
     const {
         text,
-        value
+        value,
+        index,
+        name,
+        uuid
     } = props
 
     const sound = useSound(hoverSound, {
@@ -23,19 +29,19 @@ const LeaderboardItem = (props: UILeaderboardItemProps) => {
         <div className={styles.item} onMouseEnter={sound.play}>
             <h1 className={styles.place}>
                 <span>#</span>
-                1
+                {index}
             </h1>
 
             <div className={styles.info}>
                 <div className={styles.data}>
-                    <h1 className={styles.nick}>PlayerPlayer1234</h1>
+                    <h1 className={styles.nick}>{name}</h1>
                     <p className={styles.desc}>
                         {text}:
                         <span>{value}</span>
                     </p>
                 </div>
 
-                <Head size={40}/>
+                <Head size={40} uuid={uuid}/>
             </div>
         </div>
     )
