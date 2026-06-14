@@ -1,5 +1,14 @@
 .separator {
     background-color: rgba(197, 197, 197, 0.35);
-    width: 100%;
+    width: 95%;
     height: 1px;
+    margin-block: 10px;
+    transition: all 0.3s ease;
+    animation: fade 1s ease;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
 }

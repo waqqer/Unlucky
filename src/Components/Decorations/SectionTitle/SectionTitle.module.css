@@ -1,0 +1,21 @@
+.title {
+    display: flex;
+    gap: 15px;
+    transition: all 1s ease;
+}
+
+.title span {
+    animation: fade 1.2s ease;
+    opacity: 0;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(15px) translateX(-30px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+    }
+}

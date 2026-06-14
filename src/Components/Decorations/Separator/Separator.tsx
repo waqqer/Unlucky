@@ -2,16 +2,20 @@ import { memo } from "react"
 import styles from "./Separator.module.css"
 
 interface UISeparatorProps {
-    className?: string
+    className?: string,
+    width?: number
 }
 
 const Separator = (props: UISeparatorProps) => {
     const {
-        className = ""
+        className = "",
+        width = 90
     } = props
 
     return (
-        <div className={`${styles.separator} ${className}`}>
+        <div className={`${styles.separator} ${className}`} style={{
+            width: `${width}%`
+        }}>
 
         </div>
     )

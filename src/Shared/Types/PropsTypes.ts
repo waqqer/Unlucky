@@ -15,3 +15,7 @@ export interface Identical {
 export interface Clickable {
     onClick?: () => void
 }
+
+export interface Resizable {
+    size?: number
+}
