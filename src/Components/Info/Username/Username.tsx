@@ -1,6 +1,6 @@
 import type { BaseUser } from "@/Api/User"
 import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
-import { memo, useContext } from "react"
+import { memo, useContext, useEffect, useState } from "react"
 import styles from "./Username.module.css"
 import { AuthContext } from "@/Context/AuthContext"
 
@@ -19,11 +19,21 @@ const Username = (props: UIUsernameProps) => {
         withFire = false
     } = props
 
-    const { user } = useContext(AuthContext)
+    const { user: DefaultUser } = useContext(AuthContext)
+    const [username, setUsername] = useState<string>("Username")
+    
+    useEffect(() => {
+        if(User) {
+            setUsername(User.name)
+            return
+        } else if (DefaultUser) {
+            setUsername(DefaultUser.username)
+        }
+    }, [DefaultUser, User])
 
     return (
         <h4 className={`${styles.username} ${className}`}>
-            {User ? User.name : user ? user.username : "Username"}
+            {username}
             {children}
         </h4>
     )

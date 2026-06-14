@@ -23,7 +23,7 @@ const Head = (props: UIHeadProps) => {
         } else {
             setHead(useHead(user?.minecraftUUID || "steve"))
         }
-    }, [uuid])
+    }, [uuid, user])
 
     return (
         <img

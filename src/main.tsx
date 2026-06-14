@@ -3,7 +3,7 @@ import App from "./App"
 import Modal from "react-modal"
 import { AuthProvider } from './Context/AuthContext'
 import { OnlineProvider } from './Context/OnlineContext'
-import { Slide, ToastContainer } from 'react-toastify'
+import { Flip, ToastContainer } from 'react-toastify'
 import { AccountProvider } from './Context/AccountContext'
 import { SettingsProvider } from './Context/SettingsContext'
 
@@ -25,7 +25,7 @@ createRoot(document.getElementById('root')!).render(
                             closeOnClick
                             draggable
                             pauseOnFocusLoss
-                            transition={Slide}
+                            transition={Flip}
                         />
                     </OnlineProvider>
                 </AccountProvider>
