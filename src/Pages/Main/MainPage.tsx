@@ -8,6 +8,7 @@ import Logo from "@/Components/Brand/Logo/Logo"
 import SectionTitle from "@/Components/Decorations/SectionTitle/SectionTitle"
 import { randomElement } from "blaze-engine"
 import { PagesConfig } from "@/Shared/Configs"
+import GamesList from "@/widgets/GamesList/GamesList"
 
 const MainPage = () => {
     return (
@@ -15,9 +16,18 @@ const MainPage = () => {
             <ParticleBackground />
 
             <Section justify="start">
-                <Logo />
+                <Logo size={452} />
                 <SectionTitle text={randomElement(PagesConfig.MainPage_title)} animate/>
-                <Separator width={50} className="hide--tablet"/>
+                <Separator size={50} className="hide--tablet"/>
+                <GamesList />
+            </Section>
+
+            <Section>
+                <SectionTitle text="Фонды" />
+            </Section>
+
+            <Section className="hide--mobile">
+                <SectionTitle text="Рейтинг" />
             </Section>
         </Page>
     )

@@ -4,11 +4,17 @@ import "./styles"
 import NotFoundPage from "@/Pages/NotFound/NotFoundPage"
 
 const App = () => {
+
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual'
+    }
+
     return (
         <HashRouter>
             <Routes>
                 <Route path="/" element={<MainPage />} />
-                <Route path="*" element={<NotFoundPage /> } />
+                <Route path="*" element={<NotFoundPage />} />
+
             </Routes>
         </HashRouter>
     )

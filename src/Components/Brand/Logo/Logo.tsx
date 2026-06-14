@@ -15,6 +15,8 @@ const Logo = (props: Resizable & Classable) => {
             alt="UnLucky logo"
             className={`${styles.logo} ${className}`}
             width={size}
+            loading="lazy"
+            draggable={false}
         />
     )
 }

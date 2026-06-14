@@ -1,0 +1,132 @@
+.card {
+    background: rgb(43, 42, 42);
+    min-height: 400px;
+    min-width: 300px;
+
+    max-width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+
+    background-image: var(--bg);
+    background-position: center;
+    background-size: 100% 100%;
+
+    filter: brightness(60%);
+
+    border-radius: 7px;
+    border: 1px solid rgb(156, 156, 156);
+
+    transition: all 0.5s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    filter: brightness(100%);
+    border-color: white;
+    transform: translateY(-10px);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.card:active {
+    transform: translateY(5px);
+}
+
+.card:hover .info {
+    min-height: 100%;
+    max-height: 100%;
+    opacity: 1;
+}
+
+.info {
+    width: 100%;
+    max-height: 0;
+    min-height: 0;
+    padding: 20px;
+    background: linear-gradient(transparent 20%, rgba(17, 17, 17, 0.8) 80%);
+    transition: all 0.3s ease;
+    opacity: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 1.35rem;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+.desc {
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: normal;
+}
+
+@media (min-width: 701px) and (max-width: 1000px) {
+    .card {
+        min-height: 350px;
+        min-width: 250px;
+        max-width: 250px;
+
+        filter: none;
+    }
+
+    .card:hover .info {
+        min-height: 350px;
+        opacity: 1;
+    }
+
+    .info {
+        max-height: 350px;
+        min-height: 100%;
+        opacity: 0;
+        background: rgba(0, 0, 0, 0.7);
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    .title {
+        font-size: 1rem;
+    }
+
+    .desc {
+        font-size: 0.8rem;
+        color: rgb(226, 226, 226);
+        text-align: start;
+        font-weight: 300;
+    }
+}
+
+@media (max-width: 700px) {
+    .card {
+        filter: none;
+        min-height: 325px;
+        min-width: 300px;
+        max-width: 300px;
+        aspect-ratio: 4/5;
+    }
+
+    .card:hover .info {
+        min-height: 0;
+    }
+
+    .info {
+        max-height: fit-content;
+        opacity: 1;
+        background: linear-gradient(transparent 10%, rgba(17, 17, 17, 1) 90%);
+    }
+
+    .desc {
+        color: rgb(207, 207, 207);
+        font-size: 0.8rem;
+    }
+}

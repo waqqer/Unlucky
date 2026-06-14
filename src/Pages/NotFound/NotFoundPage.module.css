@@ -30,6 +30,9 @@
     left: 50%;
     font-size: 20rem;
     opacity: 0.03;
+
+    cursor: default;
+    z-index: -10;
 }
 
 .error::selection {

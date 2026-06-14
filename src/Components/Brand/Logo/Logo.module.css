@@ -1,5 +1,6 @@
 .logo {
     margin-block: 10px;
+    min-height: 180px;
 }
 
 @media (max-width: 1000px) {

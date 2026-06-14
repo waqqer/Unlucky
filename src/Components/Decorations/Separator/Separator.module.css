@@ -7,6 +7,13 @@
     animation: fade 1s ease;
 }
 
+.vertical {
+    width: 1px;
+    height: 95%;
+    margin: 0;
+    margin-inline: 10px;
+}
+
 @keyframes fade {
     from {
         opacity: 0;
