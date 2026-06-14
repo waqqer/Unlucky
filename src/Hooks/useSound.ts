@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef } from "react"
+import { SettingsContext } from "@/Context/SettingsContext"
+import { useCallback, useContext, useEffect, useRef } from "react"
 
 interface UseSoundProps {
     speed?: number
@@ -12,11 +13,12 @@ interface UseSoundProps {
 const useSound = (soundUrl: string, config?: UseSoundProps) => {
     const sound = useRef(new Audio(soundUrl))
     const isPlaying = useRef<boolean>(false)
+    const { sound: SoundConfig } = useContext(SettingsContext)
 
     useEffect(() => {
         sound.current.playbackRate = config?.speed || 1
         sound.current.loop = config?.loop || false
-        sound.current.volume = config?.volume || 1
+        sound.current.volume = config?.volume || SoundConfig.volume
 
         if(config?.onEnd) {
             sound.current.onended = config?.onEnd
@@ -28,6 +30,9 @@ const useSound = (soundUrl: string, config?: UseSoundProps) => {
     }, [config])
 
     const play = useCallback(() => {
+        if(!SoundConfig.enable)
+            return
+
         if(!sound.current)
             return
 
@@ -38,6 +43,9 @@ const useSound = (soundUrl: string, config?: UseSoundProps) => {
     }, [])
 
     const stop = useCallback(() => {
+        if(!SoundConfig.enable)
+            return
+        
         if(!sound.current)
             return
 
