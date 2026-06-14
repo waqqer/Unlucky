@@ -30,3 +30,27 @@ main {
     background-color: var(--BG-COLOR);
     z-index: 0;
 }
+
+.hide--pc {
+    display: none;
+}
+
+@media (max-width: 1000px) {
+    .hide--tablet {
+        display: none;
+    }
+
+    .hide--pc {
+        display: inherit;
+    }
+}
+
+@media (max-width: 700px) {
+    .hide--mobile {
+        display: none;
+    }
+
+    .hide--pc {
+        display: inherit;
+    }
+}

@@ -17,7 +17,7 @@ const MainPage = () => {
             <Section justify="start">
                 <Logo />
                 <SectionTitle text={randomElement(PagesConfig.MainPage_title)} animate/>
-                <Separator width={50} />
+                <Separator width={50} className="hide--tablet"/>
             </Section>
         </Page>
     )

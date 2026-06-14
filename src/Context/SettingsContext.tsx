@@ -12,7 +12,7 @@ type SoundSettigns = {
 export const SettingsContext = createContext<SettingsContextValues>(undefined!)
 
 export const SettingsProvider = ({ children }: any) => {
-    const [sound, setSound] = useState<SoundSettigns>({ volume: 1, enable: true })
+    const [sound, _] = useState<SoundSettigns>({ volume: 1, enable: true })
 
     const values: SettingsContextValues = useMemo(() => ({
         sound

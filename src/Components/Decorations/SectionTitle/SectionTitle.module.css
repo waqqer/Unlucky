@@ -1,12 +1,22 @@
 .title {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
     transition: all 1s ease;
+
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+
+    margin-block: 20px;
+
+    align-items: center;
+    justify-content: center;
 }
 
 .title span {
     animation: fade 1.2s ease;
     opacity: 0;
+    letter-spacing: 1.5px;
 }
 
 @keyframes fade {
@@ -17,5 +27,25 @@
 
     to {
         opacity: 1;
+    }
+}
+
+@media (max-width: 1000px) {
+    .title {
+        margin-block: 10px;
+        gap: 12px;
+        letter-spacing: 1px;
+        font-size: 1.3rem;
+        font-weight: normal;
+    }
+}
+
+@media (max-width: 700px) {
+    .title {
+        gap: 10px;
+        letter-spacing: 0.9px;
+        font-size: 1.1rem;
+        margin-block: 5px;
+        opacity: 0.8;
     }
 }

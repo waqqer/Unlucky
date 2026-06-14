@@ -9,9 +9,3 @@
     align-items: center;
     justify-content: start;
 }
-
-@media (max-width: 700px) {
-    .page {
-        padding-bottom: 5%;
-    }
-}
