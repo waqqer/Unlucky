@@ -12,4 +12,10 @@ export interface UIKeybindedButton extends UIBaseButton, Clickable, Parent, Clas
     bind: string
 }
 
+export interface UIBaseSocialButton extends Clickable, Parent {
+    social: UISocial
+    link: string
+}
+
 export type UIButtonType = "PRIMARY" | "SECONDARY" | "DANGER" | "SUCCES" | "DEFAULT" | "TEXT"
+export type UISocial = "telegram" | "youtube"

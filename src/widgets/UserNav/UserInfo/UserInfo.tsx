@@ -6,7 +6,7 @@ import styles from "./UserInfo.module.css"
 const UserInfo = () => {
     return (
         <div className={styles.info}> 
-            <Username />
+            <Username withBadge />
             <Balance />
         </div>
     )

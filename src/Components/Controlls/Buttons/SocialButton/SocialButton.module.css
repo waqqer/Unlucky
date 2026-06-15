@@ -1,0 +1,47 @@
+.btn {
+    position: relative;
+    padding: 10px 20px;
+    color: black;
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+
+    transition: all 0.2s ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    margin: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    min-width: 175px;
+    text-decoration: none;
+}
+
+.btn svg {
+    height: 30px;
+    fill: white;
+}
+
+.btn:hover {
+    transform: scale(1.03)
+}
+
+.btn:active {
+    transform: scale(0.97)
+}
+
+.telegram {
+    background-color: rgb(82, 135, 196);
+}
+
+.youtube {
+    background-color: rgb(218, 60, 60);
+}

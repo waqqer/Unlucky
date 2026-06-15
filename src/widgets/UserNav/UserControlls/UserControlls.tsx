@@ -1,36 +1,33 @@
-import { memo, useCallback } from "react"
+import { memo } from "react"
 import NavButton from "../NavButton/NavButton"
 import styles from "./UserControlls.module.css"
-import { toast } from "react-toastify"
-import { randomElement } from "blaze-engine"
-import Button from "@/Components/Controlls/Buttons/Button"
+import useModal from "@/Hooks/useModal"
+import Window from "@/Components/Containers/Window"
+import AboutUsModal from "@/widgets/Modals/AboutUsModal"
 
 const UserControlls = () => {
-    const handleClick = useCallback(() => {
-        const handlers = [
-            () => toast.dark("Default message"),
-            () => toast.info("Info message"),
-            () => toast.warn("Warn message"),
-            () => toast.error("Error message"),
-            () => toast.success("Succes message")
-        ]
+    const about = useModal()
 
-        randomElement(handlers)()
-    }, [])
     return (
-        <nav className={styles.controlls}>
-            <NavButton onClick={handleClick}>
-                Профиль
-            </NavButton >
+        <>
+            <nav className={styles.controlls}>
+                <NavButton>
+                    Профиль
+                </NavButton >
 
-            <NavButton>
-                Адм. панель
-            </NavButton>
+                <NavButton>
+                    Адм. панель
+                </NavButton>
 
-            <NavButton>
-                О нас
-            </NavButton>
-        </nav>
+                <NavButton onClick={about.open}>
+                    О нас
+                </NavButton>
+            </nav>
+
+            <Window isOpen={about.isOpen} close={about.close}>
+                <AboutUsModal />
+            </Window>
+        </>
     )
 }
 

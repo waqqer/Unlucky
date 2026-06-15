@@ -8,4 +8,5 @@ export interface Leader {
     name: string
     value: number
     UUID: string
+    badge: string
 }

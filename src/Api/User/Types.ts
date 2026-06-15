@@ -16,3 +16,8 @@ export interface BaseUser {
     current_badge: string
     badges: string[]
 }
+
+export interface UserPresence {
+    name: string
+    current_badge: string
+}

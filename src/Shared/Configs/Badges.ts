@@ -16,7 +16,7 @@ interface BadgesConfig {
     nullBadge: Badge
 }
 
-interface Badge {
+export interface Badge {
     title: string,
     description: string,
     icon: string,

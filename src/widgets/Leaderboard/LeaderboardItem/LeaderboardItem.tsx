@@ -3,13 +3,15 @@ import styles from "./LeaderboardItem.module.css"
 import Head from "@/Components/Decorations/Head"
 import useSound from "@/Hooks/useSound"
 import hoverSound from "@/Shared/Assets/Audio/hover.mp3"
+import Username from "@/Components/Info/Username"
 
 interface UILeaderboardItemProps {
     text: string,
     value: number,
     uuid: string,
     name: string,
-    index: number
+    index: number,
+    badge: string
 }
 
 const LeaderboardItem = (props: UILeaderboardItemProps) => {
@@ -18,7 +20,8 @@ const LeaderboardItem = (props: UILeaderboardItemProps) => {
         value,
         index,
         name,
-        uuid
+        uuid,
+        badge
     } = props
 
     const sound = useSound(hoverSound, {
@@ -34,7 +37,10 @@ const LeaderboardItem = (props: UILeaderboardItemProps) => {
 
             <div className={styles.info}>
                 <div className={styles.data}>
-                    <h1 className={styles.nick}>{name}</h1>
+                    <Username className={styles.nick} withBadge badgeTooltip User={{
+                        name: name,
+                        current_badge: badge
+                    }}/>
                     <p className={styles.desc}>
                         {text}:
                         <span>{value}</span>

@@ -31,7 +31,7 @@ const LeaderboardBox = (props: Classable) => {
             <Leaderboard title="По балансу">
                 {leaders &&
                     leaders.balanceLeaders.map((v, i) => (
-                        <LeaderboardItem text="Баланс" value={v.value} name={v.name} uuid={v.UUID} index={i + 1} key={i}/>
+                        <LeaderboardItem text="Баланс" value={v.value} name={v.name} uuid={v.UUID} badge={v.badge} index={i + 1} key={i}/>
                     ))
                 }
             </Leaderboard>
@@ -39,7 +39,7 @@ const LeaderboardBox = (props: Classable) => {
             <Leaderboard title="По кол-ву побед">
                 {leaders &&
                     leaders.winLeaders.map((v, i) => (
-                        <LeaderboardItem text="Побед" value={v.value} name={v.name} uuid={v.UUID} index={i + 1} key={i}/>
+                        <LeaderboardItem text="Побед" value={v.value} name={v.name} uuid={v.UUID} badge={v.badge} index={i + 1} key={i}/>
                     ))
                 }
             </Leaderboard>
@@ -47,9 +47,10 @@ const LeaderboardBox = (props: Classable) => {
             <Leaderboard title="По кол-ву игр">
                 {leaders &&
                     leaders.gameLeaders.map((v, i) => (
-                        <LeaderboardItem text="Игр" value={v.value} name={v.name} uuid={v.UUID} index={i + 1} key={i}/>
+                        <LeaderboardItem text="Игр" value={v.value} name={v.name} uuid={v.UUID} badge={v.badge} index={i + 1} key={i}/>
                     ))
                 }
+                <LeaderboardItem text="Игр" value={12} name={"User"} uuid={"steve"} badge={"lucky"} index={1 + 1} key={1}/>
             </Leaderboard>
         </div>
     )
