@@ -1,0 +1,136 @@
+.content {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    gap: 15px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    padding-inline: 5%;
+    margin-block: 0.5%;
+
+    width: 100%;
+    gap: 10px;
+
+    & img {
+        border-radius: 3px;
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    text-align: start;
+    gap: 5px;
+}
+
+.balance {
+    background-color: rgba(90, 120, 255, 0.45);
+    border-radius: 7px;
+    border: 2px dashed rgb(152, 152, 255);
+    outline: 1px solid rgba(255, 255, 255, 0.15);
+
+    width: 95%;
+    padding: 3%;
+    padding-block: 3%;
+    padding-bottom: 3%;
+    
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.balance-label {
+    font-size: 1.1rem;
+}
+
+.data {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    gap: 5px;
+}
+
+.data h4 {
+    font-weight: 400;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.btns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-content: center;
+    place-items: center;
+    width: 60%;
+    
+    gap: 1px;
+}
+
+.btns .btn {
+    background-color: rgb(135, 177, 255);
+    max-height: 40px;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+
+    & svg {
+        height: 25px;
+        fill: white;
+    }
+}
+
+.btns .btn:hover {
+    background-color: rgb(159, 193, 255);
+}
+
+.history {
+    background-color: rgba(90, 255, 126, 0.45);
+    border-radius: 7px;
+    border: 2px dashed rgb(152, 255, 161);
+    outline: 1px solid rgba(255, 255, 255, 0.15);
+
+    width: 95%;
+    padding: 3%;
+    padding-block: 3%;
+    padding-bottom: 3%;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    align-items: center;
+    justify-content: center;
+
+    max-height: 300px;
+}
+
+.history-notfound {
+    color: white;
+    opacity: 0.6;
+    font-weight: 300;
+    padding: 10px;
+    font-size: 0.85rem;
+
+    cursor: default;
+}
+
+.history-notfound:hover {
+    opacity: 0.8;
+}

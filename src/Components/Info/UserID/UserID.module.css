@@ -1,0 +1,12 @@
+.uuid {
+    color: rgb(153, 153, 153);
+    opacity: 0.8;
+    text-transform: uppercase;
+    text-align: start;
+    font-weight: 400;
+    font-size: 1.05rem;
+}
+
+.uuid::before {
+    content: "#";
+}

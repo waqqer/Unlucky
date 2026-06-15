@@ -24,7 +24,7 @@ createRoot(document.getElementById('root')!).render(
                             theme="dark"
                             closeOnClick
                             draggable
-                            pauseOnFocusLoss
+                            pauseOnFocusLoss={false}
                             transition={Flip}
                         />
                     </OnlineProvider>

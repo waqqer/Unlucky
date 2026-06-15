@@ -7,7 +7,8 @@ const Button = (props: UIBaseButton) => {
         className = "",
         type = "DEFAULT",
         children,
-        onClick
+        onClick,
+        id = ""
     } = props
 
     const handleClick = useCallback(() => {
@@ -19,6 +20,7 @@ const Button = (props: UIBaseButton) => {
         <button
             onClick={handleClick}
             className={`${styles.btn} ${styles[type]} ${className}`}
+            id={id}
         >
             {children}
         </button>

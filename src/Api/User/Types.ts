@@ -1,6 +1,6 @@
 import type { UserRole, Wallet } from "@/Shared/Types/UserTypes"
 
-export interface UserInfo extends Wallet {
+export interface UserInfo extends Wallet, UserId {
     userId: number
     
     role: UserRole
@@ -15,6 +15,14 @@ export interface BaseUser {
 
     current_badge: string
     badges: string[]
+}
+
+export interface UserId {
+    userId: number
+}
+
+export interface Identical {
+    id: number
 }
 
 export interface UserPresence {

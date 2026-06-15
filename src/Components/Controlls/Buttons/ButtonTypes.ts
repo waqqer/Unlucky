@@ -1,6 +1,6 @@
-import type { Parent, Clickable, Classable, Linked } from "@/Shared/Types/PropsTypes";
+import type { Parent, Clickable, Classable, Linked, Identical } from "@/Shared/Types/PropsTypes"
 
-export interface UIBaseButton extends Clickable, Parent, Classable {
+export interface UIBaseButton extends Clickable, Parent, Classable, Identical {
     type?: UIButtonType
 }
 
