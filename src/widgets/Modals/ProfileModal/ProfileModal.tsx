@@ -8,7 +8,15 @@ import Balance from "@/Components/Info/Balance"
 import Button from "@/Components/Controlls/Buttons/Button"
 import { Tooltip } from "react-tooltip"
 
-const ProfileModal = () => {
+interface UIProfileModalProps {
+    closeThis: () => void
+}
+
+const ProfileModal = (props: UIProfileModalProps) => {
+    const {
+        closeThis
+    } = props
+    
     return (
         <>
             <div className={styles.content}>
@@ -24,6 +32,26 @@ const ProfileModal = () => {
                 </div>
 
                 <Separator size={100} />
+
+                <div className={styles.controlls}>
+                    <Button className={styles.profile_btn} id="badges">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M96.5 160L96.5 309.5C96.5 326.5 103.2 342.8 115.2 354.8L307.2 546.8C332.2 571.8 372.7 571.8 397.7 546.8L547.2 397.3C572.2 372.3 572.2 331.8 547.2 306.8L355.2 114.8C343.2 102.7 327 96 310 96L160.5 96C125.2 96 96.5 124.7 96.5 160zM208.5 176C226.2 176 240.5 190.3 240.5 208C240.5 225.7 226.2 240 208.5 240C190.8 240 176.5 225.7 176.5 208C176.5 190.3 190.8 176 208.5 176z" />
+                        </svg>
+                    </Button>
+
+                    <Button className={styles.profile_btn} id="promocode">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M385.5 132.8C393.1 119.9 406.9 112 421.8 112L424 112C446.1 112 464 129.9 464 152C464 174.1 446.1 192 424 192L350.7 192L385.5 132.8zM254.5 132.8L289.3 192L216 192C193.9 192 176 174.1 176 152C176 129.9 193.9 112 216 112L218.2 112C233.1 112 247 119.9 254.5 132.8zM344.1 108.5L320 149.5L295.9 108.5C279.7 80.9 250.1 64 218.2 64L216 64C167.4 64 128 103.4 128 152C128 166.4 131.5 180 137.6 192L96 192C78.3 192 64 206.3 64 224L64 256C64 273.7 78.3 288 96 288L544 288C561.7 288 576 273.7 576 256L576 224C576 206.3 561.7 192 544 192L502.4 192C508.5 180 512 166.4 512 152C512 103.4 472.6 64 424 64L421.8 64C389.9 64 360.3 80.9 344.1 108.4zM544 336L344 336L344 544L480 544C515.3 544 544 515.3 544 480L544 336zM296 336L96 336L96 480C96 515.3 124.7 544 160 544L296 544L296 336z" />
+                        </svg>
+                    </Button>
+
+                    <Button className={styles.profile_btn} id="referal">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M96 192C96 130.1 146.1 80 208 80C269.9 80 320 130.1 320 192C320 253.9 269.9 304 208 304C146.1 304 96 253.9 96 192zM32 528C32 430.8 110.8 352 208 352C305.2 352 384 430.8 384 528L384 534C384 557.2 365.2 576 342 576L74 576C50.8 576 32 557.2 32 534L32 528zM464 128C517 128 560 171 560 224C560 277 517 320 464 320C411 320 368 277 368 224C368 171 411 128 464 128zM464 368C543.5 368 608 432.5 608 512L608 534.4C608 557.4 589.4 576 566.4 576L421.6 576C428.2 563.5 432 549.2 432 534L432 528C432 476.5 414.6 429.1 385.5 391.3C408.1 376.6 435.1 368 464 368z" />
+                        </svg>
+                    </Button>
+                </div>
 
                 <div className={styles.balance}>
                     <div className={styles.data}>
@@ -52,15 +80,36 @@ const ProfileModal = () => {
 
             <Tooltip
                 anchorSelect="#deposit"
-                delayShow={300}
+                delayShow={100}
                 content="Пополнение средств"
                 variant="info"
             />
 
             <Tooltip
                 anchorSelect="#cashout"
-                delayShow={300}
+                delayShow={100}
                 content="Вывод средств"
+                variant="info"
+            />
+
+            <Tooltip
+                anchorSelect="#badges"
+                delayShow={100}
+                content="Значки"
+                variant="info"
+            />
+
+            <Tooltip
+                anchorSelect="#promocode"
+                delayShow={100}
+                content="Промокоды"
+                variant="info"
+            />
+
+            <Tooltip
+                anchorSelect="#referal"
+                delayShow={100}
+                content="Реферальная система"
                 variant="info"
             />
         </>

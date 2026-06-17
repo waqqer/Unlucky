@@ -31,7 +31,7 @@ const UserControlls = () => {
             </Window>
 
             <Window isOpen={profile.isOpen} close={profile.close}>
-                <ProfileModal />
+                <ProfileModal closeThis={profile.close} />
             </Window>
         </>
     )

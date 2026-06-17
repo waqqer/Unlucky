@@ -9,7 +9,8 @@ const KeybindedButton = (props: UIKeybindedButton) => {
         type = "DEFAULT",
         onClick,
         children,
-        className = ""
+        className = "",
+        sound = false
     } = props
 
     const handle = useCallback(() => {
@@ -23,7 +24,7 @@ const KeybindedButton = (props: UIKeybindedButton) => {
     })
 
     return (
-        <Button className={className} type={type} onClick={handle}>
+        <Button className={className} type={type} onClick={handle} sound={sound}>
             {children}
         </Button>
     )

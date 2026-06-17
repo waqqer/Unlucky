@@ -4,6 +4,8 @@ import { memo, useCallback } from "react"
 import styles from "./GameCard.module.css"
 import { useNavigate } from "react-router"
 import Separator from "@/Components/Decorations/Separator/Separator"
+import useSound from "@/Hooks/useSound"
+import sound from "@/Shared/Assets/Audio/hover.mp3"
 
 interface UIGameCardProps extends Classable, Identical {
     game: GameInfo
@@ -17,6 +19,9 @@ const GameCard = (props: UIGameCardProps) => {
     } = props
 
     const nav = useNavigate()
+    const hoverSound = useSound(sound, {
+        volume: 0.005
+    })
 
     const handleClick = useCallback(() => {
         nav(game.route)
@@ -27,6 +32,7 @@ const GameCard = (props: UIGameCardProps) => {
             className={`${styles.card} ${className}`}
             id={id}
             onClick={handleClick}
+            onMouseEnter={() => hoverSound.play()}
             style={{
                 "--bg": `url(${game.icon})`
             } as React.CSSProperties}

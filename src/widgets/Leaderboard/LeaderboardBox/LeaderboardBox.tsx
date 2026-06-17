@@ -50,7 +50,6 @@ const LeaderboardBox = (props: Classable) => {
                         <LeaderboardItem text="Игр" value={v.value} name={v.name} uuid={v.UUID} badge={v.badge} index={i + 1} key={i}/>
                     ))
                 }
-                <LeaderboardItem text="Игр" value={12} name={"User"} uuid={"steve"} badge={"lucky"} index={1 + 1} key={1}/>
             </Leaderboard>
         </div>
     )

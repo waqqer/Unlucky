@@ -1,15 +1,18 @@
 import type { Parent, Clickable, Classable, Linked, Identical } from "@/Shared/Types/PropsTypes"
 
 export interface UIBaseButton extends Clickable, Parent, Classable, Identical {
-    type?: UIButtonType
+    type?: UIButtonType,
+    sound?: boolean
 }
 
 export interface UILinkedBaseButton extends UIBaseButton, Clickable, Parent, Classable, Linked {
-    icon?: boolean
+    icon?: boolean,
+    sound?: boolean
 }
 
 export interface UIKeybindedButton extends UIBaseButton, Clickable, Parent, Classable {
-    bind: string
+    bind: string,
+    sound?: boolean
 }
 
 export interface UIBaseSocialButton extends Clickable, Parent {

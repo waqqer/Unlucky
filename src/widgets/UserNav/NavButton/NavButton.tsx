@@ -21,6 +21,7 @@ const NavButton = (props: UINavButtonProps) => {
             className={`${styles["nav-btn"]} ${className}`}
             icon={false}
             type="TEXT"
+            sound
         >
             {children}
         </LinkedButton>
