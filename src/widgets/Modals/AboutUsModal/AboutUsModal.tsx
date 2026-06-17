@@ -20,11 +20,11 @@ const AboutUsModal = () => {
 
             <div className={styles.info}>
                 <div className={styles.btns}>
-                    <SocialButton social="telegram" link={"https://t.me/shadowmonya"}>
+                    <SocialButton social="telegram" link={"https://t.me/shadowmonya"} sound>
                         Telegram
                     </SocialButton>
 
-                    <SocialButton social="youtube" link={"https://youtube.com/@ShadowMonya"}>
+                    <SocialButton social="youtube" link={"https://youtube.com/@ShadowMonya"} sound>
                         Youtube
                     </SocialButton>
                 </div>

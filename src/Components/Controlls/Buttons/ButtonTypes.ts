@@ -6,18 +6,19 @@ export interface UIBaseButton extends Clickable, Parent, Classable, Identical {
 }
 
 export interface UILinkedBaseButton extends UIBaseButton, Clickable, Parent, Classable, Linked {
-    icon?: boolean,
+    icon?: boolean
     sound?: boolean
 }
 
 export interface UIKeybindedButton extends UIBaseButton, Clickable, Parent, Classable {
-    bind: string,
+    bind: string
     sound?: boolean
 }
 
 export interface UIBaseSocialButton extends Clickable, Parent {
     social: UISocial
     link: string
+    sound?: boolean
 }
 
 export type UIButtonType = "PRIMARY" | "SECONDARY" | "DANGER" | "SUCCES" | "DEFAULT" | "TEXT"
