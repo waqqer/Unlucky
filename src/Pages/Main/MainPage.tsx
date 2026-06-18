@@ -6,10 +6,10 @@ import Section from "@/Components/Containers/Section"
 import Separator from "@/Components/Decorations/Separator"
 import Logo from "@/Components/Brand/Logo"
 import SectionTitle from "@/Components/Decorations/SectionTitle"
-import { randomElement } from "blaze-engine"
 import { PagesConfig } from "@/Shared/Configs"
 import GamesList from "@/widgets/GamesList/GamesList"
 import LeaderboardBox from "@/widgets/Leaderboard/LeaderboardBox"
+import { randomElement } from "@/Shared/Utils/Randomizer"
 
 const MainPage = () => {
     return (

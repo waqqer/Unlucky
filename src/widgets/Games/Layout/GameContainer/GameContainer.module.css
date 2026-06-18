@@ -1,0 +1,49 @@
+.game-box {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    min-height: 70vh;
+    gap: 15px;
+    padding-inline: 10%;
+}
+
+.game-box > div {
+    border: 1px solid rgb(114, 114, 114);
+    border-radius: 5px;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    background-color: transparent;
+}
+
+.double {
+    grid-template-columns: 30% 70%;
+}
+
+.triple {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.d-box {
+    display: grid;
+    grid-template-rows: 60% 40%;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.input > * {
+    width: 50%;
+}
+
+.input > button {
+    padding-block: 20px;
+}
+
+.game {
+}
