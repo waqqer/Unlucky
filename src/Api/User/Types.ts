@@ -29,3 +29,17 @@ export interface UserPresence {
     name: string
     current_badge: string
 }
+
+export interface Badges {
+    current_badge: string
+    badges: string[]
+}
+
+export interface UserHistory {
+    id: number
+    result: "WIN" | "LOSE"
+    game_name: string
+    amount: number
+    game_date: Date
+    user_id: number
+}

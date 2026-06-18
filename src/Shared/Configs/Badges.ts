@@ -13,13 +13,12 @@ import {
 interface BadgesConfig {
     badges: Record<string, Badge>
     colors: Record<BadgeQuality, string>
-    nullBadge: Badge
 }
 
 export interface Badge {
-    title: string,
-    description: string,
-    icon: string,
+    title: string
+    description: string
+    icon: string
     quality: BadgeQuality
 }
 
@@ -104,13 +103,6 @@ const BadgesConfig: BadgesConfig = {
         "EPIC": '#df46d2',
         "LEGENDARY": '#ffa048',
         "LIMITED": '#eb3a3a',
-    },
-
-    nullBadge: {
-        title: "Неизвестно...",
-        description: "Неизвестное достижение из другой вселенной",
-        icon: Null,
-        quality: "BASIC"
     }
 }
 

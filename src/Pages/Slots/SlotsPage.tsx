@@ -10,7 +10,8 @@ const SlotsPage = () => {
             <ParticleBackground />
 
             <Section justify="center" align="center">
-                <GameContainer type="double"/>
+                <GameContainer type="double">
+                </GameContainer>
             </Section>
         </Page>
     )
