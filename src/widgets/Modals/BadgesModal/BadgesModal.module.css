@@ -24,10 +24,11 @@
     image-rendering: pixelated;
     filter: brightness(10%) grayscale(1);
     transition: all 0.1s ease;
+    cursor: pointer;
 }
 
 .badge:hover {
-    filter: brightness(20%);
+    filter: brightness(50%) grayscale(1);
     transform: scale(1.1);
 }
 
@@ -77,6 +78,21 @@
     align-self: center;
     justify-content: center;
     image-rendering: pixelated;
+    animation: badge-pulse 6s ease infinite;
+}
+
+@keyframes badge-pulse {
+    from {
+        filter: brightness(100%);
+    }
+
+    50% {
+        filter: brightness(130%);
+    }
+
+    to {
+        filter: brightness(100%);
+    }
 }
 
 .not {

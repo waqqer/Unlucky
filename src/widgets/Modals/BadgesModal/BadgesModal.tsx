@@ -14,15 +14,15 @@ const BadgesModal = (props: UIBadgesModalProps) => {
         close
     } = props
 
-    const { userInfo } = useContext(AccountContext)
-
-    const [picked, setPicked] = useState<string>(Object.entries(BadgesConfig.badges)[0][0])
-    const [userBadges, setUserBadges] = useState<string[]>(["slots"])
+    const { badges, account, ReloadUserBadges, changeBadge } = useContext(AccountContext)
+    const [picked, setPicked] = useState<string>("slots")
 
     useEffect(() => {
-        if (userInfo)
-            setUserBadges(userInfo.badges)
-    }, [userInfo])
+        if (!account)
+            return
+
+        ReloadUserBadges()
+    }, [account, ReloadUserBadges])
 
     return (
         <div className={styles.content}>
@@ -31,27 +31,17 @@ const BadgesModal = (props: UIBadgesModalProps) => {
 
             <div className={styles.badges}>
                 <div className={styles.list}>
-                    {Object.entries(BadgesConfig.badges).map(([k, v]) => {
-                        if (userBadges.includes(k)) {
-                            return (
-                                <img
-                                    src={v.icon}
-                                    alt="Badge icon"
-                                    className={`${styles.badge} ${styles.has}`}
-                                    onClick={() => setPicked(k)}
-                                />
-                            )
-                        }
-
-                        return (
-                            <img
-                                src={v.icon}
-                                alt="Badge icon"
-                                className={styles.badge}
-                                onClick={() => setPicked(k)}
-                            />
-                        )
-                    })}
+                    {Object.entries(BadgesConfig.badges).map(([k, v]) => (
+                        <img
+                            src={v.icon}
+                            alt="Badge icon"
+                            className={`${styles.badge} ${badges.includes(k) ? styles.has : ""}`}
+                            onClick={() => setPicked(k)}
+                            draggable={false}
+                            loading="lazy"
+                            key={k}
+                        />
+                    ))}
                 </div>
 
                 <div className={styles.view}>
@@ -59,6 +49,8 @@ const BadgesModal = (props: UIBadgesModalProps) => {
                         src={BadgesConfig.badges[picked]?.icon || ""}
                         alt="Badge preview"
                         className={styles["badge-view"]}
+                        draggable={false}
+                        loading="lazy"
                     />
                     <h2 style={{
                         color: BadgesConfig.colors[
@@ -74,8 +66,11 @@ const BadgesModal = (props: UIBadgesModalProps) => {
                         {BadgesConfig.badges[picked]?.description}
                     </p>
 
-                    {userBadges.includes(picked) ?
-                        <Button type="SECONDARY" onClick={close}>Использовать</Button>
+                    {badges.includes(picked) ?
+                        <Button type="SECONDARY" onClick={() => {
+                            close()
+                            changeBadge(picked)
+                        }}>Использовать</Button>
                         :
                         <span className={styles.not}>Значек еще не получен...</span>
                     }

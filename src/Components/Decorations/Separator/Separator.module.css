@@ -5,6 +5,9 @@
     margin-block: 10px;
     transition: all 0.3s ease;
     animation: fade 1s ease;
+
+    align-self: center;
+    justify-self: center;
 }
 
 .vertical {

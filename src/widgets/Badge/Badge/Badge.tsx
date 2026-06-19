@@ -20,7 +20,7 @@ const Badge = (props: UIBadgeProps) => {
         tooltipDelay = 0
     } = props
 
-    const [badge, setBadge] = useState<Badge>(BadgesConfig.nullBadge)
+    const [badge, setBadge] = useState<Badge | null>(null)
 
     useEffect(() => {
         if (badgeName) {
@@ -32,7 +32,7 @@ const Badge = (props: UIBadgeProps) => {
 
     return (
         <>
-            {badgeName && <div className={`${styles.badge} ${className}`}>
+            {badgeName && badge && <div className={`${styles.badge} ${className}`}>
                 <img
                     src={badge.icon}
                     alt="User badge"

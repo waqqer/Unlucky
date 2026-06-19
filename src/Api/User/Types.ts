@@ -5,9 +5,6 @@ export interface UserInfo extends Wallet, UserId {
     
     role: UserRole
     balance: number
-
-    current_badge: string
-    badges: string[]
 }
 
 export interface BaseUser {

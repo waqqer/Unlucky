@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type SPWMini from "spwmini/client"
 import type { User } from "spwmini/types"
 import { AuthContext } from "./AuthContext"
-import type { UserInfo } from "@/Api/User"
+import type { Badges, UserInfo } from "@/Api/User"
 import UserApi from "@/Api/User"
 
 export interface AccountContextValues {
@@ -12,7 +12,12 @@ export interface AccountContextValues {
     spm: SPWMini | null
     userInfo: UserInfo | null,
 
+    badge: string,
+    badges: string[]
+
     ReloadUserInfo: () => void
+    ReloadUserBadges: () => void
+    changeBadge: (badge: string) => void
 }
 
 export const AccountContext = createContext<AccountContextValues>(undefined!)
@@ -21,11 +26,32 @@ export const AccountProvider = ({ children }: any) => {
     const { user, spm, account } = useContext(AuthContext)
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
 
+    const [badge, setBadge] = useState<string>("")
+    const [badges, setBadges] = useState<string[]>([])
+
     const ReloadUserInfo = useCallback(async () => {
-        if (!account) return
+        if (!account) 
+            return
 
         const data: UserInfo = await UserApi.getUser(account.UUID)
         setUserInfo(data)
+    }, [account])
+
+    const ReloadUserBadges = useCallback(async () => {
+        if (!account)
+            return
+
+        const data: Badges = await UserApi.getUserBadges(account.UUID)
+        setBadge(data.current_badge)
+        setBadges(data.badges)
+    }, [account])
+
+    const changeBadge = useCallback(async (badge: string) => {
+        if(!account)
+            return
+        
+        setBadge(badge)
+        await UserApi.setUserBadge(account.UUID, badge)
     }, [account])
 
     useEffect(() => {
@@ -33,7 +59,10 @@ export const AccountProvider = ({ children }: any) => {
             return
 
         const fetchUserData = async () => {
-            await ReloadUserInfo()
+            await Promise.all([
+                await ReloadUserInfo(),
+                await ReloadUserBadges()
+            ])
         }
 
         fetchUserData()
@@ -44,8 +73,13 @@ export const AccountProvider = ({ children }: any) => {
         account,
         spm,
         userInfo,
-        ReloadUserInfo
-    }), [user, account, spm, userInfo, ReloadUserInfo])
+        badge,
+        badges,
+
+        ReloadUserInfo,
+        ReloadUserBadges,
+        changeBadge
+    }), [user, account, spm, userInfo, badge, badges, ReloadUserInfo, ReloadUserBadges, changeBadge])
 
     return (
         <AccountContext.Provider value={values}>

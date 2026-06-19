@@ -22,7 +22,7 @@ const Username = (props: UIUsernameProps) => {
         withFire = false
     } = props
 
-    const { userInfo, user: DefaultUser } = useContext(AccountContext)
+    const { userInfo, user: DefaultUser, badge } = useContext(AccountContext)
     const [username, setUsername] = useState<string>("Username")
     const [userBadge, setUserBadge] = useState<string | undefined>(undefined)
 
@@ -33,7 +33,7 @@ const Username = (props: UIUsernameProps) => {
             return
         } else if (DefaultUser) {
             setUsername(DefaultUser.username)
-            setUserBadge(userInfo?.current_badge || undefined)
+            setUserBadge(badge || undefined)
         }
     }, [DefaultUser, User, userInfo])
 
