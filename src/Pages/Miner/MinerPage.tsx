@@ -3,6 +3,7 @@ import Page from "../Page"
 import ParticleBackground from "@/Components/Decorations/ParticleBackground"
 import Section from "@/Components/Containers/Section"
 import GameContainer from "@/widgets/Games/Layout/GameContainer"
+import GameControlls from "@/widgets/Games/Layout/GameControlls"
 
 const MinerPage = () => {
     return (
@@ -10,6 +11,7 @@ const MinerPage = () => {
             <ParticleBackground />
 
             <Section justify="center" align="center">
+                <GameControlls openAbout={() => {}}/>
                 <GameContainer type="triple"/>
             </Section>
         </Page>

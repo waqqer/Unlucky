@@ -2,9 +2,18 @@
     display: grid;
     height: 100%;
     width: 100%;
-    min-height: 70vh;
+    min-height: 80vh;
     gap: 15px;
     padding-inline: 10%;
+
+    animation: fade-up 1s ease;
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
 }
 
 .game-box > div {
@@ -22,6 +31,20 @@
 
 .triple {
     grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 1000px) {
+    .game-box {
+        padding-inline: 0;
+    }
+
+    .double {
+        grid-template-columns: 1fr;
+    }
+
+    .triple {
+        grid-template-columns: 60% 40%;
+    }
 }
 
 .d-box {

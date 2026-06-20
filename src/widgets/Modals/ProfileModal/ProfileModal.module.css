@@ -174,3 +174,9 @@
     border: 2px solid rgb(255, 255, 255);
     transform: scale(0.92);
 }
+
+@media (max-width: 750px) {
+    .controlls {
+        display: none;
+    }
+}

@@ -18,7 +18,9 @@ const Button = (props: UIBaseButton) => {
         volume: 0.005
     })
 
-    const handleClick = useCallback(() => {
+    const handleClick = useCallback((ev: React.MouseEvent<HTMLElement>) => {
+        ev.preventDefault()
+        
         if (onClick)
             onClick()
     }, [onClick])

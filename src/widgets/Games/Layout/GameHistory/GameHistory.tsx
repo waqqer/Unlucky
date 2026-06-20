@@ -1,21 +1,25 @@
 import Separator from "@/Components/Decorations/Separator"
 import { memo } from "react"
 import styles from "./GameHistory.module.css"
+import HistoryItem from "../../Items/HistoryItem/HistoryItem"
 
 const GameHistory = () => {
     return (
         <div className={styles.history}>
-            <h2>История</h2>
+            <h3>История</h3>
 
-            <Separator />
+            <Separator size={100} />
 
             <div className={styles.list}>
-                <h1>sd</h1>
-                <h1>sd</h1>
-                <h1>sd</h1>
-                <h1>sd</h1>
-                <h1>sd</h1>
-                <h1>sd</h1>
+                <HistoryItem />
+                <HistoryItem />
+                <HistoryItem />
+                <HistoryItem />
+                <HistoryItem />
+                <HistoryItem />
+                <HistoryItem />
+                <HistoryItem />
+                <HistoryItem />
             </div>
         </div>
     )

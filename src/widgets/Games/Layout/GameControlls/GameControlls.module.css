@@ -1,0 +1,19 @@
+.controlls {
+    display: flex;
+    flex-direction: row;
+
+    align-items: start;
+    justify-content: start;
+
+    padding-inline: 10%;
+    width: 100%;
+
+    gap: 10px;
+    margin: 10px;
+}
+
+@media (max-width: 1000px) {
+    .controlls {
+        padding-inline: 0;
+    }
+}
