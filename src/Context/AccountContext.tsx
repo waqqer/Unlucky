@@ -21,6 +21,7 @@ export interface AccountContextValues {
     ReloadUserInfo: () => void
     ReloadUserBadges: () => void
     changeBadge: (badge: string) => void
+    removeBadge: () => void
 
     setBalanceTo: (value: number) => void
     incrementBalance: (value: number) => void
@@ -65,6 +66,14 @@ export const AccountProvider = ({ children }: any) => {
         await UserApi.setUserBadge(account.UUID, badge)
     }, [account])
 
+    const removeBadge = useCallback(async () => {
+        if(!account)
+            return
+
+        setBadge("")
+        await UserApi.removeUserBadge(account.UUID)
+    }, [account])
+
     const setBalanceTo = useCallback((value: number) => {
         if(value > 0) {
             setBalance(value)
@@ -105,8 +114,9 @@ export const AccountProvider = ({ children }: any) => {
         ReloadUserBadges,
         changeBadge,
         setBalanceTo,
-        incrementBalance
-    }), [user, account, spm, balance, badge, badges, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance])
+        incrementBalance,
+        removeBadge
+    }), [user, account, spm, balance, badge, badges, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance, removeBadge])
 
     return (
         <AccountContext.Provider value={values}>

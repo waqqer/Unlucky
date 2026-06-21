@@ -34,6 +34,11 @@ class UserApi {
         })
         return responce.data
     }
+
+    public static async removeUserBadge(uuid: string | UUID): Promise<void> {
+        const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
+        await $api.patch("/private/api/user/" + param + "/badges")
+    }
 }
 
 export default UserApi

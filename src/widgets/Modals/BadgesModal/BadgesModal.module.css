@@ -22,26 +22,50 @@
     height: 50px;
     width: 50px;
     image-rendering: pixelated;
-    filter: brightness(40%) grayscale(1);
+    filter: brightness(30%) grayscale(1);
     transition: all 0.1s ease;
     cursor: pointer;
+    transform: scale(0.8);
 }
 
 .badge:hover {
     filter: brightness(50%) grayscale(1);
-    transform: scale(1.1);
-}
-
-.badge:active {
     transform: scale(1);
 }
 
+.badge:active {
+    transform: scale(0.8);
+}
+
 .has {
-    filter: brightness(100%);
+    filter: brightness(70%);
+    transform: scale(1);
+    transition: all 0.4s ease;
 }
 
 .has:hover {
+    filter: brightness(90%);
+    transform: scale(1.1);
+}
+
+.has:active {
+    transform: scale(0.9);
+}
+
+.current {
+    background-color: rgba(202, 151, 75, 0.1);
+    border-radius: 5px;
+    padding: 1px;
+    transform: scale(1.2);
     filter: brightness(100%);
+}
+
+.current:hover {
+    transform: scale(1.25) translateY(-2px);
+}
+
+.current:active {
+    transform: scale(1.1) translateY(1px);
 }
 
 .list {

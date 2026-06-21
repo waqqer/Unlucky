@@ -14,7 +14,7 @@ const BadgesModal = (props: UIBadgesModalProps) => {
         close
     } = props
 
-    const { badges, account, ReloadUserBadges, changeBadge } = useContext(AccountContext)
+    const { badge, badges, account, ReloadUserBadges, changeBadge, removeBadge } = useContext(AccountContext)
     const [picked, setPicked] = useState<string>("slots")
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const BadgesModal = (props: UIBadgesModalProps) => {
                                 <img
                                     src={v.icon}
                                     alt="Badge icon"
-                                    className={`${styles.badge} ${badges.includes(k) ? styles.has : ""}`}
+                                    className={`${styles.badge} ${badges.includes(k) ? styles.has : ""} ${k === badge ? styles.current : ""}`}
                                     onClick={() => setPicked(k)}
                                     draggable={false}
                                     loading="lazy"
@@ -70,10 +70,16 @@ const BadgesModal = (props: UIBadgesModalProps) => {
                     </p>
 
                     {badges.includes(picked) ?
-                        <Button type="SECONDARY" onClick={() => {
-                            close()
-                            changeBadge(picked)
-                        }}>Использовать</Button>
+                        picked === badge ?
+                            <Button type="DANGER" onClick={() => {
+                                close()
+                                removeBadge()
+                            }}>Снять</Button>
+                            :
+                            <Button type="SECONDARY" onClick={() => {
+                                close()
+                                changeBadge(picked)
+                            }}>Использовать</Button>
                         :
                         <span className={styles.not}>Значек еще не получен...</span>
                     }
