@@ -39,9 +39,9 @@ const BadgesConfig: BadgesConfig = {
             quality: "BASIC"
         },
 
-        "rocket": {
-            title: "К звёздам!",
-            description: "Выдаётся за первую игру в `Ракета`",
+        "bombs": {
+            title: "БУУМ!!!",
+            description: "Выдаётся за первую игру в `Мины`",
             icon: Rocket,
             quality: "BASIC"
         },

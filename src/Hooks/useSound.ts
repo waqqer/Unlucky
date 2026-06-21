@@ -19,6 +19,7 @@ const useSound = (soundUrl: string, config?: UseSoundProps) => {
         sound.current.playbackRate = config?.speed || 1
         sound.current.loop = config?.loop || false
         sound.current.volume = config?.volume || SoundConfig.volume
+        sound.current.preload = "auto"
 
         if(config?.onEnd) {
             sound.current.onended = config?.onEnd

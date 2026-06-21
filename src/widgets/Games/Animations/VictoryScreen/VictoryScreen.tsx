@@ -108,6 +108,10 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
                 console.error("Не удалось проиграть звук победы")
             }
         }
+
+        return () => {
+            audio.stop()
+        }
     }, [isActive, audio])
 
     if (!isActive) {
