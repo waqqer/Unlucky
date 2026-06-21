@@ -16,3 +16,9 @@
 .nav-btn:active {
     transform: translateY(0);
 }
+
+@media (max-width: 800px) {
+    .nav-btn {
+        background-color: rgba(146, 146, 146, 0.3);
+    }
+}

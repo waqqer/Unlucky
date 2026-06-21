@@ -39,7 +39,7 @@
 .info {
     display: flex;
     align-items: center;
-    justify-content: baseline;
+    justify-content: start;
 
     gap: 10px;
     width: 100%;
@@ -62,5 +62,23 @@
 @media (max-width: 1000px) {
     .separator {
         display: block !important;
+    }
+}
+
+@media (max-width: 800px) {
+    .tab {
+        left: 20px;
+        background-color: rgba(22, 22, 22, 0.8);
+        border-radius: 10px;
+    }
+
+    .info {
+        justify-content: space-between;
+        text-align: end;
+    }
+
+    .info-content > p {
+        text-align: end;
+        justify-content: end;
     }
 }

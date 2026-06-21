@@ -2,10 +2,15 @@ import Balance from "@/Components/Info/Balance"
 import Username from "@/Components/Info/Username"
 import { memo } from "react"
 import styles from "./UserInfo.module.css"
+import type { Classable } from "@/Shared/Types/PropsTypes"
 
-const UserInfo = () => {
+const UserInfo = (props: Classable) => {
+    const {
+        className = ""
+    } = props
+    
     return (
-        <div className={styles.info}> 
+        <div className={`${styles.info} ${className}`}> 
             <Username withBadge />
             <Balance />
         </div>

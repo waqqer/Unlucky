@@ -19,8 +19,9 @@
 
 @media (max-width: 700px) {
     .list {
-        margin-top: 10%;
-        margin-bottom: 0;
+        margin-top: 15%;
+        margin-bottom: 40%;
         flex-direction: column;
+        justify-content: start;
     }
 }

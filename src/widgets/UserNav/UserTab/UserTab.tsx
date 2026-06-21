@@ -10,7 +10,7 @@ const UserTab = () => {
         <div className={styles.tab}>
             <div className={styles.info}>
                 <Head size={48} />
-                <UserInfo />
+                <UserInfo className={styles["info-content"]} />
             </div>
 
             <div className={styles.controlls}>
