@@ -1,14 +1,17 @@
-import { memo } from "react"
+import { memo, useContext } from "react"
 import NavButton from "../NavButton/NavButton"
 import styles from "./UserControlls.module.css"
 import useModal from "@/Hooks/useModal"
 import Window from "@/Components/Containers/Window"
 import AboutUsModal from "@/widgets/Modals/AboutUsModal"
 import ProfileModal from "@/widgets/Modals/ProfileModal"
+import { AccountContext } from "@/Context/AccountContext"
 
 const UserControlls = () => {
     const about = useModal()
     const profile = useModal()
+
+    const { role } = useContext(AccountContext)
 
     return (
         <>
@@ -17,9 +20,11 @@ const UserControlls = () => {
                     Профиль
                 </NavButton >
 
-                <NavButton>
-                    Адм. панель
-                </NavButton>
+                {role === "ADMIN" &&
+                    <NavButton to="/admin">
+                        Адм. панель
+                    </NavButton>
+                }
 
                 <NavButton onClick={about.open}>
                     О нас

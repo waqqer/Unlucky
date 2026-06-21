@@ -113,12 +113,21 @@
 
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 10px;
 
     align-items: center;
-    justify-content: center;
+    justify-content: start;
 
     max-height: 300px;
+    overflow-y: auto;
+
+    scrollbar-color: rgb(107, 197, 107) transparent;
+}
+
+@media (max-width: 800px) {
+    .history {
+        display: none;
+    }
 }
 
 .history-notfound {
@@ -187,4 +196,53 @@
     .btns .btn {
         background-color: rgba(135, 177, 255, 0.5);
     }
+}
+
+.history-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: rgba(36, 36, 36, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(179, 179, 179);
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.history-item:hover {
+    border-color: white;
+    padding: 20px;
+    border-radius: 3px;
+}
+
+.history-item > div {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 10px;
+}
+
+.history-item > div > h1 {
+    font-size: 1.5rem;
+}
+
+.history-time-date > p {
+    font-size: 0.8rem;
+    text-wrap: nowrap;
+    opacity: 1;
+}
+
+.history-time-info {
+    align-items: end !important;
+}
+
+.history-time-info > p {
+    opacity: 1;
+    color: white;
+}
+
+.history-time-info > p::after {
+    content: " Ар";
+    opacity: 0.4;
 }

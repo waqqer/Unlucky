@@ -1,5 +1,5 @@
 import Separator from "@/Components/Decorations/Separator"
-import { memo } from "react"
+import { memo, useContext, useEffect, useState } from "react"
 import styles from "./ProfileModal.module.css"
 import Head from "@/Components/Decorations/Head"
 import Username from "@/Components/Info/Username"
@@ -11,6 +11,8 @@ import useModal from "@/Hooks/useModal"
 import Window from "@/Components/Containers/Window"
 import BadgesModal from "../BadgesModal"
 import PromoModal from "../PromoModal"
+import UserApi, { type UserHistory } from "@/Api/User"
+import { AccountContext } from "@/Context/AccountContext"
 
 interface UIProfileModalProps {
     closeThis: () => void
@@ -23,7 +25,16 @@ const ProfileModal = (props: UIProfileModalProps) => {
 
     const badges = useModal()
     const promo = useModal()
-    
+
+    const [history, setHistory] = useState<UserHistory[]>([])
+    const { account } = useContext(AccountContext)
+
+    useEffect(() => {
+        if (!account) return
+
+        UserApi.getUserHistory(account.UUID).then(d => setHistory(d))
+    }, [account])
+
     return (
         <>
             <div className={styles.content}>
@@ -81,7 +92,28 @@ const ProfileModal = (props: UIProfileModalProps) => {
                 </div>
 
                 <div className={styles.history}>
-                    <p className={styles["history-notfound"]}>Тут ничего нет(...</p>
+                    {history.length === 0 ?
+                        <p className={styles["history-notfound"]}>Тут ничего нет(...</p>
+                        :
+                        history.map((v, i) => (
+                            <div className={styles["history-item"]}>
+                                <div className={styles["history-time-date"]}>
+                                    <h1>{v.game_name}</h1>
+                                    <p>{v.game_date.toLocaleDateString("ru-RU", {
+                                        month: "short",
+                                        year: "numeric",
+                                        minute: "2-digit",
+                                        second: "2-digit",
+                                        hour: "2-digit",
+                                    })}</p>
+                                </div>
+
+                                <div className={styles["history-time-info"]}>
+                                    <h1>{v.result === "WIN" ? "ПОБЕДА" : "ПОРАЖЕНИЕ"}</h1>
+                                    <p>{v.amount}</p>
+                                </div>
+                            </div>
+                        ))}
                 </div>
             </div>
 
@@ -121,7 +153,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
             />
 
             <Window isOpen={badges.isOpen} close={badges.close}>
-                <BadgesModal close={badges.close}/>
+                <BadgesModal close={badges.close} />
             </Window>
 
             <Window isOpen={promo.isOpen} close={promo.close}>
