@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }: any) => {
         }
 
         initAuth()
-    }, [spUser])
+    }, [spUser, user])
 
     const values: AuthContextValues = useMemo(() => ({
         user: spUser,

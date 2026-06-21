@@ -27,7 +27,7 @@ const useSound = (soundUrl: string, config?: UseSoundProps) => {
         if(config?.onStart) {
             sound.current.onplay = config?.onStart
         }
-    }, [config])
+    }, [config, SoundConfig.volume])
 
     const play = useCallback(() => {
         if(!SoundConfig.enable)
@@ -40,7 +40,7 @@ const useSound = (soundUrl: string, config?: UseSoundProps) => {
         sound.current.play().catch((_) => _)
 
         isPlaying.current = true
-    }, [])
+    }, [SoundConfig.enable])
 
     const stop = useCallback(() => {
         if(!SoundConfig.enable)
@@ -52,7 +52,7 @@ const useSound = (soundUrl: string, config?: UseSoundProps) => {
         sound.current.pause()
 
         isPlaying.current = false
-    }, [])
+    }, [SoundConfig.enable])
 
     return {
         play,

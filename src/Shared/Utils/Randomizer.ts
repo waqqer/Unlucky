@@ -20,7 +20,7 @@ export const getByWeight = <T extends Weighted>(list: T[]): T => {
 }
 
 export const getManyByWeight = <T extends Weighted>(list: T[], count: number = 1): T[] => {
-    let result: T[] = []
+    const result: T[] = []
     
     for(let i = 0; i < count; i++) {
         result.push(getByWeight<T>(list))

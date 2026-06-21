@@ -5,12 +5,13 @@ import styles from "./Input.module.css"
 interface UIInputProps extends Identical, Classable, Clickable {
     ref?: Ref<HTMLInputElement>
     type?: HTMLInputTypeAttribute
-    onBlur?: () => void,
-    title?: string,
-    value?: any,
-    min?: number,
-    max?: number,
+    onBlur?: () => void
+    title?: string
+    value?: string | number | readonly string[]
+    min?: number
+    max?: number
     onChange?: (ev: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void
+    name?: string
 }
 
 const Input = (props: UIInputProps) => {
@@ -25,7 +26,8 @@ const Input = (props: UIInputProps) => {
         value,
         min,
         max,
-        onChange
+        onChange,
+        name
     } = props
 
     return (
@@ -43,6 +45,7 @@ const Input = (props: UIInputProps) => {
                     value={value}
                     min={min}
                     max={max}
+                    name={name}
                 />
                 {title &&
                     <label htmlFor={id} className={styles.title}>

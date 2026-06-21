@@ -25,7 +25,7 @@ const GameCard = (props: UIGameCardProps) => {
 
     const handleClick = useCallback(() => {
         nav(game.route)
-    }, [game])
+    }, [game, nav])
 
     return (
         <div

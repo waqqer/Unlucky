@@ -19,15 +19,17 @@ const Head = (props: UIHeadProps) => {
 
     useEffect(() => {
         if(uuid) {
-            setHead(useHead(uuid))
+            setHead(uuid)
         } else {
-            setHead(useHead(user?.minecraftUUID || "steve"))
+            setHead(user?.minecraftUUID || "steve")
         }
     }, [uuid, user])
 
+    const headUrl = useHead(head)
+
     return (
         <img
-            src={head}
+            src={headUrl}
             alt="User head"
             width={size}
             height={size}

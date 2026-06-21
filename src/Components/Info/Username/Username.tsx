@@ -22,7 +22,7 @@ const Username = (props: UIUsernameProps) => {
         withFire = false
     } = props
 
-    const { userInfo, user: DefaultUser, badge } = useContext(AccountContext)
+    const { user: DefaultUser, badge } = useContext(AccountContext)
     const [username, setUsername] = useState<string>("Username")
     const [userBadge, setUserBadge] = useState<string | undefined>(undefined)
 
@@ -35,7 +35,7 @@ const Username = (props: UIUsernameProps) => {
             setUsername(DefaultUser.username)
             setUserBadge(badge || undefined)
         }
-    }, [DefaultUser, User, userInfo])
+    }, [DefaultUser, User, badge])
 
     return (
         <h4 className={`${styles.username} ${className}`}>

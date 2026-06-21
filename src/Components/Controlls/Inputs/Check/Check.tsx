@@ -1,7 +1,6 @@
 import { memo, useCallback, useRef } from "react"
 import styles from "./Check.module.css"
 import type { Classable, Identical, Parent } from "@/Shared/Types/PropsTypes"
-import { toast } from "react-toastify"
 
 interface UICheckProps extends Classable, Identical, Parent {
     onChange?: (value: boolean) => void

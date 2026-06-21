@@ -4,6 +4,7 @@ export interface UIBaseButton extends Clickable, Parent, Classable, Identical {
     type?: UIButtonType
     sound?: boolean
     isDisabled?: boolean
+    isSubmit?: boolean
 }
 
 export interface UILinkedBaseButton extends UIBaseButton, Clickable, Parent, Classable, Linked {

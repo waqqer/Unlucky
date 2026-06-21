@@ -18,11 +18,11 @@ const UserID = (props: UIUserIdProps) => {
         data
     } = props
 
-    const { userInfo } = useContext(AccountContext)
+    const { userId } = useContext(AccountContext)
     const [id, setId] = useState<string>("000000")
 
     useEffect(() => {
-        if(!userInfo) 
+        if(!userId) 
             return
 
         if(data) {
@@ -32,9 +32,9 @@ const UserID = (props: UIUserIdProps) => {
                 setId(IdTransform(data.userId))
             }
         } else {
-            setId(IdTransform(userInfo.userId))
+            setId(IdTransform(userId))
         }
-    }, [userInfo, data, IdTransform])
+    }, [userId, data])
 
     return (
         <h3 className={`${styles.uuid} ${className}`}>

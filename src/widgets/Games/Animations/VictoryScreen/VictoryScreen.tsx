@@ -41,7 +41,7 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
         setTimeout(() => {
             onEnd?.()
         }, fade_duration)
-    }, [fade_duration])
+    }, [fade_duration, onEnd])
 
     const value = useCounter(win, {
         duration: counting_duration
@@ -108,7 +108,7 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
                 console.error("Не удалось проиграть звук победы")
             }
         }
-    }, [isActive])
+    }, [isActive, audio])
 
     if (!isActive) {
         timerRef.current = null

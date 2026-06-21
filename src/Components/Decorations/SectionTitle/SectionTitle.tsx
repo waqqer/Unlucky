@@ -14,10 +14,11 @@ const SectionTitle = (props: UISectionTitleProps) => {
         animate = false
     } = props
 
+    const tiles: string[] = useMemo(() =>
+        text.split(" "),
+        [text])
+
     if (animate) {
-        const tiles: string[] = useMemo(() =>
-            text.split(" "),
-            [text])
 
         return (
             <h1
@@ -27,9 +28,9 @@ const SectionTitle = (props: UISectionTitleProps) => {
                     <span key={i} style={{
                         animationDelay: `${(i + 0.1) / 6}s`
                     }}
-                    onAnimationEnd={(ev) => {
-                        ev.currentTarget.style.opacity = "1"
-                    }}
+                        onAnimationEnd={(ev) => {
+                            ev.currentTarget.style.opacity = "1"
+                        }}
                     >
                         {v}
                     </span>

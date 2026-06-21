@@ -17,12 +17,12 @@ const Balance = (props: UIBalanceProps) => {
         text = false
     } = props
 
-    const { userInfo } = useContext(AccountContext)
+    const { balance } = useContext(AccountContext)
 
     return (
         <p className={`${styles.balance} ${className}`}>
             {text && "Баланс: " }
-            {data ? data.balance : userInfo ? userInfo.balance : 0}
+            {data ? data.balance : balance}
             {children}
         </p>
     )

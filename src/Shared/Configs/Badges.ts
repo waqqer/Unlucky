@@ -6,8 +6,7 @@ import {
     Rocket,
     Rich,
     Tester,
-    Winner,
-    Null
+    Winner
 } from "@/Shared/Assets/Images/Badges"
 
 interface BadgesConfig {

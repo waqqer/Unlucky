@@ -14,7 +14,7 @@ const Presets = (props: UIPresetsProps) => {
         onClick
     } = props
 
-    const { userInfo } = useContext(AccountContext)
+    const { account, balance } = useContext(AccountContext)
 
     const handleClick = useCallback((value: number) => {
         if (onClick)
@@ -24,7 +24,7 @@ const Presets = (props: UIPresetsProps) => {
     return (
         <div className={styles.presets}>
             {sets.map((v, i) => {
-                if (!userInfo?.balance || userInfo.balance > v) {
+                if (!account || balance > v) {
                     return (
                         <Button
                             key={i}

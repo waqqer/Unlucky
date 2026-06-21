@@ -1,4 +1,4 @@
-import type { UserPayload } from "@/Shared/Types/UserTypes"
+import type { UserPayload, UserRole } from "@/Shared/Types/UserTypes"
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import type SPWMini from "spwmini/client"
 import type { User } from "spwmini/types"
@@ -10,7 +10,10 @@ export interface AccountContextValues {
     user: User | null
     account: UserPayload | null
     spm: SPWMini | null
-    userInfo: UserInfo | null,
+    
+    balance: number
+    userId: number
+    role: UserRole
 
     badge: string,
     badges: string[]
@@ -18,13 +21,19 @@ export interface AccountContextValues {
     ReloadUserInfo: () => void
     ReloadUserBadges: () => void
     changeBadge: (badge: string) => void
+
+    setBalanceTo: (value: number) => void
+    incrementBalance: (value: number) => void
 }
 
 export const AccountContext = createContext<AccountContextValues>(undefined!)
 
 export const AccountProvider = ({ children }: any) => {
     const { user, spm, account } = useContext(AuthContext)
-    const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+
+    const [balance, setBalance] = useState<number>(0)
+    const [userId, setUserId] = useState<number>(0)
+    const [role, setRole] = useState<UserRole>("USER")
 
     const [badge, setBadge] = useState<string>("")
     const [badges, setBadges] = useState<string[]>([])
@@ -34,7 +43,9 @@ export const AccountProvider = ({ children }: any) => {
             return
 
         const data: UserInfo = await UserApi.getUser(account.UUID)
-        setUserInfo(data)
+        setBalance(data.balance)
+        setUserId(data.userId)
+        setRole(data.role)
     }, [account])
 
     const ReloadUserBadges = useCallback(async () => {
@@ -54,6 +65,16 @@ export const AccountProvider = ({ children }: any) => {
         await UserApi.setUserBadge(account.UUID, badge)
     }, [account])
 
+    const setBalanceTo = useCallback((value: number) => {
+        if(value > 0) {
+            setBalance(value)
+        }
+    }, [])
+
+    const incrementBalance = useCallback((value: number) => {
+        setBalance(prev => prev + value)
+    }, [])
+
     useEffect(() => {
         if (!account)
             return
@@ -72,14 +93,20 @@ export const AccountProvider = ({ children }: any) => {
         user,
         account,
         spm,
-        userInfo,
+
+        balance,
+        role,
+        userId,
+
         badge,
         badges,
 
         ReloadUserInfo,
         ReloadUserBadges,
-        changeBadge
-    }), [user, account, spm, userInfo, badge, badges, ReloadUserInfo, ReloadUserBadges, changeBadge])
+        changeBadge,
+        setBalanceTo,
+        incrementBalance
+    }), [user, account, spm, balance, badge, badges, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance])
 
     return (
         <AccountContext.Provider value={values}>
