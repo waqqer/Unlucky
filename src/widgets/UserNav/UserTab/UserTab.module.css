@@ -70,15 +70,11 @@
         left: 20px;
         background-color: rgba(22, 22, 22, 0.8);
         border-radius: 10px;
+        padding: 10px 10px;
     }
 
     .info {
         justify-content: space-between;
         text-align: end;
-    }
-
-    .info-content > p {
-        text-align: end;
-        justify-content: end;
     }
 }

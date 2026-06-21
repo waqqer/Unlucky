@@ -66,9 +66,9 @@
 
 @media (max-width: 700px) {
     .modal-content {
-        max-width: 95%;
-        padding-inline: 30px;
-        padding-block: 60px;
+        max-width: 92%;
+        padding-inline: 10px;
+        padding-block: 40px;
         min-width: 70%;
     }
 
