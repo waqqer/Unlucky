@@ -1,0 +1,1 @@
+export { default as Victory } from "./victory.webm"

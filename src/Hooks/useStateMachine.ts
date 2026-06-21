@@ -4,7 +4,7 @@ interface StateMachineConfig<T extends string> {
     onChange?: (state: T) => void
 }
 
-interface StateMachineData<T extends string> {
+export interface StateMachineData<T extends string> {
     currentState: T
     changeState: (new_state: T) => void
     resetState: () => void

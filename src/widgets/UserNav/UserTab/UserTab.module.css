@@ -2,10 +2,12 @@
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 1000;
+    z-index: 100;
 
     background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px) saturate(150%);
+    backface-visibility: visible;
+    -webkit-backface-visibility: blur(10px) saturate(150%);
     will-change: backdrop-filter;
     transform: translate3d(0, 0, 0);
     -webkit-transform: translate3d(0, 0, 0);

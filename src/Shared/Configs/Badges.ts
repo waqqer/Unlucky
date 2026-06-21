@@ -104,6 +104,6 @@ const BadgesConfig: BadgesConfig = {
         "LEGENDARY": '#ffa048',
         "LIMITED": '#eb3a3a',
     }
-}
+} as const
 
 export default BadgesConfig

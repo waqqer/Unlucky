@@ -1,0 +1,1 @@
+export { default as VictoryAudio } from "./win.mp3"

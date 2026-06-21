@@ -15,7 +15,7 @@ const Check = (props: UICheckProps) => {
         id = "",
         children,
         onChange,
-        checked = false,
+        checked,
         isDisabled = false
     } = props
 
@@ -28,13 +28,14 @@ const Check = (props: UICheckProps) => {
     }, [])
 
     const handleChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
-        onChange?.(ev.target.checked)
-        toast.success("he")
+        if(onChange) {
+            onChange(ev.target.checked)
+        }
     }, [onChange])
 
     return (
         <div
-            className={`${styles.checker} ${className}`}
+            className={`${styles.checker} ${inputRef.current?.checked && styles.active} ${className}`}
             onClick={handleClick}
             style={{ opacity: isDisabled ? 0.5 : 1, cursor: isDisabled ? 'not-allowed' : 'pointer' }}
         >
@@ -42,8 +43,8 @@ const Check = (props: UICheckProps) => {
                 type="checkbox"
                 id={id}
                 checked={checked}
-                onChange={handleChange}
                 ref={inputRef}
+                onChange={handleChange}
                 disabled={isDisabled}
             />
             {children}
