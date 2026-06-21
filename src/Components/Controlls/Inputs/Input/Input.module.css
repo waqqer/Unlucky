@@ -32,3 +32,10 @@
 .input:not(:placeholder-shown) ~ .title {
     opacity: 0;
 }
+
+@media (max-width: 1000px) {
+    .input {
+        padding: 15px 5px;
+        border-radius: 5px;
+    }
+}

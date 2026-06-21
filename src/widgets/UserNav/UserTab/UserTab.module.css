@@ -58,3 +58,9 @@
     margin-top: 0;
     max-height: 0;
 }
+
+@media (max-width: 1000px) {
+    .separator {
+        display: block !important;
+    }
+}

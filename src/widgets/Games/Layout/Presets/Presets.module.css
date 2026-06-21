@@ -1,7 +1,7 @@
 .presets {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 10px;
 }
 
@@ -21,4 +21,17 @@
 
 .choice:active {
     transform: scale(0.95);
+}
+
+@media (max-width: 1000px) {
+    .choice {
+        padding: 5px;
+        padding-inline: 15px;
+        font-size: 0.9rem;
+        font-weight: normal;
+    }
+
+    .choice:hover {
+        border-color: rgb(146, 146, 146);
+    }
 }

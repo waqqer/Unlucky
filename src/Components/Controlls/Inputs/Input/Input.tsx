@@ -9,7 +9,8 @@ interface UIInputProps extends Identical, Classable, Clickable {
     title?: string,
     value?: any,
     min?: number,
-    max?: number
+    max?: number,
+    onChange?: (ev: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void
 }
 
 const Input = (props: UIInputProps) => {
@@ -23,7 +24,8 @@ const Input = (props: UIInputProps) => {
         title,
         value,
         min,
-        max
+        max,
+        onChange
     } = props
 
     return (
@@ -34,6 +36,7 @@ const Input = (props: UIInputProps) => {
                     ref={ref}
                     className={`${styles.input} ${className}`}
                     onClick={onClick}
+                    onChange={onChange}
                     placeholder=""
                     onBlur={onBlur}
                     id={id}

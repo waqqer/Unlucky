@@ -13,7 +13,8 @@ const LinkedButton = (props: UILinkedBaseButton) => {
         to,
         icon = true,
         onClick,
-        sound
+        sound,
+        isDisabled = false
     } = props
 
     const nav = useNavigate()
@@ -39,6 +40,7 @@ const LinkedButton = (props: UILinkedBaseButton) => {
                 }
             }}
             className={`${styles.btn} ${styles[type]} ${className}`}
+            disabled={isDisabled}
         >
             {icon &&
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">

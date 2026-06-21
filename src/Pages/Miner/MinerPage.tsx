@@ -12,7 +12,7 @@ const MinerPage = () => {
 
             <Section justify="center" align="center">
                 <GameControlls openAbout={() => {}}/>
-                <GameContainer type="triple"/>
+                <GameContainer type="triple" demo={false} autoreroll={false} />
             </Section>
         </Page>
     )

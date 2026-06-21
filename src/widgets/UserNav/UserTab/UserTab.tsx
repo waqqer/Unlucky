@@ -14,7 +14,7 @@ const UserTab = () => {
             </div>
 
             <div className={styles.controlls}>
-                <Separator size={100} />
+                <Separator size={100} className={styles.separator} />
                 <UserControlls />
             </div>
         </div>

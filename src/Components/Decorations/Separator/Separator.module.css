@@ -17,8 +17,8 @@
     margin-inline: 10px;
 }
 
-@keyframes fade {
-    from {
-        opacity: 0;
+@media (max-width: 1000px) {
+    .separator {
+        display: none;
     }
 }

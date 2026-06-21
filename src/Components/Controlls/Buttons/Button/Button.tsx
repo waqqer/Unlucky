@@ -11,7 +11,8 @@ const Button = (props: UIBaseButton) => {
         children,
         onClick,
         id = "",
-        sound = false
+        sound = false,
+        isDisabled = false
     } = props
 
     const hover = useSound(hoverSound, {
@@ -35,6 +36,7 @@ const Button = (props: UIBaseButton) => {
             }}
             className={`${styles.btn} ${styles[type]} ${className}`}
             id={id}
+            disabled={isDisabled}
         >
             {children}
         </button>
