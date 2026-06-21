@@ -16,7 +16,7 @@
     }
 }
 
-.game-box > div {
+.game-box>div {
     border: 1px solid rgb(114, 114, 114);
     border-radius: 5px;
     height: 100%;
@@ -33,20 +33,6 @@
     grid-template-columns: repeat(3, 1fr);
 }
 
-@media (max-width: 1000px) {
-    .game-box {
-        padding-inline: 0;
-    }
-
-    .double {
-        grid-template-columns: 1fr;
-    }
-
-    .triple {
-        grid-template-columns: 50% 50%;
-    }
-}
-
 .d-box {
     display: grid;
     grid-template-rows: 50% 50%;
@@ -60,7 +46,7 @@
     gap: 10px;
 }
 
-.d-box .input > * {
+.d-box .input>* {
     width: 50%;
 }
 
@@ -72,20 +58,19 @@
     gap: 10px;
 }
 
-.input > h2 {
+.input>h2 {
     text-align: center;
 }
 
-.input > * {
+.input>* {
     width: 100%;
 }
 
-.input > button {
+.input>button {
     padding-block: 20px;
 }
 
-.game {
-}
+.game {}
 
 .play-btn {
     background-color: rgb(92, 144, 212);
@@ -101,4 +86,44 @@
 
 .play-btn:active {
     transform: scale(0.99);
+}
+
+@media (max-width: 1040px) {
+    .game-box {
+        padding-inline: 0;
+    }
+
+    .double {
+        grid-template-columns: 1fr;
+    }
+
+    .triple {
+        grid-template-columns: 50% 50%;
+    }
+
+    .play-btn {
+        padding: 10px !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .triple {
+        display: grid;
+        grid-template-rows: 70% 30%;
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .game-box {
+        min-height: 65vh;
+    }
+
+    .d-box .input {
+        justify-content: end;
+    }
+
+    .d-box .input > * {
+        width: 100%;
+    }
 }

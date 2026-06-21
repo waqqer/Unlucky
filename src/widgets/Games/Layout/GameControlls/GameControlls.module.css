@@ -12,8 +12,19 @@
     margin: 10px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1040px) {
     .controlls {
         padding-inline: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .controlls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        padding: 0;
+        margin: 10px;
+        margin-top: 0;
     }
 }

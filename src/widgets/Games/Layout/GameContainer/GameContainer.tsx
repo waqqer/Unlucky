@@ -14,13 +14,13 @@ interface UIGameContainerProps extends Parent {
     autoreroll?: boolean
 }
 
-export interface UIGameContainerRef {
+export interface GameContainerRef {
     bet: number
     isDemo: boolean
     isAutoreroll: boolean
 } 
 
-const GameContainer = forwardRef<UIGameContainerRef, UIGameContainerProps>((props, ref) => {
+const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props, ref) => {
     const {
         type = "double",
         children,
@@ -80,8 +80,8 @@ const GameContainer = forwardRef<UIGameContainerRef, UIGameContainerProps>((prop
                         <Input type="number" value={bet} min={0} max={1000} onChange={onBetInputChange} />
                         <Presets onClick={choosePresetHandle} />
 
-                        {autoreroll && <Check>Авто-реролл</Check>}
-                        {demo && <Check>Демо</Check>}
+                        {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)}>Авто-реролл</Check>}
+                        {demo && <Check onChange={(value) => setIsDemo(value)}>Демо</Check>}
 
                         <Button className={styles["play-btn"]}>Играть</Button>
                     </div>

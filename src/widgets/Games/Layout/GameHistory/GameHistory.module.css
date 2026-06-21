@@ -22,7 +22,7 @@
     overflow-y: auto;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1040px) {
     .history {
         display: none;
     }

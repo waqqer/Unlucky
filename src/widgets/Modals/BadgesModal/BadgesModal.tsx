@@ -31,17 +31,20 @@ const BadgesModal = (props: UIBadgesModalProps) => {
 
             <div className={styles.badges}>
                 <div className={styles.list}>
-                    {Object.entries(BadgesConfig.badges).map(([k, v]) => (
-                        <img
-                            src={v.icon}
-                            alt="Badge icon"
-                            className={`${styles.badge} ${badges.includes(k) ? styles.has : ""}`}
-                            onClick={() => setPicked(k)}
-                            draggable={false}
-                            loading="lazy"
-                            key={k}
-                        />
-                    ))}
+                    {Object.entries(BadgesConfig.badges).map(([k, v]) => {
+                        if (v.quality !== "LIMITED" || badges.includes(k)) {
+                            return (
+                                <img
+                                    src={v.icon}
+                                    alt="Badge icon"
+                                    className={`${styles.badge} ${badges.includes(k) ? styles.has : ""}`}
+                                    onClick={() => setPicked(k)}
+                                    draggable={false}
+                                    loading="lazy"
+                                    key={k}
+                                />)
+                        }
+                    })}
                 </div>
 
                 <div className={styles.view}>
