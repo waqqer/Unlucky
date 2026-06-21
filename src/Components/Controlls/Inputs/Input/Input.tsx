@@ -6,7 +6,10 @@ interface UIInputProps extends Identical, Classable, Clickable {
     ref?: Ref<HTMLInputElement>
     type?: HTMLInputTypeAttribute
     onBlur?: () => void,
-    title?: string
+    title?: string,
+    value?: any,
+    min?: number,
+    max?: number
 }
 
 const Input = (props: UIInputProps) => {
@@ -17,7 +20,10 @@ const Input = (props: UIInputProps) => {
         ref,
         type = "text",
         onBlur,
-        title
+        title,
+        value,
+        min,
+        max
     } = props
 
     return (
@@ -31,6 +37,9 @@ const Input = (props: UIInputProps) => {
                     placeholder=""
                     onBlur={onBlur}
                     id={id}
+                    value={value}
+                    min={min}
+                    max={max}
                 />
                 {title &&
                     <label htmlFor={id} className={styles.title}>

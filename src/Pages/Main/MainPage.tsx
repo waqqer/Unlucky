@@ -23,10 +23,6 @@ const MainPage = () => {
                 <GamesList />
             </Section>
 
-            <Section>
-                <SectionTitle text="Фонды" />
-            </Section>
-
             <Section justify="space-between" className="hide--mobile">
                 <SectionTitle text="Главные лудоманы" className={styles["leader-title"]} />
 

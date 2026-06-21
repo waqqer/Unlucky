@@ -4,6 +4,7 @@ import "./styles"
 import NotFoundPage from "@/Pages/NotFound/NotFoundPage"
 import SlotsPage from "@/Pages/Slots/SlotsPage"
 import MinerPage from "@/Pages/Miner/MinerPage"
+import BombPage from "@/Pages/Bomb/BombPage"
 
 const App = () => {
 
@@ -19,6 +20,7 @@ const App = () => {
 
                 <Route path="/slots" element={<SlotsPage />} />
                 <Route path="/miner" element={<MinerPage />} />
+                <Route path="/bombs" element={<BombPage />} />
             </Routes>
         </HashRouter>
     )

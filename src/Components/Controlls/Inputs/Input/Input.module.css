@@ -4,10 +4,12 @@
 
 .input {
     background-color: transparent;
-    border: 1px solid rgb(202, 202, 202);
+    border: 1px solid rgb(165, 165, 165);
+    transition: all 0.2s ease;
     padding: 20px 10px;
     border-radius: 10px;
     width: 100%;
+    outline: none;
 }
 
 .title {
@@ -19,6 +21,12 @@
     pointer-events: none;
     opacity: 1;
 }
+
+.input:focus {
+    border-color: white;
+    outline: none;
+    transform: scale(1.01);
+} 
 
 .input:focus ~ .title,
 .input:not(:placeholder-shown) ~ .title {

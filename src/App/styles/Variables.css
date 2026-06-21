@@ -1,7 +1,7 @@
 :root {
     --BG-COLOR: #747070;
 
-    --MODAL_COLOR: rgba(15, 15, 15, 0.95);
+    --MODAL_COLOR: rgb(15, 15, 15);
 
     --toastify-font-family: "Cascadia Code";
 }

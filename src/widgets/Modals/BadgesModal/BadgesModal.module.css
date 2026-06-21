@@ -22,7 +22,7 @@
     height: 50px;
     width: 50px;
     image-rendering: pixelated;
-    filter: brightness(10%) grayscale(1);
+    filter: brightness(40%) grayscale(1);
     transition: all 0.1s ease;
     cursor: pointer;
 }

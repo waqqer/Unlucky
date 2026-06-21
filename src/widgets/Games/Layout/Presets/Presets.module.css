@@ -1,0 +1,24 @@
+.presets {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.choice {
+    border-color: rgb(59, 59, 59);
+    background-color: rgba(36, 36, 36, 0.3);
+    border-width: 1px;
+}
+
+.choice:hover {
+    border-color: rgb(59, 59, 59);
+    background-color: rgba(36, 36, 36, 0.3);
+    border-width: 1px;
+    color: white;
+    transform: scale(1.1);
+}
+
+.choice:active {
+    transform: scale(0.95);
+}
