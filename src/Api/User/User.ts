@@ -1,5 +1,5 @@
 import { $api } from "../Api"
-import type { Badges, UserHistory, UserInfo } from "./Types"
+import type { Badges, Policy, UserHistory, UserInfo } from "./Types"
 import type { UUID, Wallet } from "@/Shared/Types/UserTypes"
 
 class UserApi {
@@ -38,6 +38,12 @@ class UserApi {
     public static async removeUserBadge(uuid: string | UUID): Promise<void> {
         const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
         await $api.patch("/private/api/user/" + param + "/badges")
+    }
+
+    public static async acceptPolicy(uuid: string | UUID): Promise<Policy> {
+        const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
+        const responce = await $api.patch<Policy>("/private/api/user/" + param + "/policy")
+        return responce.data
     }
 }
 

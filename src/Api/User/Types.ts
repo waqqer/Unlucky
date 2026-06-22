@@ -5,6 +5,10 @@ export interface UserInfo extends Wallet, UserId {
     
     role: UserRole
     balance: number
+    freespins: number
+
+    policy_accepts_date: Date
+    policy_accepts: boolean
 }
 
 export interface BaseUser {
@@ -39,4 +43,9 @@ export interface UserHistory {
     amount: number
     game_date: Date
     user_id: number
+}
+
+export interface Policy {
+    policy_accepts_date: Date
+    policy_accepts: boolean
 }

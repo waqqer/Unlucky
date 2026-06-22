@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type SPWMini from "spwmini/client"
 import type { User } from "spwmini/types"
 import { AuthContext } from "./AuthContext"
-import type { Badges, UserInfo } from "@/Api/User"
+import type { Badges, Policy, UserInfo } from "@/Api/User"
 import UserApi from "@/Api/User"
 
 export interface AccountContextValues {
@@ -16,12 +16,15 @@ export interface AccountContextValues {
     role: UserRole
 
     badge: string,
-    badges: string[]
+    badges: string[],
+
+    policy: Policy | null,
 
     ReloadUserInfo: () => void
     ReloadUserBadges: () => void
     changeBadge: (badge: string) => void
     removeBadge: () => void
+    acceptPolicy: () => void
 
     setBalanceTo: (value: number) => void
     incrementBalance: (value: number) => void
@@ -39,6 +42,8 @@ export const AccountProvider = ({ children }: any) => {
     const [badge, setBadge] = useState<string>("")
     const [badges, setBadges] = useState<string[]>([])
 
+    const [policy, setPolicy] = useState<Policy | null>(null)
+
     const ReloadUserInfo = useCallback(async () => {
         if (!account) 
             return
@@ -47,6 +52,19 @@ export const AccountProvider = ({ children }: any) => {
         setBalance(data.balance)
         setUserId(data.userId)
         setRole(data.role)
+        setPolicy({
+            policy_accepts: data.policy_accepts,
+            policy_accepts_date: data.policy_accepts_date
+        })
+
+    }, [account])
+
+    const acceptPolicy = useCallback(async () => {
+        if(!account)
+            return
+
+        const data: Policy = await UserApi.acceptPolicy(account.UUID)
+        setPolicy(data)
     }, [account])
 
     const ReloadUserBadges = useCallback(async () => {
@@ -110,13 +128,16 @@ export const AccountProvider = ({ children }: any) => {
         badge,
         badges,
 
+        policy,
+
+        acceptPolicy,
         ReloadUserInfo,
         ReloadUserBadges,
         changeBadge,
         setBalanceTo,
         incrementBalance,
         removeBadge
-    }), [user, account, spm, balance, badge, badges, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance, removeBadge])
+    }), [policy, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance, removeBadge])
 
     return (
         <AccountContext.Provider value={values}>
