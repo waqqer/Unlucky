@@ -55,7 +55,6 @@ const PromoModal = () => {
                     <h4 className={styles["toast-title"]}>Промокод "{value.toUpperCase()}" активирован!</h4>
                     {data.rewards && (
                         <>
-                            <Separator size={100} />
                             <p>Получено:</p>
                             <ul className={styles["toast-list"]}>
                                 {data.rewards?.balanceAdded && <li>{data.rewards?.balanceAdded} Ар</li>}
