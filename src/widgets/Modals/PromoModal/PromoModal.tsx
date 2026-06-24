@@ -6,14 +6,23 @@ import PromoApi from "@/Api/Promo"
 import { AccountContext } from "@/Context/AccountContext"
 import KeybindedButton from "@/Components/Controlls/Buttons/KeybindedButton"
 import { toast } from "react-toastify"
+import { BadgesConfig } from "@/Shared/Configs"
 
-const PromoModal = () => {
+interface UIPromoModalProps {
+    onPromoActivate?: () => void
+}
+
+const PromoModal = (props: UIPromoModalProps) => {
+    const {
+        onPromoActivate
+    } = props
+
     const [pending, setPending] = useState<boolean>(false)
     const [showMessage, setShowMessage] = useState<boolean>(false)
     const [message, setMessage] = useState<string>("")
     const [messageType, setMessageType] = useState<"error" | "success">("success")
 
-    const { account, incrementBalance } = useContext(AccountContext)
+    const { account, incrementBalance, addBadge } = useContext(AccountContext)
 
     const inputRef = useRef<HTMLInputElement>(null)
     const messageRef = useRef<HTMLParagraphElement>(null)
@@ -50,6 +59,12 @@ const PromoModal = () => {
 
             incrementBalance(data.rewards?.balanceAdded || 0)
 
+            if(data.rewards.badgeAdded) {
+                addBadge(data.rewards.badgeAdded)
+            }
+
+            const badge = BadgesConfig.badges[data.rewards.badgeAdded]
+
             toast((
                 <div className={styles.toast}>
                     <h4 className={styles["toast-title"]}>Промокод "{value.toUpperCase()}" активирован!</h4>
@@ -57,8 +72,10 @@ const PromoModal = () => {
                         <>
                             <p>Получено:</p>
                             <ul className={styles["toast-list"]}>
-                                {data.rewards?.balanceAdded && <li>{data.rewards?.balanceAdded} Ар</li>}
-                                {data.rewards?.freespinsAdded && <li>{data.rewards?.freespinsAdded} Бесплатных спинов</li>}
+                                {data.rewards?.balanceAdded && <li>+ {data.rewards?.balanceAdded} Ар</li>}
+                                {badge && <li style={{
+                                    color: `${BadgesConfig.colors[badge.quality]}`
+                                }}>+ '{badge.title}'</li>}
                             </ul>
                         </>
                     )}
@@ -68,6 +85,10 @@ const PromoModal = () => {
             if (data.success) {
                 inputRef.current.value = ""
             }
+
+            if(onPromoActivate) {
+                onPromoActivate()
+            }
         } catch (error: any) {
             setMessageType("error")
             const message = error.response?.data?.message || "Ошибка при активации промокода"
@@ -76,7 +97,7 @@ const PromoModal = () => {
         } finally {
             setPending(false)
         }
-    }, [account, incrementBalance])
+    }, [account, incrementBalance, onPromoActivate])
 
     useEffect(() => {
         const element = messageRef.current

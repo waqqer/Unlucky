@@ -1,5 +1,5 @@
 import Separator from "@/Components/Decorations/Separator"
-import { memo, useContext, useEffect, useState } from "react"
+import { memo, useContext, useEffect, useState, useCallback } from "react"
 import styles from "./ProfileModal.module.css"
 import Head from "@/Components/Decorations/Head"
 import Username from "@/Components/Info/Username"
@@ -34,6 +34,11 @@ const ProfileModal = (props: UIProfileModalProps) => {
 
         UserApi.getUserHistory(account.UUID).then(d => setHistory(d))
     }, [account])
+
+    const onPromoActivateCallback = useCallback(() => {
+        promo.close()
+        closeThis()
+    }, [closeThis, promo.close])
 
     return (
         <>
@@ -157,7 +162,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
             </Window>
 
             <Window isOpen={promo.isOpen} close={promo.close}>
-                <PromoModal />
+                <PromoModal onPromoActivate={onPromoActivateCallback} />
             </Window>
         </>
     )

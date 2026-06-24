@@ -23,6 +23,7 @@ export interface AccountContextValues {
     ReloadUserInfo: () => void
     ReloadUserBadges: () => void
     changeBadge: (badge: string) => void
+    addBadge: (badge: string | string[]) => void
     removeBadge: () => void
     acceptPolicy: () => void
 
@@ -84,6 +85,14 @@ export const AccountProvider = ({ children }: any) => {
         await UserApi.setUserBadge(account.UUID, badge)
     }, [account])
 
+    const addBadge = useCallback(async (badge: string | string[]) => {
+        if(!account)
+            return
+
+        const value = typeof badge === "string" ? [badge] : badge
+        setBadges(prev => [...prev, ...value])
+    }, [account])
+
     const removeBadge = useCallback(async () => {
         if(!account)
             return
@@ -134,10 +143,11 @@ export const AccountProvider = ({ children }: any) => {
         ReloadUserInfo,
         ReloadUserBadges,
         changeBadge,
+        addBadge,
         setBalanceTo,
         incrementBalance,
         removeBadge
-    }), [policy, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance, removeBadge])
+    }), [policy, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance, removeBadge, addBadge])
 
     return (
         <AccountContext.Provider value={values}>

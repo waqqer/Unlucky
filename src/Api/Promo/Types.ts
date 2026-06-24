@@ -3,6 +3,6 @@ export interface PromoActivationResult {
     message: string
     rewards?: {
         balanceAdded?: number
-        freespinsAdded?: number
+        badgeAdded?: string
     }
 }
