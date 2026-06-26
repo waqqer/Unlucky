@@ -11,7 +11,7 @@ const UserInfo = (props: Classable) => {
     
     return (
         <div className={`${styles.info} ${className}`}> 
-            <Username withBadge />
+            <Username withBadge badgeTooltip={false} withFire fireTooltip={false} />
             <Balance />
         </div>
     )

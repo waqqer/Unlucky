@@ -1,9 +1,49 @@
 .badge {
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .badge img {
     height: 100%;
     width: 100%;
     image-rendering: pixelated;
+}
+
+.badge-tooltip {
+    overflow: hidden;
+}
+
+.badge-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50% 50%;
+    gap: 1px;
+
+    height: 100%;
+    width: 100%;
+    place-items: center;
+}
+
+.badge-info {
+    background: var(--color) !important;
+    background: linear-gradient(30deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 30%, rgba(255, 255, 255, 0.3) 63%, rgba(255, 255, 255, 0) 100%), var(--color) !important;
+}
+
+.badge-content>div {
+    background-color: transparent;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+
+    padding: 5px;
+
+    text-wrap: wrap;
+    max-width: 200px;
 }

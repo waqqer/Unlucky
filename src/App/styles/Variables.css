@@ -4,4 +4,15 @@
     --MODAL_COLOR: rgb(15, 15, 15);
 
     --toastify-font-family: "Cascadia Code";
+    --rt-opacity: 1;
+}
+
+#tooltips > * {
+    z-index: 1000000000;
+}
+
+#tooltips .react-tooltip-content-wrapper {
+    padding: 0;
+    position: relative;
+    z-index: 10;
 }

@@ -49,7 +49,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
                     <Head size={52} />
 
                     <div className={styles.info}>
-                        <Username withBadge withFire />
+                        <Username withBadge withFire fireTooltip/>
                         <UserID />
                     </div>
                 </div>

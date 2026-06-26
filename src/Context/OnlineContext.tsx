@@ -29,7 +29,6 @@ export const OnlineProvider = ({ children }: any) => {
 
         return () => {
             socket.off("connect_error")
-            socket.off("connect_failed")
             socket.off("online_update")
             socket.disconnect()
         }

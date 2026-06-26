@@ -5,11 +5,15 @@ export interface UserInfo extends Wallet, UserId {
     
     role: UserRole
     balance: number
-    freespins: number
+
+    streak: number
+    streakStatus: StreakStatus
 
     policy_accepts_date: Date
     policy_accepts: boolean
 }
+
+export type StreakStatus = "ACTIVE" | "WAITING" | "DEAD"
 
 export interface BaseUser {
     name: string

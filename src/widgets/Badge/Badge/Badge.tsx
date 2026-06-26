@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useId, useState } from "react"
 import styles from "./Badge.module.css"
 import type { Classable, Resizable } from "@/Shared/Types/PropsTypes"
 import { BadgesConfig } from "@/Shared/Configs"
@@ -21,6 +21,7 @@ const Badge = (props: UIBadgeProps) => {
     } = props
 
     const [badge, setBadge] = useState<Badge | null>(null)
+    const uniqueId = useId()
 
     useEffect(() => {
         if (badgeName) {
@@ -28,11 +29,14 @@ const Badge = (props: UIBadgeProps) => {
                 setBadge(BadgesConfig.badges[badgeName])
             }
         }
-    }, [badgeName])
+    }, [badgeName, BadgesConfig.badges])
 
     return (
         <>
-            {badgeName && badge && <div className={`${styles.badge} ${className}`}>
+            {badgeName && badge && <div
+                className={`${styles.badge} ${className}`}
+                id={`badge-${uniqueId}`}
+            >
                 <img
                     src={badge.icon}
                     alt="User badge"
@@ -43,9 +47,26 @@ const Badge = (props: UIBadgeProps) => {
                 />
             </div>}
 
-            <Tooltip anchorSelect={`.${styles.badge}`} place="top" delayShow={tooltipDelay}>
-                Helo
-            </Tooltip>
+            {tooltip && badge &&
+
+                <Tooltip
+                    anchorSelect={`#badge-${uniqueId}`}
+                    portalRoot={document.getElementById("tooltips")}
+                    delayShow={tooltipDelay}
+                    className={styles["badge-tooltip"]}
+                    opacity={1}
+                >
+                    <div className={styles["badge-content"]}>
+                        <div className={styles["badge-info"]} style={{
+                            ["--color" as string]: BadgesConfig.colors[badge.quality]
+                        }}>
+                            <h3>{badge.title}</h3>
+                        </div>
+                        <div>
+                            <p>{badge.description}</p>
+                        </div>
+                    </div>
+                </Tooltip>}
         </>
     )
 

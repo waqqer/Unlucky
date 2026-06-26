@@ -6,13 +6,14 @@ import { OnlineProvider } from './Context/OnlineContext'
 import { Flip, ToastContainer } from 'react-toastify'
 import { AccountProvider } from './Context/AccountContext'
 import { SettingsProvider } from './Context/SettingsContext'
+import { MessangerProvider } from './Context/MessangerContext'
 
 Modal.setAppElement("#root")
 createRoot(document.getElementById('root')!).render(
-    <>
-        <AuthProvider>
-            <SettingsProvider>
-                <AccountProvider>
+    <AuthProvider>
+        <SettingsProvider>
+            <AccountProvider>
+                <MessangerProvider>
                     <OnlineProvider>
                         <App />
 
@@ -28,8 +29,8 @@ createRoot(document.getElementById('root')!).render(
                             transition={Flip}
                         />
                     </OnlineProvider>
-                </AccountProvider>
-            </SettingsProvider>
-        </AuthProvider>
-    </>
+                </MessangerProvider>
+            </AccountProvider>
+        </SettingsProvider>
+    </AuthProvider>
 )

@@ -4,12 +4,15 @@ import { memo, useContext, useEffect, useState } from "react"
 import styles from "./Username.module.css"
 import Badge from "@/widgets/Badge/Badge"
 import { AccountContext } from "@/Context/AccountContext"
+import Streak from "@/widgets/Streak/Streak/Streak"
 
 interface UIUsernameProps extends Classable, Parent {
-    User?: UserPresence,
-    withBadge?: boolean,
-    withFire?: boolean,
+    User?: UserPresence
+    withBadge?: boolean
+    withFire?: boolean
     badgeTooltip?: boolean
+    fireTooltip?: boolean
+    reverse?: boolean
 }
 
 const Username = (props: UIUsernameProps) => {
@@ -19,7 +22,9 @@ const Username = (props: UIUsernameProps) => {
         User,
         withBadge = false,
         badgeTooltip = false,
-        withFire = false
+        withFire = false,
+        fireTooltip = false,
+        reverse = false
     } = props
 
     const { user: DefaultUser, badge } = useContext(AccountContext)
@@ -33,15 +38,27 @@ const Username = (props: UIUsernameProps) => {
             return
         } else if (DefaultUser) {
             setUsername(DefaultUser.username)
-            setUserBadge(badge || undefined)
+            setUserBadge(badge ?? undefined)
         }
     }, [DefaultUser, User, badge])
 
     return (
         <h4 className={`${styles.username} ${className}`}>
-            {username}
-            {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={650}/>}
-            {children}
+            {!reverse ?
+                <>
+                    {username}
+                    {!User && withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} />}
+                    {withFire && <Streak tooltip={fireTooltip} />}
+                    {children}
+                </>
+                :
+                <>
+                    {children}
+                    {!User && withFire && <Streak tooltip={fireTooltip} />}
+                    {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} />}
+                    {username}
+                </>
+            }
         </h4>
     )
 }

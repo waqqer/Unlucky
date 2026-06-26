@@ -3,17 +3,21 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type SPWMini from "spwmini/client"
 import type { User } from "spwmini/types"
 import { AuthContext } from "./AuthContext"
-import type { Badges, Policy, UserInfo } from "@/Api/User"
+import type { Badges, Policy, StreakStatus, UserInfo } from "@/Api/User"
 import UserApi from "@/Api/User"
 
 export interface AccountContextValues {
     user: User | null
     account: UserPayload | null
     spm: SPWMini | null
-    
+
     balance: number
     userId: number
     role: UserRole
+
+    streak: number
+    streakStatus: StreakStatus
+    setStreakInfo: (data: { streak: number, status: StreakStatus }) => void
 
     badge: string,
     badges: string[],
@@ -40,13 +44,24 @@ export const AccountProvider = ({ children }: any) => {
     const [userId, setUserId] = useState<number>(0)
     const [role, setRole] = useState<UserRole>("USER")
 
+    const [streak, setStreak] = useState<number>(0)
+    const [streakStatus, setStreakStatus] = useState<StreakStatus>("DEAD")
+
     const [badge, setBadge] = useState<string>("")
     const [badges, setBadges] = useState<string[]>([])
 
     const [policy, setPolicy] = useState<Policy | null>(null)
 
+    const setStreakInfo = useCallback(async (data: {
+        streak: number,
+        status: StreakStatus
+    }) => {
+        setStreak(data.streak)
+        setStreakStatus(data.status)
+    }, [])
+
     const ReloadUserInfo = useCallback(async () => {
-        if (!account) 
+        if (!account)
             return
 
         const data: UserInfo = await UserApi.getUser(account.UUID)
@@ -57,11 +72,12 @@ export const AccountProvider = ({ children }: any) => {
             policy_accepts: data.policy_accepts,
             policy_accepts_date: data.policy_accepts_date
         })
-
+        setStreak(data.streak)
+        setStreakStatus(data.streakStatus)
     }, [account])
 
     const acceptPolicy = useCallback(async () => {
-        if(!account)
+        if (!account)
             return
 
         const data: Policy = await UserApi.acceptPolicy(account.UUID)
@@ -78,15 +94,15 @@ export const AccountProvider = ({ children }: any) => {
     }, [account])
 
     const changeBadge = useCallback(async (badge: string) => {
-        if(!account)
+        if (!account)
             return
-        
+
         setBadge(badge)
         await UserApi.setUserBadge(account.UUID, badge)
     }, [account])
 
     const addBadge = useCallback(async (badge: string | string[]) => {
-        if(!account)
+        if (!account)
             return
 
         const value = typeof badge === "string" ? [badge] : badge
@@ -94,7 +110,7 @@ export const AccountProvider = ({ children }: any) => {
     }, [account])
 
     const removeBadge = useCallback(async () => {
-        if(!account)
+        if (!account)
             return
 
         setBadge("")
@@ -102,7 +118,7 @@ export const AccountProvider = ({ children }: any) => {
     }, [account])
 
     const setBalanceTo = useCallback((value: number) => {
-        if(value > 0) {
+        if (value > 0) {
             setBalance(value)
         }
     }, [])
@@ -137,6 +153,9 @@ export const AccountProvider = ({ children }: any) => {
         badge,
         badges,
 
+        streak,
+        streakStatus,
+
         policy,
 
         acceptPolicy,
@@ -146,8 +165,9 @@ export const AccountProvider = ({ children }: any) => {
         addBadge,
         setBalanceTo,
         incrementBalance,
-        removeBadge
-    }), [policy, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, role, userId, setBalanceTo, incrementBalance, removeBadge, addBadge])
+        removeBadge,
+        setStreakInfo
+    }), [policy, streak, streakStatus, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, setStreakInfo, role, userId, setBalanceTo, incrementBalance, removeBadge, addBadge])
 
     return (
         <AccountContext.Provider value={values}>
