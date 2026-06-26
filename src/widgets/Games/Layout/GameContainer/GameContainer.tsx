@@ -46,7 +46,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         console.log(state)
     }, [])
 
-    const StateMachine = useStateMachine<GameState>("WIN", {
+    const StateMachine = useStateMachine<GameState>("IDLE", {
         onChange: stateChangeHandler
     })
 

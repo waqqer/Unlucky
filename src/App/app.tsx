@@ -8,6 +8,7 @@ import BombPage from "@/Pages/Bomb/BombPage"
 import { useContext } from "react"
 import { AccountContext } from "@/Context/AccountContext"
 import PolicyPage from "@/Pages/PolicyPage"
+import AdminPage from "@/Pages/Admin"
 
 const App = () => {
 
@@ -15,7 +16,7 @@ const App = () => {
         history.scrollRestoration = 'manual'
     }
 
-    const { policy } = useContext(AccountContext)
+    const { policy, role } = useContext(AccountContext)
     
     if (policy && !policy.policy_accepts) {
         return (
@@ -37,6 +38,8 @@ const App = () => {
                 <Route path="/slots" element={<SlotsPage />} />
                 <Route path="/miner" element={<MinerPage />} />
                 <Route path="/bombs" element={<BombPage />} />
+
+                {role === "ADMIN" && <Route path="/admin" element={<AdminPage />} />}
             </Routes>
         </HashRouter>
     )
