@@ -7,6 +7,7 @@ import { Flip, ToastContainer } from 'react-toastify'
 import { AccountProvider } from './Context/AccountContext'
 import { SettingsProvider } from './Context/SettingsContext'
 import { MessangerProvider } from './Context/MessangerContext'
+import BadgeNotification from './Components/Notifications/BadgeNotification'
 
 Modal.setAppElement("#root")
 createRoot(document.getElementById('root')!).render(
@@ -16,6 +17,8 @@ createRoot(document.getElementById('root')!).render(
                 <MessangerProvider>
                     <OnlineProvider>
                         <App />
+
+                        <BadgeNotification />
 
                         <ToastContainer
                             position="bottom-right"

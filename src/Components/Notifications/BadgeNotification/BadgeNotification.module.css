@@ -1,0 +1,105 @@
+.notif {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+
+    background-image: var(--img);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+    background-blend-mode: overlay;
+
+    padding: 20px;
+
+    min-width: 350px;
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+
+    z-index: 1000000;
+    transition: all 0.3s ease;
+    animation: show 1s cubic-bezier(0.175, 0.885, 0.32, 1.05);
+}
+
+.icon {
+    height: 100%;
+    width: 100%;
+
+    max-width: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon img {
+    height: 100%;
+    width: 100%;
+
+    image-rendering: pixelated;
+
+    animation: icon-pulse 5s linear infinite;
+}
+
+@keyframes icon-pulse {
+    from {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.05);
+    }
+
+    50% {
+        filter: brightness(140%);
+        transform: scale(1.1);
+    }
+
+    75% {
+        transform: scale(1.05);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 5px;
+}
+
+.info h3 {
+    font-weight: 500;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px;
+}
+
+.info p {
+    opacity: 0.8;
+    margin-left: 5px;
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+.hidden {
+    transform: translateY(-1000px);
+    animation: hide 4s ease
+}
+
+@keyframes show {
+    from {
+        transform: translateY(-1000px);
+    }
+}
+
+@keyframes hide {
+    from {
+        transform: translateY(0px);
+    }
+}
