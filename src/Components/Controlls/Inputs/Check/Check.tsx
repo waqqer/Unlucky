@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from "react"
+import { memo, useCallback, useRef, useEffect} from "react"
 import styles from "./Check.module.css"
 import type { Classable, Identical, Parent } from "@/Shared/Types/PropsTypes"
 
@@ -27,14 +27,20 @@ const Check = (props: UICheckProps) => {
     }, [])
 
     const handleChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
-        if(onChange) {
+        if (onChange) {
             onChange(ev.target.checked)
         }
     }, [onChange])
 
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.checked = checked
+        }
+    }, [checked])
+
     return (
         <div
-            className={`${styles.checker} ${inputRef.current?.checked && styles.active} ${className}`}
+            className={`${styles.checker} ${checked && styles.active} ${className}`}
             onClick={handleClick}
             style={{ opacity: isDisabled ? 0.5 : 1, cursor: isDisabled ? 'not-allowed' : 'pointer' }}
         >

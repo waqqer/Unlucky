@@ -16,9 +16,10 @@ interface UIGameContainerProps extends Parent {
     type?: "double" | "triple"
     demo?: boolean
     autoreroll?: boolean
+    onPlay?: (bet: number) => void
 }
 
-type GameState = "IDLE" | "PLAYING" | "WIN" | "WAITING"
+type GameState = "IDLE" | "PLAYING" | "WIN"
 
 export interface GameContainerRef {
     bet: number
@@ -32,7 +33,8 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         type = "double",
         children,
         demo = true,
-        autoreroll = true
+        autoreroll = true,
+        onPlay
     } = props
 
     const [bet, setBet] = useState<number>(25)
@@ -65,6 +67,10 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         setBet(Number(ev.target.value))
     }, [])
 
+    const onPlayHandle = useCallback(() => {
+        onPlay?.(bet)
+    }, [onPlay])
+
     const buttonDisabled: boolean = useMemo((): boolean => {
         if (!StateMachine.is("IDLE"))
             return true
@@ -81,7 +87,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
 
     return (
         <>
-            <VictoryScreen isActive={StateMachine.is("WIN")} win={100} onEnd={onWinScreenEnd}/>
+            <VictoryScreen isActive={StateMachine.is("WIN")} win={100} onEnd={onWinScreenEnd} />
             <div className={`${styles["game-box"]} ${styles[type]}`}>
                 <GameHistory />
 
@@ -97,12 +103,18 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
                             <Input type="number" value={bet} min={0} max={balance} onChange={onBetInputChange} />
                             <Presets onClick={choosePresetHandle} />
 
-                            {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)} checked={isAutoreroll}>Авто-реролл</Check>}
-                            {demo && <Check onChange={(value) => setIsDemo(value)} checked={isDemo}>Демо</Check>}
+                            {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)} checked={isAutoreroll && !isDemo} isDisabled={isDemo}>Авто-реролл</Check>}
+                            {demo && <Check onChange={(value) => {
+                                if (value) {
+                                    setIsAutoreroll(false)
+                                }
+                                setIsDemo(value)
+                            }} checked={isDemo}>Демо</Check>}
 
                             <Button className={
                                 styles["play-btn"]}
                                 isDisabled={buttonDisabled}
+                                onClick={onPlayHandle}
                             >
                                 Играть
                             </Button>
@@ -120,12 +132,18 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
                             <Input type="number" value={bet} min={0} max={balance} onChange={onBetInputChange} />
                             <Presets onClick={choosePresetHandle} />
 
-                            {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)} checked={isAutoreroll}>Авто-реролл</Check>}
-                            {demo && <Check onChange={(value) => setIsDemo(value)} checked={isDemo}>Демо</Check>}
+                            {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)} checked={isAutoreroll && !isDemo} isDisabled={isDemo}>Авто-реролл</Check>}
+                            {demo && <Check onChange={(value) => {
+                                if (value) {
+                                    setIsAutoreroll(false)
+                                }
+                                setIsDemo(value)
+                            }} checked={isDemo}>Демо</Check>}
 
                             <Button
                                 className={styles["play-btn"]}
                                 isDisabled={buttonDisabled}
+                                onClick={onPlayHandle}
                             >
                                 Играть
                             </Button>
