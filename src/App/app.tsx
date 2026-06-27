@@ -9,6 +9,7 @@ import { useContext } from "react"
 import { AccountContext } from "@/Context/AccountContext"
 import PolicyPage from "@/Pages/PolicyPage"
 import AdminPage from "@/Pages/Admin"
+import BadgeNotification from "@/widgets/Badge/BadgeNotification"
 
 const App = () => {
 
@@ -41,6 +42,8 @@ const App = () => {
 
                 {role === "ADMIN" && <Route path="/admin" element={<AdminPage />} />}
             </Routes>
+
+            <BadgeNotification />
         </HashRouter>
     )
 }

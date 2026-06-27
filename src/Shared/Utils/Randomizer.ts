@@ -3,7 +3,7 @@ export interface Weighted {
 }
 
 export const randomElement = <T>(arr: T[]): T => {
-    return arr[Math.round(Math.random() * arr.length - 1)]
+    return arr[Math.floor(Math.random() * arr.length)]
 }
 
 export const getByWeight = <T extends Weighted>(list: T[]): T => {

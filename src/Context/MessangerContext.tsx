@@ -1,4 +1,4 @@
-import { createContext, useMemo, useEffect, useContext, useCallback } from "react"
+import { createContext, useMemo, useEffect, useContext, useCallback, useState, type Dispatch, type SetStateAction } from "react"
 import { AccountContext } from "./AccountContext"
 import connectSocket from "@/Api/Wss"
 import type { StreakStatus } from "@/Api/User"
@@ -14,7 +14,8 @@ interface StreakEvent extends MessageEvent {
 }
 
 export interface MessangerContextValues {
-    sendBadgeNotification: (badge: string) => void
+    setBadgeMessage: Dispatch<SetStateAction<string | null>>,
+    badgeMessage: string
 }
 
 export const MessangerContext = createContext<MessangerContextValues>(undefined!)
@@ -22,9 +23,7 @@ export const MessangerContext = createContext<MessangerContextValues>(undefined!
 export const MessangerProvider = ({ children }: any) => {
     const { account, setStreakInfo, streak, streakStatus } = useContext(AccountContext)
 
-    const sendBadgeNotification = useCallback((badge: string) => {
-
-    }, [])
+    const [badgeMessage, setBadgeMessage] = useState<string | null>(null)
     
     useEffect(() => {
         if (!account) return
@@ -32,7 +31,7 @@ export const MessangerProvider = ({ children }: any) => {
         const socket = connectSocket("/ws/messanger")
 
         socket.on("new_badge_event", (data: NewBadgeEvent) => {
-
+            setBadgeMessage(data.badge)
         })
 
         socket.on("streak_event", (data: StreakEvent) => {
@@ -67,8 +66,9 @@ export const MessangerProvider = ({ children }: any) => {
     }, [account])
 
     const values: MessangerContextValues = useMemo(() => ({
-        sendBadgeNotification
-    }), [sendBadgeNotification])
+        badgeMessage,
+        setBadgeMessage
+    }), [badgeMessage, setBadgeMessage])
 
     return (
         <MessangerContext.Provider value={values}>
