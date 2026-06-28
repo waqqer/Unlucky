@@ -2,7 +2,7 @@ import { memo, useContext, useEffect, useMemo, useRef, useCallback, useState } f
 import image from "@/Shared/Assets/Images/badge_notification.webp"
 import styles from "./BadgeNotification.module.css"
 import { BadgesConfig } from "@/Shared/Configs"
-import { MessangerContext } from "@/Context/MessangerContext"
+import { MessengerContext } from "@/Context/MessengerContext"
 
 const BadgeNotification = () => {
     const notifRef = useRef<HTMLDivElement>(null)
@@ -11,7 +11,7 @@ const BadgeNotification = () => {
     const queueRef = useRef<string[]>([])
     const isShowingRef = useRef(false)
 
-    const { badgeMessage, setBadgeMessage } = useContext(MessangerContext)
+    const { badgeMessage, setBadgeMessage } = useContext(MessengerContext)
     const [currentBadge, setCurrentBadge] = useState<string | null>(null)
 
     const achievedBadge = useMemo(() => {

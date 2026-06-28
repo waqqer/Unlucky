@@ -11,7 +11,7 @@ import { useRef } from "react"
 import GamesList from "@/widgets/GamesList/GamesList"
 import LeaderboardBox from "@/widgets/Leaderboard/LeaderboardBox"
 import { randomElement } from "@/Shared/Utils/Randomizer"
-import { MessangerContext } from "@/Context/MessangerContext"
+import { MessengerContext } from "@/Context/MessengerContext"
 
 const MainPage = () => {
     const titleRef = useRef<string>(randomElement(PagesConfig.MainPage_title))

@@ -1,1 +1,1 @@
-export { default as Randomizer } from "./Randomizer"
+export * from "./Randomizer"

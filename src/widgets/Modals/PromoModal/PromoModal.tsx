@@ -7,6 +7,7 @@ import { AccountContext } from "@/Context/AccountContext"
 import KeybindedButton from "@/Components/Controlls/Buttons/KeybindedButton"
 import { toast } from "react-toastify"
 import { BadgesConfig } from "@/Shared/Configs"
+import { MessengerContext } from "@/Context/MessengerContext"
 
 interface UIPromoModalProps {
     onPromoActivate?: () => void
@@ -23,6 +24,7 @@ const PromoModal = (props: UIPromoModalProps) => {
     const [messageType, setMessageType] = useState<"error" | "success">("success")
 
     const { account, incrementBalance, addBadge } = useContext(AccountContext)
+    const { setBadgeMessage } = useContext(MessengerContext)
 
     const inputRef = useRef<HTMLInputElement>(null)
     const messageRef = useRef<HTMLParagraphElement>(null)
@@ -60,6 +62,7 @@ const PromoModal = (props: UIPromoModalProps) => {
             incrementBalance(data.rewards?.balanceAdded || 0)
 
             if(data.rewards.badgeAdded) {
+                setBadgeMessage(data.rewards.badgeAdded)
                 addBadge(data.rewards.badgeAdded)
             }
 

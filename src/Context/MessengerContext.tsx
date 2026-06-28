@@ -18,9 +18,9 @@ export interface MessangerContextValues {
     badgeMessage: string
 }
 
-export const MessangerContext = createContext<MessangerContextValues>(undefined!)
+export const MessengerContext = createContext<MessangerContextValues>(undefined!)
 
-export const MessangerProvider = ({ children }: any) => {
+export const MessengerProvider = ({ children }: any) => {
     const { account, setStreakInfo, streak, streakStatus } = useContext(AccountContext)
 
     const [badgeMessage, setBadgeMessage] = useState<string | null>(null)
@@ -28,7 +28,7 @@ export const MessangerProvider = ({ children }: any) => {
     useEffect(() => {
         if (!account) return
 
-        const socket = connectSocket("/ws/messanger")
+        const socket = connectSocket("/ws/messenger")
 
         socket.on("new_badge_event", (data: NewBadgeEvent) => {
             setBadgeMessage(data.badge)
@@ -71,8 +71,8 @@ export const MessangerProvider = ({ children }: any) => {
     }), [badgeMessage, setBadgeMessage])
 
     return (
-        <MessangerContext.Provider value={values}>
+        <MessengerContext.Provider value={values}>
             {children}
-        </MessangerContext.Provider>
+        </MessengerContext.Provider>
     )
 }
