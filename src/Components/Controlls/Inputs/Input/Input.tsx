@@ -1,5 +1,5 @@
 import type { Classable, Clickable, Identical } from "@/Shared/Types/PropsTypes"
-import { memo, type HTMLInputTypeAttribute, type Ref } from "react"
+import { memo, type HTMLInputTypeAttribute, type Ref, useCallback } from "react"
 import styles from "./Input.module.css"
 
 interface UIInputProps extends Identical, Classable, Clickable {
@@ -7,10 +7,10 @@ interface UIInputProps extends Identical, Classable, Clickable {
     type?: HTMLInputTypeAttribute
     onBlur?: () => void
     title?: string
-    value?: string | number | readonly string[]
+    value?: string | number
     min?: number
     max?: number
-    onChange?: (ev: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void
+    onChange?: (value: string) => void
     name?: string
 }
 
@@ -30,6 +30,39 @@ const Input = (props: UIInputProps) => {
         name
     } = props
 
+    const handleChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
+        if (type === "number") {
+            if (ev.target.value === "") {
+                onChange?.("")
+                return
+            }
+
+            const val = parseInt(ev.target.value, 10)
+
+            if (isNaN(val)) {
+                onChange("")
+            } else if (val > max) {
+                onChange(max.toString())
+            } else {
+                onChange(val.toString())
+            }
+        }
+    }, [onChange, max, type])
+
+    const handleBlur = useCallback(() => {
+        if(type === "number") {
+            const val = typeof value === "number" ? value : parseInt(value, 10)
+
+            if(isNaN(val) || val < min) {
+                onChange?.(min.toString())
+            } else if (val > max) {
+                onChange?.(max.toString())
+            }
+        }
+
+        onBlur?.()
+    }, [type, value, max, min, onChange, onBlur])
+
     return (
         <>
             <div className={styles["input-box"]}>
@@ -38,9 +71,9 @@ const Input = (props: UIInputProps) => {
                     ref={ref}
                     className={`${styles.input} ${className}`}
                     onClick={onClick}
-                    onChange={onChange}
+                    onChange={handleChange}
                     placeholder=""
-                    onBlur={onBlur}
+                    onBlur={handleBlur}
                     id={id}
                     value={value}
                     min={min}

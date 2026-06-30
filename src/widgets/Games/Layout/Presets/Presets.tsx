@@ -2,8 +2,9 @@ import Button from "@/Components/Controlls/Buttons/Button"
 import { memo, useCallback, useContext } from "react"
 import styles from "./Presets.module.css"
 import { AccountContext } from "@/Context/AccountContext"
+import type { Classable } from "@/Shared/Types/PropsTypes"
 
-interface UIPresetsProps {
+interface UIPresetsProps extends Classable {
     sets?: number[],
     onClick: (value: number) => void
 }
@@ -11,7 +12,8 @@ interface UIPresetsProps {
 const Presets = (props: UIPresetsProps) => {
     const {
         sets = [10, 25, 50, 100, 250],
-        onClick
+        onClick,
+        className = ""
     } = props
 
     const { account, balance } = useContext(AccountContext)
@@ -22,20 +24,19 @@ const Presets = (props: UIPresetsProps) => {
     }, [onClick])
 
     return (
-        <div className={styles.presets}>
+        <div className={`${styles.presets} ${className}`}>
             {sets.map((v, i) => {
-                if (!account || balance > v) {
-                    return (
-                        <Button
-                            key={i}
-                            type="SECONDARY"
-                            onClick={() => handleClick(v)}
-                            className={styles.choice}
-                        >
-                            {v}
-                        </Button>
-                    )
-                }
+                return (
+                    <Button
+                        key={i}
+                        type="SECONDARY"
+                        onClick={() => handleClick(v)}
+                        className={styles.choice}
+                        isDisabled={balance < v}
+                    >
+                        {v}
+                    </Button>
+                )
             })}
         </div>
     )

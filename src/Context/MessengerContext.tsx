@@ -2,7 +2,7 @@ import { createContext, useMemo, useEffect, useContext, useCallback, useState, t
 import { AccountContext } from "./AccountContext"
 import connectSocket from "@/Api/Wss"
 import type { StreakStatus } from "@/Api/User"
-import { toast } from "react-toastify/unstyled"
+import { toast } from "react-toastify"
 
 interface MessageEvent { }
 interface NewBadgeEvent extends MessageEvent {
@@ -11,6 +11,9 @@ interface NewBadgeEvent extends MessageEvent {
 interface StreakEvent extends MessageEvent {
     current: number,
     status: StreakStatus
+}
+interface DepositEvent extends MessageEvent {
+    balance: number
 }
 
 export interface MessangerContextValues {
@@ -21,7 +24,7 @@ export interface MessangerContextValues {
 export const MessengerContext = createContext<MessangerContextValues>(undefined!)
 
 export const MessengerProvider = ({ children }: any) => {
-    const { account, setStreakInfo, streak, streakStatus } = useContext(AccountContext)
+    const { account, setStreakInfo, streak, streakStatus, setBalanceTo, balance } = useContext(AccountContext)
 
     const [badgeMessage, setBadgeMessage] = useState<string | null>(null)
     
@@ -32,6 +35,11 @@ export const MessengerProvider = ({ children }: any) => {
 
         socket.on("new_badge_event", (data: NewBadgeEvent) => {
             setBadgeMessage(data.badge)
+        })
+
+        socket.on("deposit", (data: DepositEvent) => {
+            toast.success(`Успешное пополнение баланса на ${data.balance - balance} ар.`)
+            setBalanceTo(data.balance)
         })
 
         socket.on("streak_event", (data: StreakEvent) => {
@@ -60,10 +68,11 @@ export const MessengerProvider = ({ children }: any) => {
 
         return () => {
             socket.off("new_badge_event")
+            socket.off("deposit")
             socket.off("streak_event")
             socket.disconnect()
         }
-    }, [account])
+    }, [account, setBalanceTo, setBadgeMessage, streakStatus, balance])
 
     const values: MessangerContextValues = useMemo(() => ({
         badgeMessage,

@@ -42,7 +42,7 @@ export const AccountProvider = ({ children }: any) => {
 
     const [balance, setBalance] = useState<number>(0)
     const [userId, setUserId] = useState<number>(0)
-    const [role, setRole] = useState<UserRole>("USER")
+    const [role, setRole] = useState<UserRole>("ADMIN")
 
     const [streak, setStreak] = useState<number>(0)
     const [streakStatus, setStreakStatus] = useState<StreakStatus>("DEAD")

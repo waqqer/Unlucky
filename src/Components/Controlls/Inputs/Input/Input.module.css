@@ -3,11 +3,11 @@
 }
 
 .input {
-    background-color: transparent;
-    border: 1px solid rgb(165, 165, 165);
+    background: rgba(76, 97, 116, 0.1) linear-gradient(40deg, rgba(255, 255, 255, 0.05), transparent);
+    border: 1px solid rgb(128, 128, 128);
     transition: all 0.2s ease;
     padding: 20px 10px;
-    border-radius: 10px;
+    border-radius: 15px;
     width: 100%;
     outline: none;
 }

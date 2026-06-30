@@ -1,0 +1,125 @@
+.content {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    gap: 15px;
+}
+
+.balance {
+    width: 100%;
+    text-align: center;
+    padding-block: 10px;
+    background: rgba(76, 97, 116, 0.1) linear-gradient(40deg, rgba(255, 255, 255, 0.05), transparent);
+    border: 1px solid rgb(155, 155, 155);
+    border-radius: 10px;
+    margin-bottom: 35px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    font-size: 0.9rem;
+
+    &>span {
+        font-weight: 600;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+    justify-content: center;
+
+    width: 100%;
+    gap: 10px;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 7px;
+
+    & > p {
+        color: rgb(230, 230, 230);
+        opacity: 1;
+        font-weight: 400;
+        letter-spacing: 1.2px;
+        font-size: 0.8rem;
+        margin-left: 10px;
+    }
+}
+
+.select {
+    background: rgba(76, 97, 116, 0.1) linear-gradient(40deg, rgba(255, 255, 255, 0.05), transparent);
+    padding: 10px;
+    padding-block: 20px;
+    border-radius: 15px;
+    border-color: rgb(150, 150, 150);
+    transition: all 0.3s ease;
+}
+
+.option {
+    background-color: rgb(26, 27, 27);
+    padding: 20px;
+    transition: all 0.4s ease;
+}
+
+.option:hover, .option:focus {
+    background: rgb(45, 35, 46);
+}
+
+.option:nth-child(odd) {
+    background-color: rgb(32, 32, 32);
+}
+
+.card {
+    background-color: red;
+    min-height: 20px;
+    min-width: 40px;
+    position: relative;
+}
+
+.option[value=""] {
+    font-style: italic;
+    color: gray;
+}
+
+.select:focus {
+    border-color: white;
+    outline: none;
+    transform: scale(1.01);
+} 
+
+.select[value=""] {
+    font-style: italic;
+    color: gray;
+}
+
+@media (max-width: 1000px) {
+    .select {
+        padding: 15px 5px;
+        border-radius: 5px;
+    }
+}
+
+.btn {
+    background-color: rgb(78, 131, 192);
+    color: rgb(255, 255, 255);
+    min-height: 60px;
+    margin-top: 15px;
+}
+
+.btn:hover {
+    background-color: rgb(112, 167, 230);
+    border-radius: 2px;
+}
+
+.btn:active {
+    transform: scale(0.99);
+}

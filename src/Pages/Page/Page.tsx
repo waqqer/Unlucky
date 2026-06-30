@@ -6,8 +6,8 @@ import UserTab from "@/widgets/UserNav/UserTab"
 interface PageProps extends Classable, Parent {
     className?: string,
     children?: ReactNode,
-    customHeader?: ReactNode,
-    customFooter?: ReactNode
+    customHeader?: boolean,
+    customFooter?: boolean
 }
 
 const Page = (props: PageProps) => {
@@ -21,9 +21,7 @@ const Page = (props: PageProps) => {
     return (
         <>
             <header>
-                {customHeader ?
-                    customHeader
-                    :
+                {!customHeader &&
                     <UserTab />
                 }
             </header>
@@ -33,7 +31,7 @@ const Page = (props: PageProps) => {
             </main>
 
             <footer>
-                {customFooter &&
+                {!customFooter &&
                     customFooter
                 }
             </footer>

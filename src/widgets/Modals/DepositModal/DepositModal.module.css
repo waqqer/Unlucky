@@ -1,0 +1,97 @@
+.content {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    gap: 15px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 15px;
+
+    width: 100%;
+}
+
+.btn {
+    background-color: rgb(78, 131, 192);
+    color: rgb(255, 255, 255);
+    min-height: 60px;
+}
+
+.btn:hover {
+    background-color: rgb(112, 167, 230);
+    border-radius: 2px;
+}
+
+.btn:active {
+    transform: scale(0.99);
+}
+
+.icon {
+    max-height: 180px;
+    justify-content: center;
+    align-content: center;
+    fill: rgb(112, 167, 230);
+}
+
+.presets {
+    flex-wrap: wrap;
+    gap: 5px !important;
+    width: 100%;
+
+    justify-content: center !important;
+    align-items: stretch !important;
+
+    &>* {
+        flex: 1;
+    }
+
+    &>button:hover {
+        transform: scale(0.95);
+    }
+}
+
+@media (max-width: 1040px) {
+    .presets {
+        &>button {
+            padding: 15px;
+            padding-inline: 25px;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+    }
+}
+
+.title {
+    color: rgb(230, 230, 230);
+    opacity: 0.8;
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+
+.balance {
+    width: 100%;
+    text-align: center;
+    padding-block: 10px;
+    background: rgba(76, 97, 116, 0.1) linear-gradient(40deg, rgba(255, 255, 255, 0.05), transparent);
+    border: 1px solid rgb(155, 155, 155);
+    border-radius: 10px;
+    margin-bottom: 35px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    font-size: 0.9rem;
+
+    &>span {
+        font-weight: 600;
+    }
+}
