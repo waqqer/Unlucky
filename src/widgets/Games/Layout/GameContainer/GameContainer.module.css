@@ -21,6 +21,7 @@
     border-radius: 5px;
     height: 100%;
     width: 100%;
+    min-width: 0;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.2);
 }
@@ -30,7 +31,7 @@
 }
 
 .triple {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .d-box {
@@ -75,6 +76,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 0
 }
 
 .play-btn {

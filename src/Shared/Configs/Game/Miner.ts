@@ -26,7 +26,17 @@ type Pickaxe = {
 }
 
 type ChestGlowConfig = {
-
+    spawnIntervalSec: number
+    cellPaddingMult: number
+    speedMin: number
+    speedRandom: number
+    lifeBaseSec: number
+    lifeRandomSec: number
+    sizeMinPx: number
+    sizeRandomPx: number
+    drag: number
+    speedMultiplier: number
+    distanceMultiplier: number
 }
 
 type Chest = {
@@ -55,6 +65,17 @@ interface MinerConfig {
     BACKGROUND_TEXTURE: string
     BREAK_TEXTURE: string[]
 
+    SOUND_VOLUME: number
+    PICKAXE_FALL_DURATION_MS: number
+    PICKAXE_FALL_SPINS: number
+    PICKAXE_BOUNCE_DURATION_MS: number
+    PICKAXE_ROW_PAUSE_MS: number
+    PICKAXE_BETWEEN_HIT_DELAY_MS: number
+    SLOT_SPIN_DURATION_MS: number
+    SLOT_STOP_STAGGER_MS: number
+    CHEST_OPEN_DURATION_MS: number
+    CHEST_GLOW_DEFAULTS: ChestGlowConfig
+
     BLOCKS: Record<string, Block>
     PICKAXES: Record<string, Pickaxe>
     CHESTS: Record<string, Chest>
@@ -82,6 +103,29 @@ const Config: MinerConfig = {
         Miner.DestroyStage8,
         Miner.DestroyStage9
     ],
+
+    SOUND_VOLUME: 0.18,
+    PICKAXE_FALL_DURATION_MS: 410,
+    PICKAXE_FALL_SPINS: 1,
+    PICKAXE_BOUNCE_DURATION_MS: 480,
+    PICKAXE_ROW_PAUSE_MS: 260,
+    PICKAXE_BETWEEN_HIT_DELAY_MS: 25,
+    SLOT_SPIN_DURATION_MS: 1150,
+    SLOT_STOP_STAGGER_MS: 105,
+    CHEST_OPEN_DURATION_MS: 460,
+    CHEST_GLOW_DEFAULTS: {
+        spawnIntervalSec: 0.065,
+        cellPaddingMult: 0.1,
+        speedMin: 28,
+        speedRandom: 52,
+        lifeBaseSec: 0.72,
+        lifeRandomSec: 0.48,
+        sizeMinPx: 7,
+        sizeRandomPx: 11,
+        drag: 0.987,
+        speedMultiplier: 0.5,
+        distanceMultiplier: 1.75
+    },
 
     BLOCKS: {
         "stone": {
@@ -244,7 +288,20 @@ const Config: MinerConfig = {
             },
 
             glow_texture: Miner.Glow,
-            glow: true
+            glow: true,
+            glow_config: {
+                spawnIntervalSec: 0.05,
+                cellPaddingMult: 0.12,
+                speedMin: 20,
+                speedRandom: 36,
+                lifeBaseSec: 0.55,
+                lifeRandomSec: 0.28,
+                sizeMinPx: 7,
+                sizeRandomPx: 10,
+                drag: 0.95,
+                speedMultiplier: 0.45,
+                distanceMultiplier: 0.55
+            }
         },
 
         "epic": {
@@ -257,7 +314,20 @@ const Config: MinerConfig = {
             },
 
             glow_texture: Miner.Glow,
-            glow: true
+            glow: true,
+            glow_config: {
+                spawnIntervalSec: 0.07,
+                cellPaddingMult: 0.08,
+                speedMin: 20,
+                speedRandom: 50,
+                lifeBaseSec: 0.5,
+                lifeRandomSec: 0.3,
+                sizeMinPx: 5,
+                sizeRandomPx: 10,
+                drag: 0.99,
+                speedMultiplier: 0.35,
+                distanceMultiplier: 2.2
+            }
         }
     }
 }
