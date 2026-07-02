@@ -1,5 +1,0 @@
-export { SLOTS_CONFIG } from "./game/slots"
-export { ROCKET_CONFIG } from "./game/rocket"
-export { MINER_CONFIG } from "./game/miner"
-export { GAMES_CONFIG } from "./games"
-export { BADGES_CONFIG } from "./badges"
