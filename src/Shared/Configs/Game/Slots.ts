@@ -1,27 +1,27 @@
+import * as Slots from "@/Shared/Assets/Games/Slots"
+
 interface SlotsConfig {
-    REEL_WIDTH: number
-    REEL_HEIGHT: number
     REEL_COUNT: number
-
-    SYMBOLS: string[]
-
-    MAX_BET: number
-    MIN_BET: number
+    SYMBOLS: Record<string, string>
+    INITIAL_SYMBOLS: string[],
+    SPINNING_TIME: number
 }
 
 const Config: SlotsConfig = {
     REEL_COUNT: 3,
-    REEL_HEIGHT: 130,
-    REEL_WIDTH: 130,
+    SPINNING_TIME: 5000,
 
-    SYMBOLS: [
-        "coal",
-        "iron",
-        "diamond"
-    ],
+    SYMBOLS: {
+        "star": Slots.Star,
+        "amethyst": Slots.Amethyst,
+        "redstone": Slots.Redstone,
+        "coal": Slots.Coal,
+        "iron": Slots.Iron,
+        "gold": Slots.Gold,
+        "diamond": Slots.Diamond
+    },
 
-    MAX_BET: 1000,
-    MIN_BET: 10
+    INITIAL_SYMBOLS: ["amethyst", "star", "redstone"],
 }
 
 export default Config

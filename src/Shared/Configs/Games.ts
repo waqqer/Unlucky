@@ -26,6 +26,6 @@ const GamesConfig: GameInfo[] = [
         route: "/bombs",
         icon: Rocket
     }
-] as const
+]
 
 export default GamesConfig

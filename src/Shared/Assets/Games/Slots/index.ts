@@ -1,0 +1,7 @@
+export { default as Amethyst } from "./amethyst.webp"
+export { default as Coal } from "./coal.webp"
+export { default as Diamond } from "./diamond.webp"
+export { default as Gold } from "./gold.webp"
+export { default as Iron } from "./iron.webp"
+export { default as Redstone } from "./redstone.webp"
+export { default as Star } from "./star.webp"

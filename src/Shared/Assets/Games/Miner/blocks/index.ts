@@ -1,0 +1,6 @@
+export { default as Basalt } from "./basalt.webp"
+export { default as Deepslate } from "./deepslate.webp"
+export { default as Grass } from "./grass.webp"
+export { default as Iron } from "./iron.webp"
+export { default as Obsidian } from "./obsidian.webp"
+export { default as Stone } from "./stone.webp"
