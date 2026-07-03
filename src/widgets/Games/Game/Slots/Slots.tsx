@@ -106,7 +106,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
 
         setTiltStyles(prev => {
             const next = prev.map((value, valueIndex) => valueIndex === index ? value : "")
-            next[index] = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`
+            next[index] = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.1)`
             return next
         })
     }, [])

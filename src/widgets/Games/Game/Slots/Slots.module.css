@@ -44,8 +44,14 @@
     background-size: 100% 100%;
     box-shadow:
         0 14px 30px rgb(0 0 0 / 20%);
-    transition: transform 180ms ease, filter 180ms ease;
+    transition: transform 480ms ease, filter 180ms ease, box-shadow 480ms ease;
     transform: translateZ(0);
+    image-rendering: pixelated;
+    box-shadow: 0px 0px 50px 0px rgba(34, 60, 80, 0.3);
+}
+
+.frame:hover {
+    box-shadow: 0px 0px 50px 0px rgba(89, 115, 136, 0.5);
 }
 
 .stopped {
@@ -78,8 +84,8 @@
 }
 
 .symbol {
-    width: 72%;
-    height: 72%;
+    width: 80%;
+    height: 80%;
     object-fit: contain;
     image-rendering: pixelated;
     user-select: none;
