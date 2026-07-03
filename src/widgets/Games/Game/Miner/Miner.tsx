@@ -72,7 +72,7 @@ const BLOCK_REVEAL_BOUNCE_PX = 9
 const PICKAXE_SLOT_SCALE = 0.71
 const PICKAXE_HIT_CENTER_OFFSET_Y = Config.CELL_SIZE_PX * PICKAXE_SLOT_SCALE * 0.2
 const SPIN_SOUND_MIN_INTERVAL_MS = 80
-const SPIN_SOUND_PLAY_MS = 38
+const SPIN_SOUND_PLAY_MS = 24
 
 const wait = (ms: number) => new Promise(resolve => window.setTimeout(resolve, ms))
 
@@ -745,7 +745,8 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
 
                 if (nextStep > spinState.step) {
                     const now = performance.now()
-                    if (now - lastSpinSoundAt >= SPIN_SOUND_MIN_INTERVAL_MS) {
+                    const isSettlingToResult = nextStep >= totalSteps - 1
+                    if (!isSettlingToResult && now - lastSpinSoundAt >= SPIN_SOUND_MIN_INTERVAL_MS) {
                         lastSpinSoundAt = now
                         stopSound(Config.SPINNING_SOUND)
                         playSound(Config.SPINNING_SOUND, SPIN_SOUND_PLAY_MS)
@@ -824,6 +825,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         runtime.isAnimating = true
         drawIdleScene(result.field)
         await spinPickaxes(result.field)
+        stopSound(Config.SPINNING_SOUND)
 
         for (let row = 0; row < Config.PICKAXES_ROWS; row++) {
             await Promise.all(Array.from({ length: Config.COLS }, (_, col) => runPickaxe(row * Config.COLS + col, result.field)))
@@ -841,7 +843,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
             data?.StateMachine.resetState()
         }
         runtime.isAnimating = false
-    }, [data, drawIdleScene, flushBalanceUpdate, runPickaxe, spinPickaxes])
+    }, [data, drawIdleScene, flushBalanceUpdate, runPickaxe, spinPickaxes, stopSound])
 
     const play = useCallback(async (bet?: number) => {
         if (!account || !data || runtimeRef.current?.isAnimating) return
