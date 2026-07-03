@@ -7,8 +7,14 @@ import GameControlls from "@/widgets/Games/Layout/GameControlls"
 import Bombs from "@/widgets/Games/Game/Bombs"
 import type { GameRef } from "@/Shared/Types/GameTypes"
 import { AccountContext } from "@/Context/AccountContext"
+import useModal from "@/Hooks/useModal"
+import styles from "./BombPage.module.css"
+import Window from "@/Components/Containers/Window"
+import Separator from "@/Components/Decorations/Separator"
 
 const BombPage = () => {
+    const about = useModal()
+
     const containerRef = useRef<BombsGameContainerRef>(null)
     const gameRef = useRef<GameRef>(null)
     const [gameData, setGameData] = useState<BombsGameContainerRef | null>(null)
@@ -45,22 +51,31 @@ const BombPage = () => {
     }, [])
 
     return (
-        <Page>
-            <ParticleBackground />
+        <>
+            <Page>
+                <ParticleBackground />
 
-            <Section justify="center" align="center">
-                <GameControlls openAbout={() => {}} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
-                <BombsGameContainer
-                    ref={containerRef}
-                    onPlay={handlePlay}
-                    onCashout={handleCashout}
-                    isActionPending={isActionPending}
-                    onStateChange={handleGameStateChange}
-                >
-                    <Bombs data={gameData} ref={gameRef} onPendingChange={setIsActionPending} />
-                </BombsGameContainer>
-            </Section>
-        </Page>
+                <Section justify="center" align="center">
+                    <GameControlls openAbout={about.open} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
+                    <BombsGameContainer
+                        ref={containerRef}
+                        onPlay={handlePlay}
+                        onCashout={handleCashout}
+                        isActionPending={isActionPending}
+                        onStateChange={handleGameStateChange}
+                    >
+                        <Bombs data={gameData} ref={gameRef} onPendingChange={setIsActionPending} />
+                    </BombsGameContainer>
+                </Section>
+            </Page>
+
+            <Window isOpen={about.isOpen} close={about.close}>
+                <div className={styles.modal}>
+                    <h2>О игре "Мины"</h2>
+                    <Separator />
+                </div>
+            </Window>
+        </>
     )
 }
 

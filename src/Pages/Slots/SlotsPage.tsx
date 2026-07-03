@@ -10,6 +10,7 @@ import type { GameRef } from "@/Shared/Types/GameTypes"
 import Slots from "@/widgets/Games/Game/Slots"
 import { AccountContext } from "@/Context/AccountContext"
 import Separator from "@/Components/Decorations/Separator"
+import styles from "./SlotsPage.module.css"
 
 const SlotsPage = () => {
     const about = useModal()
@@ -66,11 +67,11 @@ const SlotsPage = () => {
             </Page>
 
             <Window isOpen={about.isOpen} close={about.close}>
-                <div>
+                <div className={styles.modal} >
                     <h2>О игре "Слоты"</h2>
                     <Separator />
                     <p>
-                        J buht
+                        <strong>Слоты</strong> - игра где нужно выбить в ряд 3 предмета (чем дороже предмет, тем больше <b>X</b>🤫)
                     </p>
                 </div>
             </Window>
