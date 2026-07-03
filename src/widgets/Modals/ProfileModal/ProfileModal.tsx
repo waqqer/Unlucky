@@ -129,7 +129,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
 
                                 <div className={styles["history-time-info"]}>
                                     <h1>{v.result === "WIN" ? "ПОБЕДА" : "ПОРАЖЕНИЕ"}</h1>
-                                    <p>{v.amount}</p>
+                                    <p className={styles[v.result]}>{v.amount}</p>
                                 </div>
                             </div>
                         ))}

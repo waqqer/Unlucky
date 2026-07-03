@@ -34,7 +34,12 @@ class GameApi {
     public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:cashout", payload?: undefined): Promise<BombsSocketResponse>
     public static emitBombs(socket: ReturnType<typeof connectSocket>, event: string, payload?: object): Promise<BombsSocketResponse> {
         return new Promise(resolve => {
+            const timer = window.setTimeout(() => {
+                resolve({ ok: false, message: "Сервер не отвечает" })
+            }, 8000)
+
             socket.emit(event, payload, (response: BombsSocketResponse) => {
+                window.clearTimeout(timer)
                 resolve(response)
             })
         })

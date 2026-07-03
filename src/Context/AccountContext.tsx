@@ -49,7 +49,7 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
     const isBalanceDeferredRef = useRef<boolean>(false)
     const pendingBalanceRef = useRef<number | null>(null)
     const [userId, setUserId] = useState<number>(0)
-    const [role, setRole] = useState<UserRole>("ADMIN")
+    const [role, setRole] = useState<UserRole>("USER")
 
     const [streak, setStreak] = useState<number>(0)
     const [streakStatus, setStreakStatus] = useState<StreakStatus>("DEAD")

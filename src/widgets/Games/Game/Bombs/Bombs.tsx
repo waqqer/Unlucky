@@ -194,6 +194,8 @@ const animateBoardState = (runtime: Runtime, isEnabled: boolean) => {
     })
 }
 
+const SOCKET_CONNECT_TIMEOUT_MS = 8000
+
 const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
     const { data, onPendingChange } = props
     const hostRef = useRef<HTMLDivElement>(null)
@@ -223,6 +225,49 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
     const { account } = useContext(AuthContext)
     const { flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
+
+    const createFreshSocket = useCallback(() => {
+        socketRef.current?.disconnect()
+        const socket = GameApi.createBombsSocket()
+        socketRef.current = socket
+        return socket
+    }, [])
+
+    const getReadySocket = useCallback(() => {
+        return new Promise<ReturnType<typeof GameApi.createBombsSocket> | null>(resolve => {
+            const socket = socketRef.current?.connected ? socketRef.current : createFreshSocket()
+
+            if (socket.connected) {
+                resolve(socket)
+                return
+            }
+
+            const cleanup = () => {
+                window.clearTimeout(timer)
+                socket.off("connect", handleConnect)
+                socket.off("connect_error", handleError)
+                socket.off("disconnect", handleError)
+            }
+            const handleConnect = () => {
+                cleanup()
+                resolve(socket)
+            }
+            const handleError = () => {
+                cleanup()
+                if (socketRef.current === socket) {
+                    socket.disconnect()
+                    socketRef.current = null
+                }
+                resolve(null)
+            }
+            const timer = window.setTimeout(handleError, SOCKET_CONNECT_TIMEOUT_MS)
+
+            socket.once("connect", handleConnect)
+            socket.once("connect_error", handleError)
+            socket.once("disconnect", handleError)
+            socket.connect()
+        })
+    }, [createFreshSocket])
 
     const resizeScene = useCallback(() => {
         const host = hostRef.current
@@ -505,8 +550,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             return
         }
 
-        const socket = socketRef.current
-        if (!socket || !account) {
+        if (!account) {
             isPendingRef.current = false
             isActiveRef.current = false
             shouldDimPendingRef.current = false
@@ -515,8 +559,18 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             return
         }
 
-        incrementBalance(-currentBet)
-        void GameApi.emitBombs(socket, "bombs:start", { bet: currentBet }).then(response => {
+        void getReadySocket().then(socket => {
+            if (!socket) {
+                data.StateMachine.changeState("IDLE")
+                toast.error("Не удалось подключиться к серверу")
+                return null
+            }
+
+            incrementBalance(-currentBet)
+            return GameApi.emitBombs(socket, "bombs:start", { bet: currentBet })
+        }).then(response => {
+            if (!response) return
+
             if (response.ok === false) {
                 incrementBalance(currentBet)
                 data.StateMachine.changeState("IDLE")
@@ -537,7 +591,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             setIsPending(false)
             requestAnimationFrame(() => updateBoardStateRef.current())
         })
-    }, [account, applyState, data, flushBalanceUpdate, incrementBalance, isActive, isPending])
+    }, [account, applyState, data, flushBalanceUpdate, getReadySocket, incrementBalance, isActive, isPending])
 
     const openDemoCell = useCallback((index: number) => {
         const demoCell = demoFieldRef.current[index]
@@ -594,14 +648,20 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             return
         }
 
-        const socket = socketRef.current
-        if (!socket) return
-
         isPendingRef.current = true
         shouldDimPendingRef.current = false
         setIsPending(true)
         requestAnimationFrame(() => updateBoardStateRef.current())
-        void GameApi.emitBombs(socket, "bombs:open", { index }).then(response => {
+        void getReadySocket().then(socket => {
+            if (!socket) {
+                toast.error("Не удалось подключиться к серверу")
+                return null
+            }
+
+            return GameApi.emitBombs(socket, "bombs:open", { index })
+        }).then(response => {
+            if (!response) return
+
             if (response.ok === false) {
                 toast.error(response.message)
                 return
@@ -640,7 +700,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             setIsPending(false)
             requestAnimationFrame(() => updateBoardStateRef.current())
         })
-    }, [applyState, data, finishGame, openDemoCell, spawnExplosion])
+    }, [applyState, data, finishGame, getReadySocket, openDemoCell, spawnExplosion])
 
     const cashout = useCallback(() => {
         if (!isActiveRef.current || isPendingRef.current) return
@@ -658,15 +718,21 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             return
         }
 
-        const socket = socketRef.current
-        if (!socket) return
-
         onPendingChange?.(true)
         isPendingRef.current = true
         shouldDimPendingRef.current = true
         setIsPending(true)
         requestAnimationFrame(() => updateBoardStateRef.current())
-        void GameApi.emitBombs(socket, "bombs:cashout").then(response => {
+        void getReadySocket().then(socket => {
+            if (!socket) {
+                toast.error("Не удалось подключиться к серверу")
+                return null
+            }
+
+            return GameApi.emitBombs(socket, "bombs:cashout")
+        }).then(response => {
+            if (!response) return
+
             if (response.ok === false) {
                 toast.error(response.message)
                 return
@@ -682,27 +748,32 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             setIsPending(false)
             onPendingChange?.(false)
         })
-    }, [currentWin, data, finishDemo, finishGame, multiplier, onPendingChange])
+    }, [currentWin, data, finishDemo, finishGame, getReadySocket, multiplier, onPendingChange])
 
     useEffect(() => {
         const socket = GameApi.createBombsSocket()
         socketRef.current = socket
 
         return () => {
+            const currentSocket = socketRef.current ?? socket
+
             if (isActiveRef.current) {
-                socket.emit("bombs:cashout", undefined, (response: unknown) => {
+                currentSocket.emit("bombs:cashout", undefined, (response: unknown) => {
                     const result = response as { ok?: boolean, data?: BombsState }
                     if (result.ok && result.data?.newBalance !== undefined) {
                         queueBalanceUpdate(result.data.newBalance)
                         flushBalanceUpdate()
                     }
-                    socket.disconnect()
+                    currentSocket.disconnect()
                 })
-                window.setTimeout(() => socket.disconnect(), 120)
+                window.setTimeout(() => currentSocket.disconnect(), 120)
                 return
             }
 
-            socket.disconnect()
+            currentSocket.disconnect()
+            if (socket !== currentSocket) {
+                socket.disconnect()
+            }
         }
     }, [flushBalanceUpdate, queueBalanceUpdate])
 

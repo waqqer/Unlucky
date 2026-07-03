@@ -11,6 +11,7 @@ import { AccountContext } from "@/Context/AccountContext"
 import { AuthContext } from "@/Context/AuthContext"
 import useStateMachine, { type StateMachineData } from "@/Hooks/useStateMachine"
 import VictoryScreen from "../../Animations/VictoryScreen"
+import type { GameTitle } from "@/Api/History"
 
 interface UIGameContainerProps extends Parent {
     type?: "double" | "triple"
@@ -18,6 +19,7 @@ interface UIGameContainerProps extends Parent {
     autoreroll?: boolean
     onPlay?: (bet: number) => void
     onStateChange?: (state: GameState) => void
+    gameName: GameTitle
 }
 
 export type GameState = "IDLE" | "PLAYING" | "WIN"
@@ -37,7 +39,8 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         demo = true,
         autoreroll = true,
         onPlay,
-        onStateChange
+        onStateChange,
+        gameName
     } = props
 
     const [bet, setBet] = useState<string>("25")
