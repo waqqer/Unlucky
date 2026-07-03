@@ -2,7 +2,7 @@ import { memo, useRef, useCallback, useEffect, useState, useContext } from "reac
 import Page from "../Page"
 import ParticleBackground from "@/Components/Decorations/ParticleBackground"
 import Section from "@/Components/Containers/Section"
-import GameContainer, { type GameContainerRef } from "@/widgets/Games/Layout/GameContainer"
+import GameContainer, { type GameContainerRef, type GameState } from "@/widgets/Games/Layout/GameContainer"
 import GameControlls from "@/widgets/Games/Layout/GameControlls"
 import Miner from "@/widgets/Games/Game/Miner"
 import { type GameRef } from "@/Shared/Types/GameTypes"
@@ -13,6 +13,7 @@ const MinerPage = () => {
     const containerRef = useRef<GameContainerRef>(null)
     const gameRef = useRef<GameRef>(null)
     const [gameData, setGameData] = useState<GameContainerRef | null>(null)
+    const [isMenuDisabled, setIsMenuDisabled] = useState(false)
     const {
         beginBalanceDeferral,
         endBalanceDeferral,
@@ -43,13 +44,17 @@ const MinerPage = () => {
             gameRef.current.play(bet)
     }, [])
 
+    const handleGameStateChange = useCallback((state: GameState) => {
+        setIsMenuDisabled(state !== "IDLE")
+    }, [])
+
     return (
         <Page>
             <ParticleBackground />
 
             <Section justify="center" align="center">
-                <GameControlls openAbout={() => { }} onMenuClick={flushBalanceUpdate} />
-                <GameContainer type="triple" demo={false} autoreroll={false} ref={containerRef} onPlay={handlePlay}>
+                <GameControlls openAbout={() => { }} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
+                <GameContainer type="triple" demo={false} autoreroll={false} ref={containerRef} onPlay={handlePlay} onStateChange={handleGameStateChange}>
                     <Miner data={gameData} ref={gameRef} />
                 </GameContainer>
             </Section>

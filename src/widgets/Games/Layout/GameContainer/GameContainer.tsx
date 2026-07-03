@@ -17,9 +17,10 @@ interface UIGameContainerProps extends Parent {
     demo?: boolean
     autoreroll?: boolean
     onPlay?: (bet: number) => void
+    onStateChange?: (state: GameState) => void
 }
 
-type GameState = "IDLE" | "PLAYING" | "WIN"
+export type GameState = "IDLE" | "PLAYING" | "WIN"
 
 export interface GameContainerRef {
     bet: number
@@ -35,7 +36,8 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         children,
         demo = true,
         autoreroll = true,
-        onPlay
+        onPlay,
+        onStateChange
     } = props
 
     const [bet, setBet] = useState<string>("25")
@@ -53,7 +55,8 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
 
     const stateChangeHandler = useCallback((state: GameState) => {
         console.log(state)
-    }, [])
+        onStateChange?.(state)
+    }, [onStateChange])
 
     const StateMachine = useStateMachine<GameState>("IDLE", {
         onChange: stateChangeHandler

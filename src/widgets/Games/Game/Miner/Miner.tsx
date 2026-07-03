@@ -840,7 +840,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
             data?.StateMachine.changeState("WIN")
         } else {
             data?.setWinAmount(0)
-            data?.StateMachine.resetState()
+            data?.StateMachine.changeState("IDLE")
         }
         runtime.isAnimating = false
     }, [data, drawIdleScene, flushBalanceUpdate, runPickaxe, spinPickaxes, stopSound])
@@ -854,6 +854,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         const playId = ++playIdRef.current
         const betAmount = bet ?? data.bet
         let isBetDebited = false
+        runtime.isAnimating = true
         data.StateMachine.changeState("PLAYING")
 
         try {

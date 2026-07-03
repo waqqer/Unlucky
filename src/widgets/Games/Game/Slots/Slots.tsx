@@ -368,6 +368,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
                         >
                             <div
                                 className={styles.strip}
+                                style={{ inset: Config.REEL_CONTENT_INSET }}
                                 ref={(element) => {
                                     stripRefs.current[index] = element
                                 }}

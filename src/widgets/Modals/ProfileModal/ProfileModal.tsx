@@ -118,7 +118,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
                             <div className={styles["history-item"]}>
                                 <div className={styles["history-time-date"]}>
                                     <h1>{v.game_name}</h1>
-                                    <p>{v.game_date.toLocaleDateString("ru-RU", {
+                                    <p>{new Date(v.game_date).toLocaleDateString("ru-RU", {
                                         month: "short",
                                         year: "numeric",
                                         minute: "2-digit",

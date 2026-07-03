@@ -49,7 +49,7 @@
 }
 
 .stopped {
-    transform: translateZ(0) scale(1.05);
+    transform: translateZ(0) scale(1.015);
     filter: brightness(1.45);
 }
 

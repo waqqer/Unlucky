@@ -13,6 +13,7 @@ interface SlotsConfig {
     AUTO_REROLL_DELAY_MS: number
     SOUND_VOLUME: number
     REEL_TEXTURE: string
+    REEL_CONTENT_INSET: string
 }
 
 const Config: SlotsConfig = {
@@ -25,6 +26,7 @@ const Config: SlotsConfig = {
     AUTO_REROLL_DELAY_MS: 420,
     SOUND_VOLUME: 0.18,
     REEL_TEXTURE: Slots.Slot,
+    REEL_CONTENT_INSET: "7%",
 
     SYMBOLS: {
         "star": Slots.Star,
