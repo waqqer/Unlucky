@@ -1,0 +1,1 @@
+export { default as Tnt } from "./tnt.png"

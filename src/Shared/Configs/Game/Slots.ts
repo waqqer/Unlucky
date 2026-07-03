@@ -26,7 +26,7 @@ const Config: SlotsConfig = {
     AUTO_REROLL_DELAY_MS: 420,
     SOUND_VOLUME: 0.18,
     REEL_TEXTURE: Slots.Slot,
-    REEL_CONTENT_INSET: "7%",
+    REEL_CONTENT_INSET: "10%",
 
     SYMBOLS: {
         "star": Slots.Star,
