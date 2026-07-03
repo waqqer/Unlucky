@@ -1,5 +1,7 @@
-import { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState, type CSSProperties } from "react"
+import { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useRef, useState } from "react"
 import { toast } from "react-toastify"
+import { Application, Assets, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js"
+import { gsap } from "gsap"
 import GameApi from "@/Api/Game"
 import type { BombsCell, BombsCellKind, BombsRewardKind, BombsState } from "@/Api/Game/Types"
 import { AccountContext } from "@/Context/AccountContext"
@@ -20,12 +22,50 @@ type DemoCell = {
 }
 
 type ExplosionParticle = {
-    id: number
     x: number
     y: number
     rotate: number
     delay: number
 }
+
+type Runtime = {
+    app: Application
+    root: Container
+    cellsLayer: Container
+    effectsLayer: Container
+    resizeObserver: ResizeObserver | null
+}
+
+const CELL_SIZE = 96
+const GRID_GAP = 10
+const STAGE_PADDING = 8
+
+const pixelAsset = (src: string) => ({
+    src,
+    data: {
+        scaleMode: "nearest" as const
+    }
+})
+
+const makePixelTexture = (texture: Texture) => {
+    const source = texture.source as Texture["source"] & {
+        scaleMode?: "nearest" | "linear"
+        style?: {
+            scaleMode?: "nearest" | "linear"
+            update?: () => void
+        }
+    }
+
+    source.scaleMode = "nearest"
+    if (source.style) {
+        source.style.scaleMode = "nearest"
+        source.style.update?.()
+    }
+
+    return texture
+}
+
+const getTexture = (src: string) => makePixelTexture(Assets.get<Texture>(src) || Texture.from(src))
 
 const createClosedCells = (rows = Config.GRID_Y_SIZE, cols = Config.GRID_X_SIZE): BombsCell[] => {
     return Array.from({ length: rows * cols }, (_, index) => ({
@@ -53,6 +93,7 @@ const getCellSound = (cell: BombsCell) => {
 
 const playSound = (url: string) => {
     const audio = new Audio(url)
+    audio.preload = "auto"
     audio.volume = 0.18
     void audio.play().catch(() => undefined)
 }
@@ -103,7 +144,6 @@ const createExplosionParticles = (): ExplosionParticle[] => {
         const distance = minDistance + Math.random() * distanceRange
 
         return {
-            id: Date.now() + particleIndex,
             x: Math.cos(angle) * distance,
             y: Math.sin(angle) * distance,
             rotate: Math.random() * 540 - 270,
@@ -112,10 +152,57 @@ const createExplosionParticles = (): ExplosionParticle[] => {
     })
 }
 
+const animateCellOpen = (sprite: Sprite, x: number, y: number) => {
+    const baseScaleX = sprite.scale.x
+    const baseScaleY = sprite.scale.y
+    const inset = CELL_SIZE * 0.1
+
+    sprite.alpha = 0.45
+    sprite.x = x + inset
+    sprite.y = y + inset
+    sprite.scale.set(baseScaleX * 0.8, baseScaleY * 0.8)
+
+    gsap.to(sprite, {
+        alpha: 1,
+        duration: 0.16,
+        ease: "power2.out"
+    })
+    gsap.to(sprite, {
+        x,
+        y,
+        duration: 0.28,
+        ease: "back.out(1.9)"
+    })
+    gsap.to(sprite.scale, {
+        x: baseScaleX,
+        y: baseScaleY,
+        duration: 0.28,
+        ease: "back.out(1.9)"
+    })
+}
+
+const animateBoardState = (runtime: Runtime, isEnabled: boolean) => {
+    gsap.killTweensOf(runtime.cellsLayer)
+    gsap.to(runtime.cellsLayer, {
+        alpha: isEnabled ? 1 : 0.68,
+        duration: 0.22,
+        ease: isEnabled ? "power2.out" : "power2.inOut"
+    })
+}
+
 const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
     const { data, onPendingChange } = props
+    const hostRef = useRef<HTMLDivElement>(null)
+    const runtimeRef = useRef<Runtime | null>(null)
     const socketRef = useRef<ReturnType<typeof GameApi.createBombsSocket> | null>(null)
+    const openCellRef = useRef<(index: number) => void>(() => undefined)
+    const drawBoardRef = useRef<() => void>(() => undefined)
+    const resizeSceneRef = useRef<() => void>(() => undefined)
     const isActiveRef = useRef(false)
+    const isPendingRef = useRef(false)
+    const cellsRef = useRef<BombsCell[]>(createClosedCells())
+    const animatedOpenedCellsRef = useRef<Set<number>>(new Set())
+    const isBoardEnabledRef = useRef(false)
     const demoFieldRef = useRef<DemoCell[]>([])
     const revealTimerRef = useRef<number | null>(null)
     const [rows, setRows] = useState(Config.GRID_Y_SIZE)
@@ -126,14 +213,172 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
     const [multiplier, setMultiplier] = useState(1)
     const [currentWin, setCurrentWin] = useState(0)
     const [explodedIndex, setExplodedIndex] = useState<number | null>(null)
-    const [particles, setParticles] = useState<ExplosionParticle[]>([])
 
     const { account } = useContext(AuthContext)
     const { flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
 
+    const resizeScene = useCallback(() => {
+        const host = hostRef.current
+        const runtime = runtimeRef.current
+        if (!host || !runtime) return
+
+        const width = Math.max(1, host.clientWidth)
+        const height = Math.max(1, host.clientHeight)
+        const worldWidth = cols * CELL_SIZE + Math.max(0, cols - 1) * GRID_GAP
+        const worldHeight = rows * CELL_SIZE + Math.max(0, rows - 1) * GRID_GAP
+        const paddedWidth = worldWidth + STAGE_PADDING * 2
+        const paddedHeight = worldHeight + STAGE_PADDING * 2
+        const scale = Math.min(width / paddedWidth, height / paddedHeight)
+
+        runtime.app.renderer.resize(width, height)
+        runtime.app.canvas.style.width = `${width}px`
+        runtime.app.canvas.style.height = `${height}px`
+        runtime.root.scale.set(scale)
+        runtime.root.x = (width - paddedWidth * scale) / 2 + STAGE_PADDING * scale
+        runtime.root.y = (height - paddedHeight * scale) / 2 + STAGE_PADDING * scale
+    }, [cols, rows])
+
+    const spawnExplosion = useCallback((index: number) => {
+        const runtime = runtimeRef.current
+        if (!runtime) return
+
+        const row = Math.floor(index / cols)
+        const col = index % cols
+        const centerX = col * (CELL_SIZE + GRID_GAP) + CELL_SIZE / 2
+        const centerY = row * (CELL_SIZE + GRID_GAP) + CELL_SIZE / 2
+
+        const flash = new Graphics()
+            .circle(0, 0, CELL_SIZE * 0.72)
+            .fill({ color: 0xff7438, alpha: 0.72 })
+        flash.x = centerX
+        flash.y = centerY
+        runtime.effectsLayer.addChild(flash)
+
+        gsap.to(flash.scale, {
+            x: 1.55,
+            y: 1.55,
+            duration: 0.34,
+            ease: "power2.out"
+        })
+        gsap.to(flash, {
+            alpha: 0,
+            duration: 0.34,
+            ease: "power2.out",
+            onComplete: () => flash.destroy()
+        })
+
+        createExplosionParticles().forEach(particle => {
+            const sprite = new Sprite(getTexture(Config.EXPLODE_PARTICLE))
+            sprite.anchor.set(0.5)
+            sprite.x = centerX
+            sprite.y = centerY
+            sprite.width = CELL_SIZE * 0.18
+            sprite.height = CELL_SIZE * 0.18
+            sprite.rotation = 0
+            sprite.alpha = 0
+            runtime.effectsLayer.addChild(sprite)
+
+            gsap.to(sprite, {
+                alpha: 1,
+                delay: particle.delay / 1000,
+                duration: 0.03,
+                ease: "none"
+            })
+            gsap.to(sprite, {
+                x: centerX + particle.x,
+                y: centerY + particle.y,
+                rotation: particle.rotate * Math.PI / 180,
+                alpha: 0,
+                delay: particle.delay / 1000,
+                duration: Config.EXPLODE_PARTICLES_DURATION_MS / 1000,
+                ease: "power2.out",
+                onComplete: () => sprite.destroy()
+            })
+        })
+    }, [cols])
+
+    const drawBoard = useCallback(() => {
+        const runtime = runtimeRef.current
+        if (!runtime) return
+        const isBoardEnabled = isActiveRef.current && !isPendingRef.current
+
+        runtime.cellsLayer.removeChildren().forEach(child => {
+            gsap.killTweensOf(child)
+            gsap.killTweensOf(child.scale)
+            child.destroy()
+        })
+
+        runtime.cellsLayer.eventMode = isBoardEnabled ? "static" : "none"
+
+        cellsRef.current.forEach(cell => {
+            const row = Math.floor(cell.index / cols)
+            const col = cell.index % cols
+            const x = col * (CELL_SIZE + GRID_GAP)
+            const y = row * (CELL_SIZE + GRID_GAP)
+
+            const sprite = new Sprite(getTexture(getCellTexture(cell)))
+            sprite.x = x
+            sprite.y = y
+            sprite.width = CELL_SIZE
+            sprite.height = CELL_SIZE
+            sprite.eventMode = !cell.isOpened && isBoardEnabled ? "static" : "none"
+            if (!cell.isOpened && isBoardEnabled) {
+                sprite.hitArea = new Rectangle(0, 0, CELL_SIZE, CELL_SIZE)
+            }
+            sprite.cursor = sprite.eventMode === "static" ? "pointer" : "default"
+            sprite.alpha = !isActiveRef.current && explodedIndex === null ? 0.82 : 1
+            sprite.tint = !isActiveRef.current && explodedIndex === null ? 0x686868 : 0xffffff
+            if (!cell.isOpened) {
+                sprite.on("pointertap", () => openCellRef.current(cell.index))
+            }
+            runtime.cellsLayer.addChild(sprite)
+
+            if (cell.isOpened && !animatedOpenedCellsRef.current.has(cell.index) && (isBoardEnabled || cell.index === explodedIndex)) {
+                animatedOpenedCellsRef.current.add(cell.index)
+                animateCellOpen(sprite, x, y)
+            }
+
+            const border = new Graphics()
+                .rect(0.5, 0.5, CELL_SIZE - 1, CELL_SIZE - 1)
+                .stroke({
+                    color: cell.kind === "bomb" ? 0xff7a7a : cell.kind === "reward" ? 0x81e09d : 0xffffff,
+                    alpha: cell.kind ? 0.72 : 0.16,
+                    width: 2
+                })
+            border.x = x
+            border.y = y
+            border.eventMode = "none"
+            runtime.cellsLayer.addChild(border)
+
+        })
+
+        if (isBoardEnabledRef.current !== isBoardEnabled) {
+            isBoardEnabledRef.current = isBoardEnabled
+            animateBoardState(runtime, isBoardEnabled)
+        } else {
+            runtime.cellsLayer.alpha = isBoardEnabled ? 1 : 0.68
+        }
+    }, [cols, explodedIndex])
+
+    useEffect(() => {
+        drawBoardRef.current = drawBoard
+    }, [drawBoard])
+
+    useEffect(() => {
+        resizeSceneRef.current = resizeScene
+    }, [resizeScene])
+
     useEffect(() => {
         isActiveRef.current = isActive
     }, [isActive])
+
+    useEffect(() => {
+        isPendingRef.current = isPending
+    }, [isPending])
+
+    useEffect(() => {
+        cellsRef.current = cells
+    }, [cells])
 
     useEffect(() => {
         return () => {
@@ -144,6 +389,8 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
     }, [])
 
     const applyState = useCallback((state: BombsState) => {
+        cellsRef.current = state.cells
+        isActiveRef.current = state.isActive
         setRows(state.rows)
         setCols(state.cols)
         setCells(state.cells)
@@ -198,23 +445,32 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         }
 
         const currentBet = bet ?? data.bet
+        const closedCells = createClosedCells()
+        cellsRef.current = closedCells
+        animatedOpenedCellsRef.current.clear()
+        isPendingRef.current = true
+        isActiveRef.current = false
         setIsPending(true)
-        setCells(createClosedCells())
+        setCells(closedCells)
         setMultiplier(1)
         setCurrentWin(0)
         setExplodedIndex(null)
-        setParticles([])
         data.StateMachine.changeState("PLAYING")
 
         if (data.isDemo) {
             demoFieldRef.current = createDemoField()
+            isActiveRef.current = true
+            isPendingRef.current = false
             setIsActive(true)
             setIsPending(false)
+            requestAnimationFrame(() => drawBoardRef.current())
             return
         }
 
         const socket = socketRef.current
         if (!socket || !account) {
+            isPendingRef.current = false
+            isActiveRef.current = false
             data.StateMachine.changeState("IDLE")
             setIsPending(false)
             return
@@ -231,31 +487,38 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
             applyState(response.data)
             flushBalanceUpdate()
+            requestAnimationFrame(() => drawBoardRef.current())
         }).catch(() => {
             incrementBalance(currentBet)
             data.StateMachine.changeState("IDLE")
             toast.error("Не удалось запустить Мины")
         }).finally(() => {
+            isPendingRef.current = false
             setIsPending(false)
+            requestAnimationFrame(() => drawBoardRef.current())
         })
     }, [account, applyState, data, flushBalanceUpdate, incrementBalance, isActive, isPending])
 
     const openDemoCell = useCallback((index: number) => {
         const demoCell = demoFieldRef.current[index]
         if (!demoCell) return
+        const currentCells = cellsRef.current
+        const currentCell = currentCells[index]
+        if (!currentCell || currentCell.isOpened) return
 
-        const nextCells = cells.map(cell => cell.index === index ? {
+        const nextCells = currentCells.map(cell => cell.index === index ? {
             ...cell,
             isOpened: true,
             kind: demoCell.kind,
             rewardKind: demoCell.rewardKind
         } : cell)
+        cellsRef.current = nextCells
         const openedCell = nextCells[index]
         playSound(getCellSound(openedCell))
 
         if (demoCell.kind === "bomb") {
             setExplodedIndex(index)
-            setParticles(createExplosionParticles())
+            spawnExplosion(index)
             const revealed = nextCells.map((cell, cellIndex) => {
                 const fieldCell = demoFieldRef.current[cellIndex]
                 return {
@@ -265,13 +528,10 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
                     rewardKind: fieldCell.rewardKind
                 }
             })
-            setCells(nextCells)
+            cellsRef.current = revealed
+            setCells(revealed)
             setIsActive(false)
-            revealTimerRef.current = window.setTimeout(() => {
-                setCells(revealed)
-                finishDemo(revealed, 0, false)
-                revealTimerRef.current = null
-            }, Config.EXPLODE_REVEAL_DELAY_MS)
+            finishDemo(revealed, 0, false)
             return
         }
 
@@ -282,11 +542,11 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         setCells(nextCells)
         setMultiplier(nextMultiplier)
         setCurrentWin(Math.trunc((data?.bet ?? 0) * nextMultiplier))
-    }, [cells, data, finishDemo, multiplier])
+    }, [data, finishDemo, multiplier, spawnExplosion])
 
     const openCell = useCallback((index: number) => {
-        if (!isActive || isPending) return
-        const cell = cells[index]
+        if (!isActiveRef.current || isPendingRef.current) return
+        const cell = cellsRef.current[index]
         if (!cell || cell.isOpened) return
 
         if (data?.isDemo) {
@@ -297,7 +557,9 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         const socket = socketRef.current
         if (!socket) return
 
+        isPendingRef.current = true
         setIsPending(true)
+        requestAnimationFrame(() => drawBoardRef.current())
         void GameApi.emitBombs(socket, "bombs:open", { index }).then(response => {
             if (response.ok === false) {
                 toast.error(response.message)
@@ -309,9 +571,9 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
                 playSound(getCellSound(opened))
                 if (opened.kind === "bomb") {
                     setExplodedIndex(index)
-                    setParticles(createExplosionParticles())
                     setCells(prevCells => prevCells.map(cell => cell.index === index ? opened : cell))
                     setIsActive(false)
+                    spawnExplosion(index)
                 }
             }
 
@@ -321,10 +583,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             }
 
             if (opened?.kind === "bomb") {
-                revealTimerRef.current = window.setTimeout(() => {
-                    finishGame(response.data, false)
-                    revealTimerRef.current = null
-                }, Config.EXPLODE_REVEAL_DELAY_MS)
+                finishGame(response.data, false)
                 return
             }
 
@@ -332,15 +591,21 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         }).catch(() => {
             toast.error("Не удалось открыть клетку")
         }).finally(() => {
+            isPendingRef.current = false
             setIsPending(false)
         })
-    }, [applyState, cells, data, finishGame, isActive, isPending, openDemoCell])
+    }, [applyState, data, finishGame, openDemoCell, spawnExplosion])
 
     const cashout = useCallback(() => {
-        if (!isActive || isPending) return
+        if (!isActiveRef.current || isPendingRef.current) return
 
         if (data?.isDemo) {
-            finishDemo(cells, multiplier, currentWin > (data?.bet ?? 0))
+            isPendingRef.current = true
+            setIsPending(true)
+            requestAnimationFrame(() => drawBoardRef.current())
+            finishDemo(cellsRef.current, multiplier, currentWin > (data?.bet ?? 0))
+            isPendingRef.current = false
+            setIsPending(false)
             return
         }
 
@@ -348,7 +613,9 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         if (!socket) return
 
         onPendingChange?.(true)
+        isPendingRef.current = true
         setIsPending(true)
+        requestAnimationFrame(() => drawBoardRef.current())
         void GameApi.emitBombs(socket, "bombs:cashout").then(response => {
             if (response.ok === false) {
                 toast.error(response.message)
@@ -359,10 +626,11 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         }).catch(() => {
             toast.error("Не удалось забрать выигрыш")
         }).finally(() => {
+            isPendingRef.current = false
             setIsPending(false)
             onPendingChange?.(false)
         })
-    }, [cells, currentWin, data, finishDemo, finishGame, isActive, isPending, multiplier, onPendingChange])
+    }, [currentWin, data, finishDemo, finishGame, multiplier, onPendingChange])
 
     useEffect(() => {
         const socket = GameApi.createBombsSocket()
@@ -386,46 +654,94 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         }
     }, [flushBalanceUpdate, queueBalanceUpdate])
 
+    useEffect(() => {
+        openCellRef.current = openCell
+    }, [openCell])
+
+    useEffect(() => {
+        const host = hostRef.current
+        if (!host) return
+
+        let destroyed = false
+        const app = new Application()
+
+        const init = async () => {
+            await app.init({
+                backgroundAlpha: 0,
+                antialias: false,
+                resizeTo: host
+            })
+
+            if (destroyed) {
+                app.destroy()
+                return
+            }
+
+            host.appendChild(app.canvas)
+
+            const runtime: Runtime = {
+                app,
+                root: new Container(),
+                cellsLayer: new Container(),
+                effectsLayer: new Container(),
+                resizeObserver: null
+            }
+
+            runtime.root.addChild(runtime.cellsLayer, runtime.effectsLayer)
+            app.stage.addChild(runtime.root)
+            runtimeRef.current = runtime
+
+            const textures = [
+                Config.CLOSED_TILE_TEXTURE,
+                Config.EXPLODE_PARTICLE,
+                ...Object.values(Config.GOOD_TILES).map(tile => tile.texture),
+                ...Object.values(Config.BAD_TILES).map(tile => tile.texture),
+                ...Object.values(Config.DEFAULT_TILE).map(tile => tile.texture)
+            ]
+
+            await Assets.load(textures.map(pixelAsset))
+            Object.values(Config.GOOD_TILES).forEach(tile => new Audio(tile.sound.open).load())
+            Object.values(Config.BAD_TILES).forEach(tile => new Audio(tile.sound.open).load())
+            Object.values(Config.DEFAULT_TILE).forEach(tile => new Audio(tile.sound.open).load())
+
+            if (destroyed) return
+
+            drawBoardRef.current()
+            resizeSceneRef.current()
+            runtime.resizeObserver = new ResizeObserver(() => {
+                requestAnimationFrame(() => resizeSceneRef.current())
+            })
+            runtime.resizeObserver.observe(host)
+        }
+
+        void init()
+
+        return () => {
+            destroyed = true
+            const runtime = runtimeRef.current
+            runtime?.resizeObserver?.disconnect()
+            if (runtime) {
+                gsap.killTweensOf(runtime.cellsLayer.children)
+                gsap.killTweensOf(runtime.effectsLayer.children)
+                runtime.cellsLayer.removeChildren().forEach(child => child.destroy())
+                runtime.effectsLayer.removeChildren().forEach(child => child.destroy())
+            }
+            runtimeRef.current = null
+            if (host.contains(app.canvas)) host.removeChild(app.canvas)
+            app.destroy(true)
+        }
+    }, [])
+
+    useEffect(() => {
+        drawBoard()
+        resizeScene()
+    }, [cells, drawBoard, explodedIndex, isActive, isPending, resizeScene])
+
     useImperativeHandle(ref, () => ({ play, cashout }), [cashout, play])
 
-    const gridStyle = useMemo(() => ({
-        gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`
-    }), [cols])
-
     return (
-        <div className={`${styles.bombs} ${!isActive && explodedIndex === null ? styles.inactive : ""}`}>
-            <div className={styles.board} style={gridStyle}>
-                {cells.map(cell => (
-                    <button
-                        className={[
-                            styles.cell,
-                            cell.isOpened ? styles.opened : "",
-                            cell.kind ? styles[`cell-${cell.kind}`] : "",
-                            explodedIndex === cell.index ? styles.exploded : ""
-                        ].filter(Boolean).join(" ")}
-                        key={cell.index}
-                        type="button"
-                        style={{ backgroundImage: `url(${getCellTexture(cell)})` }}
-                        disabled={!isActive || isPending || cell.isOpened}
-                        onClick={() => openCell(cell.index)}
-                    >
-                        {explodedIndex === cell.index && particles.map(particle => (
-                            <span
-                                className={styles.particle}
-                                key={particle.id}
-                                style={{
-                                    backgroundImage: `url(${Config.EXPLODE_PARTICLE})`,
-                                    "--particle-x": `${particle.x}px`,
-                                    "--particle-y": `${particle.y}px`,
-                                    "--particle-rotate": `${particle.rotate}deg`,
-                                    "--particle-duration": `${Config.EXPLODE_PARTICLES_DURATION_MS}ms`,
-                                    animationDelay: `${particle.delay}ms`
-                                } as CSSProperties}
-                            />
-                        ))}
-                    </button>
-                ))}
-            </div>
+        <div className={styles.bombs}>
+            <div ref={hostRef} className={styles.board} />
 
             <div className={styles.panel}>
                 <div>

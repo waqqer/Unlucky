@@ -1,1 +1,1 @@
-export { default as Hidden } from "./hidden.webp"
+export { default as Stone } from "./stone.png"

@@ -38,7 +38,7 @@ const Config: BombsConfig = {
     EXPLODE_PARTICLES_DURATION_MS: 560,
     EXPLODE_PARTICLES_MAX_DELAY_MS: 40,
     EXPLODE_REVEAL_DELAY_MS: 220,
-    CLOSED_TILE_TEXTURE: Bombs.Default.Hidden,
+    CLOSED_TILE_TEXTURE: Bombs.Hidden,
 
     GOOD_TILES: {
         "iron": {
@@ -75,7 +75,7 @@ const Config: BombsConfig = {
 
     DEFAULT_TILE: {
         "empty": {
-            texture: Bombs.Default.Hidden,
+            texture: Bombs.Default.Stone,
             sound: {
                 open: BombsSFX.DefaultOpen
             }
