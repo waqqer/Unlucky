@@ -113,7 +113,7 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
             return
 
         const value = typeof badge === "string" ? [badge] : badge
-        setBadges(prev => [...prev, ...value])
+        setBadges(prev => [...new Set([...prev, ...value])])
     }, [account])
 
     const removeBadge = useCallback(async () => {

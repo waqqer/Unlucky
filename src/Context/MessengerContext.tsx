@@ -32,6 +32,9 @@ export const MessengerProvider = ({ children }: any) => {
         if (!account) return
 
         const socket = connectSocket("/ws/messenger")
+        const streakRefreshInterval = setInterval(() => {
+            socket.emit("streak:refresh")
+        }, 300_000)
 
         socket.on("new_badge_event", (data: NewBadgeEvent) => {
             setBadgeMessage(data.badge)
@@ -67,12 +70,13 @@ export const MessengerProvider = ({ children }: any) => {
         })
 
         return () => {
+            clearInterval(streakRefreshInterval)
             socket.off("new_badge_event")
             socket.off("deposit")
             socket.off("streak_event")
             socket.disconnect()
         }
-    }, [account, setBalanceTo, setBadgeMessage, streakStatus, balance])
+    }, [account, setBalanceTo, setBadgeMessage, setStreakInfo, streakStatus, balance])
 
     const values: MessangerContextValues = useMemo(() => ({
         badgeMessage,

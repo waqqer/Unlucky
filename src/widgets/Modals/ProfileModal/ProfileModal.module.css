@@ -57,6 +57,89 @@
     font-size: 1.1rem;
 }
 
+.streak {
+    background-color: rgba(255, 130, 39, 0.42);
+    border-radius: 7px;
+    border: 2px dashed rgb(255, 178, 93);
+    outline: 1px solid rgba(255, 255, 255, 0.15);
+
+    width: 95%;
+    padding: 3%;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+
+    animation: streak-show 0.45s ease both;
+}
+
+.streak-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.streak-fire {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 7px;
+    background-color: rgba(255, 107, 39, 0.28);
+    border: 1px solid rgba(255, 224, 168, 0.55);
+    font-size: 1.65rem;
+    animation: fire-idle 1.8s ease infinite;
+}
+
+.streak-data {
+    min-width: 0;
+}
+
+.streak-data h4 {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.streak-data p {
+    color: rgb(255, 244, 216);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.streak-data span,
+.streak-actions p {
+    display: block;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.76);
+}
+
+.streak-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 8px;
+}
+
+.streak-actions p {
+    text-align: right;
+    max-width: 180px;
+}
+
+.streak-btn {
+    min-width: 112px;
+    min-height: 36px;
+    border-radius: 6px;
+    background-color: rgba(255, 126, 36, 0.82);
+    border: 1px solid rgba(255, 232, 191, 0.62);
+    color: white;
+}
+
+.streak-btn:hover:not(:disabled) {
+    background-color: rgb(255, 147, 47);
+}
+
 .data {
     display: flex;
     flex-direction: row;
@@ -125,7 +208,7 @@
     scrollbar-color: rgb(107, 197, 107) transparent;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1050px) {
     .history {
         display: none;
     }
@@ -197,6 +280,19 @@
     .btns .btn {
         background-color: rgba(135, 177, 255, 0.5);
     }
+
+    .streak {
+        grid-template-columns: 1fr;
+    }
+
+    .streak-actions {
+        align-items: stretch;
+    }
+
+    .streak-actions p {
+        max-width: none;
+        text-align: left;
+    }
 }
 
 .history-item {
@@ -267,4 +363,18 @@
 
 .LOSE {
     color: rgb(255, 156, 172) !important;
+}
+
+@keyframes streak-show {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@keyframes fire-idle {
+    50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 18px rgba(255, 128, 39, 0.24);
+    }
 }

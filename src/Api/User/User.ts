@@ -1,5 +1,5 @@
 import { $api } from "../Api"
-import type { Badges, Policy, UserHistory, UserInfo } from "./Types"
+import type { Badges, ClaimStreakRewardResult, Policy, StreakReward, UserHistory, UserInfo } from "./Types"
 import type { UUID, Wallet } from "@/Shared/Types/UserTypes"
 
 class UserApi {
@@ -24,6 +24,18 @@ class UserApi {
     public static async getUserBalance(uuid: string | UUID): Promise<Wallet> {
         const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
         const responce = await $api.get<Wallet>("/private/api/user/" + param + "/balance")
+        return responce.data
+    }
+
+    public static async getStreakRewards(uuid: string | UUID): Promise<StreakReward[]> {
+        const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
+        const responce = await $api.get<StreakReward[]>("/private/api/user/" + param + "/streak-rewards")
+        return responce.data
+    }
+
+    public static async claimStreakReward(uuid: string | UUID, day: number): Promise<ClaimStreakRewardResult> {
+        const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
+        const responce = await $api.post<ClaimStreakRewardResult>("/private/api/user/" + param + "/streak-rewards/" + day + "/claim")
         return responce.data
     }
 

@@ -15,6 +15,10 @@ import UserApi, { type UserHistory } from "@/Api/User"
 import { AccountContext } from "@/Context/AccountContext"
 import DepositModal from "../DepositModal"
 import OutModal from "../OutModal"
+import StreakRewardsModal from "../StreakRewardsModal"
+import type { StreakReward } from "@/Api/User"
+import { toast } from "react-toastify"
+import { MessengerContext } from "@/Context/MessengerContext"
 
 interface UIProfileModalProps {
     closeThis: () => void
@@ -29,15 +33,28 @@ const ProfileModal = (props: UIProfileModalProps) => {
     const promo = useModal()
     const deposit = useModal()
     const out = useModal()
+    const streakRewards = useModal()
 
     const [history, setHistory] = useState<UserHistory[]>([])
-    const { account } = useContext(AccountContext)
+    const [rewards, setRewards] = useState<StreakReward[]>([])
+    const [isRewardsLoading, setIsRewardsLoading] = useState<boolean>(false)
+    const { account, streak, streakStatus, setBalanceTo, addBadge } = useContext(AccountContext)
+    const { setBadgeMessage } = useContext(MessengerContext)
 
     useEffect(() => {
         if (!account) return
 
         UserApi.getUserHistory(account.UUID).then(d => setHistory(d))
     }, [account])
+
+    useEffect(() => {
+        if (!account) return
+
+        setIsRewardsLoading(true)
+        UserApi.getStreakRewards(account.UUID)
+            .then(d => setRewards(d))
+            .finally(() => setIsRewardsLoading(false))
+    }, [account, streak])
 
     const onPromoActivateCallback = useCallback(() => {
         promo.close()
@@ -53,6 +70,36 @@ const ProfileModal = (props: UIProfileModalProps) => {
         out.close()
         closeThis()
     }, [out, closeThis])
+
+    const handleClaimReward = useCallback(async (day: number) => {
+        if (!account) return
+
+        try {
+            const data = await UserApi.claimStreakReward(account.UUID, day)
+            setBalanceTo(data.balance)
+            setRewards(prev => prev.map(reward => (
+                reward.day === data.reward.day ? data.reward : reward
+            )))
+
+            if (data.reward.badge) {
+                addBadge(data.reward.badge)
+                setBadgeMessage(data.reward.badge)
+            }
+
+            toast.success(`Награда огонька получена: +${data.reward.balance} Ар`)
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Не удалось получить награду")
+        }
+    }, [account, setBalanceTo, addBadge, setBadgeMessage])
+
+    const statusText = streakStatus === "ACTIVE"
+        ? "Огонек активен"
+        : streakStatus === "WAITING"
+            ? "Сыграй сегодня, чтобы продлить"
+            : "Огонек погас"
+
+    const hasStreak = streak > 0 && streakStatus !== "DEAD"
+    const nextReward = rewards.find(reward => !reward.isClaimed)
 
     return (
         <>
@@ -109,6 +156,37 @@ const ProfileModal = (props: UIProfileModalProps) => {
                         </Button>
                     </div>
                 </div>
+
+                {hasStreak && (
+                    <div className={styles.streak}>
+                        <div className={styles["streak-info"]}>
+                            <div className={styles["streak-fire"]}>🔥</div>
+
+                            <div className={styles["streak-data"]}>
+                                <h4>Огонек</h4>
+                                <p>{streak} дн. подряд</p>
+                                <span>{statusText}</span>
+                            </div>
+                        </div>
+
+                        <div className={styles["streak-actions"]}>
+                            {nextReward && (
+                                <p>
+                                    Следующая: {nextReward.day} дн. / +{nextReward.balance} Ар
+                                </p>
+                            )}
+
+                            <Button
+                                className={styles["streak-btn"]}
+                                id="streak-rewards"
+                                onClick={streakRewards.open}
+                                isDisabled={account === null}
+                            >
+                                Награды
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
                 <div className={styles.history}>
                     {history.length === 0 ?
@@ -171,6 +249,13 @@ const ProfileModal = (props: UIProfileModalProps) => {
                 variant="info"
             />
 
+            <Tooltip
+                anchorSelect="#streak-rewards"
+                delayShow={100}
+                content="Награды за дни огонька"
+                variant="info"
+            />
+
             <Window isOpen={badges.isOpen} close={badges.close}>
                 <BadgesModal close={badges.close} />
             </Window>
@@ -185,6 +270,15 @@ const ProfileModal = (props: UIProfileModalProps) => {
 
             <Window isOpen={out.isOpen} close={out.close}>
                 <OutModal onOut={onOutCallback} />
+            </Window>
+
+            <Window isOpen={streakRewards.isOpen} close={streakRewards.close}>
+                <StreakRewardsModal
+                    rewards={rewards}
+                    streak={streak}
+                    isLoading={isRewardsLoading}
+                    onClaim={handleClaimReward}
+                />
             </Window>
         </>
     )

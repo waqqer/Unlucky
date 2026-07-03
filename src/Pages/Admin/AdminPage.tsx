@@ -7,7 +7,7 @@ import type { AdminHeaderRef, AdminSections } from "@/widgets/Admin/Components/A
 
 const AdminPage = () => {
     const headerRef = useRef<AdminHeaderRef>(null)
-    const [section, setSection] = useState<AdminSections>("INFO")
+    const [section, setSection] = useState<AdminSections>("CONTROLS")
 
     const onSectionChange = useCallback((s: AdminSections) => {
         setSection(s)

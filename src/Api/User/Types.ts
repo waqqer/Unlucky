@@ -53,3 +53,18 @@ export interface Policy {
     policy_accepts_date: Date
     policy_accepts: boolean
 }
+
+export interface StreakReward {
+    day: number
+    title: string
+    description: string
+    balance: number
+    badge?: string
+    isAvailable: boolean
+    isClaimed: boolean
+}
+
+export interface ClaimStreakRewardResult {
+    reward: StreakReward
+    balance: number
+}

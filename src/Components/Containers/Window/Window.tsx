@@ -23,6 +23,7 @@ const Window = (props: UIModalProps) => {
 
             className="modal-content"
             overlayClassName="modal-overlay"
+            bodyOpenClassName="modal-body-open"
         >
             {children}
         </Modal>

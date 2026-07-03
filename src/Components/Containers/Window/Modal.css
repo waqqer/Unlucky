@@ -1,3 +1,7 @@
+.modal-body-open {
+    overflow: hidden;
+}
+
 .modal-overlay {
     position: fixed;
 
@@ -17,6 +21,8 @@
     justify-content: center;
     align-items: center;
     z-index: 9999999;
+    overflow: hidden;
+    overscroll-behavior: contain;
 
     opacity: 0;
     transition: opacity 300ms ease-in-out;
@@ -47,6 +53,10 @@
     width: 100%;
     max-width: 575px;
     min-width: 400px;
+    max-height: calc(100dvh - 32px);
+    box-sizing: border-box;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 
     border: 1px solid rgb(107, 107, 107);
 

@@ -1,6 +1,7 @@
 import {
     Lucky, 
     Lucky2,
+    Marathon,
     Miner,
     Slots,
     Rocket,
@@ -74,14 +75,14 @@ const BadgesConfig: BadgesConfig = {
             quality: "LEGENDARY"
         },
 
-        /*"marathon": {
+        "marathon": {
             title: "Марафон",
             description: "Сыграть 100 или более игр",
-            icon: Null,
+            icon: Marathon,
             quality: "GOOD"
         },
 
-        "loser": {
+        /*"loser": {
             title: "Неудачник",
             description: "Проиграть 5 или более игр",
             icon: Null,
