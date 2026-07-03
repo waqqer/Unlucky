@@ -1,6 +1,7 @@
 import { $api } from "../Api"
+import connectSocket from "../Wss"
 import type { UUID } from "@/Shared/Types/UserTypes"
-import type { MinerResult, SlotsResult } from "./Types"
+import type { BombsSocketResponse, MinerResult, SlotsResult } from "./Types"
 
 class GameApi {
     public static async playSlots(uuid: string | UUID, bet: number): Promise<SlotsResult> {
@@ -22,6 +23,21 @@ class GameApi {
             bet
         })
         return responce.data
+    }
+
+    public static createBombsSocket() {
+        return connectSocket("/ws/bombs")
+    }
+
+    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:start", payload: { bet: number }): Promise<BombsSocketResponse>
+    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:open", payload: { index: number }): Promise<BombsSocketResponse>
+    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:cashout", payload?: undefined): Promise<BombsSocketResponse>
+    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: string, payload?: object): Promise<BombsSocketResponse> {
+        return new Promise(resolve => {
+            socket.emit(event, payload, (response: BombsSocketResponse) => {
+                resolve(response)
+            })
+        })
     }
 }
 

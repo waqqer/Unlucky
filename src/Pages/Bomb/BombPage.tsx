@@ -1,19 +1,64 @@
-import { memo } from "react"
+import { memo, useCallback, useContext, useEffect, useRef, useState } from "react"
 import Page from "../Page"
 import ParticleBackground from "@/Components/Decorations/ParticleBackground"
 import Section from "@/Components/Containers/Section"
-import GameContainer from "@/widgets/Games/Layout/GameContainer"
+import BombsGameContainer, { type BombsGameContainerRef, type BombsGameState } from "@/widgets/Games/Layout/BombsGameContainer"
 import GameControlls from "@/widgets/Games/Layout/GameControlls"
+import Bombs from "@/widgets/Games/Game/Bombs"
+import type { GameRef } from "@/Shared/Types/GameTypes"
+import { AccountContext } from "@/Context/AccountContext"
 
 const BombPage = () => {
+    const containerRef = useRef<BombsGameContainerRef>(null)
+    const gameRef = useRef<GameRef>(null)
+    const [gameData, setGameData] = useState<BombsGameContainerRef | null>(null)
+    const [isMenuDisabled, setIsMenuDisabled] = useState(false)
+    const [isActionPending, setIsActionPending] = useState(false)
+    const {
+        beginBalanceDeferral,
+        endBalanceDeferral,
+        flushBalanceUpdate
+    } = useContext(AccountContext)
+
+    useEffect(() => {
+        setGameData(containerRef.current)
+    }, [])
+
+    useEffect(() => {
+        beginBalanceDeferral()
+
+        return () => {
+            endBalanceDeferral()
+        }
+    }, [beginBalanceDeferral, endBalanceDeferral])
+
+    const handlePlay = useCallback((bet: number) => {
+        gameRef.current?.play(bet)
+    }, [])
+
+    const handleCashout = useCallback(() => {
+        gameRef.current?.cashout?.()
+    }, [])
+
+    const handleGameStateChange = useCallback((state: BombsGameState) => {
+        setIsMenuDisabled(state !== "IDLE")
+    }, [])
+
     return (
         <Page>
             <ParticleBackground />
 
             <Section justify="center" align="center">
-                <GameControlls openAbout={() => {}} />
-                <GameContainer type="double">
-                </GameContainer>
+                <GameControlls openAbout={() => {}} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
+                <BombsGameContainer
+                    ref={containerRef}
+                    onPlay={handlePlay}
+                    onCashout={handleCashout}
+                    isActionPending={isActionPending}
+                    onStateChange={handleGameStateChange}
+                >
+                    <Bombs data={gameData} ref={gameRef} onPendingChange={setIsActionPending} />
+                </BombsGameContainer>
             </Section>
         </Page>
     )
