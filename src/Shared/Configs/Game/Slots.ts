@@ -1,7 +1,9 @@
 import * as Slots from "@/Shared/Assets/Games/Slots"
+import SpinSound from "@/Shared/Assets/Audio/slot.mp3"
 
 interface SlotsConfig {
     REEL_COUNT: number
+    SPIN_SOUND: string
     SYMBOLS: Record<string, string>
     INITIAL_SYMBOLS: string[],
     SPINNING_TIME: number
@@ -9,6 +11,7 @@ interface SlotsConfig {
 
 const Config: SlotsConfig = {
     REEL_COUNT: 3,
+    SPIN_SOUND: SpinSound,
     SPINNING_TIME: 5000,
 
     SYMBOLS: {
