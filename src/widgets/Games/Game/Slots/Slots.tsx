@@ -259,12 +259,12 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
     }, [animateReel, clearSpinTimers, resetTilt, stopSpinSound, symbols])
 
     const scheduleAutoReroll = useCallback((bet: number) => {
-        if (!data?.isAutoreroll || data.isDemo || data.StateMachine.is("PLAYING")) return
+        if (!data?.isAutoreroll || data.isDemo) return
 
         clearAutoReroll()
         autoRerollTimerRef.current = window.setTimeout(() => {
             autoRerollTimerRef.current = null
-            if (!data.isAutoreroll || data.isDemo || isAnimatingRef.current) return
+            if (!data.isAutoreroll || data.isDemo || isAnimatingRef.current || !data.StateMachine.is("IDLE")) return
             playRef.current(bet)
         }, Config.AUTO_REROLL_DELAY_MS)
     }, [clearAutoReroll, data])

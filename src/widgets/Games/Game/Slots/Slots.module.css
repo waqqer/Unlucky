@@ -12,10 +12,10 @@
 .reels {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(10px, 3vw, 24px);
+    gap: clamp(10px, 1vw, 18px);
     align-items: center;
     justify-content: center;
-    width: min(100%, 650px);
+    width: min(100%, 675px);
     padding: clamp(16px, 5vw, 42px);
     box-sizing: border-box;
     perspective: 700px;
@@ -44,11 +44,12 @@
     background-size: 100% 100%;
     box-shadow:
         0 14px 30px rgb(0 0 0 / 20%);
-    transition: filter 180ms ease;
+    transition: transform 180ms ease, filter 180ms ease;
     transform: translateZ(0);
 }
 
 .stopped {
+    transform: translateZ(0) scale(1.05);
     filter: brightness(1.45);
 }
 
