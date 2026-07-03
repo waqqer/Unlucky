@@ -3,6 +3,8 @@ import image from "@/Shared/Assets/Images/badge_notification.webp"
 import styles from "./BadgeNotification.module.css"
 import { BadgesConfig } from "@/Shared/Configs"
 import { MessengerContext } from "@/Context/MessengerContext"
+import useSound from "@/Hooks/useSound"
+import sound from "@/Shared/Assets/Audio/xp.mp3"
 
 const BadgeNotification = () => {
     const notifRef = useRef<HTMLDivElement>(null)
@@ -10,6 +12,8 @@ const BadgeNotification = () => {
     const removeTimerRef = useRef<number>(null)
     const queueRef = useRef<string[]>([])
     const isShowingRef = useRef(false)
+
+    const { play: playPingSound } = useSound(sound)
 
     const { badgeMessage, setBadgeMessage } = useContext(MessengerContext)
     const [currentBadge, setCurrentBadge] = useState<string | null>(null)
@@ -56,6 +60,8 @@ const BadgeNotification = () => {
     useEffect(() => {
         if (!currentBadge || !achievedBadge) return
 
+        playPingSound()
+
         if (timerRef.current) clearTimeout(timerRef.current)
         if (removeTimerRef.current) clearTimeout(removeTimerRef.current)
 
@@ -73,7 +79,7 @@ const BadgeNotification = () => {
             if (timerRef.current) clearTimeout(timerRef.current)
             if (removeTimerRef.current) clearTimeout(removeTimerRef.current)
         }
-    }, [currentBadge, achievedBadge, showNext])
+    }, [currentBadge, achievedBadge, playPingSound, showNext])
 
     if (!currentBadge || !achievedBadge) {
         return null
