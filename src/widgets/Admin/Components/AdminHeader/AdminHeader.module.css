@@ -19,7 +19,8 @@
 
 .btn {
     border-radius: 30px;
-    width: 100px;
+    min-width: 108px;
+    padding: 0 14px;
     background-color: transparent;
     color: rgb(255, 255, 255);
     font-size: 0.8rem;

@@ -20,5 +20,12 @@ export interface AdminStreakReward {
     isActive: boolean
 }
 
+export interface AdminStats {
+    registeredAccounts: number
+    lossAmount: number
+    winsAmount: number
+    totalAmount: number
+}
+
 export type AdminPromocodePayload = Omit<AdminPromocode, "id" | "usedCount">
 export type AdminStreakRewardPayload = Omit<AdminStreakReward, "id">

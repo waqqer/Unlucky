@@ -1,7 +1,11 @@
 import { $api } from "../Api"
-import type { AdminPromocode, AdminPromocodePayload, AdminStreakReward, AdminStreakRewardPayload } from "./Types"
+import type { AdminPromocode, AdminPromocodePayload, AdminStats, AdminStreakReward, AdminStreakRewardPayload } from "./Types"
 
 class AdminApi {
+    public static async getStats(): Promise<AdminStats> {
+        return (await $api.get<AdminStats>("/private/api/admin/stats")).data
+    }
+
     public static async getPromocodes(): Promise<AdminPromocode[]> {
         return (await $api.get<AdminPromocode[]>("/private/api/admin/promocodes")).data
     }

@@ -1,0 +1,226 @@
+.panel {
+    width: min(1480px, calc(100vw - 32px));
+    max-height: calc(100dvh - 150px);
+    min-height: min(640px, calc(100dvh - 190px));
+    margin-bottom: 90px;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 6px;
+    background: rgba(13, 17, 23, 0.356);
+    color: rgb(230, 237, 243);
+    overflow: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    width: 100%;
+    border-bottom: 1px solid rgb(48, 54, 61);
+    background: rgba(24, 29, 36, 0.356);
+}
+
+.header h1 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.header p {
+    margin-top: 4px;
+    color: rgb(139, 148, 158);
+    font-size: 0.82rem;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 310px;
+}
+
+.message {
+    color: rgb(139, 148, 158);
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.secondary {
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 6px;
+    background: rgb(33, 38, 45);
+    color: rgb(255, 255, 255);
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.secondary:hover:not(:disabled) {
+    background: rgb(48, 54, 61);
+}
+
+.secondary:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    height: 100%;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 20px;
+}
+
+.statCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 190px;
+    padding: 22px;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 6px;
+    background: rgb(13, 17, 23);
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.statCard:hover {
+    border-color: white;
+    transform: translateY(-10px);
+}
+
+.statCard:hover .statIcon {
+    bottom: -5%;
+    right: 0;
+}
+
+.statIcon {
+    position: absolute;
+    bottom: -25%;
+    right: -10%;
+    display: grid;
+    place-items: center;
+    width: 200px;
+    height: 200px;
+    color: rgb(88, 166, 255);
+    transition: all 0.3s ease;
+}
+
+.statIcon > svg {
+    fill: white;
+    height: 100%;
+    width: 100%;
+    opacity: 0.7;
+}
+
+.statCard span {
+    color: rgb(139, 148, 158);
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.statCard > span:not(.statIcon) {
+    padding-right: 54px;
+}
+
+.statCard strong {
+    color: rgb(230, 237, 243);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.statCard p {
+    margin-top: auto;
+    color: rgb(139, 148, 158);
+    font-size: 0.84rem;
+}
+
+@media (max-width: 900px) {
+    .panel {
+        width: calc(100vw - 12px);
+        min-height: calc(100dvh - 150px);
+        max-height: calc(100dvh - 118px);
+        margin-bottom: 76px;
+    }
+
+    .header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    .headerActions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .statsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 12px;
+    }
+}
+
+@media (max-width: 560px) {
+    .panel {
+        width: 100vw;
+        min-height: calc(100dvh - 120px);
+        max-height: calc(100dvh - 96px);
+        border-inline: 0;
+        border-radius: 0;
+    }
+
+    .header h1 {
+        font-size: 0.95rem;
+    }
+
+    .header p {
+        font-size: 0.76rem;
+    }
+
+    .headerActions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .message,
+    .secondary {
+        width: 100%;
+    }
+
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .statCard {
+        min-height: 140px;
+    }
+
+    .statIcon {
+        width: 36px;
+        height: 36px;
+        top: 14px;
+        right: 14px;
+    }
+
+    .statCard strong {
+        font-size: 2.15rem;
+    }
+}

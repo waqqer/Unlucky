@@ -1,0 +1,303 @@
+.panel {
+    width: min(1480px, calc(100vw - 32px));
+    max-height: calc(100dvh - 150px);
+    margin-bottom: 90px;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 6px;
+    background: rgba(13, 17, 23, 0.356);
+    color: rgb(230, 237, 243);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    width: 100%;
+    border-bottom: 1px solid rgb(48, 54, 61);
+    background: rgba(24, 29, 36, 0.356);
+}
+
+.header h1 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.header p {
+    margin-top: 4px;
+    color: rgb(139, 148, 158);
+    font-size: 0.82rem;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 310px;
+}
+
+.message {
+    color: rgb(139, 148, 158);
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.table {
+    display: grid;
+    min-width: 1320px;
+    width: 100%;
+}
+
+.promoGrid {
+    grid-template-columns: minmax(180px, 1.15fr) minmax(120px, 0.75fr) minmax(82px, 0.5fr) minmax(220px, 1.25fr) minmax(220px, 1.25fr) minmax(120px, 0.72fr) minmax(118px, 0.7fr) 116px;
+}
+
+.row,
+.head {
+    display: grid;
+    gap: 10px;
+    align-items: center;
+    min-width: 0;
+}
+
+.head {
+    padding: 10px 18px;
+    color: rgb(139, 148, 158);
+    font-size: 0.74rem;
+    font-weight: 600;
+    background: rgb(13, 17, 23);
+    border-bottom: 1px solid rgb(48, 54, 61);
+    white-space: nowrap;
+}
+
+.head > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row {
+    padding: 10px 18px;
+    border-bottom: 1px solid rgb(33, 38, 45);
+    background: rgb(13, 17, 23);
+}
+
+.row:hover {
+    background: rgb(22, 27, 34);
+}
+
+.input {
+    width: 100%;
+    height: 36px;
+    padding: 6px 10px;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 6px;
+    background: rgb(1, 4, 9);
+    color: rgb(230, 237, 243);
+    outline: none;
+    font-size: 0.86rem;
+    min-width: 0;
+}
+
+.input:focus {
+    border-color: rgb(88, 166, 255);
+    box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.18);
+}
+
+select.input {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 30px;
+    cursor: pointer;
+    background-image:
+        linear-gradient(45deg, transparent 50%, rgb(139, 148, 158) 50%),
+        linear-gradient(135deg, rgb(139, 148, 158) 50%, transparent 50%);
+    background-position:
+        calc(100% - 15px) 15px,
+        calc(100% - 10px) 15px;
+    background-size:
+        5px 5px,
+        5px 5px;
+    background-repeat: no-repeat;
+}
+
+select.input option {
+    background: rgb(13, 17, 23);
+    color: rgb(230, 237, 243);
+}
+
+.badgeSelect {
+    position: relative;
+    width: 100%;
+    height: 36px;
+}
+
+.badgeSelectInput {
+    color: transparent;
+}
+
+.badgeSelectInput:focus {
+    color: transparent;
+}
+
+.badgeSelectInput option {
+    color: rgb(230, 237, 243);
+}
+
+.badgePreview {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 4px;
+    background: rgb(22, 27, 34);
+    color: rgb(139, 148, 158);
+    font-size: 0.78rem;
+    pointer-events: none;
+}
+
+.badgePreview img {
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
+    display: block;
+}
+
+.check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: rgb(139, 148, 158);
+    font-size: 0.82rem;
+}
+
+.btn,
+.secondary,
+.danger {
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 6px;
+    color: rgb(255, 255, 255);
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.btn {
+    background: rgb(35, 134, 54);
+    border: 1px solid rgba(240, 246, 252, 0.1);
+}
+
+.btn:hover:not(:disabled) {
+    background: rgb(46, 160, 67);
+}
+
+.secondary {
+    background: rgb(33, 38, 45);
+    border: 1px solid rgb(48, 54, 61);
+}
+
+.secondary:hover:not(:disabled) {
+    background: rgb(48, 54, 61);
+}
+
+.danger {
+    background: transparent;
+    border: 1px solid rgb(48, 54, 61);
+    color: rgb(248, 81, 73);
+}
+
+.danger:hover:not(:disabled) {
+    background: rgba(248, 81, 73, 0.12);
+    border-color: rgba(248, 81, 73, 0.4);
+}
+
+.btn:disabled,
+.secondary:disabled,
+.danger:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.empty {
+    padding: 22px;
+    color: rgb(139, 148, 158);
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .panel {
+        width: calc(100vw - 12px);
+        max-height: calc(100dvh - 118px);
+        margin-bottom: 76px;
+    }
+
+    .header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    .headerActions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .table {
+        min-width: 1240px;
+    }
+}
+
+@media (max-width: 560px) {
+    .panel {
+        width: 100vw;
+        max-height: calc(100dvh - 96px);
+        border-inline: 0;
+        border-radius: 0;
+    }
+
+    .header h1 {
+        font-size: 0.95rem;
+    }
+
+    .header p {
+        font-size: 0.76rem;
+    }
+
+    .headerActions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .message {
+        grid-column: 1 / -1;
+    }
+
+    .btn,
+    .secondary {
+        width: 100%;
+    }
+
+    .table {
+        min-width: 1200px;
+    }
+
+    .head,
+    .row {
+        padding-inline: 12px;
+    }
+}

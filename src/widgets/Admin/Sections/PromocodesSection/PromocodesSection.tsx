@@ -1,62 +1,82 @@
-import AdminApi, { type AdminStreakReward, type AdminStreakRewardPayload } from "@/Api/Admin"
+import AdminApi, { type AdminPromocode, type AdminPromocodePayload } from "@/Api/Admin"
 import Button from "@/Components/Controlls/Buttons/Button"
 import { BadgesConfig } from "@/Shared/Configs"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import styles from "./AdminTables.module.css"
+import styles from "./PromocodesSection.module.css"
 
-type RewardDraft = Omit<AdminStreakReward, "balance" | "day"> & {
+type PromoDraft = Omit<AdminPromocode, "balance" | "usageLimit"> & {
     balance: number | ""
-    day: number | ""
+    usageLimit: number | ""
     isNew?: boolean
 }
 
 const badgeOptions = Object.entries(BadgesConfig.badges)
 
-const createEmptyReward = (id: number): RewardDraft => ({
+const toInputDate = (value: string) => {
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return ""
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+}
+
+const toPayloadDate = (value: string) => new Date(value).toISOString()
+
+const isValidDate = (value: string) => {
+    return value !== "" && !Number.isNaN(new Date(value).getTime())
+}
+
+const createEmptyPromo = (id: number): PromoDraft => ({
     id,
-    day: 1,
-    title: "",
-    description: "",
+    code: "",
     balance: 0,
-    badge: "",
+    badge: null,
+    startDate: toInputDate(new Date().toISOString()),
+    endDate: toInputDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()),
+    usageLimit: 1,
+    usedCount: 0,
     isActive: true,
     isNew: true
 })
 
-const normalizeReward = (reward: RewardDraft): AdminStreakRewardPayload => ({
-    day: Number(reward.day) || 1,
-    title: reward.title,
-    description: reward.description,
-    balance: Number(reward.balance) || 0,
-    badge: reward.badge?.trim() || undefined,
-    isActive: reward.isActive
+const toDraft = (promo: AdminPromocode): PromoDraft => ({
+    ...promo,
+    startDate: toInputDate(promo.startDate),
+    endDate: toInputDate(promo.endDate)
 })
 
-const sortRewards = <T extends { day: number | "" }>(rewards: T[]) => {
-    return rewards.sort((a, b) => Number(a.day) - Number(b.day))
-}
+const normalizePromo = (promo: PromoDraft): AdminPromocodePayload => ({
+    code: promo.code.trim().toUpperCase(),
+    balance: Number(promo.balance) || 0,
+    badge: promo.badge?.trim() || null,
+    startDate: toPayloadDate(promo.startDate),
+    endDate: toPayloadDate(promo.endDate),
+    usageLimit: Number(promo.usageLimit) || 1,
+    isActive: promo.isActive
+})
 
-const validateReward = (reward: RewardDraft): string | null => {
-    if (Number(reward.day) <= 0) return "День награды должен быть больше 0"
-    if (reward.title.trim() === "") return `Введите название награды за ${reward.day} день`
-    if (reward.description.trim() === "") return `Введите описание награды за ${reward.day} день`
+const validatePromo = (promo: PromoDraft): string | null => {
+    if (promo.code.trim() === "") return "У промокода должен быть код"
+    if (!isValidDate(promo.startDate)) return `Некорректная дата старта у ${promo.code || "нового промокода"}`
+    if (!isValidDate(promo.endDate)) return `Некорректная дата конца у ${promo.code || "нового промокода"}`
+    if (new Date(promo.startDate) >= new Date(promo.endDate)) return `Дата конца должна быть позже старта у ${promo.code}`
+    if (Number(promo.usageLimit) < 1) return `Лимит должен быть больше 0 у ${promo.code}`
+    if (Number(promo.usageLimit) < Number(promo.usedCount)) return `Лимит меньше использований у ${promo.code}`
     return null
 }
 
-const validateRewards = (rewards: RewardDraft[]): string | null => {
-    const invalid = rewards.map(validateReward).find(Boolean)
+const validatePromos = (promos: PromoDraft[]): string | null => {
+    const invalid = promos.map(validatePromo).find(Boolean)
     if (invalid) return invalid
 
-    const days = new Set<number>()
+    const codes = new Set<string>()
 
-    for (const reward of rewards) {
-        const day = Number(reward.day)
+    for (const promo of promos) {
+        const code = promo.code.trim().toUpperCase()
 
-        if (days.has(day)) {
-            return `Награда за ${day} день дублируется в таблице`
+        if (codes.has(code)) {
+            return `Промокод ${code} дублируется в таблице`
         }
 
-        days.add(day)
+        codes.add(code)
     }
 
     return null
@@ -110,10 +130,10 @@ const BadgeSelect = (props: {
     )
 }
 
-const RewardsSection = () => {
+const PromocodesSection = () => {
     const nextIdRef = useRef<number>(-1)
-    const [items, setItems] = useState<RewardDraft[]>([])
-    const [originalItems, setOriginalItems] = useState<RewardDraft[]>([])
+    const [items, setItems] = useState<PromoDraft[]>([])
+    const [originalItems, setOriginalItems] = useState<PromoDraft[]>([])
     const [deletedIds, setDeletedIds] = useState<number[]>([])
     const [message, setMessage] = useState<string>("")
     const [pending, setPending] = useState<boolean>(false)
@@ -125,7 +145,7 @@ const RewardsSection = () => {
     const load = useCallback(async () => {
         setPending(true)
         try {
-            const data = await AdminApi.getStreakRewards()
+            const data = (await AdminApi.getPromocodes()).map(toDraft)
             setItems(data)
             setOriginalItems(data)
             setDeletedIds([])
@@ -142,12 +162,12 @@ const RewardsSection = () => {
         return () => window.clearTimeout(timeoutId)
     }, [load])
 
-    const patchItem = useCallback((id: number, data: Partial<RewardDraft>) => {
+    const patchItem = useCallback((id: number, data: Partial<PromoDraft>) => {
         setItems(prev => prev.map(item => item.id === id ? { ...item, ...data } : item))
     }, [])
 
     const add = useCallback(() => {
-        setItems(prev => sortRewards([...prev, createEmptyReward(nextIdRef.current--)]))
+        setItems(prev => [createEmptyPromo(nextIdRef.current--), ...prev])
     }, [])
 
     const remove = useCallback((id: number) => {
@@ -163,7 +183,7 @@ const RewardsSection = () => {
         setMessage("")
 
         try {
-            const invalid = validateRewards(items)
+            const invalid = validatePromos(items)
             if (invalid) {
                 setMessage(invalid)
                 return
@@ -172,25 +192,32 @@ const RewardsSection = () => {
             const originalById = new Map(originalItems.map(item => [item.id, item]))
 
             const saved = await Promise.all(items.map(item => {
-                const payload = normalizeReward(item)
+                const payload = normalizePromo(item)
 
                 if (item.isNew || item.id < 0) {
-                    return AdminApi.createStreakReward(payload)
+                    return AdminApi.createPromocode(payload)
                 }
 
                 const original = originalById.get(item.id)
                 if (original && JSON.stringify(item) === JSON.stringify(original)) {
-                    return Promise.resolve(item as AdminStreakReward)
+                    return Promise.resolve({
+                        ...item,
+                        startDate: toPayloadDate(item.startDate),
+                        endDate: toPayloadDate(item.endDate)
+                    } as AdminPromocode)
                 }
 
-                return AdminApi.updateStreakReward(item.id, payload)
+                return AdminApi.updatePromocode(item.id, {
+                    ...payload,
+                    usedCount: Number(item.usedCount) || 0
+                })
             }))
 
-            await Promise.all(deletedIds.map(id => AdminApi.deleteStreakReward(id)))
+            await Promise.all(deletedIds.map(id => AdminApi.deletePromocode(id)))
 
-            const sorted = sortRewards(saved)
-            setItems(sorted)
-            setOriginalItems(sorted)
+            const drafts = saved.map(toDraft)
+            setItems(drafts)
+            setOriginalItems(drafts)
             setDeletedIds([])
             setMessage("Изменения сохранены")
         } catch (error) {
@@ -204,8 +231,8 @@ const RewardsSection = () => {
         <div className={styles.panel}>
             <div className={styles.header}>
                 <div>
-                    <h1>Награды огонька</h1>
-                    <p>Редактирование наград за дни стрика с общим сохранением.</p>
+                    <h1>Промокоды</h1>
+                    <p>Редактируй строки локально, затем сохрани изменения одной кнопкой.</p>
                 </div>
 
                 <div className={styles.headerActions}>
@@ -216,21 +243,23 @@ const RewardsSection = () => {
             </div>
 
             <div className={styles.table}>
-                <div className={`${styles.head} ${styles.rewardGrid}`}>
-                    <span>День</span><span>Название</span><span>Описание</span><span>Баланс</span><span>Badge</span><span>Вкл</span><span></span>
+                <div className={`${styles.head} ${styles.promoGrid}`}>
+                    <span>Код</span><span>Баланс</span><span>Badge</span><span>Старт</span><span>Конец</span><span>Лимит</span><span>Вкл / исп.</span><span></span>
                 </div>
 
-                {items.length === 0 && <p className={styles.empty}>Наград пока нет</p>}
+                {items.length === 0 && <p className={styles.empty}>Промокодов пока нет</p>}
 
                 {items.map(item => (
-                    <div className={`${styles.row} ${styles.rewardGrid}`} key={item.id}>
-                        <input className={styles.input} type="number" value={item.day} onChange={e => patchItem(item.id, { day: e.target.value === "" ? "" : Number(e.target.value) })} />
-                        <input className={styles.input} value={item.title} onChange={e => patchItem(item.id, { title: e.target.value })} />
-                        <input className={styles.input} value={item.description} onChange={e => patchItem(item.id, { description: e.target.value })} />
+                    <div className={`${styles.row} ${styles.promoGrid}`} key={item.id}>
+                        <input className={styles.input} value={item.code} onChange={e => patchItem(item.id, { code: e.target.value })} />
                         <input className={styles.input} type="number" value={item.balance} onChange={e => patchItem(item.id, { balance: e.target.value === "" ? "" : Number(e.target.value) })} />
                         <BadgeSelect value={item.badge} onChange={badge => patchItem(item.id, { badge })} />
+                        <input className={styles.input} type="datetime-local" value={item.startDate} onChange={e => patchItem(item.id, { startDate: e.target.value })} />
+                        <input className={styles.input} type="datetime-local" value={item.endDate} onChange={e => patchItem(item.id, { endDate: e.target.value })} />
+                        <input className={styles.input} type="number" value={item.usageLimit} onChange={e => patchItem(item.id, { usageLimit: e.target.value === "" ? "" : Number(e.target.value) })} />
                         <label className={styles.check}>
                             <input type="checkbox" checked={item.isActive} onChange={e => patchItem(item.id, { isActive: e.target.checked })} />
+                            {item.usedCount}
                         </label>
                         <Button className={styles.danger} onClick={() => remove(item.id)} isDisabled={pending}>Удалить</Button>
                     </div>
@@ -240,4 +269,4 @@ const RewardsSection = () => {
     )
 }
 
-export default memo(RewardsSection)
+export default memo(PromocodesSection)
