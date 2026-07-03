@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useContext, useImperativeHandle, useMemo, useState } from "react"
+import { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
 import GameHistory from "../GameHistory"
 import type { Parent } from "@/Shared/Types/PropsTypes"
 import styles from "./GameContainer.module.css"
@@ -42,6 +42,11 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
     const [isAutoreroll, setIsAutoreroll] = useState<boolean>(false)
     const [isDemo, setIsDemo] = useState<boolean>(false)
     const [winAmount, setWinAmount] = useState<number>(0)
+    const betRef = useRef(bet)
+    const isAutorerollRef = useRef(isAutoreroll)
+    const isDemoRef = useRef(isDemo)
+    const stateMachineRef = useRef<StateMachineData<GameState> | null>(null)
+    const autorerollTimerRef = useRef<number | null>(null)
 
     const { balance } = useContext(AccountContext)
     const { isAuth } = useContext(AuthContext)
@@ -54,13 +59,36 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         onChange: stateChangeHandler
     })
 
+    useEffect(() => {
+        betRef.current = bet
+        isAutorerollRef.current = isAutoreroll
+        isDemoRef.current = isDemo
+        stateMachineRef.current = StateMachine
+    }, [bet, isAutoreroll, isDemo, StateMachine])
+
+    useEffect(() => {
+        return () => {
+            if (autorerollTimerRef.current) {
+                window.clearTimeout(autorerollTimerRef.current)
+            }
+        }
+    }, [])
+
     useImperativeHandle(ref, () => ({
-        bet: Number(bet),
-        isAutoreroll,
-        isDemo,
-        StateMachine,
+        get bet() {
+            return Number(betRef.current)
+        },
+        get isAutoreroll() {
+            return isAutorerollRef.current
+        },
+        get isDemo() {
+            return isDemoRef.current
+        },
+        get StateMachine() {
+            return stateMachineRef.current || StateMachine
+        },
         setWinAmount
-    }))
+    }), [StateMachine])
 
     const choosePresetHandle = useCallback((value: number) => {
         setBet(String(value))
@@ -86,7 +114,19 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
 
     const onWinScreenEnd = useCallback(() => {
         StateMachine.changeState("IDLE")
-    }, [StateMachine])
+
+        if (!isAutorerollRef.current || isDemoRef.current) return
+
+        if (autorerollTimerRef.current) {
+            window.clearTimeout(autorerollTimerRef.current)
+        }
+
+        autorerollTimerRef.current = window.setTimeout(() => {
+            autorerollTimerRef.current = null
+            if (!isAutorerollRef.current || isDemoRef.current) return
+            onPlay?.(Number(betRef.current))
+        }, 420)
+    }, [StateMachine, onPlay])
 
     return (
         <>

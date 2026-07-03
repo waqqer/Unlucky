@@ -118,7 +118,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
     const audioStopTimersRef = useRef(new Map<HTMLAudioElement, number>())
 
     const { account } = useContext(AuthContext)
-    const { flushBalanceUpdate, queueBalanceUpdate } = useContext(AccountContext)
+    const { flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
 
     const makePixelTexture = useCallback((texture: Texture) => {
         const source = texture.source as Texture["source"] & {
@@ -852,20 +852,26 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         if (!runtime) return
 
         const playId = ++playIdRef.current
+        const betAmount = bet ?? data.bet
+        let isBetDebited = false
         data.StateMachine.changeState("PLAYING")
 
         try {
-            const betAmount = bet ?? data.bet
+            incrementBalance(-betAmount)
+            isBetDebited = true
             const result = await GameApi.playMiner(account.UUID, betAmount)
             if (playId !== playIdRef.current) return
             queueBalanceUpdate(result.newBalance)
             await playRound(result, playId, betAmount)
         } catch {
+            if (isBetDebited) {
+                incrementBalance(betAmount)
+            }
             runtime.isAnimating = false
             data.StateMachine.changeState("IDLE")
             toast.error("Не удалось запустить Майнер")
         }
-    }, [account, data, playRound, queueBalanceUpdate])
+    }, [account, data, incrementBalance, playRound, queueBalanceUpdate])
 
     useImperativeHandle(ref, () => ({ play }), [play])
 
