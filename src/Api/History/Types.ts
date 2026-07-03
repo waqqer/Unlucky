@@ -1,10 +1,11 @@
 export interface GameHistory {
     result: "WIN" | "LOSE"
-    date: Date
+    date: string
     amount: number
     user: {
         name: string
         uuid: string
+        badge: string
     }
 }
 

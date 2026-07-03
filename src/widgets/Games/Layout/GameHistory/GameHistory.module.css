@@ -24,6 +24,20 @@
     scrollbar-color: rgb(43, 43, 43) transparent;
 }
 
+.message {
+    color: rgb(255 255 255 / 58%);
+    text-align: center;
+    padding-block: 18px;
+    animation: history-message 0.25s ease;
+}
+
+@keyframes history-message {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
 @media (max-width: 1040px) {
     .history {
         display: none;

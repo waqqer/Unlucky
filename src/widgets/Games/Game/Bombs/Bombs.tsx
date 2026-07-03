@@ -487,6 +487,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
         if (!isDemo) {
             flushBalanceUpdate()
+            data?.pushHistory(Math.trunc(state.currentWin - state.bet))
         }
 
         if (state.isWin && !isDemo) {

@@ -268,7 +268,3 @@
 .LOSE {
     color: rgb(255, 156, 172) !important;
 }
-
-.LOSE::before {
-    content: "-";
-}

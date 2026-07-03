@@ -60,7 +60,7 @@ const SlotsPage = () => {
 
                 <Section justify="center" align="center">
                     <GameControlls openAbout={about.open} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
-                    <GameContainer type="double" ref={containerRef} onPlay={handlePlay} onStateChange={handleGameStateChange}>
+                    <GameContainer gameName="SLOTS" type="double" ref={containerRef} onPlay={handlePlay} onStateChange={handleGameStateChange}>
                         <Slots data={gameData} ref={gameRef} />
                     </GameContainer>
                 </Section>

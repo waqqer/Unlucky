@@ -2,30 +2,34 @@ import { memo } from "react"
 import styles from "./HistoryItem.module.css"
 import Head from "@/Components/Decorations/Head"
 import type { GameHistory } from "@/Api/History"
+import Username from "@/Components/Info/Username"
 
 interface UIHistoryItemProps {
     data: GameHistory
+    isFresh?: boolean
 }
 
 const HistoryItem = (props: UIHistoryItemProps) => {
     const {
-        data
+        data,
+        isFresh = false
     } = props
+    const amount = Math.abs(data.amount)
+    const sign = data.amount >= 0 ? "+" : "-"
 
     return (
-        <div className={styles.history}>
+        <div className={`${styles.history} ${isFresh ? styles.fresh : ""}`}>
             <div className={`${styles.block} ${styles.user}`}>
                 <Head size={48} uuid={data.user.uuid || "steve"} />
-                <h4>{data.user.name || "Username"}</h4>
+                <Username User={{
+                    current_badge: data.user.badge,
+                    name: data.user.name
+                }}/>
             </div>
 
             <div className={`${styles.block} ${styles.game}`}>
                 <h3>{data.result === "WIN" ? "Победа" : "Поражение"}</h3>
-                {data.result === "WIN" ?
-                    <p>+400 Aр</p>
-                    :
-                    <p>-400 Aр</p>
-                }
+                <p className={data.result === "WIN" ? styles.win : styles.lose}>{sign}{amount} Ар</p>
             </div>
         </div>
     )

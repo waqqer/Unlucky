@@ -58,6 +58,7 @@ const BombPage = () => {
                 <Section justify="center" align="center">
                     <GameControlls openAbout={about.open} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
                     <BombsGameContainer
+                        gameName="BOMBS"
                         ref={containerRef}
                         onPlay={handlePlay}
                         onCashout={handleCashout}

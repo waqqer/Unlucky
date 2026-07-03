@@ -61,7 +61,7 @@ const MinerPage = () => {
 
                 <Section justify="center" align="center">
                     <GameControlls openAbout={about.open} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
-                    <GameContainer type="triple" demo={false} autoreroll={false} ref={containerRef} onPlay={handlePlay} onStateChange={handleGameStateChange}>
+                    <GameContainer gameName="MINER" type="triple" demo={false} autoreroll={false} ref={containerRef} onPlay={handlePlay} onStateChange={handleGameStateChange}>
                         <Miner data={gameData} ref={gameRef} />
                     </GameContainer>
                 </Section>

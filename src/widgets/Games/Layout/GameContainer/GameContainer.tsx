@@ -12,6 +12,7 @@ import { AuthContext } from "@/Context/AuthContext"
 import useStateMachine, { type StateMachineData } from "@/Hooks/useStateMachine"
 import VictoryScreen from "../../Animations/VictoryScreen"
 import type { GameTitle } from "@/Api/History"
+import useGameHistory from "@/Hooks/useGameHistory"
 
 interface UIGameContainerProps extends Parent {
     type?: "double" | "triple"
@@ -30,6 +31,7 @@ export interface GameContainerRef {
     isAutoreroll: boolean
     StateMachine: StateMachineData<GameState>
     setWinAmount: (value: number) => void
+    pushHistory: (amount: number) => void
 }
 
 const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props, ref) => {
@@ -55,6 +57,12 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
 
     const { balance } = useContext(AccountContext)
     const { isAuth } = useContext(AuthContext)
+    const {
+        history,
+        isHistoryLoading,
+        historyError,
+        pushHistory
+    } = useGameHistory(gameName)
 
     const stateChangeHandler = useCallback((state: GameState) => {
         console.log(state)
@@ -93,8 +101,9 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         get StateMachine() {
             return stateMachineRef.current || StateMachine
         },
-        setWinAmount
-    }), [StateMachine])
+        setWinAmount,
+        pushHistory
+    }), [StateMachine, pushHistory])
 
     const choosePresetHandle = useCallback((value: number) => {
         setBet(String(value))
@@ -138,7 +147,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         <>
             <VictoryScreen isActive={StateMachine.is("WIN")} win={winAmount} onEnd={onWinScreenEnd} />
             <div className={`${styles["game-box"]} ${styles[type]}`}>
-                <GameHistory />
+                <GameHistory items={history} isLoading={isHistoryLoading} error={historyError} />
 
                 {type === "double" ?
                     <div className={styles["d-box"]}>

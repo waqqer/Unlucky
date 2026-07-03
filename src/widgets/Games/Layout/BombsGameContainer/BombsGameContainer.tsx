@@ -10,6 +10,8 @@ import type { Parent } from "@/Shared/Types/PropsTypes"
 import VictoryScreen from "../../Animations/VictoryScreen"
 import GameHistory from "../GameHistory"
 import styles from "./BombsGameContainer.module.css"
+import type { GameTitle } from "@/Api/History"
+import useGameHistory from "@/Hooks/useGameHistory"
 
 export type BombsGameState = "IDLE" | "PLAYING" | "WIN"
 
@@ -18,6 +20,7 @@ interface UIBombsGameContainerProps extends Parent {
     onCashout?: () => void
     isActionPending?: boolean
     onStateChange?: (state: BombsGameState) => void
+    gameName: GameTitle
 }
 
 export interface BombsGameContainerRef {
@@ -25,6 +28,7 @@ export interface BombsGameContainerRef {
     isDemo: boolean
     StateMachine: StateMachineData<BombsGameState>
     setWinAmount: (value: number) => void
+    pushHistory: (amount: number) => void
 }
 
 const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContainerProps>((props, ref) => {
@@ -33,7 +37,8 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
         onPlay,
         onCashout,
         isActionPending = false,
-        onStateChange
+        onStateChange,
+        gameName
     } = props
 
     const [bet, setBet] = useState("25")
@@ -45,6 +50,12 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
 
     const { balance } = useContext(AccountContext)
     const { isAuth } = useContext(AuthContext)
+    const {
+        history,
+        isHistoryLoading,
+        historyError,
+        pushHistory
+    } = useGameHistory(gameName)
 
     const stateChangeHandler = useCallback((state: BombsGameState) => {
         onStateChange?.(state)
@@ -70,8 +81,9 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
         get StateMachine() {
             return stateMachineRef.current || StateMachine
         },
-        setWinAmount
-    }), [StateMachine])
+        setWinAmount,
+        pushHistory
+    }), [StateMachine, pushHistory])
 
     const isPlaying = StateMachine.is("PLAYING")
     const buttonText = isPlaying ? "Забрать" : "Играть"
@@ -101,7 +113,7 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
         <>
             <VictoryScreen isActive={StateMachine.is("WIN") && !isDemo} win={winAmount} onEnd={handleVictoryEnd} />
             <div className={styles["game-box"]}>
-                <GameHistory />
+                <GameHistory items={history} isLoading={isHistoryLoading} error={historyError} />
 
                 <div className={styles.game}>
                     {children}
