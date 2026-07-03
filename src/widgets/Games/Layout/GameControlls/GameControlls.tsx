@@ -5,16 +5,18 @@ import LinkedButton from "@/Components/Controlls/Buttons/LinkedButton"
 
 interface UIGameControllsProps {
     openAbout: () => void
+    onMenuClick?: () => void
 }
 
 const GameControlls = (props: UIGameControllsProps) => {
     const {
-        openAbout
+        openAbout,
+        onMenuClick
     } = props
 
     return (
         <div className={styles.controlls}>
-            <LinkedButton to="/" icon={false} type="SECONDARY" sound>Меню</LinkedButton>
+            <LinkedButton to="/" icon={false} type="SECONDARY" sound onClick={onMenuClick}>Меню</LinkedButton>
             <Button onClick={openAbout} sound>О игре</Button>
         </div>
     )

@@ -25,6 +25,7 @@ type BlockCell = {
     hp: number
     maxHp: number
     sprite: CellSprite
+    border: Graphics
     crack: Sprite
 }
 
@@ -34,6 +35,7 @@ type Runtime = {
     slotsLayer: Container
     blocksLayer: Container
     chestsLayer: Container
+    pickaxesLayer: Container
     effectsLayer: Container
     labelLayer: Container
     pickaxeSlots: PickaxeSlot[]
@@ -52,14 +54,25 @@ type Runtime = {
 }
 
 const CHEST_ROWS = 1
+const PICKAXES_SECTION_GAP = 40
 const SECTION_GAP = 18
 const WORLD_WIDTH = Config.COLS * Config.CELL_SIZE_PX + (Config.COLS - 1) * Config.GRID_GAP_PX
-const PICKAXES_HEIGHT = Config.PICKAXES_ROWS * Config.CELL_SIZE_PX + (Config.PICKAXES_ROWS - 1) * Config.GRID_GAP_PX
+const PICKAXES_HEIGHT = Config.PICKAXES_ROWS * Config.CELL_SIZE_PX + (Config.PICKAXES_ROWS - 1) * Config.PICKAXES_GRID_GAP_Y_PX
 const BLOCKS_HEIGHT = Config.ROWS * Config.CELL_SIZE_PX + (Config.ROWS - 1) * Config.GRID_GAP_PX
 const CHESTS_HEIGHT = CHEST_ROWS * Config.CELL_SIZE_PX
-const BLOCKS_Y = PICKAXES_HEIGHT + SECTION_GAP
+const BLOCKS_Y = PICKAXES_HEIGHT + PICKAXES_SECTION_GAP
 const CHESTS_Y = BLOCKS_Y + BLOCKS_HEIGHT + SECTION_GAP
 const WORLD_HEIGHT = CHESTS_Y + CHESTS_HEIGHT
+const PADDED_WORLD_WIDTH = WORLD_WIDTH + Config.STAGE_PADDING_PX * 2
+const PADDED_WORLD_HEIGHT = WORLD_HEIGHT + Config.STAGE_PADDING_PX * 2
+const BLOCK_BORDER_ALPHA = 0.25
+const BLOCK_REVEAL_STAGGER_SEC = 0.028
+const BLOCK_REVEAL_DURATION_SEC = 0.24
+const BLOCK_REVEAL_BOUNCE_PX = 9
+const PICKAXE_SLOT_SCALE = 0.71
+const PICKAXE_HIT_CENTER_OFFSET_Y = Config.CELL_SIZE_PX * PICKAXE_SLOT_SCALE * 0.2
+const SPIN_SOUND_MIN_INTERVAL_MS = 80
+const SPIN_SOUND_PLAY_MS = 38
 
 const wait = (ms: number) => new Promise(resolve => window.setTimeout(resolve, ms))
 
@@ -73,9 +86,11 @@ const tweenTo = (target: gsap.TweenTarget, vars: gsap.TweenVars) => new Promise<
     })
 })
 
-const getCellPosition = (row: number, col: number, yOffset = 0) => ({
+const randomRange = (min: number, max: number) => min + Math.random() * Math.max(0, max - min)
+
+const getCellPosition = (row: number, col: number, yOffset = 0, rowGap = Config.GRID_GAP_PX) => ({
     x: col * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX),
-    y: yOffset + row * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX)
+    y: yOffset + row * (Config.CELL_SIZE_PX + rowGap)
 })
 
 const formatMultiplier = (value: number) => {
@@ -83,21 +98,63 @@ const formatMultiplier = (value: number) => {
     return `x${rounded.toFixed(2).replace(/\.?0+$/, "")}`
 }
 
+const formatWinAmount = (bet: number, multiplier: number) => {
+    return Math.max(0, Math.floor(bet * multiplier * 100) / 100)
+}
+
+const pixelAsset = (src: string) => ({
+    src,
+    data: {
+        scaleMode: "nearest" as const
+    }
+})
+
 const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
     const { data } = props
     const hostRef = useRef<HTMLDivElement>(null)
     const runtimeRef = useRef<Runtime | null>(null)
     const fieldRef = useRef<Field | null>(null)
     const playIdRef = useRef(0)
+    const audioStopTimersRef = useRef(new Map<HTMLAudioElement, number>())
 
     const { account } = useContext(AuthContext)
-    const { setBalanceTo } = useContext(AccountContext)
+    const { flushBalanceUpdate, queueBalanceUpdate } = useContext(AccountContext)
 
-    const getTexture = useCallback((src: string) => {
-        return Assets.get<Texture>(src) || Texture.from(src)
+    const makePixelTexture = useCallback((texture: Texture) => {
+        const source = texture.source as Texture["source"] & {
+            scaleMode?: "nearest" | "linear"
+            style?: {
+                scaleMode?: "nearest" | "linear"
+                update?: () => void
+            }
+        }
+
+        source.scaleMode = "nearest"
+        if (source.style) {
+            source.style.scaleMode = "nearest"
+            source.style.update?.()
+        }
+
+        return texture
     }, [])
 
-    const playSound = useCallback((src?: string) => {
+    const getTexture = useCallback((src: string) => {
+        return makePixelTexture(Assets.get<Texture>(src) || Texture.from(src))
+    }, [makePixelTexture])
+
+    const stopAudio = useCallback((audio: HTMLAudioElement) => {
+        const existingTimer = audioStopTimersRef.current.get(audio)
+        if (existingTimer) {
+            window.clearTimeout(existingTimer)
+            audioStopTimersRef.current.delete(audio)
+        }
+
+        audio.volume = 0
+        audio.pause()
+        audio.currentTime = 0
+    }, [])
+
+    const playSound = useCallback((src?: string, maxDurationMs?: number) => {
         const runtime = runtimeRef.current
         if (!runtime || !src) return
 
@@ -114,10 +171,25 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         const audio = pool?.find(item => item.paused || item.ended) || pool?.[0]
         if (!audio) return
 
+        stopAudio(audio)
         audio.currentTime = 0
         audio.volume = Config.SOUND_VOLUME
         void audio.play().catch(() => undefined)
-    }, [])
+
+        if (maxDurationMs) {
+            const timer = window.setTimeout(() => {
+                stopAudio(audio)
+            }, maxDurationMs)
+            audioStopTimersRef.current.set(audio, timer)
+        }
+    }, [stopAudio])
+
+    const stopSound = useCallback((src?: string) => {
+        const runtime = runtimeRef.current
+        if (!runtime || !src) return
+
+        runtime.audioPools.get(src)?.forEach(stopAudio)
+    }, [stopAudio])
 
     const createSprite = useCallback((src: string, x: number, y: number, layer: Container, alpha = 1): CellSprite => {
         const sprite = new Sprite(getTexture(src)) as CellSprite
@@ -132,6 +204,29 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         return sprite
     }, [getTexture])
 
+    const createBlockBorder = useCallback((x: number, y: number, layer: Container) => {
+        const border = new Graphics()
+            .rect(0.5, 0.5, Config.CELL_SIZE_PX - 1, Config.CELL_SIZE_PX - 1)
+            .stroke({ color: 0xffffff, alpha: BLOCK_BORDER_ALPHA, width: 3 })
+
+        border.x = x
+        border.y = y
+        layer.addChild(border)
+        return border
+    }, [])
+
+    const setupPickaxeSprite = useCallback((sprite: Sprite, x: number, y: number, scale = PICKAXE_SLOT_SCALE) => {
+        sprite.anchor.set(0.5)
+        sprite.x = x + Config.CELL_SIZE_PX / 2
+        sprite.y = y + Config.CELL_SIZE_PX / 2
+        sprite.width = Config.CELL_SIZE_PX * scale
+        sprite.height = Config.CELL_SIZE_PX * scale
+        sprite.rotation = 0
+        sprite.alpha = 1
+        sprite.visible = true
+        return sprite
+    }, [])
+
     const resizeScene = useCallback(() => {
         const host = hostRef.current
         const runtime = runtimeRef.current
@@ -139,11 +234,14 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
 
         const width = Math.max(1, host.clientWidth)
         const height = Math.max(1, host.clientHeight)
-        const scale = Math.min(width / WORLD_WIDTH, height / WORLD_HEIGHT)
+        const scale = Math.min(width / PADDED_WORLD_WIDTH, height / PADDED_WORLD_HEIGHT)
 
+        runtime.app.renderer.resize(width, height)
+        runtime.app.canvas.style.width = `${width}px`
+        runtime.app.canvas.style.height = `${height}px`
         runtime.root.scale.set(scale)
-        runtime.root.x = (width - WORLD_WIDTH * scale) / 2
-        runtime.root.y = (height - WORLD_HEIGHT * scale) / 2
+        runtime.root.x = (width - PADDED_WORLD_WIDTH * scale) / 2 + Config.STAGE_PADDING_PX * scale
+        runtime.root.y = (height - PADDED_WORLD_HEIGHT * scale) / 2 + Config.STAGE_PADDING_PX * scale
     }, [])
 
     const cleanupScene = useCallback(() => {
@@ -153,25 +251,37 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         runtime.spinTweens.forEach(tween => tween.kill())
         runtime.glowTweens.forEach(tween => tween.kill())
         gsap.killTweensOf(runtime.root.children)
-        runtime.audioPools.forEach(pool => pool.forEach(audio => {
-            audio.pause()
-            audio.currentTime = 0
-        }))
-    }, [])
+        audioStopTimersRef.current.forEach(timer => window.clearTimeout(timer))
+        audioStopTimersRef.current.clear()
+        runtime.audioPools.forEach(pool => pool.forEach(stopAudio))
+    }, [stopAudio])
 
-    const spawnParticles = useCallback((x: number, y: number, color: string, count = 14, glowTexture?: string) => {
+    const spawnParticles = useCallback((
+        x: number,
+        y: number,
+        color: string,
+        count = 14,
+        glowTexture?: string,
+        glowSizeConfig?: Pick<typeof Config.CHEST_GLOW_DEFAULTS, "sizeMinPx" | "sizeRandomPx">
+    ) => {
         const runtime = runtimeRef.current
         if (!runtime) return
 
+        const particleSizeConfig = glowSizeConfig || Config.CHEST_GLOW_DEFAULTS
+
         for (let index = 0; index < count; index++) {
+            const size = 4 + Math.random() * 4
             const particle = glowTexture
                 ? new Sprite(getTexture(glowTexture))
-                : new Graphics().circle(0, 0, 3 + Math.random() * 3).fill(color)
+                : new Graphics().rect(-size / 2, -size / 2, size, size).fill(color)
 
             particle.x = x + Config.CELL_SIZE_PX / 2
             particle.y = y + Config.CELL_SIZE_PX / 2
-            particle.alpha = 0.95
-            particle.scale.set(glowTexture ? 0.22 + Math.random() * 0.22 : 1)
+            particle.alpha = randomRange(Config.PARTICLE_ALPHA_MIN, Config.PARTICLE_ALPHA_MAX)
+            particle.rotation = Math.random() * Math.PI
+            particle.scale.set(glowTexture
+                ? (particleSizeConfig.sizeMinPx + Math.random() * particleSizeConfig.sizeRandomPx) / Config.CELL_SIZE_PX
+                : 1)
             if (particle instanceof Sprite) {
                 particle.anchor.set(0.5)
                 particle.tint = color
@@ -201,16 +311,31 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
 
     const shakeBlock = useCallback(async (block: BlockCell, broke: boolean) => {
         const amplitude = broke ? 2 : 4
-        await tweenTo(block.sprite, {
-            x: block.sprite.baseX + amplitude,
-            y: block.sprite.baseY - 1,
+        const offset = { x: 0, y: 0 }
+        const setBlockOffset = () => {
+            block.sprite.x = block.sprite.baseX + offset.x
+            block.sprite.y = block.sprite.baseY + offset.y
+            block.border.x = block.sprite.baseX + offset.x
+            block.border.y = block.sprite.baseY + offset.y
+            block.crack.x = block.sprite.baseX + offset.x
+            block.crack.y = block.sprite.baseY + offset.y
+        }
+
+        await tweenTo(offset, {
+            x: amplitude,
+            y: -1,
             yoyo: true,
             repeat: 3,
             duration: 0.035,
             ease: "sine.inOut",
+            onUpdate: setBlockOffset,
             onComplete: () => {
                 block.sprite.x = block.sprite.baseX
                 block.sprite.y = block.sprite.baseY
+                block.border.x = block.sprite.baseX
+                block.border.y = block.sprite.baseY
+                block.crack.x = block.sprite.baseX
+                block.crack.y = block.sprite.baseY
             }
         })
     }, [])
@@ -238,7 +363,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
                 particle.x = px
                 particle.y = py
                 particle.tint = chestConfig.color
-                particle.alpha = 0.85
+                particle.alpha = randomRange(glowConfig.alphaMin, glowConfig.alphaMax)
                 particle.scale.set((glowConfig.sizeMinPx + Math.random() * glowConfig.sizeRandomPx) / Config.CELL_SIZE_PX)
                 runtime.effectsLayer.addChild(particle)
 
@@ -270,6 +395,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         runtime.slotsLayer.removeChildren()
         runtime.blocksLayer.removeChildren()
         runtime.chestsLayer.removeChildren()
+        runtime.pickaxesLayer.removeChildren()
         runtime.effectsLayer.removeChildren()
         runtime.labelLayer.removeChildren()
 
@@ -278,16 +404,12 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
 
         for (let row = 0; row < Config.PICKAXES_ROWS; row++) {
             for (let col = 0; col < Config.COLS; col++) {
-                const { x, y } = getCellPosition(row, col)
+                const { x, y } = getCellPosition(row, col, 0, Config.PICKAXES_GRID_GAP_Y_PX)
                 const slot = createSprite(Config.SLOT_TEXTURE, x, y, runtime.slotsLayer)
                 const key = field?.pickaxes[row]?.[col] || pickaxeKeys[(row * Config.COLS + col) % pickaxeKeys.length]
-                const sprite = key ? createSprite(Config.PICKAXES[key]?.texture, x, y, runtime.slotsLayer) : null
+                const sprite = key ? createSprite(Config.PICKAXES[key]?.texture, x, y, runtime.pickaxesLayer) : null
                 if (sprite) {
-                    sprite.anchor.set(0.5)
-                    sprite.x += Config.CELL_SIZE_PX / 2
-                    sprite.y += Config.CELL_SIZE_PX / 2
-                    sprite.width = Config.CELL_SIZE_PX * 0.76
-                    sprite.height = Config.CELL_SIZE_PX * 0.76
+                    setupPickaxeSprite(sprite, x, y)
                 }
                 runtime.pickaxeSlots.push({ slot, sprite })
             }
@@ -304,8 +426,38 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
                 const cfg = Config.BLOCKS[key]
                 const { x, y } = getCellPosition(row, col, BLOCKS_Y)
                 const sprite = createSprite(cfg.texture, x, y, runtime.blocksLayer)
+                const border = createBlockBorder(x, y, runtime.blocksLayer)
                 const crack = createSprite(Config.BREAK_TEXTURE[0], x, y, runtime.blocksLayer, 0)
-                runtime.blocks[row][col] = { key, hp: cfg.health, maxHp: cfg.health, sprite, crack }
+                const revealOrder = (Config.ROWS - 1 - row) * Config.COLS + col
+                const revealState = { t: 0 }
+                const applyReveal = () => {
+                    const smoothed = revealState.t * revealState.t * (3 - 2 * revealState.t)
+                    const offsetY = -Math.sin(Math.PI * revealState.t) * BLOCK_REVEAL_BOUNCE_PX
+                    sprite.alpha = smoothed
+                    border.alpha = smoothed
+                    crack.alpha = 0
+                    sprite.y = y + offsetY
+                    border.y = y + offsetY
+                    crack.y = y + offsetY
+                }
+
+                applyReveal()
+                gsap.to(revealState, {
+                    t: 1,
+                    delay: revealOrder * BLOCK_REVEAL_STAGGER_SEC,
+                    duration: BLOCK_REVEAL_DURATION_SEC,
+                    ease: "none",
+                    onUpdate: applyReveal,
+                    onComplete: () => {
+                        sprite.alpha = 1
+                        border.alpha = 1
+                        crack.alpha = 0
+                        sprite.y = y
+                        border.y = y
+                        crack.y = y
+                    }
+                })
+                runtime.blocks[row][col] = { key, hp: cfg.health, maxHp: cfg.health, sprite, border, crack }
             }
         }
 
@@ -319,7 +471,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         }
 
         resizeScene()
-    }, [addChestGlow, cleanupScene, createSprite, resizeScene])
+    }, [addChestGlow, cleanupScene, createBlockBorder, createSprite, resizeScene, setupPickaxeSprite])
 
     const openChest = useCallback(async (col: number) => {
         const runtime = runtimeRef.current
@@ -331,6 +483,11 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         const cfg = Config.CHESTS[chest.data.quality] || Config.CHESTS.common
         chest.opened = true
         chest.sprite.texture = getTexture(cfg.opened_texture)
+        chest.sprite.width = Config.CELL_SIZE_PX
+        chest.sprite.height = Config.CELL_SIZE_PX
+        chest.sprite.anchor.set(0.5)
+        chest.sprite.x = chest.sprite.baseX + Config.CELL_SIZE_PX / 2
+        chest.sprite.y = chest.sprite.baseY + Config.CELL_SIZE_PX / 2
         playSound(cfg.sound.opening)
 
         const label = new Text({
@@ -351,16 +508,39 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         runtime.labelLayer.addChild(label)
         chest.label = label
 
-        spawnParticles(chest.sprite.baseX, chest.sprite.baseY, cfg.color, cfg.glow ? 20 : 10, cfg.glow ? cfg.glow_texture : undefined)
+        spawnParticles(
+            chest.sprite.baseX,
+            chest.sprite.baseY,
+            cfg.color,
+            cfg.glow ? 20 : 10,
+            cfg.glow ? cfg.glow_texture : undefined,
+            { ...Config.CHEST_GLOW_DEFAULTS, ...cfg.glow_config }
+        )
 
+        const chestRestY = chest.sprite.baseY + Config.CELL_SIZE_PX / 2
+        const scaleX = chest.sprite.scale.x
+        const scaleY = chest.sprite.scale.y
         await Promise.all([
-            tweenTo(chest.sprite.scale, {
-                x: 1.12,
-                y: 1.12,
+            tweenTo(chest.sprite, {
+                y: chestRestY - 9,
                 yoyo: true,
                 repeat: 1,
                 duration: Config.CHEST_OPEN_DURATION_MS / 2000,
-                ease: "back.out(2)"
+                ease: "sine.out",
+                onComplete: () => {
+                    chest.sprite.y = chestRestY
+                }
+            }),
+            tweenTo(chest.sprite.scale, {
+                x: scaleX * 1.1,
+                y: scaleY * 1.1,
+                yoyo: true,
+                repeat: 1,
+                duration: Config.CHEST_OPEN_DURATION_MS / 2000,
+                ease: "sine.out",
+                onComplete: () => {
+                    chest.sprite.scale.set(scaleX, scaleY)
+                }
             }),
             tweenTo(label, {
                 y: chest.sprite.baseY - 14,
@@ -377,6 +557,30 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         ])
     }, [getTexture, playSound, spawnParticles])
 
+    const bouncePickaxe = useCallback(async (pickaxe: Sprite, groundY: number, rotation: number) => {
+        const riseY = groundY - Config.CELL_SIZE_PX * 0.72
+        const halfDuration = Config.PICKAXE_BOUNCE_DURATION_MS / 2400
+
+        await tweenTo(pickaxe, {
+            keyframes: [
+                {
+                    y: riseY,
+                    rotation: rotation + Math.PI,
+                    duration: halfDuration,
+                    ease: "sine.out"
+                },
+                {
+                    y: groundY,
+                    rotation: rotation + Math.PI * 2,
+                    duration: halfDuration,
+                    ease: "sine.in"
+                }
+            ]
+        })
+
+        return pickaxe.rotation
+    }, [])
+
     const runPickaxe = useCallback(async (slotIndex: number, field: Field) => {
         const runtime = runtimeRef.current
         if (!runtime) return
@@ -391,7 +595,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         let hp = pickaxeCfg.health
         const pickaxe = slot.sprite
         const startX = col * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX) + Config.CELL_SIZE_PX / 2
-        let currentY = slotRow * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX) + Config.CELL_SIZE_PX / 2
+        let currentY: number
         let rotation = 0
 
         for (let row = 0; row < Config.ROWS; row++) {
@@ -399,7 +603,8 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
             if (!block || hp <= 0) continue
 
             const blockCfg = Config.BLOCKS[block.key]
-            const targetY = BLOCKS_Y + row * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX) + Config.CELL_SIZE_PX * 0.1
+            const blockTopY = BLOCKS_Y + row * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX)
+            const targetY = blockTopY - PICKAXE_HIT_CENTER_OFFSET_Y
 
             await tweenTo(pickaxe, {
                 y: targetY,
@@ -425,6 +630,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
                 if (brokeBlock) {
                     playSound(blockCfg.sound.break)
                     block.sprite.destroy()
+                    block.border.destroy()
                     block.crack.destroy()
                     runtime.blocks[row][col] = null
                 }
@@ -439,101 +645,178 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
                 }
 
                 if (brokeBlock) {
-                    await tweenTo(pickaxe, {
-                        y: currentY - Config.CELL_SIZE_PX * 0.34,
-                        rotation: rotation + Math.PI * 0.44,
-                        yoyo: true,
-                        repeat: 1,
-                        duration: 0.075,
-                        ease: "sine.out"
-                    })
-                    currentY = pickaxe.y
-                    rotation = pickaxe.rotation
                     break
                 }
 
-                await tweenTo(pickaxe, {
-                    y: currentY - Config.CELL_SIZE_PX * 0.8,
-                    rotation: rotation + Math.PI * 2,
-                    yoyo: true,
-                    repeat: 1,
-                    duration: Config.PICKAXE_BOUNCE_DURATION_MS / 2000,
-                    ease: "sine.out"
-                })
-                currentY = pickaxe.y
-                rotation = pickaxe.rotation
+                rotation = await bouncePickaxe(pickaxe, currentY, rotation)
                 await wait(Config.PICKAXE_BETWEEN_HIT_DELAY_MS)
             }
+        }
+
+        const isColumnClear = runtime.blocks.every(row => !row[col])
+        if (isColumnClear) {
+            if (slot.sprite) {
+                await tweenTo(slot.sprite, {
+                    alpha: 0,
+                    duration: 0.14,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        slot.sprite?.destroy()
+                        slot.sprite = null
+                    }
+                })
+            }
+            await openChest(col)
+            return
         }
 
         if (slot.sprite) {
             await tweenTo(slot.sprite, {
                 x: startX,
-                y: slotRow * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX) + Config.CELL_SIZE_PX / 2,
+                y: slotRow * (Config.CELL_SIZE_PX + Config.PICKAXES_GRID_GAP_Y_PX) + Config.CELL_SIZE_PX / 2,
                 rotation: 0,
                 duration: 0.22,
                 ease: "power2.out"
             })
         }
-
-        const isColumnClear = runtime.blocks.every(row => !row[col])
-        if (isColumnClear) await openChest(col)
-    }, [openChest, playSound, shakeBlock, spawnParticles, updateCrackOverlay])
+    }, [bouncePickaxe, openChest, playSound, shakeBlock, spawnParticles, updateCrackOverlay])
 
     const spinPickaxes = useCallback(async (field: Field) => {
         const runtime = runtimeRef.current
         if (!runtime) return
 
         const pickaxeKeys = Object.keys(Config.PICKAXES)
+        const reelKeys: (string | null)[] = [...pickaxeKeys, null]
+        let lastSpinSoundAt = 0
         const promises = runtime.pickaxeSlots.map((slot, slotIndex) => new Promise<void>(resolve => {
             const sprite = slot.sprite
             const row = Math.floor(slotIndex / Config.COLS)
             const col = slotIndex % Config.COLS
-            const targetKey = field.pickaxes[row]?.[col]
+            const targetKey = field.pickaxes[row]?.[col] ?? null
+            const targetReelKey = targetKey && Config.PICKAXES[targetKey] ? targetKey : null
+            const slotX = col * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX)
+            const slotY = row * (Config.CELL_SIZE_PX + Config.PICKAXES_GRID_GAP_Y_PX)
+            const centerY = slotY + Config.CELL_SIZE_PX / 2
+            const targetKeyIndex = reelKeys.indexOf(targetReelKey)
 
             if (!sprite) {
                 resolve()
                 return
             }
 
-            const swapTween = gsap.to(sprite, {
-                y: sprite.y + Config.CELL_SIZE_PX,
-                duration: 0.11,
-                repeat: -1,
-                ease: "none",
-                onRepeat: () => {
-                    const randomKey = pickaxeKeys[Math.floor(Math.random() * pickaxeKeys.length)]
-                    sprite.texture = getTexture(Config.PICKAXES[randomKey].texture)
-                    sprite.y -= Config.CELL_SIZE_PX
-                }
-            })
-            runtime.spinTweens.push(swapTween)
+            sprite.visible = false
 
-            window.setTimeout(() => {
-                swapTween.kill()
-                if (!targetKey) {
-                    sprite.visible = false
-                    slot.sprite = null
-                    resolve()
+            const reel = new Container()
+            const reelMask = new Graphics()
+                .rect(slotX + 1, slotY + 1, Config.CELL_SIZE_PX - 2, Config.CELL_SIZE_PX - 2)
+                .fill(0xffffff)
+            reelMask.alpha = 0
+            const getReelKey = (index: number) => reelKeys[index % reelKeys.length]
+            const applyReelKey = (reelSprite: Sprite, key: string | null) => {
+                if (!key) {
+                    reelSprite.texture = Texture.EMPTY
+                    reelSprite.visible = false
                     return
                 }
 
-                sprite.visible = true
-                sprite.texture = getTexture(Config.PICKAXES[targetKey].texture)
-                sprite.y = row * (Config.CELL_SIZE_PX + Config.GRID_GAP_PX) + Config.CELL_SIZE_PX / 2
-                gsap.fromTo(sprite, { y: sprite.y - 9 }, {
-                    y: sprite.y,
-                    duration: 0.18,
-                    ease: "bounce.out",
-                    onComplete: () => resolve()
-                })
-            }, Config.SLOT_SPIN_DURATION_MS + slotIndex * Config.SLOT_STOP_STAGGER_MS)
+                reelSprite.texture = getTexture(Config.PICKAXES[key].texture)
+                reelSprite.visible = true
+                reelSprite.alpha = 1
+            }
+            const first = setupPickaxeSprite(new Sprite(Texture.EMPTY), slotX, slotY)
+            const second = setupPickaxeSprite(new Sprite(Texture.EMPTY), slotX, slotY)
+            applyReelKey(first, getReelKey(slotIndex))
+            applyReelKey(second, getReelKey(slotIndex + 1))
+            const spinDuration = (Config.SLOT_SPIN_DURATION_MS + slotIndex * Config.SLOT_STOP_STAGGER_MS) / 1000
+            const totalSteps = Math.max(4, Math.ceil(spinDuration * 5))
+            const spinState = {
+                offset: 0,
+                firstKeyIndex: slotIndex % reelKeys.length,
+                secondKeyIndex: (slotIndex + 1) % reelKeys.length,
+                step: 0
+            }
+
+            reel.addChild(first, second)
+            reel.mask = reelMask
+            runtime.pickaxesLayer.addChild(reelMask, reel)
+
+            const updateReel = () => {
+                const nextStep = Math.floor(spinState.offset / Config.CELL_SIZE_PX)
+
+                if (nextStep > spinState.step) {
+                    const now = performance.now()
+                    if (now - lastSpinSoundAt >= SPIN_SOUND_MIN_INTERVAL_MS) {
+                        lastSpinSoundAt = now
+                        stopSound(Config.SPINNING_SOUND)
+                        playSound(Config.SPINNING_SOUND, SPIN_SOUND_PLAY_MS)
+                    }
+
+                    spinState.firstKeyIndex = spinState.secondKeyIndex
+                    spinState.secondKeyIndex = nextStep >= totalSteps - 1
+                        ? targetKeyIndex
+                        : Math.floor(Math.random() * reelKeys.length)
+
+                    if (nextStep >= totalSteps) {
+                        spinState.firstKeyIndex = targetKeyIndex
+                    }
+
+                    applyReelKey(first, reelKeys[spinState.firstKeyIndex])
+                    applyReelKey(second, reelKeys[spinState.secondKeyIndex])
+                    spinState.step = nextStep
+                }
+
+                const localOffset = spinState.offset - spinState.step * Config.CELL_SIZE_PX
+                first.y = centerY + localOffset
+                second.y = centerY + localOffset - Config.CELL_SIZE_PX
+                first.rotation = Math.sin(localOffset / Config.CELL_SIZE_PX * Math.PI) * 0.08
+                second.rotation = first.rotation
+            }
+
+            const spinTween = gsap.to(spinState, {
+                offset: Config.CELL_SIZE_PX * totalSteps,
+                duration: spinDuration,
+                ease: "power3.out",
+                onUpdate: updateReel,
+                onComplete: () => {
+                    if (targetReelKey) {
+                        first.texture = getTexture(Config.PICKAXES[targetReelKey].texture)
+                        first.visible = true
+                        first.y = centerY
+                        first.rotation = 0
+                    }
+
+                    reel.destroy({ children: true })
+                    reelMask.destroy()
+
+                    if (!targetReelKey) {
+                        sprite.destroy()
+                        slot.sprite = null
+                        resolve()
+                        return
+                    }
+
+                    sprite.visible = true
+                    sprite.texture = getTexture(Config.PICKAXES[targetReelKey].texture)
+                    sprite.alpha = 1
+                    setupPickaxeSprite(sprite, slotX, slotY)
+                    resolve()
+                }
+            })
+            runtime.spinTweens.push(spinTween)
+
+            window.setTimeout(() => {
+                if (!spinTween.isActive()) return
+                spinTween.progress(1)
+            }, Config.SLOT_SPIN_DURATION_MS + slotIndex * Config.SLOT_STOP_STAGGER_MS + 60)
+
+            updateReel()
         }))
 
         await Promise.all(promises)
-    }, [getTexture])
+        stopSound(Config.SPINNING_SOUND)
+    }, [getTexture, playSound, setupPickaxeSprite, stopSound])
 
-    const playRound = useCallback(async (result: MinerResult, playId: number) => {
+    const playRound = useCallback(async (result: MinerResult, playId: number, bet: number) => {
         const runtime = runtimeRef.current
         if (!runtime) return
 
@@ -549,10 +832,16 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
 
         if (playId !== playIdRef.current) return
 
-        setBalanceTo(result.newBalance)
-        data?.StateMachine.changeState(result.isWin ? "WIN" : "IDLE")
+        flushBalanceUpdate()
+        if (result.isWin) {
+            data?.setWinAmount(formatWinAmount(bet, result.multiplier))
+            data?.StateMachine.changeState("WIN")
+        } else {
+            data?.setWinAmount(0)
+            data?.StateMachine.resetState()
+        }
         runtime.isAnimating = false
-    }, [data, drawIdleScene, runPickaxe, setBalanceTo, spinPickaxes])
+    }, [data, drawIdleScene, flushBalanceUpdate, runPickaxe, spinPickaxes])
 
     const play = useCallback(async (bet?: number) => {
         if (!account || !data || runtimeRef.current?.isAnimating) return
@@ -564,15 +853,17 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         data.StateMachine.changeState("PLAYING")
 
         try {
-            const result = await GameApi.playMiner(account.UUID, bet ?? data.bet)
+            const betAmount = bet ?? data.bet
+            const result = await GameApi.playMiner(account.UUID, betAmount)
             if (playId !== playIdRef.current) return
-            await playRound(result, playId)
+            queueBalanceUpdate(result.newBalance)
+            await playRound(result, playId, betAmount)
         } catch {
             runtime.isAnimating = false
             data.StateMachine.changeState("IDLE")
             toast.error("Не удалось запустить Майнер")
         }
-    }, [account, data, playRound])
+    }, [account, data, playRound, queueBalanceUpdate])
 
     useImperativeHandle(ref, () => ({ play }), [play])
 
@@ -586,7 +877,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         const init = async () => {
             await app.init({
                 backgroundAlpha: 0,
-                antialias: true,
+                antialias: false,
                 resizeTo: host
             })
 
@@ -604,6 +895,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
                 slotsLayer: new Container(),
                 blocksLayer: new Container(),
                 chestsLayer: new Container(),
+                pickaxesLayer: new Container(),
                 effectsLayer: new Container(),
                 labelLayer: new Container(),
                 pickaxeSlots: [],
@@ -616,21 +908,25 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
                 isAnimating: false
             }
 
-            root.addChild(runtime.slotsLayer, runtime.blocksLayer, runtime.chestsLayer, runtime.effectsLayer, runtime.labelLayer)
+            root.addChild(runtime.slotsLayer, runtime.blocksLayer, runtime.chestsLayer, runtime.pickaxesLayer, runtime.effectsLayer, runtime.labelLayer)
             app.stage.addChild(root)
             runtimeRef.current = runtime
 
-            await Assets.load([
+            const imageAssets = [
                 Config.SLOT_TEXTURE,
                 Config.BACKGROUND_TEXTURE,
                 ...Config.BREAK_TEXTURE,
                 ...Object.values(Config.BLOCKS).map(item => item.texture),
                 ...Object.values(Config.PICKAXES).map(item => item.texture),
                 ...Object.values(Config.CHESTS).flatMap(item => [item.texture, item.opened_texture, item.glow_texture])
-            ])
+            ]
+
+            await Assets.load(imageAssets.map(pixelAsset))
 
             drawIdleScene()
-            runtime.resizeObserver = new ResizeObserver(resizeScene)
+            runtime.resizeObserver = new ResizeObserver(() => {
+                requestAnimationFrame(resizeScene)
+            })
             runtime.resizeObserver.observe(host)
             resizeScene()
         }

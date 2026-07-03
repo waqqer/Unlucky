@@ -7,7 +7,7 @@ export default defineConfig({
   base: "/Unlucky/",
   build: {
     outDir: "build",
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000,
 
     rolldownOptions: {
       output: {

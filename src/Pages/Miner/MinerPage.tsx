@@ -1,4 +1,4 @@
-import { memo, useRef, useCallback, useEffect, useState } from "react"
+import { memo, useRef, useCallback, useEffect, useState, useContext } from "react"
 import Page from "../Page"
 import ParticleBackground from "@/Components/Decorations/ParticleBackground"
 import Section from "@/Components/Containers/Section"
@@ -7,15 +7,29 @@ import GameControlls from "@/widgets/Games/Layout/GameControlls"
 import Miner from "@/widgets/Games/Game/Miner"
 import { type GameRef } from "@/Shared/Types/GameTypes"
 import { toast } from "react-toastify"
+import { AccountContext } from "@/Context/AccountContext"
 
 const MinerPage = () => {
     const containerRef = useRef<GameContainerRef>(null)
     const gameRef = useRef<GameRef>(null)
     const [gameData, setGameData] = useState<GameContainerRef | null>(null)
+    const {
+        beginBalanceDeferral,
+        endBalanceDeferral,
+        flushBalanceUpdate
+    } = useContext(AccountContext)
 
     useEffect(() => {
         setGameData(containerRef.current)
     }, [])
+
+    useEffect(() => {
+        beginBalanceDeferral()
+
+        return () => {
+            endBalanceDeferral()
+        }
+    }, [beginBalanceDeferral, endBalanceDeferral])
 
     const handlePlay = useCallback((bet: number) => {
         const container = containerRef.current
@@ -34,7 +48,7 @@ const MinerPage = () => {
             <ParticleBackground />
 
             <Section justify="center" align="center">
-                <GameControlls openAbout={() => { }} />
+                <GameControlls openAbout={() => { }} onMenuClick={flushBalanceUpdate} />
                 <GameContainer type="triple" demo={false} autoreroll={false} ref={containerRef} onPlay={handlePlay}>
                     <Miner data={gameData} ref={gameRef} />
                 </GameContainer>

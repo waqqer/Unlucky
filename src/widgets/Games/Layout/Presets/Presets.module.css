@@ -24,8 +24,12 @@
 }
 
 @media (max-width: 1040px) {
+    .presets {
+        justify-content: center;
+    }
+
     .choice {
-        padding: 5px;
+        padding: 7px;
         padding-inline: 15px;
         font-size: 0.9rem;
         font-weight: normal;

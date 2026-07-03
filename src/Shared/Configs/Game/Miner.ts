@@ -1,5 +1,6 @@
 import * as Miner from "@/Shared/Assets/Games/Miner"
 import * as MinerSFX from "@/Shared/Assets/Audio/Miner"
+import SpinSound from "@/Shared/Assets/Audio/slot.mp3"
 
 type Block = {
     texture: string
@@ -34,6 +35,8 @@ type ChestGlowConfig = {
     lifeRandomSec: number
     sizeMinPx: number
     sizeRandomPx: number
+    alphaMin: number
+    alphaMax: number
     drag: number
     speedMultiplier: number
     distanceMultiplier: number
@@ -60,6 +63,10 @@ interface MinerConfig {
 
     CELL_SIZE_PX: number
     GRID_GAP_PX: number
+    PICKAXES_GRID_GAP_Y_PX: number
+    STAGE_PADDING_PX: number
+
+    SPINNING_SOUND: string
 
     SLOT_TEXTURE: string
     BACKGROUND_TEXTURE: string
@@ -74,6 +81,8 @@ interface MinerConfig {
     SLOT_SPIN_DURATION_MS: number
     SLOT_STOP_STAGGER_MS: number
     CHEST_OPEN_DURATION_MS: number
+    PARTICLE_ALPHA_MIN: number
+    PARTICLE_ALPHA_MAX: number
     CHEST_GLOW_DEFAULTS: ChestGlowConfig
 
     BLOCKS: Record<string, Block>
@@ -86,8 +95,12 @@ const Config: MinerConfig = {
     COLS: 5,
     PICKAXES_ROWS: 3,
 
+    SPINNING_SOUND: SpinSound,
+
     CELL_SIZE_PX: 64,
     GRID_GAP_PX: 6,
+    PICKAXES_GRID_GAP_Y_PX: -4,
+    STAGE_PADDING_PX: 30,
 
     SLOT_TEXTURE: Miner.Slot,
     BACKGROUND_TEXTURE: Miner.Background,
@@ -113,6 +126,8 @@ const Config: MinerConfig = {
     SLOT_SPIN_DURATION_MS: 1150,
     SLOT_STOP_STAGGER_MS: 105,
     CHEST_OPEN_DURATION_MS: 460,
+    PARTICLE_ALPHA_MIN: 0.72,
+    PARTICLE_ALPHA_MAX: 0.95,
     CHEST_GLOW_DEFAULTS: {
         spawnIntervalSec: 0.065,
         cellPaddingMult: 0.1,
@@ -120,8 +135,10 @@ const Config: MinerConfig = {
         speedRandom: 52,
         lifeBaseSec: 0.72,
         lifeRandomSec: 0.48,
-        sizeMinPx: 7,
-        sizeRandomPx: 11,
+        sizeMinPx: 1,
+        sizeRandomPx: 2,
+        alphaMin: 0.45,
+        alphaMax: 0.85,
         drag: 0.987,
         speedMultiplier: 0.5,
         distanceMultiplier: 1.75
@@ -290,17 +307,19 @@ const Config: MinerConfig = {
             glow_texture: Miner.Glow,
             glow: true,
             glow_config: {
-                spawnIntervalSec: 0.05,
-                cellPaddingMult: 0.12,
-                speedMin: 20,
-                speedRandom: 36,
+                spawnIntervalSec: 0.12,
+                cellPaddingMult: 1,
+                speedMin: 40,
+                speedRandom: 100,
                 lifeBaseSec: 0.55,
                 lifeRandomSec: 0.28,
-                sizeMinPx: 7,
-                sizeRandomPx: 10,
-                drag: 0.95,
-                speedMultiplier: 0.45,
-                distanceMultiplier: 0.55
+                sizeMinPx: 0.5,
+                sizeRandomPx: 1.3,
+                alphaMin: 0.7,
+                alphaMax: 0.8,
+                drag: 0.5,
+                speedMultiplier: 0.05,
+                distanceMultiplier: 1.2
             }
         },
 
@@ -317,16 +336,18 @@ const Config: MinerConfig = {
             glow: true,
             glow_config: {
                 spawnIntervalSec: 0.07,
-                cellPaddingMult: 0.08,
-                speedMin: 20,
+                cellPaddingMult: 0.1,
+                speedMin: 30,
                 speedRandom: 50,
                 lifeBaseSec: 0.5,
                 lifeRandomSec: 0.3,
-                sizeMinPx: 5,
-                sizeRandomPx: 10,
+                sizeMinPx: 0.3,
+                sizeRandomPx: 1.2,
+                alphaMin: 1,
+                alphaMax: 1,
                 drag: 0.99,
-                speedMultiplier: 0.35,
-                distanceMultiplier: 2.2
+                speedMultiplier: 0.2,
+                distanceMultiplier: 2
             }
         }
     }

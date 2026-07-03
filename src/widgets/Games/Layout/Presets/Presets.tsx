@@ -16,7 +16,7 @@ const Presets = (props: UIPresetsProps) => {
         className = ""
     } = props
 
-    const { account, balance } = useContext(AccountContext)
+    const { balance } = useContext(AccountContext)
 
     const handleClick = useCallback((value: number) => {
         if (onClick)

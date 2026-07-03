@@ -43,7 +43,7 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
         }, fade_duration)
     }, [fade_duration, onEnd])
 
-    const value = useCounter(win, {
+    const value = useCounter(Math.floor(win), {
         duration: counting_duration
     })
     useKeybind(" ", closeScreen)

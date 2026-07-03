@@ -1,5 +1,6 @@
 import type { UserPayload, UserRole } from "@/Shared/Types/UserTypes"
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import type { PropsWithChildren } from "react"
 import type SPWMini from "spwmini/client"
 import type { User } from "spwmini/types"
 import { AuthContext } from "./AuthContext"
@@ -33,14 +34,20 @@ export interface AccountContextValues {
 
     setBalanceTo: (value: number) => void
     incrementBalance: (value: number) => void
+    beginBalanceDeferral: () => void
+    queueBalanceUpdate: (value: number) => void
+    flushBalanceUpdate: () => void
+    endBalanceDeferral: () => void
 }
 
 export const AccountContext = createContext<AccountContextValues>(undefined!)
 
-export const AccountProvider = ({ children }: any) => {
+export const AccountProvider = ({ children }: PropsWithChildren) => {
     const { user, spm, account } = useContext(AuthContext)
 
     const [balance, setBalance] = useState<number>(0)
+    const isBalanceDeferredRef = useRef<boolean>(false)
+    const pendingBalanceRef = useRef<number | null>(null)
     const [userId, setUserId] = useState<number>(0)
     const [role, setRole] = useState<UserRole>("ADMIN")
 
@@ -118,14 +125,46 @@ export const AccountProvider = ({ children }: any) => {
     }, [account])
 
     const setBalanceTo = useCallback((value: number) => {
-        if (value > 0) {
+        if (Number.isFinite(value) && value >= 0) {
+            pendingBalanceRef.current = null
             setBalance(value)
         }
     }, [])
 
     const incrementBalance = useCallback((value: number) => {
+        pendingBalanceRef.current = null
         setBalance(prev => prev + value)
     }, [])
+
+    const beginBalanceDeferral = useCallback(() => {
+        isBalanceDeferredRef.current = true
+    }, [])
+
+    const flushBalanceUpdate = useCallback(() => {
+        const pendingBalance = pendingBalanceRef.current
+        pendingBalanceRef.current = null
+
+        if (pendingBalance !== null && pendingBalance >= 0) {
+            setBalance(pendingBalance)
+        }
+    }, [])
+
+    const queueBalanceUpdate = useCallback((value: number) => {
+        if (!Number.isFinite(value) || value < 0) return
+
+        if (isBalanceDeferredRef.current) {
+            pendingBalanceRef.current = value
+            return
+        }
+
+        pendingBalanceRef.current = null
+        setBalance(value)
+    }, [])
+
+    const endBalanceDeferral = useCallback(() => {
+        isBalanceDeferredRef.current = false
+        flushBalanceUpdate()
+    }, [flushBalanceUpdate])
 
     useEffect(() => {
         if (!account)
@@ -139,7 +178,7 @@ export const AccountProvider = ({ children }: any) => {
         }
 
         fetchUserData()
-    }, [account])
+    }, [account, ReloadUserBadges, ReloadUserInfo])
 
     const values: AccountContextValues = useMemo(() => ({
         user,
@@ -165,9 +204,13 @@ export const AccountProvider = ({ children }: any) => {
         addBadge,
         setBalanceTo,
         incrementBalance,
+        beginBalanceDeferral,
+        queueBalanceUpdate,
+        flushBalanceUpdate,
+        endBalanceDeferral,
         removeBadge,
         setStreakInfo
-    }), [policy, streak, streakStatus, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, setStreakInfo, role, userId, setBalanceTo, incrementBalance, removeBadge, addBadge])
+    }), [policy, streak, streakStatus, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, setStreakInfo, role, userId, setBalanceTo, incrementBalance, beginBalanceDeferral, queueBalanceUpdate, flushBalanceUpdate, endBalanceDeferral, removeBadge, addBadge])
 
     return (
         <AccountContext.Provider value={values}>
