@@ -2,8 +2,23 @@
     display: flex;
     gap: 5px;
     align-items: center;
-    justify-content: center;
     text-align: start;
 
-    width: 100%;
+    width: 120px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 1050px) {
+    .username {
+        width: 105px;
+    }
+}
+
+@media (max-width: 700px) {
+    .username {
+        width: 140px;
+    }
 }

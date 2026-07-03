@@ -43,7 +43,9 @@ const Username = (props: UIUsernameProps) => {
     }, [DefaultUser, User, badge])
 
     return (
-        <h4 className={`${styles.username} ${className}`}>
+        <h4 className={`${styles.username} ${className}`} style={{
+            justifyContent: reverse ? "end" : "start"
+        }}>
             {!reverse ?
                 <>
                     {username}

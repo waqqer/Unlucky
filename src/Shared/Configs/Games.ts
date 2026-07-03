@@ -22,7 +22,7 @@ const GamesConfig: GameInfo[] = [
     },
     {
         title: "Мины",
-        desc: "Бла бла бла",
+        desc: "Получай ары, пока не лопнешь на мине",
         route: "/bombs",
         icon: Rocket
     }
