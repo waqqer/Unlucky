@@ -4,10 +4,12 @@ import ParticleBackground from "@/Components/Decorations/ParticleBackground"
 import Section from "@/Components/Containers/Section"
 import AdminHeader from "@/widgets/Admin/Components/AdminHeader"
 import type { AdminHeaderRef, AdminSections } from "@/widgets/Admin/Components/AdminHeader/AdminHeader"
+import PromocodesSection from "@/widgets/Admin/Sections/PromocodesSection"
+import RewardsSection from "@/widgets/Admin/Sections/RewardsSection"
 
 const AdminPage = () => {
     const headerRef = useRef<AdminHeaderRef>(null)
-    const [section, setSection] = useState<AdminSections>("CONTROLS")
+    const [section, setSection] = useState<AdminSections>("PROMO")
 
     const onSectionChange = useCallback((s: AdminSections) => {
         setSection(s)
@@ -19,7 +21,8 @@ const AdminPage = () => {
             <ParticleBackground />
 
             <Section justify="center" align="center">
-                <h1>{section}</h1>
+                {section === "PROMO" && <PromocodesSection />}
+                {section === "REWARDS" && <RewardsSection />}
             </Section>
         </Page>
     )

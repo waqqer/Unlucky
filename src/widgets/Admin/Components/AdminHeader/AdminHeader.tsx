@@ -3,7 +3,7 @@ import styles from "./AdminHeader.module.css"
 import Button from "@/Components/Controlls/Buttons/Button"
 import LinkedButton from "@/Components/Controlls/Buttons/LinkedButton"
 
-export type AdminSections = "PROMO" | "REWARDS" | "STATS" | "CONTROLS"
+export type AdminSections = "PROMO" | "REWARDS"
 
 export interface AdminHeaderRef {
     currentSection: AdminSections
@@ -18,12 +18,12 @@ const AdminHeader = forwardRef<AdminHeaderRef, UIAdminHeaderProps>((props, ref) 
         onSectionChange
     } = props
 
-    const [choosed, setChoosed] = useState<AdminSections>("CONTROLS")
+    const [choosed, setChoosed] = useState<AdminSections>("PROMO")
 
     const handleChoose = useCallback((section: AdminSections) => {
         setChoosed(section)
         onSectionChange?.(section)
-    }, [])
+    }, [onSectionChange])
 
     useImperativeHandle(ref, () => ({
         currentSection: choosed
@@ -34,8 +34,6 @@ const AdminHeader = forwardRef<AdminHeaderRef, UIAdminHeaderProps>((props, ref) 
             <LinkedButton className={`${styles.btn} ${styles.exit}`} icon={false} to="/">Выйти</LinkedButton>
             <Button className={`${styles.btn} ${choosed === "PROMO" ? styles.active : ""}`} onClick={() => handleChoose("PROMO")}>Промокоды</Button>
             <Button className={`${styles.btn} ${choosed === "REWARDS" ? styles.active : ""}`} onClick={() => handleChoose("REWARDS")}>Награды</Button>
-            <Button className={`${styles.btn} ${choosed === "STATS" ? styles.active : ""}`} onClick={() => handleChoose("STATS")}>Статистика</Button>
-            <Button className={`${styles.btn} ${choosed === "CONTROLS" ? styles.active : ""}`} onClick={() => handleChoose("CONTROLS")}>Контроль</Button>
         </nav>
     )
 })
