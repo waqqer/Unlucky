@@ -283,7 +283,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
             return
         }
 
-        data.pushHistory(Math.trunc((result.isWin ? bet * result.multiplier : 0) - bet))
+        data.pushHistory(Math.trunc((result.multiplier > 0 ? bet * result.multiplier : 0) - bet))
 
         if (result.isWin) {
             data.setWinAmount(formatWinAmount(bet, result.multiplier))

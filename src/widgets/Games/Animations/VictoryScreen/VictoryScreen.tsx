@@ -83,18 +83,22 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
         }
     }, [isActive, counting_duration, duration, closeScreen])
 
-    const selectedScreens = useMemo(() => screens.find(s => win > s.value_condition), [win, screens])
+    const selectedScreens = useMemo(() => {
+        return [...screens]
+            .sort((a, b) => b.value_condition - a.value_condition)
+            .find(s => win >= s.value_condition) ?? screens[0]
+    }, [win, screens])
     const selectedData = useMemo(() => {
-        if (selectedScreens?.data) {
-            const data = getByWeight(selectedScreens?.data)
+        if (selectedScreens?.data?.length) {
+            const data = getByWeight(selectedScreens.data)
             return {
                 video: data.video,
                 audio: data.audio
             }
         }
         return {
-            video: selectedScreens?.data[0].video,
-            audio: selectedScreens?.data[0].audio
+            video: "",
+            audio: ""
         }
     }, [selectedScreens])
 
@@ -125,14 +129,16 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
             onClick={closeScreen}
             ref={screenRef}
         >
-            <video
-                className={styles.video}
-                autoPlay
-                playsInline
-                muted
-            >
-                <source src={selectedData.video} type="video/webm" />
-            </video>
+            {selectedData.video && (
+                <video
+                    className={styles.video}
+                    autoPlay
+                    playsInline
+                    muted
+                >
+                    <source src={selectedData.video} type="video/webm" />
+                </video>
+            )}
 
             <div className={styles.message}>
                 <h1>Победа!</h1>

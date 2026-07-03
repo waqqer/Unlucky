@@ -54,6 +54,7 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
         history,
         isHistoryLoading,
         historyError,
+        freshHistoryKey,
         pushHistory
     } = useGameHistory(gameName)
 
@@ -113,7 +114,7 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
         <>
             <VictoryScreen isActive={StateMachine.is("WIN") && !isDemo} win={winAmount} onEnd={handleVictoryEnd} />
             <div className={styles["game-box"]}>
-                <GameHistory items={history} isLoading={isHistoryLoading} error={historyError} />
+                <GameHistory items={history} freshKey={freshHistoryKey} isLoading={isHistoryLoading} error={historyError} />
 
                 <div className={styles.game}>
                     {children}
@@ -126,7 +127,7 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
                         type="number"
                         value={bet}
                         min={0}
-                        max={isAuth ? balance : 1000}
+                        max={isAuth ? Math.min(1000, balance) : 1000}
                         onChange={(value) => {
                             if (!isPlaying) setBet(value)
                         }}

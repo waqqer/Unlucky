@@ -49,14 +49,14 @@ const Username = (props: UIUsernameProps) => {
             {!reverse ?
                 <>
                     {username}
-                    {!User && withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} />}
+                    {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} />}
                     {withFire && <Streak tooltip={fireTooltip} />}
                     {children}
                 </>
                 :
                 <>
                     {children}
-                    {!User && withFire && <Streak tooltip={fireTooltip} />}
+                    {withFire && <Streak tooltip={fireTooltip} />}
                     {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} />}
                     {username}
                 </>

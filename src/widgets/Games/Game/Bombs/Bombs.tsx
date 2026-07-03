@@ -560,6 +560,8 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             return
         }
 
+        let startSocket: ReturnType<typeof GameApi.createBombsSocket> | null = null
+
         void getReadySocket().then(socket => {
             if (!socket) {
                 data.StateMachine.changeState("IDLE")
@@ -567,6 +569,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
                 return null
             }
 
+            startSocket = socket
             incrementBalance(-currentBet)
             return GameApi.emitBombs(socket, "bombs:start", { bet: currentBet })
         }).then(response => {
@@ -574,6 +577,10 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
             if (response.ok === false) {
                 incrementBalance(currentBet)
+                if (response.message === "Сервер не отвечает" && startSocket) {
+                    startSocket.emit("bombs:cashout")
+                    createFreshSocket()
+                }
                 data.StateMachine.changeState("IDLE")
                 toast.error(response.message)
                 return
@@ -592,7 +599,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             setIsPending(false)
             requestAnimationFrame(() => updateBoardStateRef.current())
         })
-    }, [account, applyState, data, flushBalanceUpdate, getReadySocket, incrementBalance, isActive, isPending])
+    }, [account, applyState, createFreshSocket, data, flushBalanceUpdate, getReadySocket, incrementBalance, isActive, isPending])
 
     const openDemoCell = useCallback((index: number) => {
         const demoCell = demoFieldRef.current[index]

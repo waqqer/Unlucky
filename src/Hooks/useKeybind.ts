@@ -20,6 +20,10 @@ const useKeybind = (key: string, callback: KeybindHookCallback, config?: Keybind
     const callbackRef = useRef<KeybindHookCallback>(callback)
 
     useEffect(() => {
+        callbackRef.current = callback
+    }, [callback])
+
+    useEffect(() => {
         const handle = (event: Event) => {
             const ev = event as KeyboardEvent
             if (ev.key !== key)

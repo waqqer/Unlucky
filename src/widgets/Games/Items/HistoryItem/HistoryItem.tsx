@@ -15,7 +15,7 @@ const HistoryItem = (props: UIHistoryItemProps) => {
         isFresh = false
     } = props
     const amount = Math.abs(data.amount)
-    const sign = data.amount >= 0 ? "+" : "-"
+    const sign = amount === 0 ? "" : data.result === "WIN" ? "+" : "-"
 
     return (
         <div className={`${styles.history} ${isFresh ? styles.fresh : ""}`}>
@@ -24,7 +24,7 @@ const HistoryItem = (props: UIHistoryItemProps) => {
                 <Username User={{
                     current_badge: data.user.badge,
                     name: data.user.name
-                }}/>
+                }} withBadge={true} badgeTooltip={true} />
             </div>
 
             <div className={`${styles.block} ${styles.game}`}>

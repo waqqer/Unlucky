@@ -254,7 +254,7 @@
 
 .history-time-info > p::after {
     content: " Ар";
-    opacity: 0.4;
+    opacity: 0.8;
 }
 
 .WIN {

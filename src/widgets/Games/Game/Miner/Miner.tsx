@@ -835,7 +835,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
         if (playId !== playIdRef.current) return
 
         flushBalanceUpdate()
-        data?.pushHistory(Math.trunc((result.isWin ? bet * result.multiplier : 0) - bet))
+        data?.pushHistory(Math.trunc((result.multiplier > 0 ? bet * result.multiplier : 0) - bet))
         if (result.isWin) {
             data?.setWinAmount(formatWinAmount(bet, result.multiplier))
             data?.StateMachine.changeState("WIN")
