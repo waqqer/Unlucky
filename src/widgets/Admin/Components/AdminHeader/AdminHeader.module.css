@@ -1,50 +1,55 @@
 .header {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    bottom: 40px;
 
-    min-height: 75px;
+    min-height: 60px;
     z-index: 10000;
 
-    background-color: rgba(0, 0, 0, 0.438);
+    background-color: rgba(29, 29, 29, 0.438);
+    backdrop-filter: saturate(125%) blur(5px);
+    border: 1px solid rgb(90, 90, 90);
+    border-radius: 30px;
 
     display: flex;
     align-items: stretch;
     justify-content: center;
-    gap: 10px;
+    gap: 0px;
+    overflow: hidden;
 }
 
 .btn {
-    border-radius: 0px;
-    width: 200px;
+    border-radius: 30px;
+    width: 100px;
     background-color: transparent;
     color: rgb(255, 255, 255);
-    font-size: 1.2rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
 
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .btn:hover {
-    background-color: rgba(34, 34, 34, 0.65);
-    transform: none;
+    background-color: aliceblue;
+    color: black;
+    border-radius: 0px;
+}
+
+.exit:hover {
+    background-color: rgb(216, 121, 121);
+    color: white;
 }
 
 .btn:active {
-    background-color: rgba(95, 95, 95, 0.65);
+    background-color: rgb(212, 218, 223);
+    transform: scale(1.1);
+}
+
+.exit:active {
+    background-color: rgb(156, 79, 79);
 }
 
 .active {
-    background-color: rgb(211, 211, 211);
+    background-color: aliceblue;
     color: black;
-    font-weight: 800;
-    transform: scale(1.1);
-    border-radius: 5px;
-}
-
-.active:hover {
-    background-color: rgb(187, 187, 187);
-    opacity: 0.95;
-    transform: scale(1.1);
+    border-radius: 0px;
 }

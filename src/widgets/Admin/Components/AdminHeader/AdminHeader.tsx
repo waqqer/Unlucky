@@ -31,7 +31,7 @@ const AdminHeader = forwardRef<AdminHeaderRef, UIAdminHeaderProps>((props, ref) 
 
     return (
         <nav className={styles.header}>
-            <LinkedButton className={`${styles.btn}`} icon={false} to="/">Выйти</LinkedButton>
+            <LinkedButton className={`${styles.btn} ${styles.exit}`} icon={false} to="/">Выйти</LinkedButton>
             <Button className={`${styles.btn} ${choosed === "PROMO" ? styles.active : ""}`} onClick={() => handleChoose("PROMO")}>Промокоды</Button>
             <Button className={`${styles.btn} ${choosed === "REWARDS" ? styles.active : ""}`} onClick={() => handleChoose("REWARDS")}>Награды</Button>
             <Button className={`${styles.btn} ${choosed === "STATS" ? styles.active : ""}`} onClick={() => handleChoose("STATS")}>Статистика</Button>

@@ -29,6 +29,7 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
 
     const screenRef = useRef<HTMLDivElement>(null)
     const timerRef = useRef<number>(null)
+    const stopVictorySoundRef = useRef<() => void>(() => undefined)
 
     const closeScreen = useCallback(() => {
         if (timerRef.current) {
@@ -36,6 +37,7 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
             timerRef.current = null
         }
 
+        stopVictorySoundRef.current()
         screenRef.current?.classList.add(styles.fade)
 
         setTimeout(() => {
@@ -102,21 +104,26 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
         }
     }, [selectedScreens])
 
-    const audio = useSound(selectedData.audio || "")
+    const {
+        play: playVictorySound,
+        stop: stopVictorySound
+    } = useSound(selectedData.audio || "")
+
+    stopVictorySoundRef.current = stopVictorySound
 
     useEffect(() => {
         if (isActive) {
             try {
-                audio.play()
+                playVictorySound()
             } catch {
                 console.error("Не удалось проиграть звук победы")
             }
         }
 
         return () => {
-            audio.stop()
+            stopVictorySound()
         }
-    }, [isActive, audio])
+    }, [isActive, playVictorySound, stopVictorySound])
 
     if (!isActive) {
         timerRef.current = null
