@@ -12,6 +12,18 @@ interface UIOutModalProps {
     onOut?: () => void
 }
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+    if (typeof error === "object" && error !== null && "response" in error) {
+        const response = (error as { response?: { data?: { message?: unknown } } }).response
+
+        if (typeof response?.data?.message === "string") {
+            return response.data.message
+        }
+    }
+
+    return fallback
+}
+
 const OutModal = (props: UIOutModalProps) => {
     const {
         onOut
@@ -19,7 +31,7 @@ const OutModal = (props: UIOutModalProps) => {
 
     const { balance, account, setBalanceTo } = useContext(AccountContext)
 
-    const [value, setValue] = useState<string>(String(balance) ?? "250")
+    const [value, setValue] = useState<string>(String(balance))
     const [currentCard, setCurrentCard] = useState<string>("")
     const [cards, setCards] = useState<UserCard[]>([])
 
@@ -30,7 +42,7 @@ const OutModal = (props: UIOutModalProps) => {
     }, [])
 
     const handleOut = useCallback(async () => {
-        if (!account && !currentCard && currentCard === "")
+        if (!account || currentCard === "")
             return
 
         setIsPending(true)
@@ -45,15 +57,14 @@ const OutModal = (props: UIOutModalProps) => {
             setBalanceTo(data.new_balance)
 
             toast.success(`Успешный вывод средств на ${value} Ар.`)
-        } catch (er: any) {
-            const message = er.response?.data?.message || "Ошибка при выводе средств"
-            toast.error(message)
+        } catch (error) {
+            toast.error(getErrorMessage(error, "Ошибка при выводе средств"))
         } finally {
             setIsPending(false)
         }
 
         onOut?.()
-    }, [account, currentCard, value, setBalanceTo])
+    }, [account, currentCard, onOut, value, setBalanceTo])
 
     useEffect(() => {
         if (!account)

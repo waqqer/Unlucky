@@ -13,6 +13,18 @@ interface UIPromoModalProps {
     onPromoActivate?: () => void
 }
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+    if (typeof error === "object" && error !== null && "response" in error) {
+        const response = (error as { response?: { data?: { message?: unknown } } }).response
+
+        if (typeof response?.data?.message === "string") {
+            return response.data.message
+        }
+    }
+
+    return fallback
+}
+
 const PromoModal = (props: UIPromoModalProps) => {
     const {
         onPromoActivate
@@ -54,28 +66,29 @@ const PromoModal = (props: UIPromoModalProps) => {
 
         try {
             const data = await PromoApi.activatePromocode(value)
+            const rewards = data.rewards
+            const badgeId = rewards?.badgeAdded
+            const badge = badgeId ? BadgesConfig.badges[badgeId] : undefined
 
             setMessageType(data.success ? "success" : "error")
             setMessage(data.message)
             setShowMessage(true)
 
-            incrementBalance(data.rewards?.balanceAdded || 0)
+            incrementBalance(rewards?.balanceAdded || 0)
 
-            if(data.rewards.badgeAdded) {
-                setBadgeMessage(data.rewards.badgeAdded)
-                addBadge(data.rewards.badgeAdded)
+            if(badgeId) {
+                setBadgeMessage(badgeId)
+                addBadge(badgeId)
             }
-
-            const badge = BadgesConfig.badges[data.rewards.badgeAdded]
 
             toast((
                 <div className={styles.toast}>
                     <h4 className={styles["toast-title"]}>Промокод "{value.toUpperCase()}" активирован!</h4>
-                    {data.rewards && (
+                    {rewards && (
                         <>
                             <p>Получено:</p>
                             <ul className={styles["toast-list"]}>
-                                {data.rewards?.balanceAdded && <li>+ {data.rewards?.balanceAdded} Ар</li>}
+                                {rewards.balanceAdded && <li>+ {rewards.balanceAdded} Ар</li>}
                                 {badge && <li style={{
                                     color: `${BadgesConfig.colors[badge.quality]}`
                                 }}>+ '{badge.title}'</li>}
@@ -92,15 +105,15 @@ const PromoModal = (props: UIPromoModalProps) => {
             if(onPromoActivate) {
                 onPromoActivate()
             }
-        } catch (error: any) {
+        } catch (error) {
             setMessageType("error")
-            const message = error.response?.data?.message || "Ошибка при активации промокода"
+            const message = getErrorMessage(error, "Ошибка при активации промокода")
             setMessage(message)
             setShowMessage(true)
         } finally {
             setPending(false)
         }
-    }, [account, incrementBalance, onPromoActivate])
+    }, [account, addBadge, incrementBalance, onPromoActivate, setBadgeMessage])
 
     useEffect(() => {
         const element = messageRef.current

@@ -31,6 +31,12 @@ const BadgeNotification = () => {
         }
 
         const next = queueRef.current.shift()
+        if (!next) {
+            isShowingRef.current = false
+            setCurrentBadge(null)
+            return
+        }
+
         setCurrentBadge(next)
         isShowingRef.current = true
 

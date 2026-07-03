@@ -4,7 +4,11 @@ import { BadgesConfig } from "@/Shared/Configs"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import styles from "./AdminTables.module.css"
 
-type PromoDraft = AdminPromocode & { isNew?: boolean }
+type PromoDraft = Omit<AdminPromocode, "balance" | "usageLimit"> & {
+    balance: number | ""
+    usageLimit: number | ""
+    isNew?: boolean
+}
 
 const badgeOptions = Object.entries(BadgesConfig.badges)
 
@@ -15,6 +19,10 @@ const toInputDate = (value: string) => {
 }
 
 const toPayloadDate = (value: string) => new Date(value).toISOString()
+
+const isValidDate = (value: string) => {
+    return value !== "" && !Number.isNaN(new Date(value).getTime())
+}
 
 const createEmptyPromo = (id: number): PromoDraft => ({
     id,
@@ -44,6 +52,47 @@ const normalizePromo = (promo: PromoDraft): AdminPromocodePayload => ({
     usageLimit: Number(promo.usageLimit) || 1,
     isActive: promo.isActive
 })
+
+const validatePromo = (promo: PromoDraft): string | null => {
+    if (promo.code.trim() === "") return "У промокода должен быть код"
+    if (!isValidDate(promo.startDate)) return `Некорректная дата старта у ${promo.code || "нового промокода"}`
+    if (!isValidDate(promo.endDate)) return `Некорректная дата конца у ${promo.code || "нового промокода"}`
+    if (new Date(promo.startDate) >= new Date(promo.endDate)) return `Дата конца должна быть позже старта у ${promo.code}`
+    if (Number(promo.usageLimit) < 1) return `Лимит должен быть больше 0 у ${promo.code}`
+    if (Number(promo.usageLimit) < Number(promo.usedCount)) return `Лимит меньше использований у ${promo.code}`
+    return null
+}
+
+const validatePromos = (promos: PromoDraft[]): string | null => {
+    const invalid = promos.map(validatePromo).find(Boolean)
+    if (invalid) return invalid
+
+    const codes = new Set<string>()
+
+    for (const promo of promos) {
+        const code = promo.code.trim().toUpperCase()
+
+        if (codes.has(code)) {
+            return `Промокод ${code} дублируется в таблице`
+        }
+
+        codes.add(code)
+    }
+
+    return null
+}
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+    if (typeof error === "object" && error !== null && "response" in error) {
+        const response = (error as { response?: { data?: { message?: unknown } } }).response
+
+        if (typeof response?.data?.message === "string") {
+            return response.data.message
+        }
+    }
+
+    return fallback
+}
 
 const BadgeSelect = (props: {
     value?: string | null
@@ -106,7 +155,11 @@ const PromocodesSection = () => {
     }, [])
 
     useEffect(() => {
-        void load()
+        const timeoutId = window.setTimeout(() => {
+            void load()
+        }, 0)
+
+        return () => window.clearTimeout(timeoutId)
     }, [load])
 
     const patchItem = useCallback((id: number, data: Partial<PromoDraft>) => {
@@ -130,9 +183,13 @@ const PromocodesSection = () => {
         setMessage("")
 
         try {
-            const originalById = new Map(originalItems.map(item => [item.id, item]))
+            const invalid = validatePromos(items)
+            if (invalid) {
+                setMessage(invalid)
+                return
+            }
 
-            await Promise.all(deletedIds.map(id => AdminApi.deletePromocode(id)))
+            const originalById = new Map(originalItems.map(item => [item.id, item]))
 
             const saved = await Promise.all(items.map(item => {
                 const payload = normalizePromo(item)
@@ -156,11 +213,15 @@ const PromocodesSection = () => {
                 })
             }))
 
+            await Promise.all(deletedIds.map(id => AdminApi.deletePromocode(id)))
+
             const drafts = saved.map(toDraft)
             setItems(drafts)
             setOriginalItems(drafts)
             setDeletedIds([])
             setMessage("Изменения сохранены")
+        } catch (error) {
+            setMessage(getErrorMessage(error, "Не удалось сохранить изменения"))
         } finally {
             setPending(false)
         }
@@ -191,11 +252,11 @@ const PromocodesSection = () => {
                 {items.map(item => (
                     <div className={`${styles.row} ${styles.promoGrid}`} key={item.id}>
                         <input className={styles.input} value={item.code} onChange={e => patchItem(item.id, { code: e.target.value })} />
-                        <input className={styles.input} type="number" value={item.balance} onChange={e => patchItem(item.id, { balance: e.target.value === "" ? "" as any : Number(e.target.value) })} />
+                        <input className={styles.input} type="number" value={item.balance} onChange={e => patchItem(item.id, { balance: e.target.value === "" ? "" : Number(e.target.value) })} />
                         <BadgeSelect value={item.badge} onChange={badge => patchItem(item.id, { badge })} />
                         <input className={styles.input} type="datetime-local" value={item.startDate} onChange={e => patchItem(item.id, { startDate: e.target.value })} />
                         <input className={styles.input} type="datetime-local" value={item.endDate} onChange={e => patchItem(item.id, { endDate: e.target.value })} />
-                        <input className={styles.input} type="number" value={item.usageLimit} onChange={e => patchItem(item.id, { usageLimit: e.target.value === "" ? "" as any : Number(e.target.value) })} />
+                        <input className={styles.input} type="number" value={item.usageLimit} onChange={e => patchItem(item.id, { usageLimit: e.target.value === "" ? "" : Number(e.target.value) })} />
                         <label className={styles.check}>
                             <input type="checkbox" checked={item.isActive} onChange={e => patchItem(item.id, { isActive: e.target.checked })} />
                             {item.usedCount}

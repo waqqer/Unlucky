@@ -14,7 +14,7 @@ const Check = (props: UICheckProps) => {
         id = "",
         children,
         onChange,
-        checked,
+        checked = false,
         isDisabled = false
     } = props
 

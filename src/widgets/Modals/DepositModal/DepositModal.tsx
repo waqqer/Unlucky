@@ -13,6 +13,18 @@ interface UIDepositModalProps {
     onDeposit?: () => void
 }
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+    if (typeof error === "object" && error !== null && "response" in error) {
+        const response = (error as { response?: { data?: { message?: unknown } } }).response
+
+        if (typeof response?.data?.message === "string") {
+            return response.data.message
+        }
+    }
+
+    return fallback
+}
+
 const DepositModal = (props: UIDepositModalProps) => {
     const {
         onDeposit
@@ -29,6 +41,10 @@ const DepositModal = (props: UIDepositModalProps) => {
     }, [])
 
     const handleDeposit = useCallback(async () => {
+        if (!account || !spm) {
+            return
+        }
+
         setIsPending(true)
 
         try {
@@ -38,15 +54,14 @@ const DepositModal = (props: UIDepositModalProps) => {
             })
 
             spm.openPayment(data.code)
-        } catch (er: any) {
-            const message = er.response?.data?.message || "Ошибка при пополнение средств"
-            toast.error(message)
+        } catch (error) {
+            toast.error(getErrorMessage(error, "Ошибка при пополнение средств"))
         } finally {
             setIsPending(false)
         }
 
         onDeposit?.()
-    }, [account, spm, value])
+    }, [account, onDeposit, spm, value])
 
     return (
         <div className={styles.content}>
@@ -70,7 +85,7 @@ const DepositModal = (props: UIDepositModalProps) => {
 
                 <Button
                     className={styles.btn}
-                    isDisabled={isPending || account === null}
+                    isDisabled={isPending || account === null || spm === null}
                     onClick={handleDeposit}
                 >
                     {isPending ? "Ожидание..." : "Пополнить"}

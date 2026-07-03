@@ -38,25 +38,34 @@ const Input = (props: UIInputProps) => {
             }
 
             const val = parseInt(ev.target.value, 10)
+            const maxValue = max ?? Number.POSITIVE_INFINITY
 
             if (isNaN(val)) {
-                onChange("")
-            } else if (val > max) {
-                onChange(max.toString())
+                onChange?.("")
+            } else if (val > maxValue) {
+                onChange?.(maxValue.toString())
             } else {
-                onChange(val.toString())
+                onChange?.(val.toString())
             }
+
+            return
         }
+
+        onChange?.(ev.target.value)
     }, [onChange, max, type])
 
     const handleBlur = useCallback(() => {
         if(type === "number") {
-            const val = typeof value === "number" ? value : parseInt(value, 10)
+            const val = typeof value === "number" ? value : parseInt(value ?? "", 10)
+            const minValue = min ?? Number.NEGATIVE_INFINITY
+            const maxValue = max ?? Number.POSITIVE_INFINITY
 
-            if(isNaN(val) || val < min) {
+            if(isNaN(val) && min !== undefined) {
                 onChange?.(min.toString())
-            } else if (val > max) {
-                onChange?.(max.toString())
+            } else if (val < minValue) {
+                onChange?.(minValue.toString())
+            } else if (val > maxValue) {
+                onChange?.(maxValue.toString())
             }
         }
 

@@ -24,7 +24,7 @@ const HistoryItem = (props: UIHistoryItemProps) => {
                 <Username User={{
                     current_badge: data.user.badge,
                     name: data.user.name
-                }} withBadge={true} badgeTooltip={true} />
+                }} withBadge={true} badgeTooltip={true} className={styles.nick} />
             </div>
 
             <div className={`${styles.block} ${styles.game}`}>

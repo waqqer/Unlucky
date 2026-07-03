@@ -4,7 +4,11 @@ import { BadgesConfig } from "@/Shared/Configs"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import styles from "./AdminTables.module.css"
 
-type RewardDraft = AdminStreakReward & { isNew?: boolean }
+type RewardDraft = Omit<AdminStreakReward, "balance" | "day"> & {
+    balance: number | ""
+    day: number | ""
+    isNew?: boolean
+}
 
 const badgeOptions = Object.entries(BadgesConfig.badges)
 
@@ -27,6 +31,48 @@ const normalizeReward = (reward: RewardDraft): AdminStreakRewardPayload => ({
     badge: reward.badge?.trim() || undefined,
     isActive: reward.isActive
 })
+
+const sortRewards = <T extends { day: number | "" }>(rewards: T[]) => {
+    return rewards.sort((a, b) => Number(a.day) - Number(b.day))
+}
+
+const validateReward = (reward: RewardDraft): string | null => {
+    if (Number(reward.day) <= 0) return "День награды должен быть больше 0"
+    if (reward.title.trim() === "") return `Введите название награды за ${reward.day} день`
+    if (reward.description.trim() === "") return `Введите описание награды за ${reward.day} день`
+    return null
+}
+
+const validateRewards = (rewards: RewardDraft[]): string | null => {
+    const invalid = rewards.map(validateReward).find(Boolean)
+    if (invalid) return invalid
+
+    const days = new Set<number>()
+
+    for (const reward of rewards) {
+        const day = Number(reward.day)
+
+        if (days.has(day)) {
+            return `Награда за ${day} день дублируется в таблице`
+        }
+
+        days.add(day)
+    }
+
+    return null
+}
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+    if (typeof error === "object" && error !== null && "response" in error) {
+        const response = (error as { response?: { data?: { message?: unknown } } }).response
+
+        if (typeof response?.data?.message === "string") {
+            return response.data.message
+        }
+    }
+
+    return fallback
+}
 
 const BadgeSelect = (props: {
     value?: string | null
@@ -89,7 +135,11 @@ const RewardsSection = () => {
     }, [])
 
     useEffect(() => {
-        void load()
+        const timeoutId = window.setTimeout(() => {
+            void load()
+        }, 0)
+
+        return () => window.clearTimeout(timeoutId)
     }, [load])
 
     const patchItem = useCallback((id: number, data: Partial<RewardDraft>) => {
@@ -97,7 +147,7 @@ const RewardsSection = () => {
     }, [])
 
     const add = useCallback(() => {
-        setItems(prev => [...prev, createEmptyReward(nextIdRef.current--)].sort((a, b) => a.day - b.day))
+        setItems(prev => sortRewards([...prev, createEmptyReward(nextIdRef.current--)]))
     }, [])
 
     const remove = useCallback((id: number) => {
@@ -113,9 +163,13 @@ const RewardsSection = () => {
         setMessage("")
 
         try {
-            const originalById = new Map(originalItems.map(item => [item.id, item]))
+            const invalid = validateRewards(items)
+            if (invalid) {
+                setMessage(invalid)
+                return
+            }
 
-            await Promise.all(deletedIds.map(id => AdminApi.deleteStreakReward(id)))
+            const originalById = new Map(originalItems.map(item => [item.id, item]))
 
             const saved = await Promise.all(items.map(item => {
                 const payload = normalizeReward(item)
@@ -132,11 +186,15 @@ const RewardsSection = () => {
                 return AdminApi.updateStreakReward(item.id, payload)
             }))
 
-            const sorted = saved.sort((a, b) => a.day - b.day)
+            await Promise.all(deletedIds.map(id => AdminApi.deleteStreakReward(id)))
+
+            const sorted = sortRewards(saved)
             setItems(sorted)
             setOriginalItems(sorted)
             setDeletedIds([])
             setMessage("Изменения сохранены")
+        } catch (error) {
+            setMessage(getErrorMessage(error, "Не удалось сохранить изменения"))
         } finally {
             setPending(false)
         }
@@ -166,10 +224,10 @@ const RewardsSection = () => {
 
                 {items.map(item => (
                     <div className={`${styles.row} ${styles.rewardGrid}`} key={item.id}>
-                        <input className={styles.input} type="number" value={item.day} onChange={e => patchItem(item.id, { day: e.target.value === "" ? "" as any : Number(e.target.value) })} />
+                        <input className={styles.input} type="number" value={item.day} onChange={e => patchItem(item.id, { day: e.target.value === "" ? "" : Number(e.target.value) })} />
                         <input className={styles.input} value={item.title} onChange={e => patchItem(item.id, { title: e.target.value })} />
                         <input className={styles.input} value={item.description} onChange={e => patchItem(item.id, { description: e.target.value })} />
-                        <input className={styles.input} type="number" value={item.balance} onChange={e => patchItem(item.id, { balance: e.target.value === "" ? "" as any : Number(e.target.value) })} />
+                        <input className={styles.input} type="number" value={item.balance} onChange={e => patchItem(item.id, { balance: e.target.value === "" ? "" : Number(e.target.value) })} />
                         <BadgeSelect value={item.badge} onChange={badge => patchItem(item.id, { badge })} />
                         <label className={styles.check}>
                             <input type="checkbox" checked={item.isActive} onChange={e => patchItem(item.id, { isActive: e.target.checked })} />
