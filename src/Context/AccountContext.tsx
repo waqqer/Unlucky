@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react"
 import type SPWMini from "spwmini/client"
 import type { User } from "spwmini/types"
 import { AuthContext } from "./AuthContext"
-import type { Badges, Policy, StreakStatus, UserInfo } from "@/Api/User"
+import type { Badges, Policy, ReferralInfo, StreakStatus, UserInfo } from "@/Api/User"
 import UserApi from "@/Api/User"
 
 export interface AccountContextValues {
@@ -24,6 +24,8 @@ export interface AccountContextValues {
     badges: string[],
 
     policy: Policy | null,
+    referralInfo: ReferralInfo | null,
+    setReferralInfo: (data: ReferralInfo) => void
 
     ReloadUserInfo: () => void
     ReloadUserBadges: () => void
@@ -58,6 +60,7 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
     const [badges, setBadges] = useState<string[]>([])
 
     const [policy, setPolicy] = useState<Policy | null>(null)
+    const [referralInfo, setReferralInfo] = useState<ReferralInfo | null>(null)
 
     const setStreakInfo = useCallback(async (data: {
         streak: number,
@@ -81,6 +84,7 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
         })
         setStreak(data.streak)
         setStreakStatus(data.streakStatus)
+        setReferralInfo(data.referral)
     }, [account])
 
     const acceptPolicy = useCallback(async () => {
@@ -196,6 +200,8 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
         streakStatus,
 
         policy,
+        referralInfo,
+        setReferralInfo,
 
         acceptPolicy,
         ReloadUserInfo,
@@ -210,7 +216,7 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
         endBalanceDeferral,
         removeBadge,
         setStreakInfo
-    }), [policy, streak, streakStatus, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, setStreakInfo, role, userId, setBalanceTo, incrementBalance, beginBalanceDeferral, queueBalanceUpdate, flushBalanceUpdate, endBalanceDeferral, removeBadge, addBadge])
+    }), [policy, referralInfo, streak, streakStatus, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, setStreakInfo, role, userId, setBalanceTo, incrementBalance, beginBalanceDeferral, queueBalanceUpdate, flushBalanceUpdate, endBalanceDeferral, removeBadge, addBadge])
 
     return (
         <AccountContext.Provider value={values}>

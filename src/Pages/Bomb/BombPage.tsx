@@ -55,7 +55,7 @@ const BombPage = () => {
             <Page>
                 <ParticleBackground />
 
-                <Section justify="center" align="center">
+                <Section justify="center" align="center" className={styles.game}>
                     <GameControlls openAbout={about.open} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
                     <BombsGameContainer
                         gameName="BOMBS"

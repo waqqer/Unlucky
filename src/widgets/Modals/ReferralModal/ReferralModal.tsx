@@ -1,8 +1,8 @@
-import UserApi, { type ReferralInfo } from "@/Api/User"
+import UserApi from "@/Api/User"
 import Button from "@/Components/Controlls/Buttons/Button"
 import Separator from "@/Components/Decorations/Separator"
 import { AccountContext } from "@/Context/AccountContext"
-import { memo, useCallback, useContext, useEffect, useState } from "react"
+import { memo, useCallback, useContext, useState } from "react"
 import { toast } from "react-toastify"
 import styles from "./ReferralModal.module.css"
 
@@ -21,40 +21,20 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 const formatNumber = (value: number) => new Intl.NumberFormat("ru-RU").format(value)
 
 const ReferralModal = () => {
-    const { account } = useContext(AccountContext)
-    const [info, setInfo] = useState<ReferralInfo | null>(null)
+    const {
+        account,
+        referralInfo,
+        setReferralInfo
+    } = useContext(AccountContext)
     const [code, setCode] = useState<string>("")
-    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isPending, setIsPending] = useState<boolean>(false)
 
-    const load = useCallback(async () => {
-        if (!account) return
-
-        setIsLoading(true)
-
-        try {
-            setInfo(await UserApi.getReferralInfo(account.UUID))
-        } catch (error) {
-            toast.error(getErrorMessage(error, "Не удалось загрузить реферальную систему"))
-        } finally {
-            setIsLoading(false)
-        }
-    }, [account])
-
-    useEffect(() => {
-        const timeoutId = window.setTimeout(() => {
-            void load()
-        }, 0)
-
-        return () => window.clearTimeout(timeoutId)
-    }, [load])
-
     const handleCopy = useCallback(async () => {
-        if (!info) return
+        if (!referralInfo) return
 
-        await navigator.clipboard.writeText(info.code)
+        await navigator.clipboard.writeText(referralInfo.code)
         toast.success("Реферальный код скопирован")
-    }, [info])
+    }, [referralInfo])
 
     const handleApply = useCallback(async () => {
         if (!account) return
@@ -63,7 +43,7 @@ const ReferralModal = () => {
 
         try {
             const data = await UserApi.applyReferralCode(account.UUID, code)
-            setInfo(data)
+            setReferralInfo(data)
             setCode("")
             toast.success("Реферальный код применен")
         } catch (error) {
@@ -71,9 +51,9 @@ const ReferralModal = () => {
         } finally {
             setIsPending(false)
         }
-    }, [account, code])
+    }, [account, code, setReferralInfo])
 
-    const percent = info ? Math.round(info.rewardPercent * 100) : 5
+    const percent = referralInfo ? Math.round(referralInfo.rewardPercent * 100) : 5
 
     return (
         <div className={styles.content}>
@@ -89,34 +69,34 @@ const ReferralModal = () => {
                 </div>
 
                 <div className={styles.codeBox}>
-                    <h1 onClick={handleCopy}>{isLoading ? "Загрузка..." : info?.code ?? "CODE"}</h1>
+                    <h1 onClick={handleCopy}>{referralInfo?.code ?? "CODE"}</h1>
                 </div>
 
                 <div className={styles.stats}>
                     <div>
                         <span>Подключено</span>
-                        <strong>{formatNumber(info?.referralsCount ?? 0)}</strong>
+                        <strong>{formatNumber(referralInfo?.referralsCount ?? 0)}</strong>
                     </div>
 
                     <div>
                         <span>Заработано</span>
-                        <strong>{formatNumber(info?.earnedAmount ?? 0)} Ар</strong>
+                        <strong>{formatNumber(referralInfo?.earnedAmount ?? 0)} Ар</strong>
                     </div>
                 </div>
             </section>
 
-            {info?.usedCode && (
+            {referralInfo?.usedCode && (
                 <section className={styles.section}>
                     <div className={styles.sectionHead}>
                         <div>
                             <h3>Код уже ввёден</h3>
-                            <p>Использован код игрока: <b>{info.usedCode.ownerName}</b></p>
+                            <p>Использован код игрока: <b>{referralInfo.usedCode.ownerName}</b></p>
                         </div>
                     </div>
                 </section>
             )}
 
-            {info?.canApplyCode && (
+            {referralInfo?.canApplyCode && (
                 <section className={styles.section}>
                     <div className={styles.sectionHead}>
                         <div>

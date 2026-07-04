@@ -5,8 +5,19 @@
     text-align: start;
 
     width: 100%;
+    min-width: 0;
 
     white-space: nowrap;
+    overflow: visible;
+}
+
+.username > * {
+    flex: 0 0 auto;
+}
+
+.name {
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }

@@ -11,6 +11,8 @@ export interface UserInfo extends Wallet, UserId {
 
     policy_accepts_date: Date
     policy_accepts: boolean
+
+    referral: ReferralInfo
 }
 
 export type StreakStatus = "ACTIVE" | "WAITING" | "DEAD"

@@ -1,6 +1,6 @@
 import type { UserPresence } from "@/Api/User"
 import type { Classable, Parent } from "@/Shared/Types/PropsTypes"
-import { memo, useContext, useEffect, useState } from "react"
+import { memo, useContext } from "react"
 import styles from "./Username.module.css"
 import Badge from "@/widgets/Badge/Badge"
 import { AccountContext } from "@/Context/AccountContext"
@@ -30,19 +30,8 @@ const Username = (props: UIUsernameProps) => {
     } = props
 
     const { user: DefaultUser, badge } = useContext(AccountContext)
-    const [username, setUsername] = useState<string>("Username")
-    const [userBadge, setUserBadge] = useState<string | undefined>(undefined)
-
-    useEffect(() => {
-        if (User) {
-            setUsername(User.name)
-            setUserBadge(User.current_badge)
-            return
-        } else if (DefaultUser) {
-            setUsername(DefaultUser.username)
-            setUserBadge(badge ?? undefined)
-        }
-    }, [DefaultUser, User, badge])
+    const username = User?.name ?? DefaultUser?.username ?? "Username"
+    const userBadge = User?.current_badge ?? badge ?? undefined
 
     return (
         <h4 className={`${styles.username} ${className}`} style={{
@@ -50,7 +39,7 @@ const Username = (props: UIUsernameProps) => {
         }}>
             {!reverse ?
                 <>
-                    {username}
+                    <span className={styles.name}>{username}</span>
                     {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} size={badgeSize} />}
                     {withFire && <Streak tooltip={fireTooltip} />}
                     {children}
@@ -60,7 +49,7 @@ const Username = (props: UIUsernameProps) => {
                     {children}
                     {withFire && <Streak tooltip={fireTooltip} />}
                     {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} size={badgeSize} />}
-                    {username}
+                    <span className={styles.name}>{username}</span>
                 </>
             }
         </h4>
