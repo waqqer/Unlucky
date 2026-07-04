@@ -26,6 +26,7 @@ export interface AccountContextValues {
     policy: Policy | null,
     referralInfo: ReferralInfo | null,
     setReferralInfo: (data: ReferralInfo) => void
+    disableReferralCodeApply: () => void
 
     ReloadUserInfo: () => void
     ReloadUserBadges: () => void
@@ -61,6 +62,13 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
 
     const [policy, setPolicy] = useState<Policy | null>(null)
     const [referralInfo, setReferralInfo] = useState<ReferralInfo | null>(null)
+
+    const disableReferralCodeApply = useCallback(() => {
+        setReferralInfo(prev => prev ? {
+            ...prev,
+            canApplyCode: false
+        } : prev)
+    }, [])
 
     const setStreakInfo = useCallback(async (data: {
         streak: number,
@@ -202,6 +210,7 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
         policy,
         referralInfo,
         setReferralInfo,
+        disableReferralCodeApply,
 
         acceptPolicy,
         ReloadUserInfo,
@@ -216,7 +225,7 @@ export const AccountProvider = ({ children }: PropsWithChildren) => {
         endBalanceDeferral,
         removeBadge,
         setStreakInfo
-    }), [policy, referralInfo, streak, streakStatus, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, setStreakInfo, role, userId, setBalanceTo, incrementBalance, beginBalanceDeferral, queueBalanceUpdate, flushBalanceUpdate, endBalanceDeferral, removeBadge, addBadge])
+    }), [policy, referralInfo, streak, streakStatus, user, account, spm, balance, badge, badges, acceptPolicy, ReloadUserInfo, ReloadUserBadges, changeBadge, setStreakInfo, role, userId, setBalanceTo, incrementBalance, beginBalanceDeferral, queueBalanceUpdate, flushBalanceUpdate, endBalanceDeferral, removeBadge, addBadge, disableReferralCodeApply])
 
     return (
         <AccountContext.Provider value={values}>

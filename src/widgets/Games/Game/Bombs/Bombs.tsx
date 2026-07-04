@@ -224,7 +224,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
     const [explodedIndex, setExplodedIndex] = useState<number | null>(null)
 
     const { account } = useContext(AuthContext)
-    const { flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
+    const { disableReferralCodeApply, flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
 
     const createFreshSocket = useCallback(() => {
         socketRef.current?.disconnect()
@@ -586,6 +586,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
                 return
             }
 
+            disableReferralCodeApply()
             applyState(response.data)
             flushBalanceUpdate()
             requestAnimationFrame(() => drawBoardRef.current())
@@ -599,7 +600,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             setIsPending(false)
             requestAnimationFrame(() => updateBoardStateRef.current())
         })
-    }, [account, applyState, createFreshSocket, data, flushBalanceUpdate, getReadySocket, incrementBalance, isActive, isPending])
+    }, [account, applyState, createFreshSocket, data, disableReferralCodeApply, flushBalanceUpdate, getReadySocket, incrementBalance, isActive, isPending])
 
     const openDemoCell = useCallback((index: number) => {
         const demoCell = demoFieldRef.current[index]

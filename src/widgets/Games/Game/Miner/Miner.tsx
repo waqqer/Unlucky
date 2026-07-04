@@ -118,7 +118,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
     const audioStopTimersRef = useRef(new Map<HTMLAudioElement, number>())
 
     const { account } = useContext(AuthContext)
-    const { flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
+    const { disableReferralCodeApply, flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
 
     const makePixelTexture = useCallback((texture: Texture) => {
         const source = texture.source as Texture["source"] & {
@@ -863,6 +863,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
             isBetDebited = true
             const result = await GameApi.playMiner(account.UUID, betAmount)
             if (playId !== playIdRef.current) return
+            disableReferralCodeApply()
             queueBalanceUpdate(result.newBalance)
             await playRound(result, playId, betAmount)
         } catch {
@@ -873,7 +874,7 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
             data.StateMachine.changeState("IDLE")
             toast.error("Не удалось запустить Майнер")
         }
-    }, [account, data, incrementBalance, playRound, queueBalanceUpdate])
+    }, [account, data, disableReferralCodeApply, incrementBalance, playRound, queueBalanceUpdate])
 
     useImperativeHandle(ref, () => ({ play }), [play])
 

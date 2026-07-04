@@ -37,7 +37,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
     const [tiltStyles, setTiltStyles] = useState<string[]>(() => Array.from({ length: Config.REEL_COUNT }, () => ""))
 
     const { account } = useContext(AuthContext)
-    const { flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
+    const { disableReferralCodeApply, flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
 
     const clearAutoReroll = useCallback(() => {
         if (!autoRerollTimerRef.current) return
@@ -318,6 +318,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
                 : await GameApi.playSlots(account!.UUID, bet)
 
             if (playId !== playIdRef.current) return
+            if (!isDemo) disableReferralCodeApply()
             if (!isDemo) queueBalanceUpdate(result.newBalance)
             await finishRound(result, bet, isDemo, playId)
         } catch {
@@ -329,7 +330,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
             data.StateMachine.changeState("IDLE")
             toast.error("Не удалось запустить слоты")
         }
-    }, [account, clearAutoReroll, data, finishRound, incrementBalance, queueBalanceUpdate, resetTilt, stopSpinSound])
+    }, [account, clearAutoReroll, data, disableReferralCodeApply, finishRound, incrementBalance, queueBalanceUpdate, resetTilt, stopSpinSound])
 
     const play = useCallback((bet?: number) => {
         void runPlay(bet ?? data?.bet ?? 0, false)

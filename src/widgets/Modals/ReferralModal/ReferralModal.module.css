@@ -69,7 +69,9 @@
 }
 
 .codeBox>h1::selection {
-    background-color: transparent;
+    background-color: white;
+    border-radius: 10px;
+    color: rgb(36, 36, 36);
 }
 
 .codeBox>h1:hover {

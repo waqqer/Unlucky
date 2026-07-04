@@ -24,17 +24,11 @@ const ReferralModal = () => {
     const {
         account,
         referralInfo,
-        setReferralInfo
+        setReferralInfo,
+        disableReferralCodeApply
     } = useContext(AccountContext)
     const [code, setCode] = useState<string>("")
     const [isPending, setIsPending] = useState<boolean>(false)
-
-    const handleCopy = useCallback(async () => {
-        if (!referralInfo) return
-
-        await navigator.clipboard.writeText(referralInfo.code)
-        toast.success("Реферальный код скопирован")
-    }, [referralInfo])
 
     const handleApply = useCallback(async () => {
         if (!account) return
@@ -43,7 +37,11 @@ const ReferralModal = () => {
 
         try {
             const data = await UserApi.applyReferralCode(account.UUID, code)
-            setReferralInfo(data)
+            setReferralInfo({
+                ...data,
+                canApplyCode: false
+            })
+            disableReferralCodeApply()
             setCode("")
             toast.success("Реферальный код применен")
         } catch (error) {
@@ -51,7 +49,7 @@ const ReferralModal = () => {
         } finally {
             setIsPending(false)
         }
-    }, [account, code, setReferralInfo])
+    }, [account, code, disableReferralCodeApply, setReferralInfo])
 
     const percent = referralInfo ? Math.round(referralInfo.rewardPercent * 100) : 5
 
@@ -69,7 +67,7 @@ const ReferralModal = () => {
                 </div>
 
                 <div className={styles.codeBox}>
-                    <h1 onClick={handleCopy}>{referralInfo?.code ?? "CODE"}</h1>
+                    <h1 >{referralInfo?.code ?? "CODE"}</h1>
                 </div>
 
                 <div className={styles.stats}>
