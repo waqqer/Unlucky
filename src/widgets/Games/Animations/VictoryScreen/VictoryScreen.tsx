@@ -107,7 +107,9 @@ const VictoryScreen = (props: UIVictoryScreenProps) => {
     const {
         play: playVictorySound,
         stop: stopVictorySound
-    } = useSound(selectedData.audio || "")
+    } = useSound(selectedData.audio || "", {
+        volume: 0.02
+    })
 
     stopVictorySoundRef.current = stopVictorySound
 

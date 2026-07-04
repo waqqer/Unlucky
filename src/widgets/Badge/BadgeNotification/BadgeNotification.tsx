@@ -13,7 +13,9 @@ const BadgeNotification = () => {
     const queueRef = useRef<string[]>([])
     const isShowingRef = useRef(false)
 
-    const { play: playPingSound } = useSound(sound)
+    const { play: playPingSound } = useSound(sound, {
+        volume: 0.05
+    })
 
     const { badgeMessage, setBadgeMessage } = useContext(MessengerContext)
     const [currentBadge, setCurrentBadge] = useState<string | null>(null)

@@ -7,13 +7,15 @@ import type { Classable } from "@/Shared/Types/PropsTypes"
 interface UIPresetsProps extends Classable {
     sets?: number[],
     onClick: (value: number) => void
+    balanceDependent?: boolean
 }
 
 const Presets = (props: UIPresetsProps) => {
     const {
         sets = [10, 25, 50, 100, 250],
         onClick,
-        className = ""
+        className = "",
+        balanceDependent = true
     } = props
 
     const { balance } = useContext(AccountContext)
@@ -32,7 +34,7 @@ const Presets = (props: UIPresetsProps) => {
                         type="SECONDARY"
                         onClick={() => handleClick(v)}
                         className={styles.choice}
-                        isDisabled={balance < v}
+                        isDisabled={balanceDependent ? balance < v : false}
                     >
                         {v}
                     </Button>

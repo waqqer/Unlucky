@@ -81,7 +81,7 @@ const DepositModal = (props: UIDepositModalProps) => {
                 />
                 <Presets onClick={changePresetHandle} sets={[
                     10, 25, 50, 75, 100, 250, 500, 1000
-                ]} className={styles.presets} />
+                ]} className={styles.presets} balanceDependent={false} />
 
                 <Button
                     className={styles.btn}

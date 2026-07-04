@@ -24,7 +24,7 @@ const Config: SlotsConfig = {
     SPIN_TICKS_PER_SEC: 7,
     SPIN_SOUND_PLAY_MS: 24,
     AUTO_REROLL_DELAY_MS: 420,
-    SOUND_VOLUME: 0.18,
+    SOUND_VOLUME: 0.17,
     REEL_TEXTURE: Slots.Slot,
     REEL_CONTENT_INSET: "10%",
 

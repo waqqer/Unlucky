@@ -128,6 +128,7 @@ const Config: MinerConfig = {
     CHEST_OPEN_DURATION_MS: 460,
     PARTICLE_ALPHA_MIN: 0.72,
     PARTICLE_ALPHA_MAX: 0.95,
+    
     CHEST_GLOW_DEFAULTS: {
         spawnIntervalSec: 0.065,
         cellPaddingMult: 0.1,
