@@ -77,7 +77,7 @@ const BadgesConfig: BadgesConfig = {
 
         "marathon": {
             title: "Марафон",
-            description: "Сыграть 100 или более игр",
+            description: "Выдаётся за 7 дней б",
             icon: Marathon,
             quality: "GOOD"
         },

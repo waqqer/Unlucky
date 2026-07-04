@@ -68,3 +68,15 @@ export interface ClaimStreakRewardResult {
     reward: StreakReward
     balance: number
 }
+
+export interface ReferralInfo {
+    code: string
+    rewardPercent: number
+    referralsCount: number
+    earnedAmount: number
+    canApplyCode: boolean
+    usedCode?: {
+        code: string
+        ownerName: string
+    }
+}

@@ -19,9 +19,22 @@ import StreakRewardsModal from "../StreakRewardsModal"
 import type { StreakReward } from "@/Api/User"
 import { toast } from "react-toastify"
 import { MessengerContext } from "@/Context/MessengerContext"
+import ReferralModal from "../ReferralModal"
 
 interface UIProfileModalProps {
     closeThis: () => void
+}
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+    if (typeof error === "object" && error !== null && "response" in error) {
+        const response = (error as { response?: { data?: { message?: unknown } } }).response
+
+        if (typeof response?.data?.message === "string") {
+            return response.data.message
+        }
+    }
+
+    return fallback
 }
 
 const ProfileModal = (props: UIProfileModalProps) => {
@@ -31,6 +44,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
 
     const badges = useModal()
     const promo = useModal()
+    const referral = useModal()
     const deposit = useModal()
     const out = useModal()
     const streakRewards = useModal()
@@ -50,19 +64,23 @@ const ProfileModal = (props: UIProfileModalProps) => {
     useEffect(() => {
         if (!account) return
 
-        setIsRewardsLoading(true)
-        UserApi.getStreakRewards(account.UUID)
-            .then(d => setRewards(d))
-            .finally(() => setIsRewardsLoading(false))
+        const timeoutId = window.setTimeout(() => {
+            setIsRewardsLoading(true)
+            UserApi.getStreakRewards(account.UUID)
+                .then(d => setRewards(d))
+                .finally(() => setIsRewardsLoading(false))
+        }, 0)
+
+        return () => window.clearTimeout(timeoutId)
     }, [account, streak])
 
     const onPromoActivateCallback = useCallback(() => {
         promo.close()
         closeThis()
-    }, [closeThis, promo.close])
+    }, [closeThis, promo])
 
     const onDepositCallback = useCallback(() => {
-        deposit.close(),
+        deposit.close()
         closeThis()
     }, [deposit, closeThis])
 
@@ -87,8 +105,8 @@ const ProfileModal = (props: UIProfileModalProps) => {
             }
 
             toast.success(`Награда огонька получена: +${data.reward.balance} Ар`)
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || "Не удалось получить награду")
+        } catch (error) {
+            toast.error(getErrorMessage(error, "Не удалось получить награду"))
         }
     }, [account, setBalanceTo, addBadge, setBadgeMessage])
 
@@ -130,7 +148,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
                         </svg>
                     </Button>
 
-                    <Button className={styles.profile_btn} id="referal">
+                    <Button className={styles.profile_btn} id="referal" onClick={referral.open}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                             <path d="M96 192C96 130.1 146.1 80 208 80C269.9 80 320 130.1 320 192C320 253.9 269.9 304 208 304C146.1 304 96 253.9 96 192zM32 528C32 430.8 110.8 352 208 352C305.2 352 384 430.8 384 528L384 534C384 557.2 365.2 576 342 576L74 576C50.8 576 32 557.2 32 534L32 528zM464 128C517 128 560 171 560 224C560 277 517 320 464 320C411 320 368 277 368 224C368 171 411 128 464 128zM464 368C543.5 368 608 432.5 608 512L608 534.4C608 557.4 589.4 576 566.4 576L421.6 576C428.2 563.5 432 549.2 432 534L432 528C432 476.5 414.6 429.1 385.5 391.3C408.1 376.6 435.1 368 464 368z" />
                         </svg>
@@ -192,7 +210,7 @@ const ProfileModal = (props: UIProfileModalProps) => {
                     {history.length === 0 ?
                         <p className={styles["history-notfound"]}>Тут ничего нет(...</p>
                         :
-                        history.map((v, i) => (
+                        history.map(v => (
                             <div className={styles["history-item"]}>
                                 <div className={styles["history-time-date"]}>
                                     <h1>{v.game_name}</h1>
@@ -262,6 +280,10 @@ const ProfileModal = (props: UIProfileModalProps) => {
 
             <Window isOpen={promo.isOpen} close={promo.close}>
                 <PromoModal onPromoActivate={onPromoActivateCallback} />
+            </Window>
+
+            <Window isOpen={referral.isOpen} close={referral.close}>
+                <ReferralModal />
             </Window>
 
             <Window isOpen={deposit.isOpen} close={deposit.close}>

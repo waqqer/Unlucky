@@ -49,7 +49,7 @@ const LeaderboardItem = (props: UILeaderboardItemProps) => {
                     <Username className={styles.nick} withBadge reverse badgeTooltip={true} User={{
                         name: name,
                         current_badge: account?.UUID === uuid ? userBadge : badge
-                    }} />
+                    }} badgeSize={28} />
                     <p className={styles.desc}>
                         {text}:
                         <span>{value}</span>

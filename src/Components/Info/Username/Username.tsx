@@ -13,6 +13,7 @@ interface UIUsernameProps extends Classable, Parent {
     badgeTooltip?: boolean
     fireTooltip?: boolean
     reverse?: boolean
+    badgeSize?: number
 }
 
 const Username = (props: UIUsernameProps) => {
@@ -24,7 +25,8 @@ const Username = (props: UIUsernameProps) => {
         badgeTooltip = false,
         withFire = false,
         fireTooltip = false,
-        reverse = false
+        reverse = false,
+        badgeSize = 32
     } = props
 
     const { user: DefaultUser, badge } = useContext(AccountContext)
@@ -49,7 +51,7 @@ const Username = (props: UIUsernameProps) => {
             {!reverse ?
                 <>
                     {username}
-                    {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} />}
+                    {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} size={badgeSize} />}
                     {withFire && <Streak tooltip={fireTooltip} />}
                     {children}
                 </>
@@ -57,7 +59,7 @@ const Username = (props: UIUsernameProps) => {
                 <>
                     {children}
                     {withFire && <Streak tooltip={fireTooltip} />}
-                    {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} />}
+                    {withBadge && <Badge badgeName={userBadge} tooltip={badgeTooltip} tooltipDelay={200} size={badgeSize} />}
                     {username}
                 </>
             }

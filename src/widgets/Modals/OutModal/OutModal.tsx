@@ -31,7 +31,7 @@ const OutModal = (props: UIOutModalProps) => {
 
     const { balance, account, setBalanceTo } = useContext(AccountContext)
 
-    const [value, setValue] = useState<string>(String(balance))
+    const [value, setValue] = useState<string>(String(Math.min(balance, 100)))
     const [currentCard, setCurrentCard] = useState<string>("")
     const [cards, setCards] = useState<UserCard[]>([])
 

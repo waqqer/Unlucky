@@ -1,5 +1,5 @@
 import { $api } from "../Api"
-import type { Badges, ClaimStreakRewardResult, Policy, StreakReward, UserHistory, UserInfo } from "./Types"
+import type { Badges, ClaimStreakRewardResult, Policy, ReferralInfo, StreakReward, UserHistory, UserInfo } from "./Types"
 import type { UUID, Wallet } from "@/Shared/Types/UserTypes"
 
 class UserApi {
@@ -36,6 +36,18 @@ class UserApi {
     public static async claimStreakReward(uuid: string | UUID, day: number): Promise<ClaimStreakRewardResult> {
         const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
         const responce = await $api.post<ClaimStreakRewardResult>("/private/api/user/" + param + "/streak-rewards/" + day + "/claim")
+        return responce.data
+    }
+
+    public static async getReferralInfo(uuid: string | UUID): Promise<ReferralInfo> {
+        const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
+        const responce = await $api.get<ReferralInfo>("/private/api/user/" + param + "/referral")
+        return responce.data
+    }
+
+    public static async applyReferralCode(uuid: string | UUID, code: string): Promise<ReferralInfo> {
+        const param = typeof uuid === "string" ? uuid : uuid.minecraftUUID
+        const responce = await $api.post<ReferralInfo>("/private/api/user/" + param + "/referral", { code })
         return responce.data
     }
 
