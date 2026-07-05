@@ -12,6 +12,7 @@ import GameHistory from "../GameHistory"
 import styles from "./BombsGameContainer.module.css"
 import type { GameTitle } from "@/Api/History"
 import useGameHistory from "@/Hooks/useGameHistory"
+import Presets from "../Presets"
 
 export type BombsGameState = "IDLE" | "PLAYING" | "WIN"
 
@@ -133,6 +134,14 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
                         }}
                         className={styles["bet-input"]}
                     />
+
+                    <Presets
+                        onClick={(v) => setBet(String(v))}
+                        sets={[10, 25, 50, 100]}
+                        balanceDependent={false}
+                        className={styles.presets}
+                    />
+
                     <Check onChange={setIsDemo} checked={isDemo} isDisabled={isPlaying}>Демо</Check>
 
                     <Button

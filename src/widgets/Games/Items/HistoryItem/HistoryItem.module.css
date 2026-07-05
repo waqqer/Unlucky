@@ -30,7 +30,7 @@
 }
 
 .nick span {
-    min-width: 0;
+    max-width: 145px;
 }
 
 @keyframes history-in {
@@ -47,6 +47,7 @@
         border-color: rgb(255 255 255 / 80%);
         background: rgb(255 255 255 / 10%);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -96,9 +97,19 @@
     gap: 10px;
     min-width: 0;
 
-    & > img {
+    &>img {
         flex: 0 0 auto;
         border-radius: 5px;
+    }
+}
+
+@media (max-width: 1450px) {
+    .user>img {
+        display: none;
+    }
+
+    .nick span {
+        max-width: 100px;
     }
 }
 
@@ -109,12 +120,20 @@
         padding: 8px;
     }
 
-    .nick {
-        width: min(145px, 100%);
+    .nick span {
+        max-width: 70px;
     }
 
     .game {
-        min-width: 82px;
+        min-width: 80px;
+    }
+
+    .game h3 {
+        font-size: 0.9rem;
+    }
+
+    .game p {
+        font-size: 0.7rem;
     }
 }
 

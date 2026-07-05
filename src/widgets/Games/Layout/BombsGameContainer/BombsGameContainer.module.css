@@ -43,6 +43,15 @@
     gap: 10px;
 }
 
+.presets {
+    gap: 4px;    
+}
+
+.presets > button {
+    padding: 10px;
+    padding-inline: 15px;
+}
+
 .input > h2 {
     text-align: center;
 }
@@ -91,10 +100,22 @@
         grid-template-columns: 1fr;
         padding-inline: 0;
     }
+
+    .presets {
+        gap: 10px;
+    }
+    
+    .presets > button {
+        flex: 1;
+    }
 }
 
 @media (max-width: 700px) {
     .game-box {
         min-height: 65vh;
+    }
+
+    .presets {
+        display: none;
     }
 }

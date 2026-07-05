@@ -51,6 +51,7 @@ const Check = (props: UICheckProps) => {
                 ref={inputRef}
                 onChange={handleChange}
                 disabled={isDisabled}
+                className={styles.input}
             />
             {children}
         </div>

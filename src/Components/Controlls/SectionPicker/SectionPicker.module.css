@@ -49,6 +49,7 @@
     text-align: start;
     corner-shape: bevel;
     border: 1px solid rgba(110, 110, 110, 0.527);
+    pointer-events: none;
 }
 
 .btn:hover > .name {
@@ -64,4 +65,10 @@
 
 .btn:hover > svg {
     fill: aliceblue;
+}
+
+@media (max-width: 1100px) {
+    .picker {
+        display: none;
+    }
 }
