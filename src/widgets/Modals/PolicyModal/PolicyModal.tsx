@@ -16,7 +16,7 @@ const PolicyModal = () => {
                 <Policy />
             </div>
 
-            {policy?.policy_accepts_date && <p className={styles["policy-date"]}>Дата принятия вами политика конфиденциальности: {new Date(policy.policy_accepts_date).toLocaleDateString(
+            {policy?.policy_accepts_date && <p className={styles["policy-date"]}>Дата принятия вами политики конфиденциальности: {new Date(policy.policy_accepts_date).toLocaleDateString(
                 "ru-RU", {
                 month: "2-digit",
                 day: "numeric",

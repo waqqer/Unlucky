@@ -321,7 +321,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
             if (!isDemo) disableReferralCodeApply()
             if (!isDemo) queueBalanceUpdate(result.newBalance)
             await finishRound(result, bet, isDemo, playId)
-        } catch {
+        } catch(ex) {
             if (isBetDebited) {
                 incrementBalance(bet)
             }
@@ -329,6 +329,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
             isAnimatingRef.current = false
             data.StateMachine.changeState("IDLE")
             toast.error("Не удалось запустить слоты")
+            console.log(ex)
         }
     }, [account, clearAutoReroll, data, disableReferralCodeApply, finishRound, incrementBalance, queueBalanceUpdate, resetTilt, stopSpinSound])
 

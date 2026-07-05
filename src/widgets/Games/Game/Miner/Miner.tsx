@@ -866,13 +866,14 @@ const Miner = forwardRef<GameRef, GameProps>((props, ref) => {
             disableReferralCodeApply()
             queueBalanceUpdate(result.newBalance)
             await playRound(result, playId, betAmount)
-        } catch {
+        } catch(ex) {
             if (isBetDebited) {
                 incrementBalance(betAmount)
             }
             runtime.isAnimating = false
             data.StateMachine.changeState("IDLE")
             toast.error("Не удалось запустить Майнер")
+            console.log(ex)
         }
     }, [account, data, disableReferralCodeApply, incrementBalance, playRound, queueBalanceUpdate])
 
