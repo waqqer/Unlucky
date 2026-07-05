@@ -150,7 +150,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
 
     return (
         <>
-            <VictoryScreen isActive={StateMachine.is("WIN")} win={winAmount} onEnd={onWinScreenEnd} />
+            <VictoryScreen isActive={StateMachine.is("WIN")} win={winAmount - Number(bet)} onEnd={onWinScreenEnd} />
             <div className={`${styles["game-box"]} ${styles[type]}`}>
                 <GameHistory items={history} freshKey={freshHistoryKey} isLoading={isHistoryLoading} error={historyError} />
 
@@ -164,7 +164,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
                             <h2>Ставка</h2>
                             <Separator size={50} />
                             <Input type="number" value={bet} min={0} max={isAuth ? Math.min(1000, balance) : 1000} onChange={onBetInputChange} className={styles["bet-input"]}/>
-                            <Presets onClick={choosePresetHandle} />
+                            <Presets className={styles.presets} onClick={choosePresetHandle} />
 
                             {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)} checked={isAutoreroll && !isDemo} isDisabled={isDemo}>Авто-реролл</Check>}
                             {demo && <Check onChange={(value) => {

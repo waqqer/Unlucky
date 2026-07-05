@@ -16,7 +16,7 @@
     }
 }
 
-.game-box > div {
+.game-box>div {
     border: 1px solid rgb(114, 114, 114);
     border-radius: 5px;
     height: 100%;
@@ -44,23 +44,23 @@
 }
 
 .presets {
-    gap: 4px;    
+    gap: 4px;
 }
 
-.presets > button {
+.presets>button {
     padding: 10px;
     padding-inline: 15px;
 }
 
-.input > h2 {
+.input>h2 {
     text-align: center;
 }
 
-.input > * {
+.input>* {
     width: 100%;
 }
 
-.input > button {
+.input>button {
     padding-block: 20px;
 }
 
@@ -104,18 +104,31 @@
     .presets {
         gap: 10px;
     }
-    
-    .presets > button {
+
+    .presets>button {
         flex: 1;
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
     .game-box {
-        min-height: 65vh;
+        min-height: 55vh;
+        max-height: 70vh;
     }
 
     .presets {
         display: none;
+    }
+
+    .input>h2 {
+        font-size: 1.1rem;
+    }
+
+    .input>* {
+        width: 90%;
+    }
+
+    .input>button {
+        padding-block: 5px;
     }
 }

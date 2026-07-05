@@ -113,7 +113,7 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
 
     return (
         <>
-            <VictoryScreen isActive={StateMachine.is("WIN") && !isDemo} win={winAmount} onEnd={handleVictoryEnd} />
+            <VictoryScreen isActive={StateMachine.is("WIN") && !isDemo} win={winAmount - Number(bet)} onEnd={handleVictoryEnd} />
             <div className={styles["game-box"]}>
                 <GameHistory items={history} freshKey={freshHistoryKey} isLoading={isHistoryLoading} error={historyError} />
 

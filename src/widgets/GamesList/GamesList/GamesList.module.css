@@ -17,11 +17,18 @@
     }
 }
 
+@media (max-width: 840px) {
+    .list {
+        flex-wrap: wrap;
+    }
+}
+
 @media (max-width: 700px) {
     .list {
         margin-top: 15%;
         margin-bottom: 40%;
         flex-direction: column;
         justify-content: start;
+        flex-wrap: nowrap;
     }
 }

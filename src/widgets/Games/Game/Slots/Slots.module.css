@@ -15,7 +15,7 @@
     gap: clamp(10px, 1vw, 18px);
     align-items: center;
     justify-content: center;
-    width: min(100%, 675px);
+    width: min(100%, 750px);
     padding: clamp(16px, 5vw, 42px);
     box-sizing: border-box;
     perspective: 700px;
@@ -93,6 +93,6 @@
 
 @media (max-width: 700px) {
     .reels {
-        width: min(100%, 390px);
+        width: min(100%, 490px);
     }
 }

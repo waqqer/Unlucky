@@ -40,7 +40,7 @@ const MainPage = () => {
                 <GamesList />
             </Section>
 
-            <Section justify="space-between" className="hide--mobile" id="leaders">
+            <Section justify="space-between" className={styles.leaders} id="leaders">
                 <SectionTitle text="Главные лудоманы" className={styles["leader-title"]} />
 
                 <LeaderboardBox />
