@@ -1,4 +1,4 @@
-import { Miner, Rocket, Slots } from "../Assets/Images"
+import { Miner, Bombs, Slots } from "../Assets/Images"
 
 export interface GameInfo {
     title: string,
@@ -24,7 +24,7 @@ const GamesConfig: GameInfo[] = [
         title: "Мины",
         desc: "Получай ары, пока не лопнешь на мине",
         route: "/bombs",
-        icon: Rocket
+        icon: Bombs
     }
 ]
 
