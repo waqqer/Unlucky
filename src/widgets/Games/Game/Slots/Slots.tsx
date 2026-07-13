@@ -101,8 +101,8 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
         const centerY = rect.top + rect.height / 2
         const mouseX = event.clientX - centerX
         const mouseY = event.clientY - centerY
-        const rotateX = (mouseY / rect.height) * -24
-        const rotateY = (mouseX / rect.width) * 24
+        const rotateX = (mouseY / rect.height) * -64
+        const rotateY = (mouseX / rect.width) * 64
 
         setTiltStyles(prev => {
             const next = prev.map((value, valueIndex) => valueIndex === index ? value : "")
@@ -321,7 +321,7 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
             if (!isDemo) disableReferralCodeApply()
             if (!isDemo) queueBalanceUpdate(result.newBalance)
             await finishRound(result, bet, isDemo, playId)
-        } catch(ex) {
+        } catch (ex) {
             if (isBetDebited) {
                 incrementBalance(bet)
             }
@@ -362,9 +362,6 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
                     <div
                         className={styles.card}
                         key={index}
-                        onMouseMove={(event) => handleMouseMove(index, event)}
-                        onMouseLeave={() => handleMouseLeave(index)}
-                        style={{ transform: tiltStyles[index] || undefined }}
                     >
                         <div
                             className={`${styles.frame} ${stoppedReels[index] ? styles.stopped : ""}`}
@@ -384,6 +381,9 @@ const Slots = forwardRef<GameRef, GameProps>((props, ref) => {
                                             src={Config.SYMBOLS[symbol]}
                                             alt=""
                                             draggable={false}
+                                            onMouseMove={(event) => handleMouseMove(index, event)}
+                                            onMouseLeave={() => handleMouseLeave(index)}
+                                            style={{ transform: tiltStyles[index] || undefined }}
                                         />
                                     </div>
                                 ))}

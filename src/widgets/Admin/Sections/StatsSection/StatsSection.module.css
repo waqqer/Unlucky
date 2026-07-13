@@ -85,6 +85,11 @@
     padding: 20px;
 }
 
+.statsGrid>article {
+    width: 100%;
+    height: 100%;
+}
+
 .statCard {
     position: relative;
     display: flex;
@@ -121,7 +126,7 @@
     transition: all 0.3s ease;
 }
 
-.statIcon > svg {
+.statIcon>svg {
     fill: white;
     height: 100%;
     width: 100%;
@@ -130,17 +135,17 @@
 
 .statCard span {
     color: rgb(139, 148, 158);
-    font-size: 0.84rem;
+    font-size: 1.3rem;
     font-weight: 600;
 }
 
-.statCard > span:not(.statIcon) {
+.statCard>span:not(.statIcon) {
     padding-right: 54px;
 }
 
 .statCard strong {
     color: rgb(230, 237, 243);
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 700;
     line-height: 1;
 }
@@ -149,6 +154,16 @@
     margin-top: auto;
     color: rgb(139, 148, 158);
     font-size: 0.84rem;
+}
+
+@media (max-width: 1250px) {
+    .statIcon {
+        opacity: 0.3;
+    }
+
+    .statCard:hover .statIcon {
+        opacity: 0.8;
+    }
 }
 
 @media (max-width: 900px) {

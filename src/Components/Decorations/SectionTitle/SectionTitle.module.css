@@ -17,6 +17,18 @@
     animation: fade 1.2s ease;
     opacity: 0;
     letter-spacing: 1.5px;
+    transition: transform 0.4s ease, margin 0.8s ease-out;
+    cursor: default;
+}
+
+.title::selection {
+    background-color: aliceblue;
+    color: black;
+}
+
+.title span:hover {
+    transform: scale(1.02) translateY(-3px);
+    margin-inline: 10px;
 }
 
 @keyframes fade {
