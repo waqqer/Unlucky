@@ -5,12 +5,6 @@
     justify-content: center;
 }
 
-.badge img {
-    height: 100%;
-    width: 100%;
-    image-rendering: pixelated;
-}
-
 .badge-tooltip {
     overflow: hidden;
 }
@@ -46,4 +40,11 @@
 
     text-wrap: wrap;
     max-width: 200px;
+}
+
+.badge > img {
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
 }

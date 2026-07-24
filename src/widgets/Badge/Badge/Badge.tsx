@@ -36,6 +36,9 @@ const Badge = (props: UIBadgeProps) => {
             {badgeName && badge && <div
                 className={`${styles.badge} ${className}`}
                 id={`badge-${uniqueId}`}
+                style={{
+                    ["--size"]: size
+                } as React.CSSProperties}
             >
                 <img
                     src={badge.icon}
@@ -44,6 +47,9 @@ const Badge = (props: UIBadgeProps) => {
                     loading="lazy"
                     width={size}
                     height={size}
+                    style={{
+                        ["--size"]: size
+                    } as React.CSSProperties}
                 />
             </div>}
 

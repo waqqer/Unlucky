@@ -14,7 +14,7 @@
 
 @media (max-width: 850px) {
     .leaders {
-        display: none;
+        display: none !important;
     }
 }
 
