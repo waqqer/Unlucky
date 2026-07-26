@@ -107,6 +107,10 @@
     gap: 5px;
 }
 
+.t-presets>button {
+    flex: 1;
+}
+
 .presets>button {
     flex: 1;
 }
@@ -155,6 +159,10 @@
 
     .d-box .input {
         justify-content: end;
+    }
+
+    .triple .input {
+        justify-content: center;
     }
 
     .d-box .input>* {

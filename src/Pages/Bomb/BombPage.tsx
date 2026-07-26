@@ -52,7 +52,7 @@ const BombPage = () => {
 
     return (
         <>
-            <Page>
+            <Page className={styles.page}>
                 <ParticleBackground />
 
                 <Section justify="center" align="center" className={styles.game}>

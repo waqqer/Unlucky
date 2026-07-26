@@ -5,3 +5,15 @@
     justify-content: center;
     gap: 10px;
 }
+
+@media (max-height: 950px) {
+    .game {
+        padding-top: 80px;
+    }
+}
+
+@media (max-height: 900px) {
+    .game {
+        padding-top: 100px;
+    }
+}
