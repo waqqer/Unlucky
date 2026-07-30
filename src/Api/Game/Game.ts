@@ -30,8 +30,8 @@ class GameApi {
     }
 
     public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:start", payload: { bet: number }): Promise<BombsSocketResponse>
-    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:open", payload: { index: number }): Promise<BombsSocketResponse>
-    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:cashout", payload?: undefined): Promise<BombsSocketResponse>
+    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:open", payload: { index: number, gameId?: string, requestId?: string }): Promise<BombsSocketResponse>
+    public static emitBombs(socket: ReturnType<typeof connectSocket>, event: "bombs:cashout", payload?: { gameId?: string, requestId?: string }): Promise<BombsSocketResponse>
     public static emitBombs(socket: ReturnType<typeof connectSocket>, event: string, payload?: object): Promise<BombsSocketResponse> {
         return new Promise(resolve => {
             const timer = window.setTimeout(() => {

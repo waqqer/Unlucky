@@ -208,6 +208,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
     const isActiveRef = useRef(false)
     const isPendingRef = useRef(false)
     const cellsRef = useRef<BombsCell[]>(createClosedCells())
+    const gameIdRef = useRef<string | null>(null)
     const animatedOpenedCellsRef = useRef<Set<number>>(new Set())
     const isBoardEnabledRef = useRef(false)
     const shouldDimPendingRef = useRef(false)
@@ -469,6 +470,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
     }, [])
 
     const applyState = useCallback((state: BombsState) => {
+        gameIdRef.current = state.gameId
         cellsRef.current = state.cells
         isActiveRef.current = state.isActive
         setRows(state.rows)
@@ -505,6 +507,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         const currentWinValue = isWin ? Math.trunc(bet * nextMultiplier) : 0
 
         finishGame({
+            gameId: "demo",
             rows: Config.GRID_Y_SIZE,
             cols: Config.GRID_X_SIZE,
             bet,
@@ -527,6 +530,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
         const currentBet = bet ?? data.bet
         const closedCells = createClosedCells()
+        gameIdRef.current = null
         cellsRef.current = closedCells
         animatedOpenedCellsRef.current.clear()
         shouldAnimateResultRevealRef.current = false
@@ -667,7 +671,11 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
                 return null
             }
 
-            return GameApi.emitBombs(socket, "bombs:open", { index })
+            return GameApi.emitBombs(socket, "bombs:open", {
+                index,
+                gameId: gameIdRef.current ?? undefined,
+                requestId: `open:${index}`
+            })
         }).then(response => {
             if (!response) return
 
@@ -738,7 +746,10 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
                 return null
             }
 
-            return GameApi.emitBombs(socket, "bombs:cashout")
+            return GameApi.emitBombs(socket, "bombs:cashout", {
+                gameId: gameIdRef.current ?? undefined,
+                requestId: "cashout"
+            })
         }).then(response => {
             if (!response) return
 
@@ -767,7 +778,10 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             const currentSocket = socketRef.current ?? socket
 
             if (isActiveRef.current) {
-                currentSocket.emit("bombs:cashout", undefined, (response: unknown) => {
+                currentSocket.emit("bombs:cashout", {
+                    gameId: gameIdRef.current ?? undefined,
+                    requestId: "disconnect-cashout"
+                }, (response: unknown) => {
                     const result = response as { ok?: boolean, data?: BombsState }
                     if (result.ok && result.data?.newBalance !== undefined) {
                         queueBalanceUpdate(result.data.newBalance)

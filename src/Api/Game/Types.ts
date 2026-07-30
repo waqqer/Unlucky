@@ -23,6 +23,7 @@ export interface BombsCell {
 }
 
 export interface BombsState {
+    gameId: string
     multiplier: number
     isWin: boolean
     rows: number
