@@ -21,7 +21,7 @@ const SectionPicker = (props: UISectionPicker) => {
 
     const handleClick = useCallback((data: SectionData) => {
         if (data.id) {
-            document.getElementById(data.id).scrollIntoView({
+            document.getElementById(data.id)?.scrollIntoView({
                 behavior: "smooth"
             })
         }

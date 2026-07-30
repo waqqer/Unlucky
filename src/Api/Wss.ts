@@ -1,11 +1,11 @@
 import { io, type ManagerOptions, type SocketOptions } from "socket.io-client"
-import { getAccessToken } from "./Api"
+import { getSPUserToken } from "./Api"
 import API_URL from "./Config"
 
 const connectSocket = (url: string, config?: Partial<ManagerOptions & SocketOptions>) => {
     const socket = io(API_URL + url, {
         auth: {
-            token: getAccessToken()
+            token: getSPUserToken()
         },
         transports: ["websocket"],
         timeout: 5000,

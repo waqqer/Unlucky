@@ -8,6 +8,16 @@ export interface UserPayload {
     name: string
 }
 
+export interface SPUser {
+    accountId: string
+    hash: string
+    isAdmin: boolean
+    minecraftUUID: string
+    roles: string[]
+    timestamp: number
+    username: string
+}
+
 export interface Wallet {
     balance: number
 }
