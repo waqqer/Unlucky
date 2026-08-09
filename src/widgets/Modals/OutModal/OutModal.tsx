@@ -24,6 +24,12 @@ const getErrorMessage = (error: unknown, fallback: string) => {
     return fallback
 }
 
+const createOperationId = () => {
+    if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID()
+
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+}
+
 const OutModal = (props: UIOutModalProps) => {
     const {
         onOut
@@ -51,7 +57,8 @@ const OutModal = (props: UIOutModalProps) => {
             const data = await PaymentApi.sendTransaction({
                 amount: Number(value),
                 uuid: account.UUID,
-                card: currentCard
+                card: currentCard,
+                operationId: createOperationId()
             })
 
             setBalanceTo(data.new_balance)

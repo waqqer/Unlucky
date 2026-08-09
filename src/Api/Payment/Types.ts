@@ -2,11 +2,14 @@ export interface PaymentOut {
     card: string
     amount: number
     uuid: string
+    operationId: string
 }
 
 export interface PaymentOutResult {
     message: string
     new_balance: number
+    operationId?: string
+    status?: string
 }
 
 export interface PaymentDeposit {

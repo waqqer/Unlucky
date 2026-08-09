@@ -20,6 +20,7 @@ interface UIBombsGameContainerProps extends Parent {
     onPlay?: (bet: number) => void
     onCashout?: () => void
     isActionPending?: boolean
+    canCashout?: boolean
     onStateChange?: (state: BombsGameState) => void
     gameName: GameTitle
 }
@@ -38,6 +39,7 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
         onPlay,
         onCashout,
         isActionPending = false,
+        canCashout = false,
         onStateChange,
         gameName
     } = props
@@ -91,12 +93,12 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
     const buttonText = isPlaying ? "Забрать" : "Играть"
 
     const buttonDisabled = useMemo(() => {
-        if (isPlaying) return isActionPending
+        if (isPlaying) return isActionPending || !canCashout
         if (!StateMachine.is("IDLE")) return true
         if (Number(bet) <= 0) return true
         if (isDemo) return false
         return Number(bet) > balance || !isAuth
-    }, [StateMachine, balance, bet, isActionPending, isAuth, isDemo, isPlaying])
+    }, [StateMachine, balance, bet, canCashout, isActionPending, isAuth, isDemo, isPlaying])
 
     const handleMainButton = useCallback(() => {
         if (isPlaying) {

@@ -14,6 +14,7 @@ import styles from "./Bombs.module.css"
 type BombsProps = {
     data: BombsGameContainerRef | null
     onPendingChange?: (value: boolean) => void
+    onCanCashoutChange?: (value: boolean) => void
 }
 
 type DemoCell = {
@@ -197,7 +198,7 @@ const animateBoardState = (runtime: Runtime, isEnabled: boolean) => {
 const SOCKET_CONNECT_TIMEOUT_MS = 8000
 
 const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
-    const { data, onPendingChange } = props
+    const { data, onPendingChange, onCanCashoutChange } = props
     const hostRef = useRef<HTMLDivElement>(null)
     const runtimeRef = useRef<Runtime | null>(null)
     const socketRef = useRef<ReturnType<typeof GameApi.createBombsSocket> | null>(null)
@@ -226,6 +227,10 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
     const { account } = useContext(AuthContext)
     const { disableReferralCodeApply, flushBalanceUpdate, incrementBalance, queueBalanceUpdate } = useContext(AccountContext)
+
+    const updateCanCashout = useCallback((cells: BombsCell[]) => {
+        onCanCashoutChange?.(cells.some(cell => cell.isOpened))
+    }, [onCanCashoutChange])
 
     const createFreshSocket = useCallback(() => {
         socketRef.current?.disconnect()
@@ -479,13 +484,15 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         setIsActive(state.isActive)
         setMultiplier(state.multiplier)
         setCurrentWin(state.currentWin)
+        updateCanCashout(state.cells)
         if (state.newBalance !== undefined) {
             queueBalanceUpdate(state.newBalance)
         }
-    }, [queueBalanceUpdate])
+    }, [queueBalanceUpdate, updateCanCashout])
 
     const finishGame = useCallback((state: BombsState, isDemo: boolean) => {
         applyState(state)
+        updateCanCashout(state.cells)
 
         if (!isDemo) {
             flushBalanceUpdate()
@@ -500,11 +507,12 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
         data?.setWinAmount(0)
         data?.StateMachine.changeState("IDLE")
-    }, [applyState, data, flushBalanceUpdate])
+    }, [applyState, data, flushBalanceUpdate, updateCanCashout])
 
     const finishDemo = useCallback((nextCells: BombsCell[], nextMultiplier: number, isWin: boolean) => {
         const bet = data?.bet ?? 0
         const currentWinValue = isWin ? Math.trunc(bet * nextMultiplier) : 0
+        updateCanCashout(nextCells)
 
         finishGame({
             gameId: "demo",
@@ -518,7 +526,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             isWin,
             cells: nextCells,
         }, true)
-    }, [data, finishGame])
+    }, [data, finishGame, updateCanCashout])
 
     const play = useCallback((bet?: number) => {
         if (!data || isActive || isPending) return
@@ -542,6 +550,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         setMultiplier(1)
         setCurrentWin(0)
         setExplodedIndex(null)
+        onCanCashoutChange?.(false)
         data.StateMachine.changeState("PLAYING")
 
         if (data.isDemo) {
@@ -560,20 +569,19 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             isActiveRef.current = false
             shouldDimPendingRef.current = false
             data.StateMachine.changeState("IDLE")
+            onCanCashoutChange?.(false)
             setIsPending(false)
             return
         }
 
-        let startSocket: ReturnType<typeof GameApi.createBombsSocket> | null = null
-
         void getReadySocket().then(socket => {
             if (!socket) {
                 data.StateMachine.changeState("IDLE")
+                onCanCashoutChange?.(false)
                 toast.error("Не удалось подключиться к серверу")
                 return null
             }
 
-            startSocket = socket
             incrementBalance(-currentBet)
             return GameApi.emitBombs(socket, "bombs:start", { bet: currentBet })
         }).then(response => {
@@ -581,11 +589,8 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
             if (response.ok === false) {
                 incrementBalance(currentBet)
-                if (response.message === "Сервер не отвечает" && startSocket) {
-                    startSocket.emit("bombs:cashout")
-                    createFreshSocket()
-                }
                 data.StateMachine.changeState("IDLE")
+                onCanCashoutChange?.(false)
                 toast.error(response.message)
                 return
             }
@@ -597,6 +602,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         }).catch(() => {
             incrementBalance(currentBet)
             data.StateMachine.changeState("IDLE")
+            onCanCashoutChange?.(false)
             toast.error("Не удалось запустить Мины")
         }).finally(() => {
             isPendingRef.current = false
@@ -604,7 +610,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             setIsPending(false)
             requestAnimationFrame(() => updateBoardStateRef.current())
         })
-    }, [account, applyState, createFreshSocket, data, disableReferralCodeApply, flushBalanceUpdate, getReadySocket, incrementBalance, isActive, isPending])
+    }, [account, applyState, data, disableReferralCodeApply, flushBalanceUpdate, getReadySocket, incrementBalance, isActive, isPending, onCanCashoutChange])
 
     const openDemoCell = useCallback((index: number) => {
         const demoCell = demoFieldRef.current[index]
@@ -638,6 +644,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
             cellsRef.current = revealed
             setCells(revealed)
             setIsActive(false)
+            updateCanCashout(revealed)
             finishDemo(revealed, 0, false)
             return
         }
@@ -649,7 +656,8 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         setCells(nextCells)
         setMultiplier(nextMultiplier)
         setCurrentWin(Math.trunc((data?.bet ?? 0) * nextMultiplier))
-    }, [data, finishDemo, multiplier, spawnExplosion])
+        updateCanCashout(nextCells)
+    }, [data, finishDemo, multiplier, spawnExplosion, updateCanCashout])
 
     const openCell = useCallback((index: number) => {
         if (!isActiveRef.current || isPendingRef.current) return
@@ -721,6 +729,7 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
 
     const cashout = useCallback(() => {
         if (!isActiveRef.current || isPendingRef.current) return
+        if (!cellsRef.current.some(cell => cell.isOpened)) return
 
         if (data?.isDemo) {
             isPendingRef.current = true
@@ -777,28 +786,12 @@ const Bombs = forwardRef<GameRef, BombsProps>((props, ref) => {
         return () => {
             const currentSocket = socketRef.current ?? socket
 
-            if (isActiveRef.current) {
-                currentSocket.emit("bombs:cashout", {
-                    gameId: gameIdRef.current ?? undefined,
-                    requestId: "disconnect-cashout"
-                }, (response: unknown) => {
-                    const result = response as { ok?: boolean, data?: BombsState }
-                    if (result.ok && result.data?.newBalance !== undefined) {
-                        queueBalanceUpdate(result.data.newBalance)
-                        flushBalanceUpdate()
-                    }
-                    currentSocket.disconnect()
-                })
-                window.setTimeout(() => currentSocket.disconnect(), 120)
-                return
-            }
-
             currentSocket.disconnect()
             if (socket !== currentSocket) {
                 socket.disconnect()
             }
         }
-    }, [flushBalanceUpdate, queueBalanceUpdate])
+    }, [])
 
     useEffect(() => {
         openCellRef.current = openCell

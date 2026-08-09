@@ -28,7 +28,7 @@ const BadgesModal = (props: UIBadgesModalProps) => {
         <div className={styles.content}>
             <h2>Значки</h2>
             <Separator size={100} />
-
+            
             <div className={styles.badges}>
                 <div className={styles.list}>
                     {Object.entries(BadgesConfig.badges).map(([k, v]) => {

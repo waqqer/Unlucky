@@ -20,6 +20,7 @@ const BombPage = () => {
     const [gameData, setGameData] = useState<BombsGameContainerRef | null>(null)
     const [isMenuDisabled, setIsMenuDisabled] = useState(false)
     const [isActionPending, setIsActionPending] = useState(false)
+    const [canCashout, setCanCashout] = useState(false)
     const {
         beginBalanceDeferral,
         endBalanceDeferral,
@@ -63,9 +64,15 @@ const BombPage = () => {
                         onPlay={handlePlay}
                         onCashout={handleCashout}
                         isActionPending={isActionPending}
+                        canCashout={canCashout}
                         onStateChange={handleGameStateChange}
                     >
-                        <Bombs data={gameData} ref={gameRef} onPendingChange={setIsActionPending} />
+                        <Bombs
+                            data={gameData}
+                            ref={gameRef}
+                            onPendingChange={setIsActionPending}
+                            onCanCashoutChange={setCanCashout}
+                        />
                     </BombsGameContainer>
                 </Section>
             </Page>
