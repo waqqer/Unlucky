@@ -13,6 +13,7 @@ import useStateMachine, { type StateMachineData } from "@/Hooks/useStateMachine"
 import VictoryScreen from "../../Animations/VictoryScreen"
 import type { GameTitle } from "@/Api/History"
 import useGameHistory from "@/Hooks/useGameHistory"
+import type { GameBetRange } from "@/Shared/Types/GameTypes"
 
 interface UIGameContainerProps extends Parent {
     type?: "double" | "triple"
@@ -20,7 +21,8 @@ interface UIGameContainerProps extends Parent {
     autoreroll?: boolean
     onPlay?: (bet: number) => void
     onStateChange?: (state: GameState) => void
-    gameName: GameTitle
+    gameName: GameTitle,
+    gameBet: GameBetRange
 }
 
 export type GameState = "IDLE" | "PLAYING" | "WIN"
@@ -42,10 +44,11 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         autoreroll = true,
         onPlay,
         onStateChange,
-        gameName
+        gameName,
+        gameBet
     } = props
 
-    const [bet, setBet] = useState<string>("25")
+    const [bet, setBet] = useState<string>(String(gameBet.default || gameBet.min))
     const [isAutoreroll, setIsAutoreroll] = useState<boolean>(false)
     const [isDemo, setIsDemo] = useState<boolean>(false)
     const [winAmount, setWinAmount] = useState<number>(0)
@@ -123,7 +126,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
         if (!StateMachine.is("IDLE"))
             return true
 
-        if (Number(bet) <= 0)
+        if (Number(bet) < gameBet.min || Number(bet) > gameBet.max)
             return true
 
         if (isDemo)
@@ -163,7 +166,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
                         <div className={styles.input}>
                             <h2>Ставка</h2>
                             <Separator size={50} />
-                            <Input type="number" value={bet} min={0} max={isAuth ? Math.min(1000, balance) : 1000} onChange={onBetInputChange} className={styles["bet-input"]}/>
+                            <Input type="number" value={bet} min={gameBet.min} max={isAuth ? Math.min(gameBet.max, balance) : gameBet.max} onChange={onBetInputChange} className={styles["bet-input"]}/>
                             <Presets className={styles.presets} onClick={choosePresetHandle} />
 
                             {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)} checked={isAutoreroll && !isDemo} isDisabled={isDemo}>Авто-реролл</Check>}
@@ -192,7 +195,7 @@ const GameContainer = forwardRef<GameContainerRef, UIGameContainerProps>((props,
                         <div className={styles.input}>
                             <h2>Ставка</h2>
                             <Separator size={100} />
-                            <Input type="number" value={bet} min={0} max={isAuth ? Math.min(1000, balance) : 1000} onChange={onBetInputChange} className={styles["bet-input"]}/>
+                            <Input type="number" value={bet} min={gameBet.min} max={isAuth ? Math.min(gameBet.max, balance) : gameBet.max} onChange={onBetInputChange} className={styles["bet-input"]}/>
                             <Presets className={styles["t-presets"]} onClick={choosePresetHandle} />
 
                             {autoreroll && <Check onChange={(value) => setIsAutoreroll(value)} checked={isAutoreroll && !isDemo} isDisabled={isDemo}>Авто-реролл</Check>}

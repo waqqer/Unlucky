@@ -11,6 +11,7 @@ import Slots from "@/widgets/Games/Game/Slots"
 import { AccountContext } from "@/Context/AccountContext"
 import Separator from "@/Components/Decorations/Separator"
 import styles from "./SlotsPage.module.css"
+import { SlotsBet } from "@/Shared/Configs/Game"
 
 const SlotsPage = () => {
     const about = useModal()
@@ -60,7 +61,14 @@ const SlotsPage = () => {
 
                 <Section justify="center" align="center">
                     <GameControlls openAbout={about.open} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
-                    <GameContainer gameName="SLOTS" type="double" ref={containerRef} onPlay={handlePlay} onStateChange={handleGameStateChange}>
+                    <GameContainer
+                        gameName="SLOTS"
+                        type="double"
+                        ref={containerRef}
+                        onPlay={handlePlay}
+                        onStateChange={handleGameStateChange}
+                        gameBet={SlotsBet}
+                    >
                         <Slots data={gameData} ref={gameRef} />
                     </GameContainer>
                 </Section>

@@ -9,3 +9,9 @@ export interface GameRef {
 export interface GameProps {
     data: GameContainerRef | null
 }
+
+export interface GameBetRange {
+    min: number
+    default?: number
+    max: number
+}

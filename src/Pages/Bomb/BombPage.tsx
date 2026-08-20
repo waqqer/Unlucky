@@ -11,6 +11,7 @@ import useModal from "@/Hooks/useModal"
 import styles from "./BombPage.module.css"
 import Window from "@/Components/Containers/Window"
 import Separator from "@/Components/Decorations/Separator"
+import { BombsBet } from "@/Shared/Configs/Game"
 
 const BombPage = () => {
     const about = useModal()
@@ -66,6 +67,7 @@ const BombPage = () => {
                         isActionPending={isActionPending}
                         canCashout={canCashout}
                         onStateChange={handleGameStateChange}
+                        gameBet={BombsBet}
                     >
                         <Bombs
                             data={gameData}

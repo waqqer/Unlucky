@@ -13,6 +13,7 @@ import styles from "./BombsGameContainer.module.css"
 import type { GameTitle } from "@/Api/History"
 import useGameHistory from "@/Hooks/useGameHistory"
 import Presets from "../Presets"
+import type { GameBetRange } from "@/Shared/Types/GameTypes"
 
 export type BombsGameState = "IDLE" | "PLAYING" | "WIN"
 
@@ -22,7 +23,8 @@ interface UIBombsGameContainerProps extends Parent {
     isActionPending?: boolean
     canCashout?: boolean
     onStateChange?: (state: BombsGameState) => void
-    gameName: GameTitle
+    gameName: GameTitle,
+    gameBet: GameBetRange
 }
 
 export interface BombsGameContainerRef {
@@ -41,10 +43,11 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
         isActionPending = false,
         canCashout = false,
         onStateChange,
-        gameName
+        gameName,
+        gameBet
     } = props
 
-    const [bet, setBet] = useState("25")
+    const [bet, setBet] = useState(String(gameBet.default || gameBet.min))
     const [isDemo, setIsDemo] = useState(false)
     const [winAmount, setWinAmount] = useState(0)
     const betRef = useRef(bet)
@@ -95,7 +98,7 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
     const buttonDisabled = useMemo(() => {
         if (isPlaying) return isActionPending || !canCashout
         if (!StateMachine.is("IDLE")) return true
-        if (Number(bet) <= 0) return true
+        if (Number(bet) < gameBet.min || Number(bet) > gameBet.max) return true
         if (isDemo) return false
         return Number(bet) > balance || !isAuth
     }, [StateMachine, balance, bet, canCashout, isActionPending, isAuth, isDemo, isPlaying])
@@ -129,8 +132,8 @@ const BombsGameContainer = forwardRef<BombsGameContainerRef, UIBombsGameContaine
                     <Input
                         type="number"
                         value={bet}
-                        min={0}
-                        max={isAuth ? Math.min(1000, balance) : 1000}
+                        min={gameBet.min}
+                        max={isAuth ? Math.min(gameBet.max, balance) : gameBet.max}
                         onChange={(value) => {
                             if (!isPlaying) setBet(value)
                         }}

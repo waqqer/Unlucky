@@ -12,6 +12,7 @@ import styles from "./MinerPage.module.css"
 import Window from "@/Components/Containers/Window"
 import useModal from "@/Hooks/useModal"
 import Separator from "@/Components/Decorations/Separator"
+import { MinerBet } from "@/Shared/Configs/Game"
 
 const MinerPage = () => {
     const about = useModal()
@@ -61,7 +62,16 @@ const MinerPage = () => {
 
                 <Section justify="center" align="center" className={styles.game}>
                     <GameControlls openAbout={about.open} onMenuClick={flushBalanceUpdate} isMenuDisabled={isMenuDisabled} />
-                    <GameContainer gameName="MINER" type="triple" demo={false} autoreroll={false} ref={containerRef} onPlay={handlePlay} onStateChange={handleGameStateChange}>
+                    <GameContainer
+                        gameName="MINER"
+                        type="triple"
+                        demo={false}
+                        autoreroll={false}
+                        ref={containerRef}
+                        onPlay={handlePlay}
+                        onStateChange={handleGameStateChange}
+                        gameBet={MinerBet}
+                    >
                         <Miner data={gameData} ref={gameRef} />
                     </GameContainer>
                 </Section>
