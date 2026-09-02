@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 
 export default defineConfig({
   plugins: [react()],
+  base: "/Unlucky/",
   build: {
     outDir: "build",
     chunkSizeWarningLimit: 2000,
