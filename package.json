@@ -8,9 +8,8 @@
     "dev": "vite",
     "build:ts": "tsc -b && vite build",
     "build": "vite build",
-    "deploy": "gh-pages -d build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "deploy": "vite build && gh-pages -d build",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@pixi/react": "^8.0.5",
